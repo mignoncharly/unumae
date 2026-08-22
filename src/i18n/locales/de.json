@@ -159,5 +159,45 @@
       "underAge": "Du musst mindestens 16 sein.",
       "alreadyBeenHuman": "Du hattest deinen Tag bereits. Ein Human, ein Tag, für immer."
     }
+  },
+  "invitation": {
+    "title": "Du wurdest ausgewählt.",
+    "body": "Am {{date}} lernt die Welt einen Menschen kennen. Die Auswahl hat dich getroffen. Noch ist nichts veröffentlicht, und ohne dein Ja wird es das auch nicht.",
+    "windowLabel": "Zeit zum Antworten",
+    "windowHint": "Danach fragen wir die nächste Person. So oder so passiert dir nichts.",
+    "accept": "Ja, ich mache das",
+    "decline": "Diesmal nicht",
+    "declineNote": "Ablehnen kostet nichts. Du bleibst in jeder künftigen Auswahl, genau wie zuvor.",
+    "whatHappensNext": "Wenn du zusagst, hast du einen Tag, um deine Geschichte in eigenen Worten zu erzählen. Du entscheidest, was du sagst und was nicht.",
+    "none": "Gerade keine Einladung",
+    "noneBody": "Wenn die Auswahl dich trifft, findest du es hier.",
+    "acceptFailed": "Annehmen nicht möglich. Bitte versuche es erneut.",
+    "declineFailed": "Antwort konnte nicht gesendet werden. Bitte versuche es erneut.",
+    "tooLate": "Diese Einladung ist abgelaufen, die nächste Person wurde gefragt."
+  },
+  "howSelection": {
+    "title": "Wie die Auswahl funktioniert",
+    "heading": "Wie die Auswahl funktioniert",
+    "intro": "Eine Person pro Tag, zufällig aus allen Berechtigten gewählt. Hier steht genau wie, ohne Auslassungen.",
+    "poolTitle": "Wer in der Auswahl ist",
+    "poolBody": "Zwei Tage vor jedem Zyklus, um Mitternacht UTC, frieren wir die Liste aller Berechtigten ein. Berechtigt heißt: aktives Konto, mindestens {{age}} Jahre alt, Community-Richtlinien akzeptiert, als echte Person bestätigt, und die Entscheidung mitzumachen. Das ist die ganze Liste. Wer eine Minute nach dem Einfrieren berechtigt wird, wartet auf den nächsten Tag — genau das macht die Auswahl reproduzierbar.",
+    "drawTitle": "Wie die Person gewählt wird",
+    "drawBody": "Wir speichern einen Hash der eingefrorenen Liste und einen kryptografisch sicheren Seed, dann ordnen wir jede Kandidatin und jeden Kandidaten nach einem HMAC ihrer Kennung unter diesem Seed. Die erste Person wird gewählt, die nächsten {{backups}} sind Nachrücker. Alle in der Liste haben exakt dieselbe Chance.",
+    "acceptTitle": "Gefragt werden",
+    "acceptBody": "Die gewählte Person erfährt von der Auswahl und hat {{hours}} Stunden Zeit zu antworten. Bei Ablehnung oder Schweigen fragen wir den ersten Nachrücker, dann den zweiten, dann den dritten. Ablehnung und Schweigen werden gleich behandelt: nichts passiert, und die Person bleibt in jeder künftigen Auswahl.",
+    "onceTitle": "Einmal, und nur einmal",
+    "onceBody": "Wer einmal Today’s Human war, wird aus allen künftigen Auswahlen entfernt. Keine Sperrfrist, keine zweite Runde. Ein Human, ein Tag, für immer.",
+    "verifyTitle": "Unsere Arbeit prüfen",
+    "verifyBody": "Nachdem ein Zyklus live gegangen ist, veröffentlichen wir Pool-Hash und Seed. Jede und jeder kann daraus die Reihenfolge nachrechnen und bestätigen, dass die veröffentlichte Person die von der Auswahl gezogene ist. Die Funktionen dafür stehen allen offen, angemeldet oder nicht.",
+    "neverTitle": "Was die Auswahl nie beeinflusst",
+    "neverPay": "Uns Geld zu zahlen. Es gibt keinen Weg, eine bessere Chance zu kaufen, und wird nie einen geben.",
+    "neverFollowers": "Follower-Zahlen. Niemand hat hier Follower — das Produkt kennt sie nicht.",
+    "neverBoost": "Boosts, Promotions oder hervorgehobene Plätze. Es gibt keine.",
+    "neverSponsor": "Sponsoren. Kein Sponsor kann beeinflussen, wer erscheint.",
+    "neverInfluencer": "Bereits berühmt zu sein. Bestehende Bekanntheit fließt hier nirgends ein.",
+    "neverAlgorithm": "Engagement, Aktivität, oder wie interessant wir dich finden.",
+    "safetyTitle": "Wann jemand ausgeschlossen ist",
+    "safetyBody": "Gesperrte und verbannte Konten sind nicht im Pool, und ein Porträt wird vor der Veröffentlichung von einem Menschen geprüft. Lässt sich ein Zyklus nicht rechtzeitig füllen, veröffentlichen wir nichts und sagen das, statt jemanden ungeprüft zu zeigen.",
+    "footer": "Diese Regeln stammen aus unserer Produktverfassung. Die Teile über Fairness sind nicht änderbar."
   }
 }

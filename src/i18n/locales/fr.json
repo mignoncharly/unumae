@@ -159,5 +159,45 @@
       "underAge": "Vous devez avoir au moins 16 ans.",
       "alreadyBeenHuman": "Vous avez déjà eu votre journée. Un human, un jour, pour toujours."
     }
+  },
+  "invitation": {
+    "title": "Vous avez été sélectionné.",
+    "body": "Le {{date}}, le monde rencontrera une personne. Le tirage vous a choisi. Rien n'est encore publié, et rien ne le sera sans votre accord.",
+    "windowLabel": "Temps pour répondre",
+    "windowHint": "Ensuite nous demandons à la personne suivante. Rien ne vous arrive dans un cas comme dans l’autre.",
+    "accept": "Oui, je le fais",
+    "decline": "Pas cette fois",
+    "declineNote": "Refuser ne coûte rien. Vous restez dans tous les tirages futurs, exactement comme avant.",
+    "whatHappensNext": "Si vous acceptez, vous aurez une journée pour raconter votre histoire avec vos mots. Vous choisissez ce que vous dites et ce que vous gardez.",
+    "none": "Aucune invitation pour le moment",
+    "noneBody": "Si le tirage vous choisit, vous le verrez ici.",
+    "acceptFailed": "Impossible d'accepter. Veuillez réessayer.",
+    "declineFailed": "Impossible d'envoyer votre réponse. Veuillez réessayer.",
+    "tooLate": "Cette invitation a expiré et la personne suivante a été contactée."
+  },
+  "howSelection": {
+    "title": "Comment la sélection fonctionne",
+    "heading": "Comment la sélection fonctionne",
+    "intro": "Une personne par jour, choisie au hasard parmi toutes les personnes éligibles. Voici exactement comment, sans rien omettre.",
+    "poolTitle": "Qui participe au tirage",
+    "poolBody": "Deux jours avant chaque cycle, à minuit UTC, nous figeons la liste des personnes éligibles. Éligible signifie : un compte actif, au moins {{age}} ans, les règles de la communauté acceptées, une vérification de personne réelle, et le choix de participer. C'est toute la liste. Devenir éligible une minute après le gel signifie attendre le jour suivant — c'est ce qui rend le tirage reproductible.",
+    "drawTitle": "Comment la personne est choisie",
+    "drawBody": "Nous enregistrons une empreinte de la liste figée et une graine aléatoire cryptographiquement sûre, puis classons chaque candidat par un HMAC de son identifiant sous cette graine. Le premier est choisi ; les {{backups}} suivants sont des remplaçants. Chaque personne de la liste a exactement la même chance.",
+    "acceptTitle": "Être contacté",
+    "acceptBody": "La personne choisie est informée de sa sélection et dispose de {{hours}} heures pour répondre. En cas de refus ou d'absence de réponse, nous contactons le premier remplaçant, puis le deuxième, puis le troisième. Le refus et le silence sont traités de la même façon : rien ne se passe, et la personne reste dans tous les tirages futurs.",
+    "onceTitle": "Une fois, et une seule",
+    "onceBody": "Toute personne ayant été le Human du jour est retirée de tous les tirages futurs. Il n'y a ni délai ni second tour. Un human, un jour, pour toujours.",
+    "verifyTitle": "Vérifier notre travail",
+    "verifyBody": "Après la mise en ligne d'un cycle, nous publions l'empreinte du pool et la graine. Chacun peut recalculer le classement et confirmer que la personne publiée est bien celle que le tirage a choisie. Les fonctions qui le permettent sont ouvertes à tous, connectés ou non.",
+    "neverTitle": "Ce qui n'influence jamais le tirage",
+    "neverPay": "Nous payer quoi que ce soit. Aucun moyen d'acheter une meilleure chance, et il n'y en aura jamais.",
+    "neverFollowers": "Le nombre d'abonnés. Personne n'a d'abonnés ici — cela n'existe pas dans le produit.",
+    "neverBoost": "Les boosts, promotions ou mises en avant. Il n’en existe aucun.",
+    "neverSponsor": "Les sponsors. Aucun sponsor ne peut influencer qui apparaît.",
+    "neverInfluencer": "Être déjà célèbre. La notoriété existante n'entre dans aucun calcul ici.",
+    "neverAlgorithm": "L'engagement, l'activité, ou l'intérêt que nous vous trouvons.",
+    "safetyTitle": "Quand quelqu'un est exclu",
+    "safetyBody": "Les comptes suspendus et bannis ne sont pas dans le pool, et un portrait est relu par une personne avant publication. Si un cycle ne peut être rempli à temps, nous ne publions rien et le disons, plutôt que de publier quelqu'un sans relecture.",
+    "footer": "Ces règles viennent de notre Constitution produit. Les parties sur l’équité ne peuvent pas être modifiées."
   }
 }

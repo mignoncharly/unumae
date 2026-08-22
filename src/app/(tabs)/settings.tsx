@@ -73,6 +73,10 @@ function AccountSection() {
         variant="secondary"
       />
 
+      <Link href="/how-selection-works">
+        <Text color="accent">{t('settings.howSelectionWorks')} →</Text>
+      </Link>
+
       <Link href="/settings/eligibility">
         <Text color="accent">{t('settings.eligibility')} →</Text>
       </Link>

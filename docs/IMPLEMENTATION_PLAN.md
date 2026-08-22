@@ -11,8 +11,8 @@ original). This file tracks status only.
 | 2 | Design system + UX prototype | ✅ done | ✅ |
 | 3 | Authentication & user profile | ✅ done | ✅ |
 | 4 | Eligibility & daily selection engine | ✅ done | ✅ |
-| 5 | Fairness, transparency & candidate notification | ⬜ next | ✅ |
-| 6 | Human Portrait Builder | ⬜ | ✅ |
+| 5 | Fairness, transparency & candidate notification | ✅ done | ✅ |
+| 6 | Human Portrait Builder | ⬜ next | ✅ |
 | 7 | Today's Human experience | ⬜ | ✅ |
 | 8 | Human Archive, discovery & One Year Ago | ⬜ | ✅ |
 | 9 | Trust & safety | ⬜ | ✅ |
@@ -144,11 +144,43 @@ any of them wins outside ±15% of an equal share.
 `run_daily_draw`. It must be called at D-2 00:00 UTC, by `pg_cron` or an
 external scheduler. That belongs with Phase 5's notification timing.
 
-## Phase 5 — next
+## Phase 5 — Fairness, transparency & candidate notification ✅
 
-Fairness, transparency and candidate notification. The public "How selection
-works" page, the 12-hour acceptance window, and the scheduling that actually
-fires the draw.
+- `draw_invitations` — who was asked, when, and what they answered. Escalation
+  used to overwrite `selected_user_id`, so the record of who was actually asked
+  was lost; now it survives, and `expired` is kept distinct from `declined`
+  because only one of them was a decision.
+- 12-hour window enforced by the database. A late acceptance is refused — two
+  accepted humans for one cycle is the one thing Article 1.6 forbids outright.
+- `accept_selection()` / `decline_selection()` take no arguments, so they
+  cannot be aimed at anyone else. Declining asks the next backup immediately.
+- **Scheduling is live.** `pg_cron` runs the draw at 00:00 UTC for D+2,
+  notifies at 00:10, and sweeps expired invitations every 15 minutes.
+  `scheduler_status` records whether it installed, so an unscheduled cycle is
+  visible rather than silent.
+- "You were selected." screen and the public **How selection works** page,
+  open to guests, with every number pulled from `constants/constitution.ts`.
+
+**Security fix, found by probing rather than by review.** Every privileged
+function was executable by anonymous callers holding the publishable key that
+ships in the app — `escalate_draw` among them, which would have let anyone skip
+the selected candidate. Two causes: Postgres grants EXECUTE to `PUBLIC` on new
+functions, and Supabase additionally grants it to `anon` directly, so
+`revoke ... from anon` in one migration does nothing for the next function
+added. Fixed in `20260822080000` and `20260822090000`, and the default privilege
+is now revoked so a new function is closed until someone opens it.
+
+`npm run verify:privileges` probes the live database against an explicit
+allowlist and is the reason this cannot regress quietly.
+
+228 tests. New guards: the invitation copy may not say "Today's Human" in any
+locale, and neither `decline_selection` nor `expire_stale_invitations` may
+touch a single eligibility column.
+
+## Phase 6 — next
+
+The Human Portrait Builder. Guided prompts rather than a blank textbox, five to
+seven elements of the nine, photo upload, and the moderation handoff.
 
 ## Working agreements
 

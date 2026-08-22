@@ -159,5 +159,45 @@
       "underAge": "You must be at least 16.",
       "alreadyBeenHuman": "You have already had your day. One human, one day, forever."
     }
+  },
+  "invitation": {
+    "title": "You were selected.",
+    "body": "On {{date}}, the world will meet one person. The draw chose you. Nothing is published yet, and nothing will be unless you say yes.",
+    "windowLabel": "Time to answer",
+    "windowHint": "After that we ask the next person. Nothing happens to you either way.",
+    "accept": "Yes, I will do it",
+    "decline": "Not this time",
+    "declineNote": "Declining costs nothing. You stay in every future draw, exactly as you were.",
+    "whatHappensNext": "If you say yes, you will have a day to tell your story in your own words. You choose what to answer and what to leave out.",
+    "none": "No invitation right now",
+    "noneBody": "If the draw chooses you, you will find it here.",
+    "acceptFailed": "Could not accept. Please try again.",
+    "declineFailed": "Could not send your answer. Please try again.",
+    "tooLate": "This invitation has expired and the next person has been asked."
+  },
+  "howSelection": {
+    "title": "How selection works",
+    "heading": "How selection works",
+    "intro": "One person each day, chosen at random from everyone eligible. Here is exactly how, with nothing left out.",
+    "poolTitle": "Who is in the draw",
+    "poolBody": "Two days before each cycle, at midnight UTC, we freeze a list of everyone eligible. Eligible means: an active account, at least {{age}} years old, community rules accepted, verified as a real person, and choosing to take part. That is the whole list. Becoming eligible one minute after the freeze means waiting for the next day — which is what makes the draw reproducible.",
+    "drawTitle": "How the person is chosen",
+    "drawBody": "We record a hash of the frozen list and a cryptographically secure random seed, then rank every candidate by an HMAC of their identifier under that seed. The first is chosen; the next {{backups}} are backups. Everyone in the list has exactly the same chance.",
+    "acceptTitle": "Being asked",
+    "acceptBody": "The chosen person is told they were selected and has {{hours}} hours to answer. If they decline or do not answer, we ask the first backup, then the second, then the third. Declining and silence are treated the same way: nothing happens, and the person stays in every future draw.",
+    "onceTitle": "Once, and only once",
+    "onceBody": "Anyone who has been Today’s Human is removed from every future draw. There is no cooldown and no second turn. One human, one day, forever.",
+    "verifyTitle": "Checking our work",
+    "verifyBody": "After a cycle goes live we publish the pool hash and the seed. Anyone can recompute the ordering from them and confirm the person we published is the person the draw chose. The functions that do it are open to everyone, signed in or not.",
+    "neverTitle": "What never affects the draw",
+    "neverPay": "Paying us anything. There is no way to buy a better chance, and there never will be.",
+    "neverFollowers": "Follower counts. Nobody has followers here — the product has no such thing.",
+    "neverBoost": "Boosts, promotions or featured slots. None exist.",
+    "neverSponsor": "Sponsors. No sponsor can influence who appears.",
+    "neverInfluencer": "Being already famous. Existing fame is not an input to anything here.",
+    "neverAlgorithm": "Engagement, activity, or how interesting we think you are.",
+    "safetyTitle": "When someone is excluded",
+    "safetyBody": "Suspended and banned accounts are not in the pool, and a portrait is reviewed by a person before it is published. If a cycle cannot be filled in time, we publish nothing and say so rather than publishing someone unreviewed.",
+    "footer": "These rules come from our Product Constitution. The parts about fairness cannot be amended."
   }
 }

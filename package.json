@@ -22,7 +22,9 @@
     "db:push": "node scripts/db.mjs push",
     "db:list": "node scripts/db.mjs list",
     "db:types": "node scripts/db.mjs types",
-    "verify:draw": "node scripts/verify-draw.mjs"
+    "verify:draw": "node scripts/verify-draw.mjs",
+    "verify:privileges": "node scripts/verify-privileges.mjs",
+    "verify:live": "npm run verify:draw && npm run verify:privileges"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

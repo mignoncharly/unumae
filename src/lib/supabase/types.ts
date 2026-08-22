@@ -139,6 +139,29 @@ export type Database = {
         Args: { ids: string[] };
         Returns: string;
       };
+      /** The candidate's own answer. Takes no argument: it is about the caller. */
+      accept_selection: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      decline_selection: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      my_pending_invitation: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          invitation_id: string;
+          selection_date: string;
+          notified_at: string;
+          acceptance_deadline: string;
+          selection_status: SelectionStatus;
+        }[];
+      };
+      scheduler_installed: {
+        Args: Record<PropertyKey, never>;
+        Returns: { installed: boolean; detail: string; checked_at: string }[];
+      };
     };
     Enums: {
       account_status: AccountStatus;

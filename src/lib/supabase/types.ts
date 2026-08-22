@@ -31,6 +31,7 @@ export type ProfileRow = {
   birth_year: number;
   country_code: string;
   city: string | null;
+  city_hidden: boolean;
   languages: string[];
   avatar_path: string | null;
   bio_short: string | null;
@@ -59,6 +60,7 @@ export type ProfileInsert = {
 /** Columns the `authenticated` role may UPDATE. `birth_year` is not one. */
 export type ProfileUpdate = {
   wants_selection?: boolean | undefined;
+  city_hidden?: boolean | undefined;
   username?: string | undefined;
   display_name?: string | undefined;
   country_code?: string | undefined;
@@ -146,6 +148,7 @@ export type PortraitElementInsert = {
  */
 export type TodaysHumanRow = {
   draw_id: string;
+  portrait_id: string;
   selection_date: string;
   human_number: number | null;
   display_name: string;
@@ -185,11 +188,55 @@ export type ArchiveEntryRow = {
 };
 
 export type ArchiveHumanRow = ArchiveEntryRow & {
+  portrait_id: string | null;
   published_at: string | null;
 };
 
 export type AnniversaryRow = Omit<ArchiveEntryRow, 'city'> & {
   years_ago: number;
+};
+
+export type ReportTarget = 'portrait' | 'question' | 'profile';
+
+export type ReportReason =
+  | 'harassment'
+  | 'hate'
+  | 'sexual'
+  | 'violence'
+  | 'impersonation'
+  | 'spam'
+  | 'other';
+
+export type ModerationDecision = 'approved' | 'rejected';
+
+export type PortraitQueueRow = {
+  portrait_id: string;
+  draw_id: string;
+  selection_date: string;
+  display_name: string;
+  country_code: string;
+  photo_path: string | null;
+  submitted_at: string | null;
+  verification_level: VerificationLevel;
+  open_reports: number;
+};
+
+export type QuestionQueueRow = {
+  question_id: string;
+  draw_id: string;
+  body: string;
+  created_at: string;
+  /** Layer 2 structural signals, comma separated. Null when nothing tripped. */
+  auto_flags: string | null;
+};
+
+export type ReportQueueRow = {
+  report_id: string;
+  target_type: ReportTarget;
+  target_id: string;
+  reason: ReportReason;
+  note: string | null;
+  created_at: string;
 };
 
 export type Database = {
@@ -351,6 +398,76 @@ export type Database = {
       get_archive_years: {
         Args: Record<PropertyKey, never>;
         Returns: { year: number; humans: number }[];
+      };
+      is_moderator: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      report_content: {
+        Args: {
+          report_target_type: ReportTarget;
+          report_target_id: string;
+          report_reason: ReportReason;
+          report_note?: string | null;
+        };
+        Returns: string;
+      };
+      block_user: {
+        Args: { target_user: string };
+        Returns: boolean;
+      };
+      unblock_user: {
+        Args: { target_user: string };
+        Returns: boolean;
+      };
+      /** Everything we hold about the caller, as one document (Article 8.2). */
+      export_my_data: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      review_portrait: {
+        Args: {
+          target_portrait: string;
+          decision: ModerationDecision;
+          review_reason?: string | null;
+        };
+        Returns: boolean;
+      };
+      review_question: {
+        Args: {
+          target_question: string;
+          decision: ModerationDecision;
+          review_reason?: string | null;
+        };
+        Returns: boolean;
+      };
+      resolve_report: {
+        Args: {
+          target_report: string;
+          actioned: boolean;
+          resolution_note?: string | null;
+        };
+        Returns: boolean;
+      };
+      set_account_status: {
+        Args: {
+          target_user: string;
+          new_status: AccountStatus;
+          status_reason?: string | null;
+        };
+        Returns: boolean;
+      };
+      moderation_portrait_queue: {
+        Args: Record<PropertyKey, never>;
+        Returns: PortraitQueueRow[];
+      };
+      moderation_question_queue: {
+        Args: Record<PropertyKey, never>;
+        Returns: QuestionQueueRow[];
+      };
+      moderation_report_queue: {
+        Args: Record<PropertyKey, never>;
+        Returns: ReportQueueRow[];
       };
     };
     Enums: {

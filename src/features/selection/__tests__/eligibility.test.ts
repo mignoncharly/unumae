@@ -16,6 +16,7 @@ const eligibleProfile: ProfileRow = {
   birth_year: 1995,
   country_code: 'JP',
   city: null,
+  city_hidden: false,
   languages: ['ja', 'en'],
   avatar_path: null,
   bio_short: null,

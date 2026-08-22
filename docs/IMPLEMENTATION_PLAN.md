@@ -15,8 +15,8 @@ original). This file tracks status only.
 | 6 | Human Portrait Builder | ✅ done | ✅ |
 | 7 | Today's Human experience | ✅ done | ✅ |
 | 8 | Human Archive, discovery & One Year Ago | ✅ done | ✅ |
-| 9 | Trust & safety | ⬜ next | ✅ |
-| 10 | Notifications, localization & translation | ⬜ | ✅ |
+| 9 | Trust & safety | ✅ done | ✅ |
+| 10 | Notifications, localization & translation | ⬜ next | ✅ |
 | 11 | Analytics, sharing & landing web | ⬜ | ✅ |
 | 12 | Accessibility & offline | ⬜ | ✅ |
 | 13 | Testing & App Store readiness | ⬜ | ✅ |
@@ -254,10 +254,55 @@ archived portrait with its questions and answers, and no countdown.
 argument, no count read, and no function named `top_human`, `most_liked`,
 `trending`, `popular`, `leaderboard` or `ranking`.
 
-## Phase 9 — next
+## Phase 9 — Trust & safety ✅
 
-Trust & safety: the moderation queue, `content_reports` and `moderation_events`,
-the admin console, and liveness verification before publication.
+Seven tables: `moderators`, `content_reports`, `moderation_events`,
+`moderation_decisions`, `user_blocks`, `account_flags`, `app_settings`.
+
+**Moderation authority is not a profile column.** It lives in its own table, so
+no client GRANT can ever expose or grant it. Every moderator function refuses
+inside the database — the client decides what to show, never who may act.
+Getting the first wrong leaks a button; getting the second wrong leaks a
+capability.
+
+**Every decision is logged, and the log is append-only.** `moderation_events`
+records who acted, on what, and why. Nothing updates or deletes it, and no
+client role has any write on it. A decision nobody can review afterwards is a
+decision nobody can be held to.
+
+**Layer 2 screening is structural, not a word list.** Links, shouting, repeated
+characters, handle mentions. A list of forbidden words in a repository ages
+badly and misfires on the people it is meant to protect — semantic screening
+belongs to a service that can be corrected without a deployment. Nothing here
+rejects anything; it raises a flag so a human looks sooner.
+
+**Blocking now means something.** It was a row that changed nothing anybody
+could see. A blocked person's questions disappear from the blocker's view and
+stay visible to everyone else: blocking is a personal filter, not a moderation
+decision, and one person must not be able to remove another's words from the
+world by pressing a button.
+
+**Privacy.** `city_hidden` separates hiding from erasing — somebody who wants
+their city private this year and public next should not have to retype it.
+`export_my_data()` returns the rows themselves rather than a summary.
+
+**Liveness before publication** is written into `publish_due_cycles()` and
+switched off in `app_settings`, because no capture flow exists yet and turning
+it on would make every cycle a Quiet Day. The switch is recorded rather than
+remembered.
+
+Screens: `/admin` (portrait, question and report queues — plain, reliable, two
+decisions per item) and Settings → Privacy.
+
+333 tests. Also fixed a latent weakness in the older schema guards: they
+matched the **first** definition of a function, but `create or replace` means
+the last one wins — so they had been validating superseded SQL.
+
+## Phase 10 — next
+
+Notifications, localization and translation: push for the daily human, the
+selection invitation, and answered questions; plus translated user content that
+never replaces the original.
 
 ## Working agreements
 

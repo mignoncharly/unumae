@@ -21,12 +21,27 @@ const ALL_SQL = readdirSync(MIGRATIONS_DIR)
 
 const FLAT = ALL_SQL.replace(/\s+/g, ' ');
 
+/**
+ * The **last** definition, not the first.
+ *
+ * `create or replace` means a later migration supersedes an earlier one, so
+ * matching the first occurrence would test SQL that Postgres no longer runs —
+ * and a redefinition that broke Article 9.5 would pass unnoticed.
+ */
 function functionBody(name: string): string {
-  return (
-    new RegExp(
-      `function public\\.${name}\\([\\s\\S]*?as \\$\\$([\\s\\S]*?)\\$\\$;`
-    ).exec(ALL_SQL)?.[1] ?? ''
+  const pattern = new RegExp(
+    // Anchored on `create or replace`: a GRANT also contains
+    // "function public.<name>(", and matching that would scan forward into
+    // whatever body came next — in a different migration entirely.
+    `create or replace function public\\.${name}\\([\\s\\S]*?as \\$\\$([\\s\\S]*?)\\$\\$;`,
+    'g'
   );
+
+  let last = '';
+  for (const match of ALL_SQL.matchAll(pattern)) {
+    last = match[1] ?? '';
+  }
+  return last;
 }
 
 /**

@@ -22,6 +22,7 @@ import {
   useTodaysHuman,
   useVote,
 } from '@/features/daily-human/hooks';
+import { useReport } from '@/features/moderation/hooks';
 import { track } from '@/lib/analytics';
 import { useTheme } from '@/theme';
 
@@ -48,6 +49,7 @@ export default function TodayScreen() {
   const ask = useAskQuestion(drawId);
   const remember = useRemember(drawId);
   const vote = useVote(drawId);
+  const report = useReport();
 
   const [askOpen, setAskOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -177,7 +179,15 @@ export default function TodayScreen() {
             variant={remembered ? 'secondary' : 'primary'}
           />
 
-          <ReportAction onReport={() => setToast(t('report.submitted'))} />
+          <ReportAction
+            onReport={(reason) =>
+              requireAccount(() => {
+                report.mutate(['portrait', today.human.portrait_id, reason], {
+                  onSuccess: () => setToast(t('report.submitted')),
+                });
+              })
+            }
+          />
         </View>
 
         {/* You reach the end, and it is finished. */}

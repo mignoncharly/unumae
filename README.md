@@ -65,6 +65,6 @@ to say yes start sounding excellent.
 
 ## Status
 
-Phases 0–8 of 18 complete. Development runs in Expo Go on Android; Sign in with
+Phases 0–9 of 18 complete. Development runs in Expo Go on Android; Sign in with
 Apple needs a native build and hides itself until then. See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md)
 for detail and [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) for what is outstanding.

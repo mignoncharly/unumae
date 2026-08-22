@@ -20,6 +20,21 @@ const ALL_SQL = readdirSync(MIGRATIONS_DIR)
 
 const FLAT = ALL_SQL.replace(/\s+/g, ' ');
 
+/**
+ * The **last** definition, not the first. `create or replace` means a later
+ * migration supersedes an earlier one, so matching the first occurrence would
+ * test SQL that Postgres no longer runs.
+ */
+function functionBody(name: string): string {
+  const pattern = new RegExp(
+    `create or replace function public\\.${name}\\([\\s\\S]*?as \\$\\$([\\s\\S]*?)\\$\\$;`,
+    'g'
+  );
+  let last = '';
+  for (const match of ALL_SQL.matchAll(pattern)) last = match[1] ?? '';
+  return last;
+}
+
 function tableBody(name: string): string {
   return (
     new RegExp(`create table public\\.${name}[\\s\\S]*?\\n\\);`).exec(
@@ -87,10 +102,7 @@ describe('questions are moderated before they show (Article 8.1)', () => {
   });
 
   it('only ever returns approved questions', () => {
-    const getQuestions =
-      /function public\.get_questions[\s\S]*?as \$\$([\s\S]*?)\$\$;/.exec(
-        ALL_SQL
-      )?.[1];
+    const getQuestions = functionBody('get_questions');
 
     expect(getQuestions).toContain("q.status = 'approved'");
   });
@@ -108,10 +120,7 @@ describe('questions are moderated before they show (Article 8.1)', () => {
 
 describe('nothing goes live unreviewed (Article 1.12)', () => {
   it('publishes only cycles whose portrait a person approved', () => {
-    const publish =
-      /function public\.publish_due_cycles[\s\S]*?as \$\$([\s\S]*?)\$\$;/.exec(
-        ALL_SQL
-      )?.[1];
+    const publish = functionBody('publish_due_cycles');
 
     expect(publish).toContain("p.status = 'approved'");
     expect(publish).toContain("d.selection_status = 'ready'");
@@ -120,10 +129,7 @@ describe('nothing goes live unreviewed (Article 1.12)', () => {
   it('assigns the human number at publication, not at the draw', () => {
     // A cancelled cycle must not consume a number, or the Archive would have
     // gaps that mean nothing.
-    const publish =
-      /function public\.publish_due_cycles[\s\S]*?as \$\$([\s\S]*?)\$\$;/.exec(
-        ALL_SQL
-      )?.[1];
+    const publish = functionBody('publish_due_cycles');
 
     expect(publish).toContain("nextval('public.human_number_seq')");
   });

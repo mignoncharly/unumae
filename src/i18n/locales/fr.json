@@ -60,7 +60,10 @@
       "impersonation": "Usurpation d'identité",
       "spam": "Spam",
       "other": "Autre chose"
-    }
+    },
+    "failed": "Impossible d'envoyer ce signalement. Veuillez réessayer.",
+    "blockFailed": "Action impossible. Veuillez réessayer.",
+    "blocked": "Bloqué. Vous ne le verrez plus."
   },
   "archive": {
     "title": "L'Archive",
@@ -108,7 +111,8 @@
     "eligibility": "Le tirage quotidien",
     "communityRules": "Règles de la communauté",
     "portrait": "Votre portrait",
-    "project": "Projet Supabase"
+    "project": "Projet Supabase",
+    "moderation": "Modération"
   },
   "connection": {
     "checking": "Vérification…",
@@ -315,6 +319,48 @@
     "breakingRules": {
       "title": "Que se passe-t-il en cas de manquement",
       "body": "Dans l'ordre : le contenu est retiré, le compte est suspendu, puis banni. Les préjudices graves vont directement à la fin et, si nécessaire, aux autorités. Si vous êtes banni, vous sortez de tous les tirages futurs. Vous pouvez contester une décision et une autre personne la réexaminera."
+    }
+  },
+  "moderation": {
+    "title": "Modération",
+    "notModerator": "Réservé aux modérateurs.",
+    "portraits": "Portraits",
+    "questions": "Questions",
+    "reports": "Signalements",
+    "queueEmpty": "Rien en attente.",
+    "approve": "Approuver",
+    "reject": "Rejeter",
+    "dismiss": "Écarter",
+    "action": "Agir",
+    "approved": "Approuvé",
+    "rejected": "Rejeté",
+    "dismissed": "Écarté",
+    "actioned": "Traité",
+    "autoFlagged": "Signalé",
+    "noFlags": "Rien de signalé",
+    "verification": "Vérification",
+    "openReports_one": "{{count}} signalement ouvert",
+    "openReports_other": "{{count}} signalements ouverts",
+    "actionFailed": "L'action n'a pas abouti. Veuillez réessayer.",
+    "everyDecisionLogged": "Chaque décision est enregistrée avec son auteur et son motif. La modération est un pouvoir exercé sur des personnes, et une décision que personne ne peut relire est une décision dont personne ne répond."
+  },
+  "privacy": {
+    "title": "Confidentialité",
+    "heading": "Ce que nous savons de vous",
+    "countryNote": "Votre pays est la seule localisation que nous exigeons, et nous ne demandons jamais où vous êtes.",
+    "hideCity": "Masquer ma ville",
+    "hideCityHint": "Conserve {{city}} sans la publier. Vous pourrez la réafficher plus tard.",
+    "yourData": "Vos données",
+    "exportExplain": "Tout ce que nous détenons sur vous, en un seul document : votre profil, vos questions, votre bibliothèque et chaque invitation reçue.",
+    "export": "Copier mes données",
+    "exportCopied": "Copié dans le presse-papiers",
+    "exportFailed": "Impossible d'exporter vos données. Veuillez réessayer.",
+    "neverCollected": "Ce que nous ne collectons jamais",
+    "never": {
+      "location": "Votre localisation précise. Le pays uniquement, et jamais automatiquement.",
+      "contacts": "Vos contacts ou votre carnet d’adresses.",
+      "tracking": "Votre activité dans d'autres applications ou sur d'autres sites.",
+      "ads": "Quoi que ce soit à des fins publicitaires. Il n'y a pas de publicité ici."
     }
   }
 }

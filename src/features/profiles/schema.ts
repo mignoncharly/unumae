@@ -72,7 +72,11 @@ export const updateProfileSchema = createProfileSchema
   .partial()
   // Article 5.6 — leaving the draw is the user's decision, so this one
   // system-adjacent flag is user writable. selection_eligible is not.
-  .extend({ wants_selection: z.boolean().optional() });
+  .extend({
+    wants_selection: z.boolean().optional(),
+    // Article 8.2 — hiding is not deleting. The value stays; publication stops.
+    city_hidden: z.boolean().optional(),
+  });
 
 export type CreateProfileInput = z.infer<typeof createProfileSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

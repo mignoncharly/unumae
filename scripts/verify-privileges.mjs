@@ -73,6 +73,28 @@ const PROBES = [
   ['get_archive_countries', {}],
   ['get_archive_years', {}],
 
+  // Phase 9 — moderation and privacy. None of this is anonymous business.
+  ['is_moderator', {}],
+  [
+    'report_content',
+    {
+      report_target_type: 'question',
+      report_target_id: NIL_UUID,
+      report_reason: 'spam',
+    },
+  ],
+  ['block_user', { target_user: NIL_UUID }],
+  ['unblock_user', { target_user: NIL_UUID }],
+  ['export_my_data', {}],
+  ['review_portrait', { target_portrait: NIL_UUID, decision: 'approved' }],
+  ['review_question', { target_question: NIL_UUID, decision: 'approved' }],
+  ['resolve_report', { target_report: NIL_UUID, actioned: false }],
+  ['set_account_status', { target_user: NIL_UUID, new_status: 'active' }],
+  ['moderation_portrait_queue', {}],
+  ['moderation_question_queue', {}],
+  ['moderation_report_queue', {}],
+  ['record_liveness_check', { target_user: NIL_UUID }],
+
   // Phase 7 — reading is open, taking part is not.
   ['get_todays_human', {}],
   ['get_portrait_elements', { target_draw: NIL_UUID }],
@@ -97,6 +119,13 @@ const CLOSED_TABLES = [
   'questions',
   'question_votes',
   'remembers',
+  'moderators',
+  'content_reports',
+  'moderation_events',
+  'moderation_decisions',
+  'user_blocks',
+  'account_flags',
+  'app_settings',
 ];
 
 function loadEnv() {

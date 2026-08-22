@@ -60,7 +60,10 @@
       "impersonation": "Impersonation",
       "spam": "Spam",
       "other": "Something else"
-    }
+    },
+    "failed": "Could not send that report. Please try again.",
+    "blockFailed": "Could not do that. Please try again.",
+    "blocked": "Blocked. You will not see them again."
   },
   "archive": {
     "title": "The Archive",
@@ -108,7 +111,8 @@
     "eligibility": "The daily draw",
     "communityRules": "Community rules",
     "portrait": "Your portrait",
-    "project": "Supabase project"
+    "project": "Supabase project",
+    "moderation": "Moderation"
   },
   "connection": {
     "checking": "Checking…",
@@ -315,6 +319,48 @@
     "breakingRules": {
       "title": "What happens when rules are broken",
       "body": "In order: content is removed, the account is suspended, then banned. Serious harm skips to the end and, where required, to the authorities. If you are banned you are out of every future draw. You can dispute a decision and a different person will look at it."
+    }
+  },
+  "moderation": {
+    "title": "Moderation",
+    "notModerator": "This is for moderators.",
+    "portraits": "Portraits",
+    "questions": "Questions",
+    "reports": "Reports",
+    "queueEmpty": "Nothing waiting.",
+    "approve": "Approve",
+    "reject": "Reject",
+    "dismiss": "Dismiss",
+    "action": "Act on it",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "dismissed": "Dismissed",
+    "actioned": "Actioned",
+    "autoFlagged": "Flagged",
+    "noFlags": "Nothing flagged",
+    "verification": "Verification",
+    "openReports_one": "{{count}} open report",
+    "openReports_other": "{{count}} open reports",
+    "actionFailed": "That did not go through. Please try again.",
+    "everyDecisionLogged": "Every decision here is recorded with who made it and why. Moderation is a power over people, and a decision nobody can review is a decision nobody can be held to."
+  },
+  "privacy": {
+    "title": "Privacy",
+    "heading": "What we know about you",
+    "countryNote": "Your country is the only location we ever require, and we never ask where you are.",
+    "hideCity": "Hide my city",
+    "hideCityHint": "Keeps {{city}} saved but unpublished. You can show it again later.",
+    "yourData": "Your data",
+    "exportExplain": "Everything we hold about you, as one document: your profile, your questions, your library, and every invitation you received.",
+    "export": "Copy my data",
+    "exportCopied": "Copied to your clipboard",
+    "exportFailed": "Could not export your data. Please try again.",
+    "neverCollected": "What we never collect",
+    "never": {
+      "location": "Your precise location. Country only, and never automatically.",
+      "contacts": "Your contacts or address book.",
+      "tracking": "Your activity in other apps or on other websites.",
+      "ads": "Anything for advertising. There are no adverts here."
     }
   }
 }

@@ -12,15 +12,16 @@ Last updated: end of Phase 7.
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
 | 1 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. You said you will run it later — nothing else is waiting on it. | Testing Sign in with Apple. |
-| 2 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
+| 2 | **Appoint the first moderator** | `public.moderators` is service-role only by design — no client can grant moderation authority. Insert your own profile id there from the Supabase SQL editor once you have signed up, or ask me and I will run it. Until then the moderation queue is unreachable and no portrait can be approved. | Any cycle going live. |
+| 3 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
 
 ## Mine — code, and already planned
 
 | # | Item | Phase |
 | --- | --- | --- |
-| 1 | Moderation queue and admin console | 9 — next |
-| 2 | Liveness verification before publication (`VERIFICATION_POLICY.md`) | 9 |
-| 3 | Push notifications — the invitation is in-app only today | 10 |
+| 1 | Push notifications — the invitation is in-app only today | 10 — next |
+| 2 | Translated user content, never replacing the original | 10 |
+| 3 | Liveness capture flow — the gate exists and is switched off | later, native |
 | 4 | Optional audio/video portrait element | later |
 
 ## Needs a native build, not Expo Go
@@ -42,7 +43,7 @@ picking, storage — runs in Expo Go.
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | 14 applied |
+| Migrations | 17 applied |
 | Edge Functions | `delete-account` deployed; rejects no-auth 401, anon-key 401, GET 405 |
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min |
@@ -50,8 +51,8 @@ picking, storage — runs in Expo Go.
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Community rules | approved as written, live in EN/FR/DE |
 | Draw verification | database and independent implementation agree |
-| Anonymous access | 32 checks, matches the allowlist |
-| Tests | 306, with a pre-push hook |
+| Anonymous access | 52 checks, matches the allowlist |
+| Tests | 333, with a pre-push hook |
 
 ## Commands worth remembering
 

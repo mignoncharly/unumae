@@ -9,6 +9,7 @@ import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { signOut } from '@/features/auth/api';
 import { useSession } from '@/features/auth/useSession';
+import { useAmIModerator } from '@/features/moderation/hooks';
 import { useMyProfile } from '@/features/profiles/hooks';
 import { projectRef } from '@/lib/env';
 import { checkConnection, type ConnectionStatus } from '@/lib/supabase';
@@ -26,6 +27,7 @@ function AccountSection() {
   const { t } = useTranslation();
   const session = useSession();
   const { data: profile, isLoading } = useMyProfile();
+  const { data: isModerator } = useAmIModerator();
 
   if (session.status === 'loading') {
     return null;
@@ -72,6 +74,18 @@ function AccountSection() {
         }}
         variant="secondary"
       />
+
+      {/* Hiding this is a courtesy. Every action behind it is refused in the
+          database unless the caller is a moderator. */}
+      {isModerator ? (
+        <Link href="/admin">
+          <Text color="accent">{t('settings.moderation')} →</Text>
+        </Link>
+      ) : null}
+
+      <Link href="/settings/privacy">
+        <Text color="accent">{t('settings.privacy')} →</Text>
+      </Link>
 
       <Link href="/settings/community-rules">
         <Text color="accent">{t('settings.communityRules')} →</Text>

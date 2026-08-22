@@ -60,7 +60,10 @@
       "impersonation": "Identitätsmissbrauch",
       "spam": "Spam",
       "other": "Etwas anderes"
-    }
+    },
+    "failed": "Meldung konnte nicht gesendet werden. Bitte versuche es erneut.",
+    "blockFailed": "Das hat nicht geklappt. Bitte versuche es erneut.",
+    "blocked": "Blockiert. Du siehst diese Person nicht mehr."
   },
   "archive": {
     "title": "Das Archiv",
@@ -108,7 +111,8 @@
     "eligibility": "Die tägliche Auswahl",
     "communityRules": "Community-Richtlinien",
     "portrait": "Dein Porträt",
-    "project": "Supabase-Projekt"
+    "project": "Supabase-Projekt",
+    "moderation": "Moderation"
   },
   "connection": {
     "checking": "Wird geprüft…",
@@ -315,6 +319,48 @@
     "breakingRules": {
       "title": "Was bei Regelverstößen passiert",
       "body": "Der Reihe nach: Inhalt wird entfernt, das Konto gesperrt, dann verbannt. Schwerer Schaden führt sofort zum Ende und, wo nötig, zu den Behörden. Wer verbannt ist, ist aus jeder künftigen Auswahl. Du kannst eine Entscheidung anfechten, dann prüft sie eine andere Person."
+    }
+  },
+  "moderation": {
+    "title": "Moderation",
+    "notModerator": "Das ist für Moderatoren.",
+    "portraits": "Porträts",
+    "questions": "Fragen",
+    "reports": "Meldungen",
+    "queueEmpty": "Nichts offen.",
+    "approve": "Freigeben",
+    "reject": "Ablehnen",
+    "dismiss": "Verwerfen",
+    "action": "Handeln",
+    "approved": "Freigegeben",
+    "rejected": "Abgelehnt",
+    "dismissed": "Verworfen",
+    "actioned": "Bearbeitet",
+    "autoFlagged": "Markiert",
+    "noFlags": "Nichts markiert",
+    "verification": "Verifizierung",
+    "openReports_one": "{{count}} offene Meldung",
+    "openReports_other": "{{count}} offene Meldungen",
+    "actionFailed": "Das ging nicht durch. Bitte versuche es erneut.",
+    "everyDecisionLogged": "Jede Entscheidung wird mit Urheber und Grund festgehalten. Moderation ist Macht über Menschen, und eine Entscheidung, die niemand nachprüfen kann, ist eine, für die niemand einsteht."
+  },
+  "privacy": {
+    "title": "Datenschutz",
+    "heading": "Was wir über dich wissen",
+    "countryNote": "Dein Land ist der einzige Ort, den wir je verlangen, und wir fragen nie, wo du bist.",
+    "hideCity": "Meine Stadt verbergen",
+    "hideCityHint": "Behält {{city}} gespeichert, aber unveröffentlicht. Du kannst sie später wieder zeigen.",
+    "yourData": "Deine Daten",
+    "exportExplain": "Alles, was wir über dich haben, in einem Dokument: dein Profil, deine Fragen, deine Bibliothek und jede Einladung, die du bekommen hast.",
+    "export": "Meine Daten kopieren",
+    "exportCopied": "In die Zwischenablage kopiert",
+    "exportFailed": "Deine Daten konnten nicht exportiert werden. Bitte versuche es erneut.",
+    "neverCollected": "Was wir nie erheben",
+    "never": {
+      "location": "Deinen genauen Standort. Nur das Land, und nie automatisch.",
+      "contacts": "Deine Kontakte oder dein Adressbuch.",
+      "tracking": "Deine Aktivität in anderen Apps oder auf anderen Websites.",
+      "ads": "Irgendetwas für Werbung. Hier gibt es keine Werbung."
     }
   }
 }

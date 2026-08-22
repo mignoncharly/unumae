@@ -68,6 +68,12 @@ export default function SettingsScreen() {
           <Link href="/dev/tokens">
             <Text color="accent">{t('settings.designTokens')} →</Text>
           </Link>
+          <Link href="/dev/components">
+            <Text color="accent">{t('settings.components')} →</Text>
+          </Link>
+          <Link href="/dev/preview">
+            <Text color="accent">{t('settings.uxPreview')} →</Text>
+          </Link>
         </View>
       </View>
     </Screen>

@@ -20,7 +20,38 @@
     "quietDayBody": "Aucun Human n'est publié aujourd'hui. Vous pouvez rencontrer quelqu'un dans l'Archive.",
     "empty": "Le Human du jour n'est pas encore en ligne.",
     "endOfStory": "Vous êtes arrivé à la fin.",
-    "meetRandom": "Rencontrer un Human au hasard"
+    "meetRandom": "Rencontrer un Human au hasard",
+    "selectingTomorrow": "Sélection du human de demain…"
+  },
+  "questions": {
+    "title": "Questions",
+    "ask": "Poser une question",
+    "askThis": "Poser celle-ci",
+    "placeholder": "Que souhaitez-vous demander ?",
+    "remaining": "{{count}} caractères restants",
+    "empty": "Aucune question pour l'instant. La vôtre peut être la première.",
+    "answered": "Répondu"
+  },
+  "remember": {
+    "action": "Se souvenir de ce Human",
+    "remembered": "Mémorisé",
+    "library": "Les Humans dont je me souviens",
+    "empty": "Vous ne vous souvenez encore de personne."
+  },
+  "report": {
+    "action": "Signaler",
+    "title": "Signaler ce contenu",
+    "block": "Bloquer cet utilisateur",
+    "submitted": "Merci. Notre équipe va examiner ce signalement.",
+    "reasons": {
+      "harassment": "Harcèlement ou intimidation",
+      "hate": "Discours haineux",
+      "sexual": "Contenu sexuel",
+      "violence": "Violence ou automutilation",
+      "impersonation": "Usurpation d'identité",
+      "spam": "Spam",
+      "other": "Autre chose"
+    }
   },
   "archive": {
     "title": "L'Archive",
@@ -45,7 +76,9 @@
     "developer": "Développeur",
     "designTokens": "Design tokens",
     "environment": "Environnement",
-    "connection": "Connexion Supabase"
+    "connection": "Connexion Supabase",
+    "components": "Composants",
+    "uxPreview": "Aperçu UX"
   },
   "connection": {
     "checking": "Vérification…",

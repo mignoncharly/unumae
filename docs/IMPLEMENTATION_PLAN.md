@@ -8,8 +8,8 @@ original). This file tracks status only.
 | --- | --- | --- | --- |
 | 0 | Product Constitution | ✅ done | ✅ |
 | 1 | Foundation & project architecture | ✅ done | ✅ |
-| 2 | Design system + UX prototype | ⬜ next | ✅ |
-| 3 | Authentication & user profile | ⬜ | ✅ |
+| 2 | Design system + UX prototype | ✅ done | ✅ |
+| 3 | Authentication & user profile | ⬜ next | ✅ |
 | 4 | Eligibility & daily selection engine | ⬜ | ✅ |
 | 5 | Fairness, transparency & candidate notification | ⬜ | ✅ |
 | 6 | Human Portrait Builder | ⬜ | ✅ |
@@ -60,13 +60,35 @@ Phase 1 "done" criteria from the plan:
 | Run the tests | ✅ `npm test` |
 | Build an iOS development build | ⏳ requires macOS or EAS Build |
 
-## Phase 2 — next
+## Phase 2 — Design system + UX prototype ✅
 
-Design system and UX prototype: refine the tokens against real portraits, and
-build the component set — Button, Text, Avatar, HumanPortrait, CountryBadge,
-QuestionCard, Timer, EmptyState, Skeleton, Sheet, Toast, ErrorState,
-LanguageSelector, ReportAction. Text, Button, Screen and LanguageSelector exist
-in draft form from Phase 1.
+Direction fixed as **editorial · documentary · premium · calm** and written down
+in `docs/DESIGN_SYSTEM.md`.
+
+All sixteen components built: Text, Button, Screen, Avatar, Skeleton,
+EmptyState, ErrorState, Sheet, Toast, CountryBadge, Timer, HumanPortrait,
+SelectingHuman, QuestionCard, ReportAction, LanguageSelector.
+
+Two developer surfaces, both reachable from Settings:
+
+- **Components** — every component with realistic states.
+- **UX preview** — a complete fabricated Today's Human (Aya, Kyoto, HUMAN #0128)
+  so the editorial direction can be judged before Phase 7 builds the real thing.
+
+Component testing starts here: 19 render tests, including two that fail the
+build if a downvote affordance or a guest vote ever appears.
+
+Also in this phase: Supabase credentials wired and the connection verified
+against the live project, `eas.json` with development / staging / production
+profiles, and a fix to the Phase 1 connection probe, which read local storage
+and so could not fail.
+
+## Phase 3 — next
+
+Authentication and user profile. Sign in with Apple first, email magic link
+second, no classic passwords. The `profiles` table from `docs/DATABASE.md`, with
+RLS from the first migration. Guest viewing must stay a permanent right
+(Article 6.1) — the sign-in screen is never a gate.
 
 ## Working agreements
 

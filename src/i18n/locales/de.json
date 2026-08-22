@@ -20,7 +20,38 @@
     "quietDayBody": "Heute wird kein Human veröffentlicht. Du kannst stattdessen jemanden im Archiv treffen.",
     "empty": "Der Human des Tages ist noch nicht live.",
     "endOfStory": "Du hast das Ende erreicht.",
-    "meetRandom": "Einen zufälligen Human treffen"
+    "meetRandom": "Einen zufälligen Human treffen",
+    "selectingTomorrow": "Der Human von morgen wird ausgewählt…"
+  },
+  "questions": {
+    "title": "Fragen",
+    "ask": "Frage stellen",
+    "askThis": "Diese fragen",
+    "placeholder": "Was möchtest du fragen?",
+    "remaining": "Noch {{count}} Zeichen",
+    "empty": "Noch keine Fragen. Deine kann die erste sein.",
+    "answered": "Beantwortet"
+  },
+  "remember": {
+    "action": "An diesen Human erinnern",
+    "remembered": "Gemerkt",
+    "library": "Humans, an die ich mich erinnere",
+    "empty": "Du hast dir noch niemanden gemerkt."
+  },
+  "report": {
+    "action": "Melden",
+    "title": "Diesen Inhalt melden",
+    "block": "Diese Person blockieren",
+    "submitted": "Danke. Unser Team prüft das.",
+    "reasons": {
+      "harassment": "Belästigung oder Mobbing",
+      "hate": "Hassrede",
+      "sexual": "Sexuelle Inhalte",
+      "violence": "Gewalt oder Selbstverletzung",
+      "impersonation": "Identitätsmissbrauch",
+      "spam": "Spam",
+      "other": "Etwas anderes"
+    }
   },
   "archive": {
     "title": "Das Archiv",
@@ -45,7 +76,9 @@
     "developer": "Entwickler",
     "designTokens": "Design-Tokens",
     "environment": "Umgebung",
-    "connection": "Supabase-Verbindung"
+    "connection": "Supabase-Verbindung",
+    "components": "Komponenten",
+    "uxPreview": "UX-Vorschau"
   },
   "connection": {
     "checking": "Wird geprüft…",

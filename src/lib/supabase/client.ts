@@ -38,20 +38,35 @@ export type ConnectionStatus =
   'not-configured' | 'checking' | 'connected' | 'failed';
 
 /**
- * A cheap reachability probe used by Settings → Supabase connection, which is
- * one of the Phase 1 "done" criteria. It deliberately touches auth rather than
- * a table, so it keeps working before any table exists.
+ * Reachability probe used by Settings → Supabase connection.
+ *
+ * It hits GoTrue's /health over the network on purpose. `auth.getSession()`
+ * would be cheaper but reads local storage, so it reports success on a plane
+ * with no signal — a probe that cannot fail is not a probe.
+ *
+ * /health is chosen over a table query so it keeps working before any table
+ * exists, and over /rest/v1/ which requires a secret key.
  */
-export async function checkConnection(): Promise<ConnectionStatus> {
+export async function checkConnection(
+  timeoutMs = 5000
+): Promise<ConnectionStatus> {
   if (!isConfigured) {
     return 'not-configured';
   }
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
   try {
-    const { error } = await getSupabase().auth.getSession();
-    return error ? 'failed' : 'connected';
+    const response = await fetch(`${env.supabaseUrl}/auth/v1/health`, {
+      headers: { apikey: env.supabaseAnonKey },
+      signal: controller.signal,
+    });
+    return response.ok ? 'connected' : 'failed';
   } catch {
     return 'failed';
+  } finally {
+    clearTimeout(timer);
   }
 }
 

@@ -20,7 +20,38 @@
     "quietDayBody": "No Human is being published today. You can meet someone from the Archive instead.",
     "empty": "Today's Human is not live yet.",
     "endOfStory": "You have reached the end.",
-    "meetRandom": "Meet a random Human"
+    "meetRandom": "Meet a random Human",
+    "selectingTomorrow": "Selecting tomorrow's human…"
+  },
+  "questions": {
+    "title": "Questions",
+    "ask": "Ask",
+    "askThis": "Ask this",
+    "placeholder": "What would you like to ask?",
+    "remaining": "{{count}} characters left",
+    "empty": "No questions yet. Yours can be the first.",
+    "answered": "Answered"
+  },
+  "remember": {
+    "action": "Remember this Human",
+    "remembered": "Remembered",
+    "library": "Humans I remember",
+    "empty": "You have not remembered anyone yet."
+  },
+  "report": {
+    "action": "Report",
+    "title": "Report this content",
+    "block": "Block this user",
+    "submitted": "Thank you. Our team will review this.",
+    "reasons": {
+      "harassment": "Harassment or bullying",
+      "hate": "Hate speech",
+      "sexual": "Sexual content",
+      "violence": "Violence or self-harm",
+      "impersonation": "Impersonation",
+      "spam": "Spam",
+      "other": "Something else"
+    }
   },
   "archive": {
     "title": "The Archive",
@@ -45,7 +76,9 @@
     "developer": "Developer",
     "designTokens": "Design tokens",
     "environment": "Environment",
-    "connection": "Supabase connection"
+    "connection": "Supabase connection",
+    "components": "Components",
+    "uxPreview": "UX preview"
   },
   "connection": {
     "checking": "Checking…",

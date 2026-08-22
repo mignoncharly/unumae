@@ -62,4 +62,5 @@ to say yes start sounding excellent.
 
 ## Status
 
-Phase 1 of 18 complete. See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md).
+Phases 0–5 of 18 complete. See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md)
+for detail and [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) for what is outstanding.

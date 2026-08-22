@@ -32,6 +32,7 @@ export type ProfileRow = {
   country_code: string;
   city: string | null;
   city_hidden: boolean;
+  locale: string;
   languages: string[];
   avatar_path: string | null;
   bio_short: string | null;
@@ -61,6 +62,7 @@ export type ProfileInsert = {
 export type ProfileUpdate = {
   wants_selection?: boolean | undefined;
   city_hidden?: boolean | undefined;
+  locale?: string | undefined;
   username?: string | undefined;
   display_name?: string | undefined;
   country_code?: string | undefined;
@@ -468,6 +470,40 @@ export type Database = {
       moderation_report_queue: {
         Args: Record<PropertyKey, never>;
         Returns: ReportQueueRow[];
+      };
+      register_push_token: {
+        Args: { push_token: string; device_platform: 'ios' | 'android' };
+        Returns: boolean;
+      };
+      unregister_push_token: {
+        Args: { push_token: string };
+        Returns: boolean;
+      };
+      set_notification_settings: {
+        Args: {
+          daily: boolean;
+          selected: boolean;
+          answered: boolean;
+          anniversary: boolean;
+        };
+        Returns: boolean;
+      };
+      get_notification_settings: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          daily: boolean;
+          selected: boolean;
+          answered: boolean;
+          anniversary: boolean;
+        }[];
+      };
+      /** Added alongside the original, never in place of it (Article 9.6). */
+      get_portrait_translations: {
+        Args: { target_draw: string; target_locale: string };
+        Returns: {
+          element_key: PortraitElementKeyEnum;
+          translated_text: string;
+        }[];
       };
     };
     Enums: {

@@ -45,6 +45,7 @@ const ANON_ALLOWED = new Set([
   'get_anniversaries',
   'get_archive_countries',
   'get_archive_years',
+  'get_portrait_translations',
 ]);
 
 const PROBES = [
@@ -95,6 +96,31 @@ const PROBES = [
   ['moderation_report_queue', {}],
   ['record_liveness_check', { target_user: NIL_UUID }],
 
+  // Phase 10 — reading a translation is public; everything else is not.
+  ['get_portrait_translations', { target_draw: NIL_UUID, target_locale: 'fr' }],
+  ['get_notification_settings', {}],
+  [
+    'set_notification_settings',
+    { daily: false, selected: true, answered: true, anniversary: false },
+  ],
+  ['register_push_token', { push_token: 'probe', device_platform: 'ios' }],
+  ['unregister_push_token', { push_token: 'probe' }],
+  ['notifications_due', {}],
+  [
+    'record_notification_sent',
+    { target_user: NIL_UUID, sent_category: 'daily', key: 'probe' },
+  ],
+  [
+    'record_translation',
+    {
+      target_portrait: NIL_UUID,
+      target_element: 'introduction',
+      target_locale: 'fr',
+      text_value: 'probe',
+      translation_engine: 'probe',
+    },
+  ],
+
   // Phase 7 — reading is open, taking part is not.
   ['get_todays_human', {}],
   ['get_portrait_elements', { target_draw: NIL_UUID }],
@@ -126,6 +152,10 @@ const CLOSED_TABLES = [
   'user_blocks',
   'account_flags',
   'app_settings',
+  'push_tokens',
+  'notification_settings',
+  'notification_log',
+  'portrait_element_translations',
 ];
 
 function loadEnv() {

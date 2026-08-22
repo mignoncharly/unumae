@@ -140,3 +140,30 @@ export async function doIRemember(drawId: string): Promise<boolean> {
   }
   return data ?? false;
 }
+
+/**
+ * Translations of a published portrait, keyed by element.
+ *
+ * Returned separately from the original on purpose: there is no code path that
+ * can substitute one for the other, because they come from different functions
+ * (Article 9.6).
+ */
+export async function getPortraitTranslations(
+  drawId: string,
+  locale: string
+): Promise<Record<string, string>> {
+  const { data, error } = await getSupabase().rpc('get_portrait_translations', {
+    target_draw: drawId,
+    target_locale: locale,
+  });
+
+  // A missing translation is not worth failing a screen for: the original is
+  // always there.
+  if (error) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    (data ?? []).map((row) => [row.element_key, row.translated_text])
+  );
+}

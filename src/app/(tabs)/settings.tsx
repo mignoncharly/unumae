@@ -83,6 +83,10 @@ function AccountSection() {
         </Link>
       ) : null}
 
+      <Link href="/settings/notifications">
+        <Text color="accent">{t('settings.notifications')} →</Text>
+      </Link>
+
       <Link href="/settings/privacy">
         <Text color="accent">{t('settings.privacy')} →</Text>
       </Link>

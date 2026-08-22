@@ -5,6 +5,14 @@
 -- only the draw id, so a client reporting a portrait would have had to send the
 -- wrong identifier under the right label — a mismatch nobody would notice until
 -- a moderator opened a report that pointed at nothing.
+--
+-- `create or replace` cannot change a function's return type — Postgres rejects
+-- it with "cannot change return type of existing function", because the OUT
+-- parameters are part of the identity. Both have to be dropped and recreated,
+-- which also drops their grants, so those are restored at the bottom.
+
+drop function if exists public.get_todays_human();
+drop function if exists public.get_human(uuid);
 
 create or replace function public.get_todays_human()
 returns table (
@@ -79,3 +87,11 @@ as $$
     and d.selection_status in ('live', 'completed')
     and d.human_number is not null;
 $$;
+
+-- Grants do not survive a drop, so they are restored here. Both readers are
+-- part of what a guest sees (Article 6.1).
+revoke execute on function public.get_todays_human() from public;
+revoke execute on function public.get_human(uuid) from public;
+
+grant execute on function public.get_todays_human() to anon, authenticated;
+grant execute on function public.get_human(uuid) to anon, authenticated;

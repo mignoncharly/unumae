@@ -112,7 +112,8 @@
     "communityRules": "Community rules",
     "portrait": "Your portrait",
     "project": "Supabase project",
-    "moderation": "Moderation"
+    "moderation": "Moderation",
+    "notifications": "Notifications"
   },
   "connection": {
     "checking": "Checking…",
@@ -362,5 +363,41 @@
       "tracking": "Your activity in other apps or on other websites.",
       "ads": "Anything for advertising. There are no adverts here."
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "heading": "What we may tell you",
+    "intro": "Four things, and nothing else. We will never message you to bring you back.",
+    "enable": "Allow notifications",
+    "enabled": "Notifications are on",
+    "declined": "That is fine — nothing here depends on them.",
+    "needsBuild": "Push notifications need a development build. They cannot work in Expo Go.",
+    "unsupported": "Push notifications are not available on this device.",
+    "registerFailed": "Could not register this device. Please try again.",
+    "saveFailed": "Could not save that. Please try again.",
+    "promise": "No streaks, no reminders, no \"come back\". If a category is off, we do not contact you about it at all.",
+    "categories": {
+      "daily": {
+        "label": "Today's Human",
+        "example": "Meet today’s Human."
+      },
+      "selected": {
+        "label": "Being selected",
+        "example": "You were selected."
+      },
+      "answered": {
+        "label": "Your question answered",
+        "example": "Aya answered your question."
+      },
+      "anniversary": {
+        "label": "One year ago",
+        "example": "One year ago today, the world met Maria."
+      }
+    }
+  },
+  "translation": {
+    "showTranslated": "Read a translation",
+    "showOriginal": "Read the original",
+    "translated": "Translated. The original is one tap away."
   }
 }

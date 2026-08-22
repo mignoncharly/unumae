@@ -112,7 +112,8 @@
     "communityRules": "Règles de la communauté",
     "portrait": "Votre portrait",
     "project": "Projet Supabase",
-    "moderation": "Modération"
+    "moderation": "Modération",
+    "notifications": "Notifications"
   },
   "connection": {
     "checking": "Vérification…",
@@ -362,5 +363,41 @@
       "tracking": "Votre activité dans d'autres applications ou sur d'autres sites.",
       "ads": "Quoi que ce soit à des fins publicitaires. Il n'y a pas de publicité ici."
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "heading": "Ce que nous pouvons vous dire",
+    "intro": "Quatre choses, et rien d'autre. Nous ne vous écrirons jamais pour vous faire revenir.",
+    "enable": "Autoriser les notifications",
+    "enabled": "Notifications activées",
+    "declined": "C'est très bien — rien ici n'en dépend.",
+    "needsBuild": "Les notifications push nécessitent un build de développement. Elles ne fonctionnent pas dans Expo Go.",
+    "unsupported": "Les notifications push ne sont pas disponibles sur cet appareil.",
+    "registerFailed": "Impossible d'enregistrer cet appareil. Veuillez réessayer.",
+    "saveFailed": "Impossible d'enregistrer. Veuillez réessayer.",
+    "promise": "Pas de séries, pas de rappels, pas de « revenez ». Si une catégorie est désactivée, nous ne vous contactons pas du tout à ce sujet.",
+    "categories": {
+      "daily": {
+        "label": "Le Human du jour",
+        "example": "Rencontrez le Human du jour."
+      },
+      "selected": {
+        "label": "Être sélectionné",
+        "example": "Vous avez été sélectionné."
+      },
+      "answered": {
+        "label": "Réponse à votre question",
+        "example": "Aya a répondu à votre question."
+      },
+      "anniversary": {
+        "label": "Il y a un an",
+        "example": "Il y a un an aujourd'hui, le monde rencontrait Maria."
+      }
+    }
+  },
+  "translation": {
+    "showTranslated": "Lire une traduction",
+    "showOriginal": "Lire l'original",
+    "translated": "Traduit. L'original est à un geste d'ici."
   }
 }

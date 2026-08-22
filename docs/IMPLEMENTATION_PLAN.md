@@ -16,8 +16,8 @@ original). This file tracks status only.
 | 7 | Today's Human experience | ✅ done | ✅ |
 | 8 | Human Archive, discovery & One Year Ago | ✅ done | ✅ |
 | 9 | Trust & safety | ✅ done | ✅ |
-| 10 | Notifications, localization & translation | ⬜ next | ✅ |
-| 11 | Analytics, sharing & landing web | ⬜ | ✅ |
+| 10 | Notifications, localization & translation | ✅ done | ✅ |
+| 11 | Analytics, sharing & landing web | ⬜ next | ✅ |
 | 12 | Accessibility & offline | ⬜ | ✅ |
 | 13 | Testing & App Store readiness | ⬜ | ✅ |
 | 14 | Internal Alpha, Private Beta & retention | ⬜ | ✅ |
@@ -298,11 +298,41 @@ decisions per item) and Settings → Privacy.
 matched the **first** definition of a function, but `create or replace` means
 the last one wins — so they had been validating superseded SQL.
 
-## Phase 10 — next
+## Phase 10 — Notifications, localization & translation ✅
 
-Notifications, localization and translation: push for the daily human, the
-selection invitation, and answered questions; plus translated user content that
-never replaces the original.
+The plan named the thing to avoid: **"COME BACK!!! 🔥🔥🔥"**. So the constraint
+is structural rather than a matter of tone.
+
+- **Four categories, and the enum has exactly four values**: daily, selected,
+  answered, anniversary. A test fails on any of `reengage`, `streak`,
+  `reminder`, `inactive`, `winback`, `promo` appearing anywhere in the schema.
+- **Defaults are conservative**: the two categories about *you* (selected,
+  answered) are on; the two about the product (daily, anniversary) are off
+  until asked for.
+- `notifications_due()` returns recipients, a category and a **locale** —
+  never a written sentence. The copy lives with the rest of the product's
+  words, so a notification cannot drift from the language everything else uses.
+- Every send is recorded with a dedupe key, so a retried job cannot send twice
+  and anybody can check how often this product contacts a person.
+- Nobody is told about their own day.
+
+**Translation is additive by construction.** `portrait_element_translations` is
+a separate table keyed by locale, and `get_portrait_elements()` knows nothing
+about it. There is no code path that can return a translation *instead of* the
+original, because they come from different functions. The reader chooses, the
+label always says which they are reading, and it opens on the original.
+
+`send-notifications` Edge Function written: reads the queue under the service
+role, composes in the reader's language, posts to Expo, and records each send
+individually so a partial failure leaves an accurate log.
+
+355 tests.
+
+## Phase 11 — next
+
+Analytics, sharing and the landing web page: the event list from the plan,
+shareable cards, deep links, and a page that makes a shared link
+understandable without installing anything.
 
 ## Working agreements
 

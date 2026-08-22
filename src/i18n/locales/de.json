@@ -112,7 +112,8 @@
     "communityRules": "Community-Richtlinien",
     "portrait": "Dein Porträt",
     "project": "Supabase-Projekt",
-    "moderation": "Moderation"
+    "moderation": "Moderation",
+    "notifications": "Mitteilungen"
   },
   "connection": {
     "checking": "Wird geprüft…",
@@ -362,5 +363,41 @@
       "tracking": "Deine Aktivität in anderen Apps oder auf anderen Websites.",
       "ads": "Irgendetwas für Werbung. Hier gibt es keine Werbung."
     }
+  },
+  "notifications": {
+    "title": "Mitteilungen",
+    "heading": "Was wir dir sagen dürfen",
+    "intro": "Vier Dinge, und sonst nichts. Wir schreiben dir nie, um dich zurückzuholen.",
+    "enable": "Mitteilungen erlauben",
+    "enabled": "Mitteilungen sind an",
+    "declined": "Alles gut — nichts hier hängt davon ab.",
+    "needsBuild": "Push-Mitteilungen brauchen einen Development Build. In Expo Go funktionieren sie nicht.",
+    "unsupported": "Push-Mitteilungen sind auf diesem Gerät nicht verfügbar.",
+    "registerFailed": "Dieses Gerät konnte nicht registriert werden. Bitte versuche es erneut.",
+    "saveFailed": "Konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "promise": "Keine Serien, keine Erinnerungen, kein „komm zurück\". Ist eine Kategorie aus, melden wir uns dazu gar nicht.",
+    "categories": {
+      "daily": {
+        "label": "Today’s Human",
+        "example": "Lerne den Human von heute kennen."
+      },
+      "selected": {
+        "label": "Ausgewählt werden",
+        "example": "Du wurdest ausgewählt."
+      },
+      "answered": {
+        "label": "Antwort auf deine Frage",
+        "example": "Aya hat deine Frage beantwortet."
+      },
+      "anniversary": {
+        "label": "Vor einem Jahr",
+        "example": "Heute vor einem Jahr lernte die Welt Maria kennen."
+      }
+    }
+  },
+  "translation": {
+    "showTranslated": "Übersetzung lesen",
+    "showOriginal": "Original lesen",
+    "translated": "Übersetzt. Das Original ist einen Tipp entfernt."
   }
 }

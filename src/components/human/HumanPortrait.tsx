@@ -1,4 +1,6 @@
-import { Image, View } from 'react-native';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Image, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { useTheme } from '@/theme';
@@ -28,6 +30,11 @@ export interface HumanPortraitProps {
   /** Optional: age is never required (Article 8.2). */
   age?: number | null;
   elements: PortraitElement[];
+  /**
+   * Translations of the answers, keyed by element id. Additive by design: the
+   * original is always present and the reader chooses (Article 9.6).
+   */
+  translations?: Record<string, string>;
   /** Live humans show a countdown; archived ones show nothing. */
   showTimer?: boolean;
 }
@@ -44,9 +51,14 @@ export function HumanPortrait({
   photoUri,
   age,
   elements,
+  translations,
   showTimer = false,
 }: HumanPortraitProps) {
   const theme = useTheme();
+  const { t } = useTranslation();
+  const [showTranslation, setShowTranslation] = useState(false);
+  const hasTranslations =
+    translations !== undefined && Object.keys(translations).length > 0;
 
   return (
     <View style={{ gap: theme.spacing.xl }}>
@@ -80,15 +92,46 @@ export function HumanPortrait({
         />
       ) : null}
 
+      {/*
+        Article 9.6 — a translation is added, never substituted. Somebody's own
+        words in their own language are part of who they are, so the toggle
+        starts on the original and the label always says which you are reading.
+      */}
+      {hasTranslations ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ selected: showTranslation }}
+          onPress={() => setShowTranslation((previous) => !previous)}
+          style={{ minHeight: 44, justifyContent: 'center' }}
+        >
+          <Text color="accent" variant="footnote">
+            {showTranslation
+              ? t('translation.showOriginal')
+              : t('translation.showTranslated')}
+          </Text>
+        </Pressable>
+      ) : null}
+
       <View style={{ gap: theme.spacing.xxl }}>
-        {elements.map((element) => (
-          <View key={element.id} style={{ gap: theme.spacing.sm }}>
-            <Text color="textTertiary" variant="footnote">
-              {element.prompt.toUpperCase()}
-            </Text>
-            <Text variant="callout">{element.answer}</Text>
-          </View>
-        ))}
+        {elements.map((element) => {
+          const translated = translations?.[element.id];
+          const reading =
+            showTranslation && translated ? translated : element.answer;
+
+          return (
+            <View key={element.id} style={{ gap: theme.spacing.sm }}>
+              <Text color="textTertiary" variant="footnote">
+                {element.prompt.toUpperCase()}
+              </Text>
+              <Text variant="callout">{reading}</Text>
+              {showTranslation && translated ? (
+                <Text color="textTertiary" variant="caption">
+                  {t('translation.translated')}
+                </Text>
+              ) : null}
+            </View>
+          );
+        })}
       </View>
     </View>
   );

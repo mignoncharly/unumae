@@ -17,6 +17,7 @@ const eligibleProfile: ProfileRow = {
   country_code: 'JP',
   city: null,
   city_hidden: false,
+  locale: 'en',
   languages: ['ja', 'en'],
   avatar_path: null,
   bio_short: null,

@@ -1,71 +1,76 @@
-# Environments
+# Environment
 
-Three environments, three Supabase projects. Never one project for everything.
+**One Supabase project. One EAS project. One bundle identifier.**
 
-## The shape
+Decided 2026-08-22, superseding the three-environment design in earlier
+revisions of this file.
 
-| `APP_ENV` | App name | Bundle identifier | Scheme | Supabase project |
-| --- | --- | --- | --- | --- |
-| `development` | ONE HUMAN (Dev) | `com.unumae.app.dev` | `onehuman-dev` | dev project |
-| `staging` | ONE HUMAN (Staging) | `com.unumae.app.staging` | `onehuman-staging` | staging project |
-| `production` | ONE HUMAN | `com.unumae.app` | `onehuman` | production project |
+## The setup
 
-The production bundle identifier is the one registered in the Apple Developer
-account. It is not ours to choose: Sign in with Apple fails if it does not
-match exactly. Dev and staging are suffixes so all three install side by side.
-
-**Each bundle identifier needs its own App ID in the Apple Developer account,
-with the Sign in with Apple capability enabled**, or auth only works in
-production builds.
-
-## Where credentials live
-
-| Environment | Where the Supabase keys come from |
+| Thing | Value |
 | --- | --- |
-| development | `.env`, local, gitignored |
-| staging | EAS environment variables, `staging` profile |
-| production | EAS environment variables, `production` profile |
+| Supabase project | `qpicjsjxdblrxdrdibge` |
+| EAS project | `@mignoncharly/unumae` (`75cfb922-5d90-4436-965d-e67672558ed3`) |
+| iOS bundle identifier | `com.unumae.app` |
+| Deep link scheme | `onehuman://` |
+| Apple Team ID | `UB67843RJK` |
 
-`EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` are deliberately
-**not** in `eas.json`. That file is committed, and although both values are
-public by design, putting them there makes it far too easy to point a
-production build at the wrong project by editing the wrong line.
+There is no `APP_ENV`, no staging project, and no `.dev` or `.staging` bundle
+suffix. Configuration that pretends to separate environments while pointing at
+one database is worse than no separation at all: it reads as a safeguard and
+is not one.
+
+## What this costs, stated plainly
+
+Since development and production are the same database:
+
+- **A destructive migration is immediately live.** Migrations are append-only
+  and additive, and `npm run verify` checks them before they are applied, but
+  there is no rehearsal step. Read a migration twice before `npm run db:push`.
+- **Test data becomes real data.** Anything created while trying something out
+  is in the same tables as everything else. `supabase/seed.sql` therefore stays
+  empty of anything that could be mistaken for a person.
+- **There is no safe place to break things.** Schema experiments happen against
+  the live project, so prefer a scratch table you drop over altering a real one.
+
+These are accepted, not overlooked. If the project later needs a rehearsal
+environment, the migration pipeline already supports it — `scripts/db.mjs`
+reads `CREDENTIALS_FILE`, so a second project is a credential file away.
+
+## Configuration
+
+`.env`, gitignored, local only:
 
 ```bash
-eas env:create --environment production \
-  --name EXPO_PUBLIC_SUPABASE_URL --value https://<prod-ref>.supabase.co
-eas env:create --environment production \
-  --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <prod publishable key>
+EXPO_PUBLIC_SUPABASE_URL=https://qpicjsjxdblrxdrdibge.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=<publishable key>
 ```
 
-## The guard
-
-`app.config.ts` refuses to configure a staging or production build that has no
-`EXPO_PUBLIC_SUPABASE_URL`, or whose URL matches `DEVELOPMENT_SUPABASE_URL`.
-
-That second check is the one that matters. A production build pointed at the
-development database looks completely normal until a test run destroys real
-data. Set `DEVELOPMENT_SUPABASE_URL` in the EAS environment for staging and
-production so the guard has something to compare against.
-
-## Applying migrations to each project
-
-`scripts/db.mjs` reads the credential file for the project it should target.
-Point `CREDENTIALS_FILE` at the right one:
+For EAS builds the same two values are set as EAS environment variables rather
+than committed:
 
 ```bash
-CREDENTIALS_FILE=~/.onehuman/dev.md      npm run db:push
-CREDENTIALS_FILE=~/.onehuman/staging.md  npm run db:push
-CREDENTIALS_FILE=~/.onehuman/prod.md     npm run db:push
+eas env:create --name EXPO_PUBLIC_SUPABASE_URL --value https://qpicjsjxdblrxdrdibge.supabase.co
+eas env:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <publishable key>
 ```
 
-Migrations are append-only and applied in the same order everywhere, so the
-three schemas stay identical. Anything applied to production must have been
-applied to staging first.
+The anon key is public by design — it is safe in the client only because Row
+Level Security is enabled on every table. It stays out of the repository
+anyway, because a key in a repository is a key you cannot rotate quietly.
 
-## Current state
+## Platform
 
-Only the development project exists. Until staging and production are created,
-all three `APP_ENV` values would reach the same database — which is why the
-guard exists and why creating the other two projects is tracked in
-`docs/OPEN_ITEMS.md`.
+iOS first. The Android block in `app.config.ts` exists so the project stays
+cross-platform — nothing in `src/` is iOS-only by construction — but no Android
+work is done, and none should be started before the iOS product is real.
+
+## Commands
+
+```bash
+npm run db:push          # apply pending migrations to the project
+npm run db:list          # what is applied
+npm run verify:live      # draw cross-check + anonymous access probe
+
+npx supabase functions deploy delete-account --project-ref qpicjsjxdblrxdrdibge
+eas build --profile development --platform ios
+```

@@ -60,20 +60,25 @@ may construct a cycle boundary.
 Local time exists only at render time. If a `new Date()` appears in a feature
 folder doing date arithmetic, it is a bug.
 
-## Environments
+## Environment
 
-Three, from day one. Never one Supabase project used for everything.
+One Supabase project, one EAS project, one bundle identifier — see
+[ENVIRONMENTS.md](./ENVIRONMENTS.md) for the decision and what it costs.
 
-| `APP_ENV` | App name | Bundle id | Scheme |
-| --- | --- | --- | --- |
-| `development` | ONE HUMAN (Dev) | `app.onehuman.dev` | `onehuman-dev` |
-| `staging` | ONE HUMAN (Staging) | `app.onehuman.staging` | `onehuman-staging` |
-| `production` | ONE HUMAN | `app.onehuman` | `onehuman` |
+| Thing | Value |
+| --- | --- |
+| Supabase | `qpicjsjxdblrxdrdibge` |
+| EAS | `@mignoncharly/unumae` |
+| iOS bundle | `com.unumae.app` |
+| Scheme | `onehuman://` |
 
-`app.config.ts` selects the triple; `src/lib/env.ts` validates the Supabase
-credentials with Zod at import time and fails loudly rather than three screens
-later. The app still runs unconfigured — guest viewing degrades to an empty
-state instead of crashing on a fresh checkout.
+`src/lib/env.ts` validates the two Supabase values with Zod at import time and
+fails loudly rather than three screens later. The app still runs unconfigured —
+guest viewing degrades to an empty state instead of crashing on a fresh
+checkout.
+
+iOS first. The Android config block exists so the project stays cross-platform;
+no Android work is started yet.
 
 ## Verification instead of GitHub Actions
 

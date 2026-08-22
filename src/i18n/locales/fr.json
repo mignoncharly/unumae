@@ -97,7 +97,8 @@
     "deleteFailed": "Impossible de supprimer le compte. Veuillez réessayer.",
     "eligibility": "Le tirage quotidien",
     "communityRules": "Règles de la communauté",
-    "portrait": "Votre portrait"
+    "portrait": "Votre portrait",
+    "project": "Projet Supabase"
   },
   "connection": {
     "checking": "Vérification…",

@@ -97,7 +97,8 @@
     "deleteFailed": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut.",
     "eligibility": "Die tägliche Auswahl",
     "communityRules": "Community-Richtlinien",
-    "portrait": "Dein Porträt"
+    "portrait": "Dein Porträt",
+    "project": "Supabase-Projekt"
   },
   "connection": {
     "checking": "Wird geprüft…",

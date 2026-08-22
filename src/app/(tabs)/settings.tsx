@@ -10,7 +10,7 @@ import { Text } from '@/components/ui/Text';
 import { signOut } from '@/features/auth/api';
 import { useSession } from '@/features/auth/useSession';
 import { useMyProfile } from '@/features/profiles/hooks';
-import { env } from '@/lib/env';
+import { projectRef } from '@/lib/env';
 import { checkConnection, type ConnectionStatus } from '@/lib/supabase';
 import { useTheme } from '@/theme';
 
@@ -148,7 +148,7 @@ export default function SettingsScreen() {
 
         <View style={{ gap: theme.spacing.sm }}>
           <Text color="textSecondary">
-            {t('settings.environment')}: {env.appEnv}
+            {t('settings.project')}: {projectRef}
           </Text>
           <Text color="textSecondary">
             {t('settings.connection')}: {t(STATUS_KEYS[status])}

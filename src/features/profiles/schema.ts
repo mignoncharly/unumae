@@ -69,7 +69,10 @@ export const createProfileSchema = z.object({
 /** birth_year is absent: the database refuses to update it (age gate). */
 export const updateProfileSchema = createProfileSchema
   .omit({ birth_year: true })
-  .partial();
+  .partial()
+  // Article 5.6 — leaving the draw is the user's decision, so this one
+  // system-adjacent flag is user writable. selection_eligible is not.
+  .extend({ wants_selection: z.boolean().optional() });
 
 export type CreateProfileInput = z.infer<typeof createProfileSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

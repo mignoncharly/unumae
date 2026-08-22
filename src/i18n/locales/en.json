@@ -85,7 +85,8 @@
     "deleteArchiveNote": "If you have been Today’s Human, your Archive entry is removed on request. The human number and date remain, so the Archive stays a complete sequence.",
     "deleteConfirm": "This cannot be undone.",
     "deleteConfirmAction": "Yes, delete everything",
-    "deleteFailed": "Could not delete the account. Please try again."
+    "deleteFailed": "Could not delete the account. Please try again.",
+    "eligibility": "The daily draw"
   },
   "connection": {
     "checking": "Checking…",
@@ -138,5 +139,25 @@
     "saveFailed": "Could not save your profile. Please try again.",
     "finish": "Finish setting up your profile",
     "privacyNote": "Your country is the only location we ever require. We never ask where you are."
+  },
+  "eligibility": {
+    "title": "The daily draw",
+    "inPool": "You are in the draw",
+    "inPoolBody": "Every eligible person has exactly the same chance. Nothing you do here changes it, and nothing you could pay for would.",
+    "notInPool": "You are not in the draw yet",
+    "notInPoolBody": "Here is why, in full:",
+    "alreadyHad": "You have already been Today’s Human",
+    "participate": "Take part in the draw",
+    "participateHint": "You can leave and come back whenever you like.",
+    "fairnessNote": "The draw is random, recorded, and reproducible from the published pool and seed. There is no boost, no sponsor and no follower count anywhere in it.",
+    "reasons": {
+      "noProfile": "Your profile is not finished yet.",
+      "accountNotActive": "Your account is not active.",
+      "optedOut": "You have chosen to stay out of the draw.",
+      "notVerified": "We still need to confirm you are a real person.",
+      "rulesNotAccepted": "You have not accepted the community rules yet.",
+      "underAge": "You must be at least 16.",
+      "alreadyBeenHuman": "You have already had your day. One human, one day, forever."
+    }
   }
 }

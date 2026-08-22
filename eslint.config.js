@@ -7,7 +7,15 @@ module.exports = defineConfig([
   expoConfig,
   prettierConfig,
   {
-    ignores: ['dist/*', '.expo/*', 'node_modules/*', 'coverage/*'],
+    // supabase/functions is Deno, not React Native: different globals, different
+    // module resolution. It is checked by `deno check`, not by this config.
+    ignores: [
+      'dist/*',
+      '.expo/*',
+      'node_modules/*',
+      'coverage/*',
+      'supabase/functions/**',
+    ],
   },
   {
     rules: {

@@ -10,8 +10,8 @@ original). This file tracks status only.
 | 1 | Foundation & project architecture | ✅ done | ✅ |
 | 2 | Design system + UX prototype | ✅ done | ✅ |
 | 3 | Authentication & user profile | ✅ done | ✅ |
-| 4 | Eligibility & daily selection engine | ⬜ next | ✅ |
-| 5 | Fairness, transparency & candidate notification | ⬜ | ✅ |
+| 4 | Eligibility & daily selection engine | ✅ done | ✅ |
+| 5 | Fairness, transparency & candidate notification | ⬜ next | ✅ |
 | 6 | Human Portrait Builder | ⬜ | ✅ |
 | 7 | Today's Human experience | ⬜ | ✅ |
 | 8 | Human Archive, discovery & One Year Ago | ⬜ | ✅ |
@@ -106,12 +106,49 @@ access to their own eligibility.
 Supabase dashboard, and a Service ID plus key created in the Apple Developer
 account, before Sign in with Apple works on a real build.
 
-## Phase 4 — next
+## Phase 4 — Eligibility & the daily selection engine ✅
 
-Eligibility and the daily selection engine. The `daily_draws` table, the frozen
-candidate pool with its hash, a CSPRNG seed recorded before the draw, primary
-plus three backups, and the state machine from Article 4.3. This is the phase
-where fairness stops being a promise and becomes a reproducible record.
+The phase where fairness stops being a promise and becomes a reproducible
+record.
+
+- `daily_draws` — permanent audit row per cycle: pool hash, CSPRNG seed,
+  primary and three backups, the ten-state machine from Article 4.3. One human
+  per cycle is a partial unique index, not a code path.
+- `draw_candidates` — the frozen pool, so the recorded hash proves something.
+- `run_daily_draw()` freezes, hashes, seeds with `gen_random_bytes(32)`, and
+  orders candidates by `HMAC-SHA256(candidate_id, seed)`. No `order by
+  random()` anywhere.
+- `escalate_draw()` — primary → backup 1 → 2 → 3 → emergency re-draw, which
+  supersedes rather than edits so history survives.
+- `is_eligible()` — binary, and structurally incapable of taking a forbidden
+  input because there is nowhere to put one.
+- `draw_rank()`, `draw_order()`, `pool_hash()` are granted to **anon**: anyone
+  can recompute a published result and check it (Article 12).
+- Split `wants_selection` (the user's choice) from `selection_eligible` (the
+  system's judgement), resolving a contradiction Phase 3 introduced — Article
+  5.6 lets a user leave the pool, but the column GRANTs had made that
+  impossible.
+- Settings → The daily draw: eligibility status, every unmet reason in full,
+  and the opt-out switch.
+
+**Two independent implementations.** `tests/helpers/draw.ts` is written from the
+constitution rather than from the SQL, and `npm run verify:draw` cross-checks it
+against the live database. On its first run it found a real bug: `pool_hash([])`
+returned NULL while `run_daily_draw` recorded `sha256('')` — a disagreement in
+exactly the Quiet Day case. Fixed in `20260822040000_pool_hash_empty.sql`.
+
+184 tests. The fairness test runs 10,000 draws over 10 candidates and fails if
+any of them wins outside ±15% of an equal share.
+
+**Not done, and needed before a real cycle runs:** nothing schedules
+`run_daily_draw`. It must be called at D-2 00:00 UTC, by `pg_cron` or an
+external scheduler. That belongs with Phase 5's notification timing.
+
+## Phase 5 — next
+
+Fairness, transparency and candidate notification. The public "How selection
+works" page, the 12-hour acceptance window, and the scheduling that actually
+fires the draw.
 
 ## Working agreements
 

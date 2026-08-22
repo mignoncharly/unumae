@@ -73,6 +73,10 @@ function AccountSection() {
         variant="secondary"
       />
 
+      <Link href="/settings/eligibility">
+        <Text color="accent">{t('settings.eligibility')} →</Text>
+      </Link>
+
       <Link href="/settings/account">
         <Text color="danger" variant="footnote">
           {t('settings.deleteAccount')} →

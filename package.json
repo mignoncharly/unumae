@@ -21,7 +21,8 @@
     "prepare": "git config core.hooksPath .githooks",
     "db:push": "node scripts/db.mjs push",
     "db:list": "node scripts/db.mjs list",
-    "db:types": "node scripts/db.mjs types"
+    "db:types": "node scripts/db.mjs types",
+    "verify:draw": "node scripts/verify-draw.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

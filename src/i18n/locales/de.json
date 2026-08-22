@@ -85,7 +85,8 @@
     "deleteArchiveNote": "Warst du Today’s Human, wird dein Archiv-Eintrag auf Wunsch entfernt. Nummer und Datum bleiben, damit das Archiv eine vollständige Folge bleibt.",
     "deleteConfirm": "Das kann nicht rückgängig gemacht werden.",
     "deleteConfirmAction": "Ja, alles löschen",
-    "deleteFailed": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut."
+    "deleteFailed": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut.",
+    "eligibility": "Die tägliche Auswahl"
   },
   "connection": {
     "checking": "Wird geprüft…",
@@ -138,5 +139,25 @@
     "saveFailed": "Dein Profil konnte nicht gespeichert werden. Bitte versuche es erneut.",
     "finish": "Profil fertig einrichten",
     "privacyNote": "Dein Land ist der einzige Ort, den wir je verlangen. Wir fragen nie, wo du bist."
+  },
+  "eligibility": {
+    "title": "Die tägliche Auswahl",
+    "inPool": "Du bist in der Auswahl",
+    "inPoolBody": "Jede berechtigte Person hat genau dieselbe Chance. Nichts, was du hier tust, ändert das, und mit Geld erst recht nicht.",
+    "notInPool": "Du bist noch nicht in der Auswahl",
+    "notInPoolBody": "Hier ist der vollständige Grund:",
+    "alreadyHad": "Du warst bereits Today’s Human",
+    "participate": "An der Auswahl teilnehmen",
+    "participateHint": "Du kannst jederzeit aussteigen und zurückkommen.",
+    "fairnessNote": "Die Auswahl ist zufällig, aufgezeichnet und aus dem veröffentlichten Pool und Seed reproduzierbar. Kein Boost, kein Sponsor, keine Follower-Zahl spielt eine Rolle.",
+    "reasons": {
+      "noProfile": "Dein Profil ist noch nicht fertig.",
+      "accountNotActive": "Dein Konto ist nicht aktiv.",
+      "optedOut": "Du hast dich gegen die Teilnahme entschieden.",
+      "notVerified": "Wir müssen noch bestätigen, dass du eine echte Person bist.",
+      "rulesNotAccepted": "Du hast die Community-Richtlinien noch nicht akzeptiert.",
+      "underAge": "Du musst mindestens 16 sein.",
+      "alreadyBeenHuman": "Du hattest deinen Tag bereits. Ein Human, ein Tag, für immer."
+    }
   }
 }

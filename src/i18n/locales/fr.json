@@ -85,7 +85,8 @@
     "deleteArchiveNote": "Si vous avez été le Human du jour, votre entrée dans l’Archive est retirée sur demande. Le numéro et la date restent, afin que l’Archive demeure une séquence complète.",
     "deleteConfirm": "Cette action est irréversible.",
     "deleteConfirmAction": "Oui, tout supprimer",
-    "deleteFailed": "Impossible de supprimer le compte. Veuillez réessayer."
+    "deleteFailed": "Impossible de supprimer le compte. Veuillez réessayer.",
+    "eligibility": "Le tirage quotidien"
   },
   "connection": {
     "checking": "Vérification…",
@@ -138,5 +139,25 @@
     "saveFailed": "Impossible d'enregistrer votre profil. Veuillez réessayer.",
     "finish": "Terminer la configuration de votre profil",
     "privacyNote": "Votre pays est la seule localisation que nous exigeons. Nous ne demandons jamais où vous êtes."
+  },
+  "eligibility": {
+    "title": "Le tirage quotidien",
+    "inPool": "Vous êtes dans le tirage",
+    "inPoolBody": "Chaque personne éligible a exactement la même chance. Rien de ce que vous faites ici ne la change, et aucun paiement ne le pourrait.",
+    "notInPool": "Vous n'êtes pas encore dans le tirage",
+    "notInPoolBody": "Voici pourquoi, en entier :",
+    "alreadyHad": "Vous avez déjà été le Human du jour",
+    "participate": "Participer au tirage",
+    "participateHint": "Vous pouvez partir et revenir quand vous voulez.",
+    "fairnessNote": "Le tirage est aléatoire, enregistré et reproductible à partir du pool et de la graine publiés. Aucun boost, aucun sponsor, aucun nombre d’abonnés n’y intervient.",
+    "reasons": {
+      "noProfile": "Votre profil n'est pas encore terminé.",
+      "accountNotActive": "Votre compte n'est pas actif.",
+      "optedOut": "Vous avez choisi de rester en dehors du tirage.",
+      "notVerified": "Nous devons encore confirmer que vous êtes une personne réelle.",
+      "rulesNotAccepted": "Vous n'avez pas encore accepté les règles de la communauté.",
+      "underAge": "Vous devez avoir au moins 16 ans.",
+      "alreadyBeenHuman": "Vous avez déjà eu votre journée. Un human, un jour, pour toujours."
+    }
   }
 }

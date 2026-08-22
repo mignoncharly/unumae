@@ -86,7 +86,9 @@
     "deleteConfirm": "Cette action est irréversible.",
     "deleteConfirmAction": "Oui, tout supprimer",
     "deleteFailed": "Impossible de supprimer le compte. Veuillez réessayer.",
-    "eligibility": "Le tirage quotidien"
+    "eligibility": "Le tirage quotidien",
+    "communityRules": "Règles de la communauté",
+    "portrait": "Votre portrait"
   },
   "connection": {
     "checking": "Vérification…",
@@ -199,5 +201,98 @@
     "safetyTitle": "Quand quelqu'un est exclu",
     "safetyBody": "Les comptes suspendus et bannis ne sont pas dans le pool, et un portrait est relu par une personne avant publication. Si un cycle ne peut être rempli à temps, nous ne publions rien et le disons, plutôt que de publier quelqu'un sans relecture.",
     "footer": "Ces règles viennent de notre Constitution produit. Les parties sur l’équité ne peuvent pas être modifiées."
+  },
+  "portrait": {
+    "title": "Votre portrait",
+    "heading": "Racontez votre histoire",
+    "intro": "Sept questions. Répondez-en au moins cinq, dans l'ordre que vous voulez, et ajoutez une photo. Passez ce que vous préférez taire — rien de ce que vous omettez n'apparaît comme manquant.",
+    "photo": "Photo",
+    "photoAdd": "Ajouter une photo",
+    "photoChange": "Changer la photo",
+    "photoHint": "Une photo de vous. Elle n'a pas besoin d'être flatteuse.",
+    "photoSaved": "Photo enregistrée",
+    "photoPermission": "Nous avons besoin de votre autorisation pour ouvrir votre photothèque.",
+    "readyToSubmit": "Prêt quand vous le serez.",
+    "stillNeeded": "Répondez encore à {{count}}, {{photo}} et vous pourrez envoyer.",
+    "andAPhotograph": "ajoutez une photo,",
+    "submit": "Envoyer pour relecture",
+    "submitNote": "Une personne lit chaque portrait avant publication. Après l'envoi, vous ne pourrez plus le modifier.",
+    "notSelected": "Aucun portrait à écrire",
+    "notSelectedBody": "Les portraits sont écrits par la personne sélectionnée pour un cycle, après son acceptation.",
+    "startFailed": "Impossible de démarrer votre portrait. Veuillez réessayer.",
+    "saveFailed": "Impossible d'enregistrer cette réponse. Veuillez réessayer.",
+    "uploadFailed": "Impossible d'envoyer la photo. Veuillez réessayer.",
+    "submitFailed": "Envoi impossible. Vérifiez que vous avez une photo et cinq réponses.",
+    "prompts": {
+      "introduction": {
+        "label": "Présentez-vous",
+        "hint": "Quelques phrases. Pas un CV — comme vous le diriez à quelqu'un assis à côté de vous."
+      },
+      "where_im_from": {
+        "label": "D'où je viens",
+        "hint": "Le lieu tel que vous le connaissez, pas tel qu’un guide le décrit."
+      },
+      "today_i_feel": {
+        "label": "Aujourd'hui je me sens",
+        "hint": "Aujourd'hui précisément. Cela n'a pas besoin d'être intéressant."
+      },
+      "something_i_love": {
+        "label": "Quelque chose que j'aime",
+        "hint": "Ici, petit vaut mieux qu’important."
+      },
+      "something_misunderstood": {
+        "label": "Ce que les gens comprennent mal",
+        "hint": "Sur vous, sur là où vous vivez, ou sur ce que vous faites."
+      },
+      "ordinary_moment": {
+        "label": "Un moment ordinaire auquel je tiens",
+        "hint": "Quelque chose qui ne dirait rien à un inconnu et tout pour vous."
+      },
+      "something_id_tell_the_world": {
+        "label": "Ce que je dirais au monde",
+        "hint": "Vous avez l'attention de beaucoup de gens pour une journée."
+      }
+    }
+  },
+  "rules": {
+    "title": "Règles de la communauté",
+    "heading": "Les règles",
+    "intro": "Un petit endroit avec une promesse simple : chaque jour, une personne ordinaire est présentée au monde. Ces règles existent pour que cela reste possible.",
+    "accept": "J'accepte ces règles",
+    "alreadyAccepted": "Vous avez accepté ces règles.",
+    "needProfile": "Terminez d'abord votre profil.",
+    "acceptFailed": "Impossible d'enregistrer votre acceptation. Veuillez réessayer.",
+    "onePerson": {
+      "title": "Il y a une personne à la fois ici. Traitez-la comme telle.",
+      "body": "Le Human du jour n'est pas du contenu. C'est quelqu'un qui a accepté d'être vu, une fois, par des inconnus. Demandez-lui ce que vous demanderiez à un inconnu que vous respectez. Si vous ne le diriez pas en face, ne l'envoyez pas ici."
+    },
+    "askQuestions": {
+      "title": "Posez des questions. Ne rendez pas de verdicts.",
+      "body": "Vous pouvez tout demander. Vous ne pouvez pas utiliser une question pour porter un jugement sur quelqu'un — son pays, sa religion, son corps, sa politique, sa vie. « Qu'est-ce que les gens comprennent mal sur votre région ? » est une question. « Pourquoi votre pays est-il comme ça ? » est un verdict déguisé. Nous retirons le second type."
+    },
+    "noCompeting": {
+      "title": "Personne n'est en compétition ici.",
+      "body": "Il n'y a ni abonnés, ni scores, ni classements, ni moyen de payer pour de l'attention. N'utilisez pas les questions, les portraits ou les signalements pour promouvoir quoi que ce soit — vous-même, une entreprise, une cause, ou une autre plateforme."
+    },
+    "beTruthful": {
+      "title": "Dites la vérité sur qui vous êtes.",
+      "body": "Un compte par personne. Ne vous présentez pas comme quelqu'un d'autre, réel ou inventé. Si vous êtes sélectionné, l'histoire que vous racontez doit être la vôtre. Vous pouvez omettre ce que vous voulez, mais ce que vous dites doit être vrai."
+    },
+    "neverAllowed": {
+      "title": "Certaines choses ne sont jamais permises.",
+      "body": "Le harcèlement, les menaces, ou le ciblage d'une personne ou d'un groupe. La haine visant des personnes pour ce qu'elles sont. Le contenu sexuel, et tout contenu sexuel impliquant des mineurs, que nous signalons aux autorités. L'incitation à l'automutilation. Le partage d'informations privées. Tenter de contacter le Human du jour en dehors de l'application."
+    },
+    "protectPeople": {
+      "title": "Protégez la personne, pas la plateforme.",
+      "body": "Si quelque chose vous inquiète ici, signalez-le. Les signalements sont lus par une personne. Signaler est gratuit, toujours disponible, et ne vous sera jamais reproché. En cas de doute, signalez et laissez-nous décider — c'est notre travail, pas le vôtre."
+    },
+    "ifSelected": {
+      "title": "Si vous êtes sélectionné",
+      "body": "On vous le demandera, et vous pouvez refuser. Refuser ne coûte rien. Si vous acceptez : vous choisissez ce que vous partagez, votre pays est affiché mais votre ville et votre âge exact restent les vôtres, une personne relit votre portrait avant publication, et vous pouvez demander à être retiré de l'Archive ensuite."
+    },
+    "breakingRules": {
+      "title": "Que se passe-t-il en cas de manquement",
+      "body": "Dans l'ordre : le contenu est retiré, le compte est suspendu, puis banni. Les préjudices graves vont directement à la fin et, si nécessaire, aux autorités. Si vous êtes banni, vous sortez de tous les tirages futurs. Vous pouvez contester une décision et une autre personne la réexaminera."
+    }
   }
 }

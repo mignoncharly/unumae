@@ -1,9 +1,9 @@
 # Open items
 
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
-each phase. Anything with a ⚠️ blocks a real cycle from running.
+each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: end of Phase 5.
+Last updated: end of Phase 6.
 
 ---
 
@@ -11,35 +11,45 @@ Last updated: end of Phase 5.
 
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
-| 1 | ⚠️ **Enable Apple as a Supabase auth provider** | Dashboard → Authentication → Providers → Apple. Needs a Service ID, Key ID and private key from your Apple Developer account. | Sign in with Apple on device. Email code works without it. |
-| 2 | ⚠️ **Deploy the delete-account Edge Function** | `npx supabase functions deploy delete-account --project-ref qpicjsjxdblrxdrdibge`. Needs a personal access token I do not have. | Account deletion, and App Store review. |
-| 3 | ⚠️ **Separate Supabase projects for staging and production** | One project is currently used for all three environments, so a test run could destroy real data. Create two more and put their keys in the EAS environment. | Safe testing once there is real data. |
-| 4 | **Move `docs/supa_keys.md` out of the repo** | It holds the service-role key, the database password and the JWT secret. Gitignored and never committed, but one `git add -f` away from being public. Suggested: `C:\Users\migno\.onehuman\`. | Nothing, until it leaks. |
-| 5 | **`eas login` and `eas init`** | Links the project id. Then `eas build --profile development --platform ios` produces the iOS development build Phase 1 could not. | Running the app on a real device. |
-| 6 | **Decide the verification bar for `selection_eligible`** | Article 8.5 says device signals, optional phone, liveness on selection. Which of those you actually want at launch is a product decision, not a technical one. | Anyone becoming eligible at all. |
-| 7 | **Write the community rules text** | `accepted_rules_at` exists and gates eligibility, but there is no document to accept yet. | Anyone becoming eligible at all. |
+| 1 | ⚠️ **Deploy the delete-account Edge Function** | `npx supabase functions deploy delete-account --project-ref qpicjsjxdblrxdrdibge`. Waiting on your access token. | Account deletion, App Store review. |
+| 2 | ⚠️ **Create staging and production Supabase projects** | One project currently serves all three environments. `docs/ENVIRONMENTS.md` has the setup; `app.config.ts` now refuses a non-dev build that has no separate URL. | Safe testing once real data exists. |
+| 3 | ⚠️ **App IDs for the dev and staging bundle identifiers** | `com.unumae.app.dev` and `com.unumae.app.staging` each need an App ID with Sign in with Apple enabled, or auth only works in production builds. | Testing Apple auth before release. |
+| 4 | **Move `docs/supa_keys.md` out of the repo** | Holds the service-role key, database password and JWT secret. Gitignored, never committed. Suggested: `C:\Users\migno\.onehuman\`. | Nothing, until it leaks. |
+| 5 | **`eas login` and `eas init`** | Interactive, so run it yourself — in this session you can type `! eas login`. Then `eas build --profile development --platform ios`. | Running on a real device. |
+| 6 | **Review `docs/COMMUNITY_RULES.md`** | Drafted for you. The notes at the bottom list five decisions worth overturning if you disagree — particularly the appeals promise in rule 8, which is a real operational commitment. | Nothing; the text is live in the app already. |
+| 7 | **Confirm the product name** | The bundle identifier is `com.unumae.app` and the SKU is `unumae-ios-001`, but every string in the app says ONE HUMAN. If Unumae is the public name, the rename is a half-day of work and should happen before the App Store listing. | The App Store listing. |
 
 ## Mine — code, and already planned
 
 | # | Item | Phase |
 | --- | --- | --- |
-| 1 | Human Portrait Builder: guided prompts, 5–7 elements, photo upload | 6 — next |
-| 2 | `avatars` and portrait storage buckets with RLS | 6 |
-| 3 | Community-rules acceptance flow, once you supply the text (Yours #7) | 6 |
-| 4 | Moderation queue and the `content_review` → `ready` transition | 9 |
-| 5 | Today's Human screen, questions, voting, Remember | 7 |
-| 6 | Push notifications — the invitation currently only appears in-app | 10 |
-| 7 | Admin console for the daily queue and portrait review | 9 |
+| 1 | Today's Human screen, questions, voting, Remember | 7 — next |
+| 2 | Signed URLs for portrait photos, so the live cycle can show them | 7 |
+| 3 | Moderation queue, `content_review` → `ready` → `live` transitions | 9 |
+| 4 | Liveness verification before publication (`VERIFICATION_POLICY.md`) | 9 |
+| 5 | Admin console for the daily queue and portrait review | 9 |
+| 6 | Push notifications — the invitation is in-app only today | 10 |
+| 7 | Optional audio/video portrait element | 7 or later |
+
+## Decided this session
+
+- **Verification bar** (`docs/VERIFICATION_POLICY.md`): email confirmed plus a
+  seven-day-old account to enter the pool; liveness only after selection and
+  before publication. No phone, no device attestation as a default toll —
+  reserved as responses to observed abuse. The one-person-one-account problem
+  is explicitly *not* solved, and the document says so rather than pretending.
+- **Community rules** (`docs/COMMUNITY_RULES.md`): drafted, live in the app in
+  all three languages, awaiting your review.
 
 ## Done and verified against the live project
 
-- Draw is reproducible, and cross-checked against a second implementation
+- Draw reproducible, cross-checked against a second implementation
   (`npm run verify:draw`).
-- No privileged function or table is reachable anonymously
+- No privileged function or table reachable anonymously
   (`npm run verify:privileges`).
-- `pg_cron` drives the cycle: draw at 00:00 UTC for D+2, notify at 00:10,
-  expiry sweep every 15 minutes.
-- 228 tests, and a pre-push hook that runs them.
+- `pg_cron` drives the cycle: eligibility refresh 23:50, draw 00:00 for D+2,
+  notify 00:10, expiry sweep every 15 minutes.
+- 247 tests, and a pre-push hook that runs them.
 
 ## Commands worth remembering
 

@@ -73,6 +73,10 @@ function AccountSection() {
         variant="secondary"
       />
 
+      <Link href="/settings/community-rules">
+        <Text color="accent">{t('settings.communityRules')} →</Text>
+      </Link>
+
       <Link href="/how-selection-works">
         <Text color="accent">{t('settings.howSelectionWorks')} →</Text>
       </Link>

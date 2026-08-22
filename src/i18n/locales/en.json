@@ -86,7 +86,9 @@
     "deleteConfirm": "This cannot be undone.",
     "deleteConfirmAction": "Yes, delete everything",
     "deleteFailed": "Could not delete the account. Please try again.",
-    "eligibility": "The daily draw"
+    "eligibility": "The daily draw",
+    "communityRules": "Community rules",
+    "portrait": "Your portrait"
   },
   "connection": {
     "checking": "Checking…",
@@ -199,5 +201,98 @@
     "safetyTitle": "When someone is excluded",
     "safetyBody": "Suspended and banned accounts are not in the pool, and a portrait is reviewed by a person before it is published. If a cycle cannot be filled in time, we publish nothing and say so rather than publishing someone unreviewed.",
     "footer": "These rules come from our Product Constitution. The parts about fairness cannot be amended."
+  },
+  "portrait": {
+    "title": "Your portrait",
+    "heading": "Tell your story",
+    "intro": "Seven questions. Answer at least five, in any order, and add a photograph. Skip anything you would rather not say — nothing you leave out is shown as missing.",
+    "photo": "Photograph",
+    "photoAdd": "Add a photograph",
+    "photoChange": "Change photograph",
+    "photoHint": "One picture of you. It does not have to be flattering.",
+    "photoSaved": "Photograph saved",
+    "photoPermission": "We need permission to open your photo library.",
+    "readyToSubmit": "This is ready whenever you are.",
+    "stillNeeded": "Answer {{count}} more, {{photo}} and you can submit.",
+    "andAPhotograph": "add a photograph,",
+    "submit": "Submit for review",
+    "submitNote": "A person reads every portrait before it is published. After you submit you can no longer edit it.",
+    "notSelected": "No portrait to write",
+    "notSelectedBody": "Portraits are written by the person selected for a cycle, after they accept.",
+    "startFailed": "Could not start your portrait. Please try again.",
+    "saveFailed": "Could not save that answer. Please try again.",
+    "uploadFailed": "Could not upload the photograph. Please try again.",
+    "submitFailed": "Could not submit. Check you have a photograph and five answers.",
+    "prompts": {
+      "introduction": {
+        "label": "Introduce yourself",
+        "hint": "A few sentences. Not a CV — just how you would say it to someone sitting next to you."
+      },
+      "where_im_from": {
+        "label": "Where I'm from",
+        "hint": "The place as you know it, not as a guidebook describes it."
+      },
+      "today_i_feel": {
+        "label": "Today I feel",
+        "hint": "Today specifically. It does not have to be interesting."
+      },
+      "something_i_love": {
+        "label": "Something I love",
+        "hint": "Small is better than important here."
+      },
+      "something_misunderstood": {
+        "label": "Something people misunderstand",
+        "hint": "About you, where you live, or what you do."
+      },
+      "ordinary_moment": {
+        "label": "An ordinary moment I treasure",
+        "hint": "Something that would mean nothing to a stranger and everything to you."
+      },
+      "something_id_tell_the_world": {
+        "label": "Something I'd tell the world",
+        "hint": "You have the attention of a lot of people for one day."
+      }
+    }
+  },
+  "rules": {
+    "title": "Community rules",
+    "heading": "The rules",
+    "intro": "A small place with a simple promise: every day, one ordinary person is introduced to the world. These rules exist to keep that possible.",
+    "accept": "I accept these rules",
+    "alreadyAccepted": "You accepted these rules.",
+    "needProfile": "Finish your profile first.",
+    "acceptFailed": "Could not record your acceptance. Please try again.",
+    "onePerson": {
+      "title": "There is one person here at a time. Treat them that way.",
+      "body": "Today’s Human is not content. They are somebody who agreed to be seen, once, by strangers. Ask them what you would ask a stranger you respected. If you would not say it to them in a room, do not send it here."
+    },
+    "askQuestions": {
+      "title": "Ask questions. Do not deliver verdicts.",
+      "body": "You can ask anything. You cannot use a question to make a statement about someone — their country, religion, body, politics or life. \"What do people misunderstand about where you live?\" is a question. \"Why is your country like that?\" is a verdict wearing a question mark. We remove the second kind."
+    },
+    "noCompeting": {
+      "title": "Nobody here is competing.",
+      "body": "There are no followers, no scores, no rankings and no way to pay for attention. Do not use questions, portraits or reports to promote anything — yourself, a business, a cause, or another platform."
+    },
+    "beTruthful": {
+      "title": "Tell the truth about who you are.",
+      "body": "One account per person. Do not present yourself as somebody else, real or invented. If you are selected, the story you tell must be your own. You may leave out anything you like, but what you do say has to be true."
+    },
+    "neverAllowed": {
+      "title": "Some things are never allowed.",
+      "body": "Harassment, threats or targeting a person or group. Hate directed at people for who they are. Sexual content, and any sexual content involving minors, which we report to the authorities. Encouraging self-harm. Sharing anyone’s private information. Trying to contact Today’s Human outside this app."
+    },
+    "protectPeople": {
+      "title": "Protect the person, not the platform.",
+      "body": "If something here worries you, report it. Reports are read by a person. Reporting is free, always available, and never held against you. If you are unsure, report it and let us decide — that is our job, not yours."
+    },
+    "ifSelected": {
+      "title": "If you are selected",
+      "body": "You will be asked, and you can say no. Declining costs nothing. If you accept: you choose what to share, your country is shown but your city and exact age are yours to withhold, a person reviews your portrait before it is published, and you can ask to be removed from the Archive afterwards."
+    },
+    "breakingRules": {
+      "title": "What happens when rules are broken",
+      "body": "In order: content is removed, the account is suspended, then banned. Serious harm skips to the end and, where required, to the authorities. If you are banned you are out of every future draw. You can dispute a decision and a different person will look at it."
+    }
   }
 }

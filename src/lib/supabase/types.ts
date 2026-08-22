@@ -96,6 +96,50 @@ export type DailyDrawPublicRow = {
   published_at: string | null;
 };
 
+export type PortraitStatus =
+  'draft' | 'submitted' | 'in_review' | 'approved' | 'rejected';
+
+export type PortraitElementKeyEnum =
+  | 'introduction'
+  | 'where_im_from'
+  | 'today_i_feel'
+  | 'something_i_love'
+  | 'something_misunderstood'
+  | 'ordinary_moment'
+  | 'something_id_tell_the_world';
+
+export type PortraitRow = {
+  id: string;
+  draw_id: string;
+  user_id: string;
+  status: PortraitStatus;
+  photo_path: string | null;
+  media_path: string | null;
+  submitted_at: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+/** Only the two paths are granted; the system owns the state columns. */
+export type PortraitUpdate = {
+  photo_path?: string | null | undefined;
+  media_path?: string | null | undefined;
+};
+
+export type PortraitElementRow = {
+  portrait_id: string;
+  element_key: PortraitElementKeyEnum;
+  answer: string;
+  updated_at: string;
+};
+
+export type PortraitElementInsert = {
+  portrait_id: string;
+  element_key: PortraitElementKeyEnum;
+  answer: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -109,6 +153,18 @@ export type Database = {
         Row: DailyDrawPublicRow;
         Insert: never;
         Update: never;
+        Relationships: [];
+      };
+      portraits: {
+        Row: PortraitRow;
+        Insert: never;
+        Update: PortraitUpdate;
+        Relationships: [];
+      };
+      portrait_elements: {
+        Row: PortraitElementRow;
+        Insert: PortraitElementInsert;
+        Update: PortraitElementInsert;
         Relationships: [];
       };
     };
@@ -156,11 +212,25 @@ export type Database = {
           notified_at: string;
           acceptance_deadline: string;
           selection_status: SelectionStatus;
+          portrait_status: PortraitStatus;
+          portrait_element_key: PortraitElementKeyEnum;
         }[];
       };
       scheduler_installed: {
         Args: Record<PropertyKey, never>;
         Returns: { installed: boolean; detail: string; checked_at: string }[];
+      };
+      accept_community_rules: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
+      start_my_portrait: {
+        Args: Record<PropertyKey, never>;
+        Returns: string | null;
+      };
+      submit_my_portrait: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
       };
     };
     Enums: {

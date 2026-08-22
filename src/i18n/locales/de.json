@@ -86,7 +86,9 @@
     "deleteConfirm": "Das kann nicht rückgängig gemacht werden.",
     "deleteConfirmAction": "Ja, alles löschen",
     "deleteFailed": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut.",
-    "eligibility": "Die tägliche Auswahl"
+    "eligibility": "Die tägliche Auswahl",
+    "communityRules": "Community-Richtlinien",
+    "portrait": "Dein Porträt"
   },
   "connection": {
     "checking": "Wird geprüft…",
@@ -199,5 +201,98 @@
     "safetyTitle": "Wann jemand ausgeschlossen ist",
     "safetyBody": "Gesperrte und verbannte Konten sind nicht im Pool, und ein Porträt wird vor der Veröffentlichung von einem Menschen geprüft. Lässt sich ein Zyklus nicht rechtzeitig füllen, veröffentlichen wir nichts und sagen das, statt jemanden ungeprüft zu zeigen.",
     "footer": "Diese Regeln stammen aus unserer Produktverfassung. Die Teile über Fairness sind nicht änderbar."
+  },
+  "portrait": {
+    "title": "Dein Porträt",
+    "heading": "Erzähl deine Geschichte",
+    "intro": "Sieben Fragen. Beantworte mindestens fünf, in beliebiger Reihenfolge, und füge ein Foto hinzu. Lass aus, was du lieber nicht sagst — nichts davon wird als fehlend angezeigt.",
+    "photo": "Foto",
+    "photoAdd": "Foto hinzufügen",
+    "photoChange": "Foto ändern",
+    "photoHint": "Ein Bild von dir. Es muss nicht schmeichelhaft sein.",
+    "photoSaved": "Foto gespeichert",
+    "photoPermission": "Wir brauchen deine Erlaubnis, um deine Fotomediathek zu öffnen.",
+    "readyToSubmit": "Bereit, wann immer du es bist.",
+    "stillNeeded": "Beantworte noch {{count}}, {{photo}} dann kannst du senden.",
+    "andAPhotograph": "füge ein Foto hinzu,",
+    "submit": "Zur Prüfung senden",
+    "submitNote": "Ein Mensch liest jedes Porträt vor der Veröffentlichung. Nach dem Senden kannst du es nicht mehr ändern.",
+    "notSelected": "Kein Porträt zu schreiben",
+    "notSelectedBody": "Porträts schreibt die für einen Zyklus ausgewählte Person, nachdem sie zugesagt hat.",
+    "startFailed": "Porträt konnte nicht gestartet werden. Bitte versuche es erneut.",
+    "saveFailed": "Antwort konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "uploadFailed": "Foto konnte nicht hochgeladen werden. Bitte versuche es erneut.",
+    "submitFailed": "Senden nicht möglich. Prüfe, ob du ein Foto und fünf Antworten hast.",
+    "prompts": {
+      "introduction": {
+        "label": "Stell dich vor",
+        "hint": "Ein paar Sätze. Kein Lebenslauf — so, wie du es jemandem neben dir sagen würdest."
+      },
+      "where_im_from": {
+        "label": "Woher ich komme",
+        "hint": "Der Ort, wie du ihn kennst, nicht wie ein Reiseführer ihn beschreibt."
+      },
+      "today_i_feel": {
+        "label": "Heute fühle ich mich",
+        "hint": "Genau heute. Es muss nicht interessant sein."
+      },
+      "something_i_love": {
+        "label": "Etwas, das ich liebe",
+        "hint": "Klein ist hier besser als wichtig."
+      },
+      "something_misunderstood": {
+        "label": "Was Leute falsch verstehen",
+        "hint": "Über dich, über deinen Ort, oder über das, was du tust."
+      },
+      "ordinary_moment": {
+        "label": "Ein gewöhnlicher Moment, den ich bewahre",
+        "hint": "Etwas, das Fremden nichts sagt und dir alles."
+      },
+      "something_id_tell_the_world": {
+        "label": "Was ich der Welt sagen würde",
+        "hint": "Du hast einen Tag lang die Aufmerksamkeit vieler Menschen."
+      }
+    }
+  },
+  "rules": {
+    "title": "Community-Richtlinien",
+    "heading": "Die Regeln",
+    "intro": "Ein kleiner Ort mit einem einfachen Versprechen: Jeden Tag wird ein gewöhnlicher Mensch der Welt vorgestellt. Diese Regeln halten das möglich.",
+    "accept": "Ich akzeptiere diese Regeln",
+    "alreadyAccepted": "Du hast diese Regeln akzeptiert.",
+    "needProfile": "Vervollständige zuerst dein Profil.",
+    "acceptFailed": "Deine Zustimmung konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "onePerson": {
+      "title": "Hier ist immer nur ein Mensch. Behandle ihn so.",
+      "body": "Today’s Human ist kein Content. Es ist jemand, der zugestimmt hat, einmal von Fremden gesehen zu werden. Frage, was du einem Fremden fragen würdest, den du respektierst. Was du ihm nicht im selben Raum sagen würdest, schicke auch hier nicht."
+    },
+    "askQuestions": {
+      "title": "Stelle Fragen. Fälle keine Urteile.",
+      "body": "Du darfst alles fragen. Du darfst eine Frage nicht nutzen, um eine Aussage über jemanden zu treffen — über Land, Religion, Körper, Politik oder Leben. „Was verstehen Leute an deiner Gegend falsch?\" ist eine Frage. „Warum ist dein Land so?\" ist ein Urteil mit Fragezeichen. Das Zweite entfernen wir."
+    },
+    "noCompeting": {
+      "title": "Hier steht niemand im Wettbewerb.",
+      "body": "Es gibt keine Follower, keine Punkte, keine Ranglisten und keinen Weg, Aufmerksamkeit zu kaufen. Nutze Fragen, Porträts oder Meldungen nicht, um etwas zu bewerben — dich, ein Geschäft, eine Sache oder eine andere Plattform."
+    },
+    "beTruthful": {
+      "title": "Sag die Wahrheit darüber, wer du bist.",
+      "body": "Ein Konto pro Person. Gib dich nicht als jemand anderes aus, echt oder erfunden. Wirst du ausgewählt, muss die Geschichte deine eigene sein. Du darfst weglassen, was du willst, aber was du sagst, muss wahr sein."
+    },
+    "neverAllowed": {
+      "title": "Manches ist nie erlaubt.",
+      "body": "Belästigung, Drohungen oder das gezielte Angreifen einer Person oder Gruppe. Hass gegen Menschen für das, was sie sind. Sexuelle Inhalte, und jeder sexuelle Inhalt mit Minderjährigen, den wir den Behörden melden. Aufrufe zur Selbstverletzung. Das Teilen privater Informationen. Versuche, Today’s Human außerhalb der App zu kontaktieren."
+    },
+    "protectPeople": {
+      "title": "Schütze den Menschen, nicht die Plattform.",
+      "body": "Wenn dich hier etwas beunruhigt, melde es. Meldungen liest ein Mensch. Melden ist kostenlos, immer möglich und wird dir nie angelastet. Im Zweifel melde es und lass uns entscheiden — das ist unsere Aufgabe, nicht deine."
+    },
+    "ifSelected": {
+      "title": "Wenn du ausgewählt wirst",
+      "body": "Du wirst gefragt und darfst Nein sagen. Ablehnen kostet nichts. Sagst du zu: du entscheidest, was du teilst, dein Land wird gezeigt, Stadt und genaues Alter bleiben deine Sache, ein Mensch prüft dein Porträt vor der Veröffentlichung, und du kannst später aus dem Archiv entfernt werden."
+    },
+    "breakingRules": {
+      "title": "Was bei Regelverstößen passiert",
+      "body": "Der Reihe nach: Inhalt wird entfernt, das Konto gesperrt, dann verbannt. Schwerer Schaden führt sofort zum Ende und, wo nötig, zu den Behörden. Wer verbannt ist, ist aus jeder künftigen Auswahl. Du kannst eine Entscheidung anfechten, dann prüft sie eine andere Person."
+    }
   }
 }

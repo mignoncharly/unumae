@@ -12,8 +12,8 @@ original). This file tracks status only.
 | 3 | Authentication & user profile | ✅ done | ✅ |
 | 4 | Eligibility & daily selection engine | ✅ done | ✅ |
 | 5 | Fairness, transparency & candidate notification | ✅ done | ✅ |
-| 6 | Human Portrait Builder | ⬜ next | ✅ |
-| 7 | Today's Human experience | ⬜ | ✅ |
+| 6 | Human Portrait Builder | ✅ done | ✅ |
+| 7 | Today's Human experience | ⬜ next | ✅ |
 | 8 | Human Archive, discovery & One Year Ago | ⬜ | ✅ |
 | 9 | Trust & safety | ⬜ | ✅ |
 | 10 | Notifications, localization & translation | ⬜ | ✅ |
@@ -177,10 +177,26 @@ allowlist and is the reason this cannot regress quietly.
 locale, and neither `decline_selection` nor `expire_stale_invitations` may
 touch a single eligibility column.
 
-## Phase 6 — next
+## Phase 6 — Human Portrait Builder ✅
 
-The Human Portrait Builder. Guided prompts rather than a blank textbox, five to
-seven elements of the nine, photo upload, and the moderation handoff.
+- `portraits` and `portrait_elements`: answers stored against the prompt key,
+  so the question is never separated from the answer
+- seven written prompts, five required, plus a photograph. Everything beyond
+  the minimum is the author's choice and a skipped prompt is never shown as an
+  absence
+- edits are refused once submitted, by trigger. Otherwise the text a moderator
+  approved and the text published could differ, which makes review theatre
+- private `avatars` and `portraits` storage buckets, owner-scoped by folder
+- **Verification policy decided** (`docs/VERIFICATION_POLICY.md"): email plus a
+  seven-day-old account to enter the pool, liveness only before publication
+- **Community rules drafted** (`docs/COMMUNITY_RULES.md`), live in all three
+  languages, with an acceptance screen — `accepted_rules_at` had no way to be
+  set before this, so the pool was permanently empty
+- bundle identifier corrected to the registered `com.unumae.app`
+
+## Phase 7 — next
+
+Today's Human: the live screen, questions, voting and Remember.
 
 ## Working agreements
 

@@ -22,6 +22,9 @@ amended. Every feature request is measured against it.
 | [SECURITY.md](./docs/SECURITY.md) | Threat model, secrets, proof of humanity |
 | [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) | 18 phases and their status |
 | [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) | What is waiting on you, and what is waiting on me |
+| [VERIFICATION_POLICY.md](./docs/VERIFICATION_POLICY.md) | Who may enter the draw, and who may be published |
+| [COMMUNITY_RULES.md](./docs/COMMUNITY_RULES.md) | The rules users accept |
+| [ENVIRONMENTS.md](./docs/ENVIRONMENTS.md) | Three environments, three Supabase projects |
 
 ## Getting started
 
@@ -62,5 +65,5 @@ to say yes start sounding excellent.
 
 ## Status
 
-Phases 0–5 of 18 complete. See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md)
+Phases 0–6 of 18 complete. See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md)
 for detail and [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) for what is outstanding.

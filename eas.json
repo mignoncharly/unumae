@@ -37,6 +37,7 @@
     "production": {
       "ios": {
         "appleId": "charles.nguenkam@gmail.com",
+        "appleTeamId": "UB67843RJK",
         "language": "en-US"
       }
     }

@@ -1,0 +1,49 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+
+# native
+ios/
+android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# supabase
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+
+# build / test output
+coverage/
+*.tsbuildinfo
+.eslintcache
+
+# editor / os
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# logs
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*

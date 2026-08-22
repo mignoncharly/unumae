@@ -1,5 +1,3 @@
-| [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) | 18 phases and their status |
-| [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) | What is waiting on you, and what is waiting on me |
 # ONE HUMAN
 
 > **8 billion people. One today.**
@@ -23,6 +21,7 @@ amended. Every feature request is measured against it.
 | [DATABASE.md](./docs/DATABASE.md) | Schema conventions, RLS posture, planned tables |
 | [SECURITY.md](./docs/SECURITY.md) | Threat model, secrets, proof of humanity |
 | [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) | 18 phases and their status |
+| [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) | What is waiting on you, and what is waiting on me |
 
 ## Getting started
 

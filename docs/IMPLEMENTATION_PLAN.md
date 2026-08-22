@@ -9,8 +9,8 @@ original). This file tracks status only.
 | 0 | Product Constitution | ✅ done | ✅ |
 | 1 | Foundation & project architecture | ✅ done | ✅ |
 | 2 | Design system + UX prototype | ✅ done | ✅ |
-| 3 | Authentication & user profile | ⬜ next | ✅ |
-| 4 | Eligibility & daily selection engine | ⬜ | ✅ |
+| 3 | Authentication & user profile | ✅ done | ✅ |
+| 4 | Eligibility & daily selection engine | ⬜ next | ✅ |
 | 5 | Fairness, transparency & candidate notification | ⬜ | ✅ |
 | 6 | Human Portrait Builder | ⬜ | ✅ |
 | 7 | Today's Human experience | ⬜ | ✅ |
@@ -83,12 +83,35 @@ against the live project, `eas.json` with development / staging / production
 profiles, and a fix to the Phase 1 connection probe, which read local storage
 and so could not fail.
 
-## Phase 3 — next
+## Phase 3 — Authentication & user profile ✅
 
-Authentication and user profile. Sign in with Apple first, email magic link
-second, no classic passwords. The `profiles` table from `docs/DATABASE.md`, with
-RLS from the first migration. Guest viewing must stay a permanent right
-(Article 6.1) — the sign-in screen is never a gate.
+- `profiles` migration applied to the live Supabase project: RLS, column-level
+  GRANTs, an age-gate trigger, and two enums. Anonymous access verified denied.
+- Sign in with Apple (native button, iOS only) and email six-digit code. No
+  classic passwords.
+- Onboarding form: four required fields, three optional, `birth_year` writable
+  once and never again.
+- Settings gained an account section: guest notice and sign-in, or signed-in
+  identity, sign out, and a delete-account screen that states the Archive
+  tombstone rule before the button.
+- `src/features/auth/gate.ts` makes the guest/account boundary an explicit,
+  tested list rather than an assumption scattered across screens.
+
+127 tests. Two new suites are constitutional guards: `gate.test.ts` fails if
+anything is added to the four account-required actions, and
+`profile-privileges.test.ts` fails if a migration ever grants a user write
+access to their own eligibility.
+
+**Still needed from a human:** Apple must be enabled as a provider in the
+Supabase dashboard, and a Service ID plus key created in the Apple Developer
+account, before Sign in with Apple works on a real build.
+
+## Phase 4 — next
+
+Eligibility and the daily selection engine. The `daily_draws` table, the frozen
+candidate pool with its hash, a CSPRNG seed recorded before the draw, primary
+plus three backups, and the state machine from Article 4.3. This is the phase
+where fairness stops being a promise and becomes a reproducible record.
 
 ## Working agreements
 

@@ -50,30 +50,66 @@ one exists.
 `timestamptz` everywhere, never `timestamp`. Article 4 has one global clock and
 the database is not the place to lose it.
 
-## Planned schema, by phase
+## 4. Column-level GRANTs, not just RLS
 
-Nothing below exists yet. It is recorded here so that the shape is agreed before
-the first table is written.
+RLS decides **which rows** you touch. GRANTs decide **which columns**. Both are
+required, and forgetting the second is how a user makes themselves eligible.
 
-### Phase 3 — auth
+The pattern every table follows:
 
-`profiles` — deliberately minimal (Article 6.2 and 7.2).
+```sql
+revoke all on public.<table> from anon, authenticated;
+grant select on public.<table> to authenticated;
+grant insert (<only the columns a user may set>) on public.<table> to authenticated;
+grant update (<only the columns a user may change>) on public.<table> to authenticated;
+```
+
+## Shipped schema
+
+### Phase 3 — profiles ✅
+
+`public.profiles`, deliberately minimal (Article 6.2 and 7.2).
 
 ```text
-id                  uuid primary key, references auth.users
-username            citext unique
-display_name        text
+id                  uuid primary key, references auth.users on delete cascade
+username            citext unique, ^[a-z0-9_]{3,20}$
+display_name        text, 1–40 chars
 birth_year          integer          -- age gate, not a birthday feature
 country_code        char(2)          -- country is sufficient (Article 8.2)
 city                text null        -- optional, hideable, never required
-languages           text[]
+languages           text[]           -- max 10
 avatar_path         text null
-bio_short           text null
+bio_short           text null        -- max 160
+selection_eligible  boolean          -- service role only
+verification_level  verification_level enum  -- service role only
+account_status      account_status enum      -- service role only
+accepted_rules_at   timestamptz null         -- service role only
 created_at          timestamptz
-selection_eligible  boolean
-verification_level  text
-account_status      text
+updated_at          timestamptz      -- maintained by trigger
 ```
+
+**Privileges.** `authenticated` may insert nine columns and update seven.
+`birth_year` is insertable but **not updatable** — an age gate you can edit
+afterwards is not a gate. `selection_eligible`, `verification_level`,
+`account_status` and `accepted_rules_at` appear in neither grant: a user cannot
+make themselves eligible, verified, or unbanned. `anon` is granted nothing at
+all.
+
+**The age gate is a trigger, not a CHECK.** `extract(year from now())` is not an
+immutable expression, so Postgres rejects it in a constraint.
+`profiles_enforce_min_age` raises on insert and on any update of `birth_year`.
+
+**Policies.** Select, insert and update, all scoped to `auth.uid() = id`. There
+is no delete policy: deletion cascades from `auth.users`, so a profile is never
+orphaned and a user cannot delete the row while keeping the account.
+
+`tests/profile-privileges.test.ts` asserts all of the above by reading the
+migration, so a future migration that widens a grant fails `npm run verify`.
+
+## Planned schema, by phase
+
+Nothing below exists yet. It is recorded here so the shape is agreed before the
+first table is written.
 
 ### Phase 4 — eligibility and the draw
 

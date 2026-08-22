@@ -41,6 +41,10 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="(auth)" options={{ presentation: 'modal' }} />
+          <Stack.Screen
+            name="(onboarding)"
+            options={{ presentation: 'modal', gestureEnabled: false }}
+          />
         </Stack>
       </SafeAreaProvider>
     </QueryClientProvider>

@@ -1,42 +1,139 @@
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
+import { TextField } from '@/components/ui/TextField';
+import {
+  isAppleAuthAvailable,
+  sendEmailCode,
+  signInWithApple,
+} from '@/features/auth/api';
+import { track } from '@/lib/analytics';
+import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 
 /**
- * Phase 3 implements Sign in with Apple and email magic links.
+ * Article 6.1 — this screen is never a gate.
  *
- * The important part is already true here: this screen is never a gate. Article
- * 6.1 makes guest viewing a permanent right — an account is required to ask,
- * vote, Remember and enter the draw, and for nothing else.
+ * It is reached by choosing to act, never by opening the app. Guest viewing is
+ * a permanent right, so "continue without an account" is always present and
+ * always works.
  */
 export default function SignInScreen() {
   const theme = useTheme();
   const { t } = useTranslation();
 
+  const [appleAvailable, setAppleAvailable] = useState(false);
+  const [email, setEmail] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    void isAppleAuthAvailable().then(setAppleAvailable);
+  }, []);
+
+  async function handleApple() {
+    setError(undefined);
+    setBusy(true);
+    try {
+      track('signup_started', { method: 'apple' });
+      await signInWithApple();
+      track('signup_completed', { method: 'apple' });
+      router.back();
+    } catch (caught) {
+      const appError = toAppError(caught);
+      // Closing the Apple sheet is a decision, not a failure to report.
+      if (appError.messageKey !== 'auth.cancelled') {
+        setError(t(appError.messageKey));
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleEmail() {
+    setError(undefined);
+    setBusy(true);
+    try {
+      track('signup_started', { method: 'email' });
+      await sendEmailCode(email.trim());
+      router.push({
+        pathname: '/(auth)/verify',
+        params: { email: email.trim() },
+      });
+    } catch (caught) {
+      setError(t(toAppError(caught).messageKey));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <Screen>
       <Text variant="title2">{t('auth.signIn')}</Text>
-      <Text
-        color="textSecondary"
-        style={{ marginTop: theme.spacing.md, marginBottom: theme.spacing.xxl }}
-      >
+      <Text color="textSecondary" style={{ marginTop: theme.spacing.md }}>
         {t('auth.signInPrompt')}
       </Text>
 
-      <Text variant="footnote" color="textTertiary">
-        {t('auth.guestNotice')}
-      </Text>
+      <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.lg }}>
+        {appleAvailable ? (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonStyle={
+              theme.scheme === 'dark'
+                ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+                : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
+            }
+            buttonType={
+              AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
+            }
+            cornerRadius={theme.radius.full}
+            onPress={handleApple}
+            style={{ height: 48 }}
+          />
+        ) : null}
 
-      <View style={{ marginTop: theme.spacing.xxl }}>
+        {appleAvailable ? (
+          <Text
+            color="textTertiary"
+            style={{ textAlign: 'center' }}
+            variant="footnote"
+          >
+            {t('auth.or')}
+          </Text>
+        ) : null}
+
+        <TextField
+          autoCapitalize="none"
+          autoComplete="email"
+          error={error}
+          inputMode="email"
+          keyboardType="email-address"
+          label={t('auth.emailLabel')}
+          onChangeText={setEmail}
+          placeholder={t('auth.emailPlaceholder')}
+          value={email}
+        />
+
+        <Button
+          disabled={busy || !email.includes('@')}
+          label={t('auth.sendCode')}
+          onPress={handleEmail}
+        />
+      </View>
+
+      <View style={{ marginTop: theme.spacing.xxxl, gap: theme.spacing.md }}>
+        <Text color="textTertiary" variant="footnote">
+          {t('auth.guestNotice')}
+        </Text>
         <Button
           label={t('auth.continueAsGuest')}
-          variant="secondary"
           onPress={() => router.back()}
+          variant="secondary"
         />
       </View>
     </Screen>

@@ -18,7 +18,10 @@
     "test:watch": "jest --watch",
     "verify:migrations": "node scripts/verify-migrations.mjs",
     "verify": "npm run typecheck && npm run lint && npm run format:check && npm run verify:migrations && npm run test",
-    "prepare": "git config core.hooksPath .githooks"
+    "prepare": "git config core.hooksPath .githooks",
+    "db:push": "node scripts/db.mjs push",
+    "db:list": "node scripts/db.mjs list",
+    "db:types": "node scripts/db.mjs types"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -26,6 +29,7 @@
     "@supabase/supabase-js": "^2.112.3",
     "@tanstack/react-query": "^5.101.4",
     "expo": "^57.0.15",
+    "expo-apple-authentication": "~57.0.1",
     "expo-constants": "~57.0.13",
     "expo-linking": "~57.0.7",
     "expo-localization": "~57.0.1",

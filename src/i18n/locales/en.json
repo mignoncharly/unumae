@@ -78,7 +78,14 @@
     "environment": "Environment",
     "connection": "Supabase connection",
     "components": "Components",
-    "uxPreview": "UX preview"
+    "uxPreview": "UX preview",
+    "account": "Account",
+    "deleteAccount": "Delete my account",
+    "deleteExplain": "This permanently deletes your profile, your photos, your questions and your library. It cannot be undone.",
+    "deleteArchiveNote": "If you have been Today’s Human, your Archive entry is removed on request. The human number and date remain, so the Archive stays a complete sequence.",
+    "deleteConfirm": "This cannot be undone.",
+    "deleteConfirmAction": "Yes, delete everything",
+    "deleteFailed": "Could not delete the account. Please try again."
   },
   "connection": {
     "checking": "Checking…",
@@ -90,10 +97,46 @@
     "signIn": "Sign in",
     "signInPrompt": "Create an account to ask, vote and remember.",
     "guestNotice": "You can read every story without an account.",
-    "continueAsGuest": "Continue without an account"
+    "continueAsGuest": "Continue without an account",
+    "or": "or",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "sendCode": "Send me a code",
+    "codeTitle": "Check your email",
+    "codeSent": "We sent a six-digit code to {{email}}.",
+    "codeLabel": "Code",
+    "verify": "Continue",
+    "resend": "Send a new code",
+    "signOut": "Sign out",
+    "signedInAs": "Signed in as {{email}}",
+    "cancelled": "Sign-in cancelled",
+    "appleFailed": "Could not sign in with Apple. Please try again.",
+    "emailFailed": "Could not send the code. Check the address and try again.",
+    "codeInvalid": "That code is not valid or has expired."
   },
   "errors": {
     "notFound": "This page does not exist.",
     "goHome": "Back to Today"
+  },
+  "profile": {
+    "title": "Tell us who you are",
+    "subtitle": "Six fields, and only four are required. Nothing here can be ranked or followed.",
+    "username": "Username",
+    "usernameHint": "3–20 characters: lowercase letters, numbers, underscores",
+    "usernameTaken": "That username is taken.",
+    "displayName": "Name",
+    "displayNameHint": "A first name is enough. You never have to give a surname.",
+    "birthYear": "Year of birth",
+    "birthYearHint": "Used only to check you are 16 or older.",
+    "country": "Country",
+    "countryHint": "Two-letter country code, for example JP.",
+    "city": "City (optional)",
+    "cityHint": "You can leave this empty, and you can hide it later.",
+    "bio": "One line about you (optional)",
+    "bioHint": "160 characters at most.",
+    "save": "Save",
+    "saveFailed": "Could not save your profile. Please try again.",
+    "finish": "Finish setting up your profile",
+    "privacyNote": "Your country is the only location we ever require. We never ask where you are."
   }
 }

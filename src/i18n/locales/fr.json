@@ -78,7 +78,14 @@
     "environment": "Environnement",
     "connection": "Connexion Supabase",
     "components": "Composants",
-    "uxPreview": "Aperçu UX"
+    "uxPreview": "Aperçu UX",
+    "account": "Compte",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteExplain": "Cela supprime définitivement votre profil, vos photos, vos questions et votre bibliothèque. C’est irréversible.",
+    "deleteArchiveNote": "Si vous avez été le Human du jour, votre entrée dans l’Archive est retirée sur demande. Le numéro et la date restent, afin que l’Archive demeure une séquence complète.",
+    "deleteConfirm": "Cette action est irréversible.",
+    "deleteConfirmAction": "Oui, tout supprimer",
+    "deleteFailed": "Impossible de supprimer le compte. Veuillez réessayer."
   },
   "connection": {
     "checking": "Vérification…",
@@ -90,10 +97,46 @@
     "signIn": "Se connecter",
     "signInPrompt": "Créez un compte pour poser une question, voter et vous souvenir.",
     "guestNotice": "Vous pouvez lire chaque histoire sans compte.",
-    "continueAsGuest": "Continuer sans compte"
+    "continueAsGuest": "Continuer sans compte",
+    "or": "ou",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
+    "sendCode": "Envoyez-moi un code",
+    "codeTitle": "Vérifiez vos e-mails",
+    "codeSent": "Nous avons envoyé un code à six chiffres à {{email}}.",
+    "codeLabel": "Code",
+    "verify": "Continuer",
+    "resend": "Envoyer un nouveau code",
+    "signOut": "Se déconnecter",
+    "signedInAs": "Connecté en tant que {{email}}",
+    "cancelled": "Connexion annulée",
+    "appleFailed": "Connexion Apple impossible. Veuillez réessayer.",
+    "emailFailed": "Impossible d'envoyer le code. Vérifiez l'adresse et réessayez.",
+    "codeInvalid": "Ce code n'est pas valide ou a expiré."
   },
   "errors": {
     "notFound": "Cette page n'existe pas.",
     "goHome": "Retour à Aujourd'hui"
+  },
+  "profile": {
+    "title": "Dites-nous qui vous êtes",
+    "subtitle": "Six champs, dont quatre obligatoires. Rien ici ne peut être classé ni suivi.",
+    "username": "Nom d'utilisateur",
+    "usernameHint": "3 à 20 caractères : minuscules, chiffres, tirets bas",
+    "usernameTaken": "Ce nom d'utilisateur est déjà pris.",
+    "displayName": "Nom",
+    "displayNameHint": "Un prénom suffit. Vous ne devez jamais donner votre nom de famille.",
+    "birthYear": "Année de naissance",
+    "birthYearHint": "Sert uniquement à vérifier que vous avez 16 ans ou plus.",
+    "country": "Pays",
+    "countryHint": "Code pays à deux lettres, par exemple JP.",
+    "city": "Ville (facultatif)",
+    "cityHint": "Vous pouvez laisser vide, et la masquer plus tard.",
+    "bio": "Une ligne sur vous (facultatif)",
+    "bioHint": "160 caractères maximum.",
+    "save": "Enregistrer",
+    "saveFailed": "Impossible d'enregistrer votre profil. Veuillez réessayer.",
+    "finish": "Terminer la configuration de votre profil",
+    "privacyNote": "Votre pays est la seule localisation que nous exigeons. Nous ne demandons jamais où vous êtes."
   }
 }

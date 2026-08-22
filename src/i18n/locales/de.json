@@ -78,7 +78,14 @@
     "environment": "Umgebung",
     "connection": "Supabase-Verbindung",
     "components": "Komponenten",
-    "uxPreview": "UX-Vorschau"
+    "uxPreview": "UX-Vorschau",
+    "account": "Konto",
+    "deleteAccount": "Mein Konto löschen",
+    "deleteExplain": "Das löscht dauerhaft dein Profil, deine Fotos, deine Fragen und deine Bibliothek. Es kann nicht rückgängig gemacht werden.",
+    "deleteArchiveNote": "Warst du Today’s Human, wird dein Archiv-Eintrag auf Wunsch entfernt. Nummer und Datum bleiben, damit das Archiv eine vollständige Folge bleibt.",
+    "deleteConfirm": "Das kann nicht rückgängig gemacht werden.",
+    "deleteConfirmAction": "Ja, alles löschen",
+    "deleteFailed": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut."
   },
   "connection": {
     "checking": "Wird geprüft…",
@@ -90,10 +97,46 @@
     "signIn": "Anmelden",
     "signInPrompt": "Erstelle ein Konto, um zu fragen, abzustimmen und dich zu erinnern.",
     "guestNotice": "Du kannst jede Geschichte ohne Konto lesen.",
-    "continueAsGuest": "Ohne Konto fortfahren"
+    "continueAsGuest": "Ohne Konto fortfahren",
+    "or": "oder",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "du@beispiel.com",
+    "sendCode": "Code senden",
+    "codeTitle": "Prüfe deine E-Mails",
+    "codeSent": "Wir haben einen sechsstelligen Code an {{email}} geschickt.",
+    "codeLabel": "Code",
+    "verify": "Weiter",
+    "resend": "Neuen Code senden",
+    "signOut": "Abmelden",
+    "signedInAs": "Angemeldet als {{email}}",
+    "cancelled": "Anmeldung abgebrochen",
+    "appleFailed": "Anmeldung mit Apple nicht möglich. Bitte versuche es erneut.",
+    "emailFailed": "Code konnte nicht gesendet werden. Prüfe die Adresse und versuche es erneut.",
+    "codeInvalid": "Dieser Code ist ungültig oder abgelaufen."
   },
   "errors": {
     "notFound": "Diese Seite existiert nicht.",
     "goHome": "Zurück zu Heute"
+  },
+  "profile": {
+    "title": "Erzähl uns, wer du bist",
+    "subtitle": "Sechs Felder, nur vier sind Pflicht. Nichts davon lässt sich ranken oder abonnieren.",
+    "username": "Benutzername",
+    "usernameHint": "3–20 Zeichen: Kleinbuchstaben, Zahlen, Unterstriche",
+    "usernameTaken": "Dieser Benutzername ist bereits vergeben.",
+    "displayName": "Name",
+    "displayNameHint": "Ein Vorname genügt. Du musst nie einen Nachnamen angeben.",
+    "birthYear": "Geburtsjahr",
+    "birthYearHint": "Nur zur Prüfung, ob du 16 oder älter bist.",
+    "country": "Land",
+    "countryHint": "Zweibuchstabiger Ländercode, zum Beispiel JP.",
+    "city": "Stadt (optional)",
+    "cityHint": "Kann leer bleiben und später verborgen werden.",
+    "bio": "Eine Zeile über dich (optional)",
+    "bioHint": "Höchstens 160 Zeichen.",
+    "save": "Speichern",
+    "saveFailed": "Dein Profil konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "finish": "Profil fertig einrichten",
+    "privacyNote": "Dein Land ist der einzige Ort, den wir je verlangen. Wir fragen nie, wo du bist."
   }
 }

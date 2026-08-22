@@ -1,11 +1,15 @@
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
+import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
+import { signOut } from '@/features/auth/api';
+import { useSession } from '@/features/auth/useSession';
+import { useMyProfile } from '@/features/profiles/hooks';
 import { env } from '@/lib/env';
 import { checkConnection, type ConnectionStatus } from '@/lib/supabase';
 import { useTheme } from '@/theme';
@@ -16,6 +20,67 @@ const STATUS_KEYS: Record<ConnectionStatus, string> = {
   connected: 'connection.connected',
   failed: 'connection.failed',
 };
+
+function AccountSection() {
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const session = useSession();
+  const { data: profile, isLoading } = useMyProfile();
+
+  if (session.status === 'loading') {
+    return null;
+  }
+
+  // Article 6.1 — a guest is a first-class visitor. This says so, and offers
+  // an account without implying anything is missing.
+  if (session.status === 'guest') {
+    return (
+      <View style={{ gap: theme.spacing.md }}>
+        <Text color="textSecondary">{t('auth.guestNotice')}</Text>
+        <Button
+          label={t('auth.signIn')}
+          onPress={() => router.push('/(auth)/sign-in')}
+          variant="secondary"
+        />
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ gap: theme.spacing.md }}>
+      <Text color="textSecondary">
+        {t('auth.signedInAs', { email: session.session.user.email ?? '' })}
+      </Text>
+
+      {!isLoading && profile === null ? (
+        <Button
+          label={t('profile.finish')}
+          onPress={() => router.push('/(onboarding)/profile')}
+        />
+      ) : null}
+
+      {profile ? (
+        <Text color="textTertiary" variant="footnote">
+          @{profile.username}
+        </Text>
+      ) : null}
+
+      <Button
+        label={t('auth.signOut')}
+        onPress={() => {
+          void signOut();
+        }}
+        variant="secondary"
+      />
+
+      <Link href="/settings/account">
+        <Text color="danger" variant="footnote">
+          {t('settings.deleteAccount')} →
+        </Text>
+      </Link>
+    </View>
+  );
+}
 
 export default function SettingsScreen() {
   const theme = useTheme();
@@ -40,9 +105,20 @@ export default function SettingsScreen() {
 
       <View style={{ marginTop: theme.spacing.xxl }}>
         <Text
-          variant="footnote"
           color="textTertiary"
           style={{ marginBottom: theme.spacing.sm }}
+          variant="footnote"
+        >
+          {t('settings.account').toUpperCase()}
+        </Text>
+        <AccountSection />
+      </View>
+
+      <View style={{ marginTop: theme.spacing.xxl }}>
+        <Text
+          color="textTertiary"
+          style={{ marginBottom: theme.spacing.sm }}
+          variant="footnote"
         >
           {t('settings.language').toUpperCase()}
         </Text>
@@ -51,9 +127,9 @@ export default function SettingsScreen() {
 
       <View style={{ marginTop: theme.spacing.xxl }}>
         <Text
-          variant="footnote"
           color="textTertiary"
           style={{ marginBottom: theme.spacing.sm }}
+          variant="footnote"
         >
           {t('settings.developer').toUpperCase()}
         </Text>

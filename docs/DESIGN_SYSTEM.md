@@ -84,6 +84,7 @@ full mock screen lives in **Settings → UX preview**.
 | `QuestionCard` | Upvote only. No downvote exists to be styled |
 | `ReportAction` | Always reachable, never prominent |
 | `LanguageSelector` | Each language named in its own language |
+| `TextField` | Added in Phase 3. Label, hint, error; the error replaces the hint |
 
 ## Rules that are enforced, not just documented
 

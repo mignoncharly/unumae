@@ -47,6 +47,8 @@ describe('there are exactly four reasons to send anything', () => {
   });
 
   it('has no category for winning somebody back', () => {
+    // Whole words only. `promote_founding_moderator` is not a marketing
+    // category, and a substring match said it was.
     for (const forbidden of [
       'reengage',
       're_engage',
@@ -55,8 +57,9 @@ describe('there are exactly four reasons to send anything', () => {
       'inactive',
       'winback',
       'promo',
+      'promotion',
     ]) {
-      expect(ALL_SQL).not.toContain(forbidden);
+      expect(ALL_SQL).not.toMatch(new RegExp(`\\b${forbidden}\\b`));
     }
   });
 

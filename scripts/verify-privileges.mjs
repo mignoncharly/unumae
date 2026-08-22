@@ -121,6 +121,11 @@ const PROBES = [
     },
   ],
 
+  // Appointing a moderator is not something a moderator may do, let alone a
+  // stranger. Service role only.
+  ['grant_moderator', { target_email: 'probe@example.com' }],
+  ['revoke_moderator', { target_email: 'probe@example.com' }],
+
   // Phase 7 — reading is open, taking part is not.
   ['get_todays_human', {}],
   ['get_portrait_elements', { target_draw: NIL_UUID }],
@@ -156,6 +161,7 @@ const CLOSED_TABLES = [
   'notification_settings',
   'notification_log',
   'portrait_element_translations',
+  'founding_moderators',
 ];
 
 function loadEnv() {

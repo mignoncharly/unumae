@@ -1,3 +1,5 @@
+| [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) | 18 phases and their status |
+| [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) | What is waiting on you, and what is waiting on me |
 # ONE HUMAN
 
 > **8 billion people. One today.**

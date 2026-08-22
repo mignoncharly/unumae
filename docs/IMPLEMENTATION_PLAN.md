@@ -14,8 +14,8 @@ original). This file tracks status only.
 | 5 | Fairness, transparency & candidate notification | ✅ done | ✅ |
 | 6 | Human Portrait Builder | ✅ done | ✅ |
 | 7 | Today's Human experience | ✅ done | ✅ |
-| 8 | Human Archive, discovery & One Year Ago | ⬜ next | ✅ |
-| 9 | Trust & safety | ⬜ | ✅ |
+| 8 | Human Archive, discovery & One Year Ago | ✅ done | ✅ |
+| 9 | Trust & safety | ⬜ next | ✅ |
 | 10 | Notifications, localization & translation | ⬜ | ✅ |
 | 11 | Analytics, sharing & landing web | ⬜ | ✅ |
 | 12 | Accessibility & offline | ⬜ | ✅ |
@@ -224,10 +224,40 @@ Two rules are now unrepresentable rather than merely disabled:
 
 273 tests.
 
-## Phase 8 — next
+## Phase 8 — Human Archive, discovery & One Year Ago ✅
 
-The Human Archive: Today, Yesterday, One year ago, Random Human, by country and
-by year — and never by "most liked".
+- `get_archive()` — newest first, filterable by country and year, paginated.
+  It takes **no ordering argument**, and reads no vote or Remember data, so
+  there is nothing for a future "sort by popular" to sort by.
+- `get_human()` — one archived Human, the same shape as `get_todays_human()`,
+  so one screen renders either.
+- `get_random_human()` — sampled by random offset, not `order by random()`,
+  which stays banned everywhere so it can never quietly reappear in the draw.
+- `get_anniversaries()` — one, five, ten and twenty-five years ago today. Empty
+  until the Archive is old enough, and needs no change when it is.
+- `get_archive_countries()` / `get_archive_years()` — the filter lists, ordered
+  alphabetically and chronologically. A country list sorted by count would be a
+  ranking of countries.
+- All six are granted to **anon**: the Archive is readable in full by guests.
+
+**The tombstone is now visible.** A removed Human keeps their number and date
+and loses everything else (Article 8.6). The listing uses left joins so they
+still appear — an inner join would make them vanish and leave the sequence
+gappy — and `is_removed` is returned explicitly so no screen has to infer it
+from a missing name.
+
+Screens: the Archive tab with anniversaries, a Random Human button, country and
+year filters, and the chronological list; plus `/human/[id]`, which renders an
+archived portrait with its questions and answers, and no countdown.
+
+306 tests. The new suite asserts the Archive cannot be ranked: no ordering
+argument, no count read, and no function named `top_human`, `most_liked`,
+`trending`, `popular`, `leaderboard` or `ranking`.
+
+## Phase 9 — next
+
+Trust & safety: the moderation queue, `content_reports` and `moderation_events`,
+the admin console, and liveness verification before publication.
 
 ## Working agreements
 

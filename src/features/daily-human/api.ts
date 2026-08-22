@@ -32,10 +32,29 @@ async function signPhoto(path: string | null): Promise<string | null> {
   return error ? null : (data?.signedUrl ?? null);
 }
 
-export async function getTodaysHuman(): Promise<TodaysHuman | null> {
-  const supabase = getSupabase();
+/**
+ * The portrait's answers for any published cycle. Shared with the Archive, so
+ * a Human reads identically on their day and forever afterwards.
+ */
+export async function getPortraitElements(
+  drawId: string
+): Promise<{ key: PortraitElementKey; answer: string }[]> {
+  const { data, error } = await getSupabase().rpc('get_portrait_elements', {
+    target_draw: drawId,
+  });
 
-  const { data, error } = await supabase.rpc('get_todays_human');
+  if (error) {
+    throw new AppError('network', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((element) => ({
+    key: element.element_key as PortraitElementKey,
+    answer: element.answer,
+  }));
+}
+
+export async function getTodaysHuman(): Promise<TodaysHuman | null> {
+  const { data, error } = await getSupabase().rpc('get_todays_human');
   if (error) {
     throw new AppError('network', 'common.error', { cause: error });
   }
@@ -47,21 +66,9 @@ export async function getTodaysHuman(): Promise<TodaysHuman | null> {
     return null;
   }
 
-  const { data: elements, error: elementsError } = await supabase.rpc(
-    'get_portrait_elements',
-    { target_draw: human.draw_id }
-  );
-
-  if (elementsError) {
-    throw new AppError('network', 'common.error', { cause: elementsError });
-  }
-
   return {
     human,
-    elements: (elements ?? []).map((element) => ({
-      key: element.element_key as PortraitElementKey,
-      answer: element.answer,
-    })),
+    elements: await getPortraitElements(human.draw_id),
     photoUrl: await signPhoto(human.photo_path),
   };
 }

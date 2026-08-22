@@ -71,7 +71,17 @@
     "randomHuman": "Random Human",
     "byCountry": "By country",
     "byYear": "By year",
-    "empty": "The Archive is still empty. It begins with Human #0001."
+    "empty": "The Archive is still empty. It begins with Human #0001.",
+    "allCountries": "Everywhere",
+    "allYears": "All years",
+    "yearsAgo_one": "One year ago today",
+    "yearsAgo_other": "{{count}} years ago today",
+    "removed": "This Human asked to be removed.",
+    "removedBody": "On {{date}} the world met this person. They have since asked to be removed, and we did. The number and the date stay so the Archive remains a complete sequence.",
+    "notFound": "That Human is not in the Archive.",
+    "noMatch": "Nobody here yet",
+    "noMatchBody": "No Human matches that filter. Try another country or year.",
+    "dayIsOver": "Their day was {{date}}."
   },
   "settings": {
     "title": "Settings",

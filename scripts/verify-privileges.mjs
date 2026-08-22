@@ -39,6 +39,12 @@ const ANON_ALLOWED = new Set([
   'get_todays_human',
   'get_portrait_elements',
   'get_questions',
+  'get_archive',
+  'get_human',
+  'get_random_human',
+  'get_anniversaries',
+  'get_archive_countries',
+  'get_archive_years',
 ]);
 
 const PROBES = [
@@ -58,6 +64,14 @@ const PROBES = [
     { seed: 's', candidate: '00000000-0000-0000-0000-000000000001' },
   ],
   ['pool_hash', { ids: [] }],
+
+  // Phase 8 — the Archive is open to guests in full (Article 6.1).
+  ['get_archive', { page_limit: 1 }],
+  ['get_human', { target_draw: NIL_UUID }],
+  ['get_random_human', {}],
+  ['get_anniversaries', {}],
+  ['get_archive_countries', {}],
+  ['get_archive_years', {}],
 
   // Phase 7 — reading is open, taking part is not.
   ['get_todays_human', {}],

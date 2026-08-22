@@ -71,7 +71,17 @@
     "randomHuman": "Zufälliger Human",
     "byCountry": "Nach Land",
     "byYear": "Nach Jahr",
-    "empty": "Das Archiv ist noch leer. Es beginnt mit Human #0001."
+    "empty": "Das Archiv ist noch leer. Es beginnt mit Human #0001.",
+    "allCountries": "Überall",
+    "allYears": "Alle Jahre",
+    "yearsAgo_one": "Heute vor einem Jahr",
+    "yearsAgo_other": "Heute vor {{count}} Jahren",
+    "removed": "Dieser Human hat um Entfernung gebeten.",
+    "removedBody": "Am {{date}} lernte die Welt diese Person kennen. Sie hat seitdem um Entfernung gebeten, und wir haben sie entfernt. Nummer und Datum bleiben, damit das Archiv eine vollständige Folge bleibt.",
+    "notFound": "Dieser Human ist nicht im Archiv.",
+    "noMatch": "Hier ist noch niemand",
+    "noMatchBody": "Kein Human passt zu diesem Filter. Versuche ein anderes Land oder Jahr.",
+    "dayIsOver": "Ihr Tag war der {{date}}."
   },
   "settings": {
     "title": "Einstellungen",

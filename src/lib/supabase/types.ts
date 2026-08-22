@@ -165,6 +165,33 @@ export type PublicQuestionRow = {
   has_voted: boolean | null;
 };
 
+/**
+ * An Archive entry.
+ *
+ * Everything except the number and the date is nullable, because Article 8.6
+ * lets a person leave: the row survives as a tombstone so the sequence stays
+ * complete, and the identity does not. `is_removed` says which case this is,
+ * so no screen has to infer it from a missing name.
+ */
+export type ArchiveEntryRow = {
+  draw_id: string;
+  selection_date: string;
+  human_number: number;
+  display_name: string | null;
+  country_code: string | null;
+  city: string | null;
+  photo_path: string | null;
+  is_removed: boolean;
+};
+
+export type ArchiveHumanRow = ArchiveEntryRow & {
+  published_at: string | null;
+};
+
+export type AnniversaryRow = Omit<ArchiveEntryRow, 'city'> & {
+  years_ago: number;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -294,6 +321,36 @@ export type Database = {
       do_i_remember: {
         Args: { target_draw: string };
         Returns: boolean;
+      };
+      /** Newest first. There is no ordering argument, and nothing to sort by. */
+      get_archive: {
+        Args: {
+          filter_country?: string | null;
+          filter_year?: number | null;
+          page_limit?: number;
+          page_offset?: number;
+        };
+        Returns: ArchiveEntryRow[];
+      };
+      get_human: {
+        Args: { target_draw: string };
+        Returns: ArchiveHumanRow[];
+      };
+      get_random_human: {
+        Args: { filter_country?: string | null };
+        Returns: ArchiveEntryRow[];
+      };
+      get_anniversaries: {
+        Args: Record<PropertyKey, never>;
+        Returns: AnniversaryRow[];
+      };
+      get_archive_countries: {
+        Args: Record<PropertyKey, never>;
+        Returns: { country_code: string; humans: number }[];
+      };
+      get_archive_years: {
+        Args: Record<PropertyKey, never>;
+        Returns: { year: number; humans: number }[];
       };
     };
     Enums: {

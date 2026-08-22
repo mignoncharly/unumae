@@ -18,11 +18,10 @@ Last updated: end of Phase 7.
 
 | # | Item | Phase |
 | --- | --- | --- |
-| 1 | Human Archive: Today, Yesterday, One year ago, Random, country, year | 8 — next |
-| 2 | Moderation queue and admin console | 9 |
-| 3 | Liveness verification before publication (`VERIFICATION_POLICY.md`) | 9 |
-| 4 | Push notifications — the invitation is in-app only today | 10 |
-| 5 | Optional audio/video portrait element | later |
+| 1 | Moderation queue and admin console | 9 — next |
+| 2 | Liveness verification before publication (`VERIFICATION_POLICY.md`) | 9 |
+| 3 | Push notifications — the invitation is in-app only today | 10 |
+| 4 | Optional audio/video portrait element | later |
 
 ## Needs a native build, not Expo Go
 
@@ -43,7 +42,7 @@ picking, storage — runs in Expo Go.
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | 13 applied |
+| Migrations | 14 applied |
 | Edge Functions | `delete-account` deployed; rejects no-auth 401, anon-key 401, GET 405 |
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min |
@@ -51,8 +50,8 @@ picking, storage — runs in Expo Go.
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Community rules | approved as written, live in EN/FR/DE |
 | Draw verification | database and independent implementation agree |
-| Anonymous access | 26 checks, matches the allowlist |
-| Tests | 283, with a pre-push hook |
+| Anonymous access | 32 checks, matches the allowlist |
+| Tests | 306, with a pre-push hook |
 
 ## Commands worth remembering
 

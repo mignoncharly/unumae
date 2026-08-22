@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# ONE HUMAN runs no GitHub Actions. This hook is the gate instead: nothing
+# reaches the remote without passing the same checks CI would have run.
+#
+# Installed by `npm install` (the prepare script sets core.hooksPath).
+# Emergency bypass, to be used almost never: git push --no-verify
+#
+set -e
+
+echo "pre-push: npm run verify"
+npm run verify
+
+echo "pre-push: OK"

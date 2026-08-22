@@ -1,0 +1,66 @@
+{
+  "common": {
+    "appName": "ONE HUMAN",
+    "tagline": "8 billion people. One today.",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "close": "Close",
+    "error": "Something went wrong"
+  },
+  "tabs": {
+    "today": "Today",
+    "archive": "Archive",
+    "settings": "Settings"
+  },
+  "today": {
+    "title": "Today",
+    "remaining": "{{countdown}} remaining",
+    "quietDay": "Today the world is quiet",
+    "quietDayBody": "No Human is being published today. You can meet someone from the Archive instead.",
+    "empty": "Today's Human is not live yet.",
+    "endOfStory": "You have reached the end.",
+    "meetRandom": "Meet a random Human"
+  },
+  "archive": {
+    "title": "The Archive",
+    "subtitle": "Everyone the world has met.",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "oneYearAgo": "One year ago",
+    "randomHuman": "Random Human",
+    "byCountry": "By country",
+    "byYear": "By year",
+    "empty": "The Archive is still empty. It begins with Human #0001."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languageSystem": "System default",
+    "about": "About",
+    "howSelectionWorks": "How selection works",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "communityGuidelines": "Community guidelines",
+    "developer": "Developer",
+    "designTokens": "Design tokens",
+    "environment": "Environment",
+    "connection": "Supabase connection"
+  },
+  "connection": {
+    "checking": "Checking…",
+    "connected": "Connected",
+    "failed": "Not reachable",
+    "notConfigured": "Not configured"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signInPrompt": "Create an account to ask, vote and remember.",
+    "guestNotice": "You can read every story without an account.",
+    "continueAsGuest": "Continue without an account"
+  },
+  "errors": {
+    "notFound": "This page does not exist.",
+    "goHome": "Back to Today"
+  }
+}

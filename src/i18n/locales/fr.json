@@ -1,0 +1,66 @@
+{
+  "common": {
+    "appName": "ONE HUMAN",
+    "tagline": "8 milliards de personnes. Une aujourd'hui.",
+    "loading": "Chargement…",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "error": "Une erreur est survenue"
+  },
+  "tabs": {
+    "today": "Aujourd'hui",
+    "archive": "Archive",
+    "settings": "Réglages"
+  },
+  "today": {
+    "title": "Aujourd'hui",
+    "remaining": "il reste {{countdown}}",
+    "quietDay": "Aujourd'hui, le monde est silencieux",
+    "quietDayBody": "Aucun Human n'est publié aujourd'hui. Vous pouvez rencontrer quelqu'un dans l'Archive.",
+    "empty": "Le Human du jour n'est pas encore en ligne.",
+    "endOfStory": "Vous êtes arrivé à la fin.",
+    "meetRandom": "Rencontrer un Human au hasard"
+  },
+  "archive": {
+    "title": "L'Archive",
+    "subtitle": "Toutes les personnes que le monde a rencontrées.",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "oneYearAgo": "Il y a un an",
+    "randomHuman": "Human au hasard",
+    "byCountry": "Par pays",
+    "byYear": "Par année",
+    "empty": "L'Archive est encore vide. Elle commence avec Human #0001."
+  },
+  "settings": {
+    "title": "Réglages",
+    "language": "Langue",
+    "languageSystem": "Langue du système",
+    "about": "À propos",
+    "howSelectionWorks": "Comment la sélection fonctionne",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "communityGuidelines": "Règles de la communauté",
+    "developer": "Développeur",
+    "designTokens": "Design tokens",
+    "environment": "Environnement",
+    "connection": "Connexion Supabase"
+  },
+  "connection": {
+    "checking": "Vérification…",
+    "connected": "Connecté",
+    "failed": "Injoignable",
+    "notConfigured": "Non configuré"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signInPrompt": "Créez un compte pour poser une question, voter et vous souvenir.",
+    "guestNotice": "Vous pouvez lire chaque histoire sans compte.",
+    "continueAsGuest": "Continuer sans compte"
+  },
+  "errors": {
+    "notFound": "Cette page n'existe pas.",
+    "goHome": "Retour à Aujourd'hui"
+  }
+}

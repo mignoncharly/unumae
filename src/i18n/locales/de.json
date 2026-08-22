@@ -1,0 +1,66 @@
+{
+  "common": {
+    "appName": "ONE HUMAN",
+    "tagline": "8 Milliarden Menschen. Einer heute.",
+    "loading": "Wird geladen…",
+    "retry": "Erneut versuchen",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "error": "Etwas ist schiefgelaufen"
+  },
+  "tabs": {
+    "today": "Heute",
+    "archive": "Archiv",
+    "settings": "Einstellungen"
+  },
+  "today": {
+    "title": "Heute",
+    "remaining": "noch {{countdown}}",
+    "quietDay": "Heute ist die Welt still",
+    "quietDayBody": "Heute wird kein Human veröffentlicht. Du kannst stattdessen jemanden im Archiv treffen.",
+    "empty": "Der Human des Tages ist noch nicht live.",
+    "endOfStory": "Du hast das Ende erreicht.",
+    "meetRandom": "Einen zufälligen Human treffen"
+  },
+  "archive": {
+    "title": "Das Archiv",
+    "subtitle": "Alle, die die Welt kennengelernt hat.",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "oneYearAgo": "Vor einem Jahr",
+    "randomHuman": "Zufälliger Human",
+    "byCountry": "Nach Land",
+    "byYear": "Nach Jahr",
+    "empty": "Das Archiv ist noch leer. Es beginnt mit Human #0001."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "languageSystem": "Systemsprache",
+    "about": "Über",
+    "howSelectionWorks": "Wie die Auswahl funktioniert",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "communityGuidelines": "Community-Richtlinien",
+    "developer": "Entwickler",
+    "designTokens": "Design-Tokens",
+    "environment": "Umgebung",
+    "connection": "Supabase-Verbindung"
+  },
+  "connection": {
+    "checking": "Wird geprüft…",
+    "connected": "Verbunden",
+    "failed": "Nicht erreichbar",
+    "notConfigured": "Nicht konfiguriert"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signInPrompt": "Erstelle ein Konto, um zu fragen, abzustimmen und dich zu erinnern.",
+    "guestNotice": "Du kannst jede Geschichte ohne Konto lesen.",
+    "continueAsGuest": "Ohne Konto fortfahren"
+  },
+  "errors": {
+    "notFound": "Diese Seite existiert nicht.",
+    "goHome": "Zurück zu Heute"
+  }
+}

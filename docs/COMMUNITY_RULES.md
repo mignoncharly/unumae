@@ -1,14 +1,18 @@
 # Community rules
 
-**Draft for review.** This is the text users accept before they can enter the
-draw. Written to be read once, by a real person, in about ninety seconds.
+**Approved 2026-08-22, as written.** This is the text users accept before they
+can enter the draw. Written to be read once, by a real person, in about ninety
+seconds.
+
+The appeals commitment in rule 8 was reviewed and kept, so it is now an
+operational promise: somebody has to be available to re-review a decision.
 
 Accepting it sets `accepted_rules_at`, which is a hard requirement for
 eligibility (Article 5.1).
 
 ---
 
-## ONE HUMAN — the rules
+## Unumae — the rules
 
 This is a small place with a simple promise: every day, one ordinary person is
 introduced to the world. These rules exist to keep that possible.
@@ -107,9 +111,9 @@ a day.
 
 ---
 
-## Notes for review — not part of the user-facing text
+## Notes on the draft — not part of the user-facing text
 
-Decisions taken while drafting, which are yours to overturn:
+Decisions taken while drafting. All five were reviewed and kept:
 
 1. **Rule 2 is unusual and deliberate.** Most platforms ban topics. This bans a
    *form* — the rhetorical question used as an accusation — which is the actual

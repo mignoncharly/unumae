@@ -1,29 +1,31 @@
-import * as AppleAuthentication from 'expo-apple-authentication';
-import { Platform } from 'react-native';
-
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 
+import { loadAppleModule } from './appleAuth';
+
 /**
- * Article 1.3 of the plan: very low friction, and no classic passwords.
- * Sign in with Apple first, email magic link second.
+ * Very low friction, and no classic passwords.
+ * Sign in with Apple first, email six-digit code second.
  */
 
-export async function isAppleAuthAvailable(): Promise<boolean> {
-  if (Platform.OS !== 'ios') {
-    return false;
-  }
-  return AppleAuthentication.isAvailableAsync();
-}
+export { isAppleAuthAvailable } from './appleAuth';
 
 export async function signInWithApple(): Promise<void> {
-  let credential: AppleAuthentication.AppleAuthenticationCredential;
+  const apple = loadAppleModule();
+
+  // Every caller checks availability first; this is the belt to that braces,
+  // so a stray call on Android throws an AppError rather than a TypeError.
+  if (!apple) {
+    throw new AppError('auth', 'auth.appleUnavailable');
+  }
+
+  let credential: Awaited<ReturnType<typeof apple.signInAsync>>;
 
   try {
-    credential = await AppleAuthentication.signInAsync({
+    credential = await apple.signInAsync({
       requestedScopes: [
-        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        apple.AppleAuthenticationScope.FULL_NAME,
+        apple.AppleAuthenticationScope.EMAIL,
       ],
     });
   } catch (error) {
@@ -56,6 +58,9 @@ export async function signInWithApple(): Promise<void> {
  * Sends a six-digit code. A code rather than a link because a link opens in
  * whichever browser the mail app prefers, which breaks the session handoff on
  * iOS often enough to be a support burden.
+ *
+ * This path works everywhere — Expo Go and Android included — which is why it
+ * is never hidden behind the Apple button.
  */
 export async function sendEmailCode(email: string): Promise<void> {
   const { error } = await getSupabase().auth.signInWithOtp({

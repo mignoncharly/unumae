@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "ONE HUMAN",
+    "appName": "Unumae",
     "tagline": "8 billion people. One today.",
     "loading": "Loading…",
     "retry": "Try again",
@@ -125,7 +125,9 @@
     "cancelled": "Sign-in cancelled",
     "appleFailed": "Could not sign in with Apple. Please try again.",
     "emailFailed": "Could not send the code. Check the address and try again.",
-    "codeInvalid": "That code is not valid or has expired."
+    "codeInvalid": "That code is not valid or has expired.",
+    "appleUnavailable": "Sign in with Apple is not available on this device.",
+    "appleNeedsBuild": "Sign in with Apple needs a development build — it cannot work in Expo Go. Use the email code below."
   },
   "errors": {
     "notFound": "This page does not exist.",

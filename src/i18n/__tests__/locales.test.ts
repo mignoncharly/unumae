@@ -80,7 +80,7 @@ describe('locale files', () => {
   it('never translates the product name', () => {
     for (const locale of SUPPORTED_LOCALES) {
       const translation = resources[locale].translation as Translations;
-      expect(valueAt(translation, 'common.appName')).toBe('ONE HUMAN');
+      expect(valueAt(translation, 'common.appName')).toBe('Unumae');
     }
   });
 });

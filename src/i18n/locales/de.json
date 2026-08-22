@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "ONE HUMAN",
+    "appName": "Unumae",
     "tagline": "8 Milliarden Menschen. Einer heute.",
     "loading": "Wird geladen…",
     "retry": "Erneut versuchen",
@@ -125,7 +125,9 @@
     "cancelled": "Anmeldung abgebrochen",
     "appleFailed": "Anmeldung mit Apple nicht möglich. Bitte versuche es erneut.",
     "emailFailed": "Code konnte nicht gesendet werden. Prüfe die Adresse und versuche es erneut.",
-    "codeInvalid": "Dieser Code ist ungültig oder abgelaufen."
+    "codeInvalid": "Dieser Code ist ungültig oder abgelaufen.",
+    "appleUnavailable": "Anmelden mit Apple ist auf diesem Gerät nicht verfügbar.",
+    "appleNeedsBuild": "Anmelden mit Apple braucht einen Development Build — in Expo Go funktioniert es nicht. Nutze den E-Mail-Code unten."
   },
   "errors": {
     "notFound": "Diese Seite existiert nicht.",

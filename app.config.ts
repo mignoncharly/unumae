@@ -15,7 +15,7 @@ const BUNDLE_ID = 'com.unumae.app';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: 'ONE HUMAN',
+  name: 'Unumae',
   slug: 'unumae',
   version: '0.1.0',
   orientation: 'portrait',
@@ -53,7 +53,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-image-picker',
       {
         photosPermission:
-          'ONE HUMAN uses your photo library so you can choose the photograph for your portrait.',
+          'Unumae uses your photo library so you can choose the photograph for your portrait.',
       },
     ],
   ],

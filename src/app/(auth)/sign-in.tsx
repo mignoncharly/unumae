@@ -1,18 +1,14 @@
-import * as AppleAuthentication from 'expo-apple-authentication';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { AppleSignInButton } from '@/components/shared/AppleSignInButton';
 import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { TextField } from '@/components/ui/TextField';
-import {
-  isAppleAuthAvailable,
-  sendEmailCode,
-  signInWithApple,
-} from '@/features/auth/api';
+import { sendEmailCode, signInWithApple } from '@/features/auth/api';
 import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
@@ -23,19 +19,17 @@ import { useTheme } from '@/theme';
  * It is reached by choosing to act, never by opening the app. Guest viewing is
  * a permanent right, so "continue without an account" is always present and
  * always works.
+ *
+ * The email path works on every platform, including Expo Go and Android. Apple
+ * appears only where it can actually succeed.
  */
 export default function SignInScreen() {
   const theme = useTheme();
   const { t } = useTranslation();
 
-  const [appleAvailable, setAppleAvailable] = useState(false);
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
-
-  useEffect(() => {
-    void isAppleAuthAvailable().then(setAppleAvailable);
-  }, []);
 
   async function handleApple() {
     setError(undefined);
@@ -81,31 +75,7 @@ export default function SignInScreen() {
       </Text>
 
       <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.lg }}>
-        {appleAvailable ? (
-          <AppleAuthentication.AppleAuthenticationButton
-            buttonStyle={
-              theme.scheme === 'dark'
-                ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
-                : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
-            }
-            buttonType={
-              AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
-            }
-            cornerRadius={theme.radius.full}
-            onPress={handleApple}
-            style={{ height: 48 }}
-          />
-        ) : null}
-
-        {appleAvailable ? (
-          <Text
-            color="textTertiary"
-            style={{ textAlign: 'center' }}
-            variant="footnote"
-          >
-            {t('auth.or')}
-          </Text>
-        ) : null}
+        <AppleSignInButton onPress={handleApple} />
 
         <TextField
           autoCapitalize="none"

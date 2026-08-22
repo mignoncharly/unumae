@@ -11,11 +11,8 @@ Last updated: end of Phase 7.
 
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
-| 1 | ⚠️ **Confirm `com.unumae.app` is in the Apple provider's Client IDs** | Supabase → Authentication → Providers → Apple. The provider is enabled, but native Sign in with Apple sends an identity token whose audience is the **bundle id**, and Supabase rejects it unless that exact string is listed there. The dashboard is the only place to check it. | Apple sign-in on device. |
-| 2 | ⚠️ **First iOS build, and sign-in on a real device** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. Sign in with Apple cannot be tested in a simulator or on web. | Verifying auth end to end. |
-| 3 | **Confirm the display name** | Bundle `com.unumae.app`, SKU `unumae-ios-001`, EAS project `unumae` — but every string in the app still says ONE HUMAN. I left the strings alone: renaming is a product decision, not an inference from an identifier. Half a day if you want it. | The App Store listing. |
-| 4 | **Review `docs/COMMUNITY_RULES.md`** | Drafted and live in all three languages. The notes at the bottom list five decisions worth overturning — particularly the appeals promise in rule 8, which is a real operational commitment. | Nothing. |
-| 5 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
+| 1 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. You said you will run it later — nothing else is waiting on it. | Testing Sign in with Apple. |
+| 2 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
 
 ## Mine — code, and already planned
 
@@ -27,6 +24,20 @@ Last updated: end of Phase 7.
 | 4 | Push notifications — the invitation is in-app only today | 10 |
 | 5 | Optional audio/video portrait element | later |
 
+## Needs a native build, not Expo Go
+
+Development happens in Expo Go on Android. These work in the code but cannot be
+exercised there, and are flagged rather than reworked:
+
+| Feature | Why | State |
+| --- | --- | --- |
+| Sign in with Apple | Expo Go signs its own bundle, so it cannot carry this app's entitlement | Implemented; hides itself and explains why. Email code works everywhere. |
+| Push notifications (Phase 10) | Expo Go has no push credentials for this bundle | Not built yet |
+| Liveness check (Phase 9) | Camera-based SDK, likely a native module | Not built yet |
+
+Everything else — the draw, portraits, questions, voting, Remember, image
+picking, storage — runs in Expo Go.
+
 ## Deployed and verified against the live project
 
 | Thing | State |
@@ -37,10 +48,11 @@ Last updated: end of Phase 7.
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min |
 | EAS project | `@mignoncharly/unumae` |
-| Apple provider | enabled on the hosted project |
+| Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
+| Community rules | approved as written, live in EN/FR/DE |
 | Draw verification | database and independent implementation agree |
 | Anonymous access | 26 checks, matches the allowlist |
-| Tests | 273, with a pre-push hook |
+| Tests | 283, with a pre-push hook |
 
 ## Commands worth remembering
 

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "ONE HUMAN",
+    "appName": "Unumae",
     "tagline": "8 milliards de personnes. Une aujourd'hui.",
     "loading": "Chargement…",
     "retry": "Réessayer",
@@ -125,7 +125,9 @@
     "cancelled": "Connexion annulée",
     "appleFailed": "Connexion Apple impossible. Veuillez réessayer.",
     "emailFailed": "Impossible d'envoyer le code. Vérifiez l'adresse et réessayez.",
-    "codeInvalid": "Ce code n'est pas valide ou a expiré."
+    "codeInvalid": "Ce code n'est pas valide ou a expiré.",
+    "appleUnavailable": "La connexion avec Apple n'est pas disponible sur cet appareil.",
+    "appleNeedsBuild": "La connexion avec Apple nécessite un build de développement — elle ne peut pas fonctionner dans Expo Go. Utilisez le code par e-mail ci-dessous."
   },
   "errors": {
     "notFound": "Cette page n'existe pas.",

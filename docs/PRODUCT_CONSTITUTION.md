@@ -1,4 +1,4 @@
-# ONE HUMAN — Product Constitution
+# Unumae — Product Constitution
 
 > **8 billion people. One today.**
 
@@ -9,7 +9,7 @@
 ## How to read this document
 
 This is not a specification and not a roadmap. It is the set of rules that decides,
-in advance, what ONE HUMAN is allowed to become.
+in advance, what Unumae is allowed to become.
 
 Every future feature request is measured against this file. If a feature contradicts
 Article 1, the feature is rejected — not the article. The purpose of writing this
@@ -409,7 +409,7 @@ a workload chosen, in part, because a human can actually review it.
 
 ### 8.3 No private channel
 
-There is no direct messaging in ONE HUMAN, at any tier, for any user. This removes
+There is no direct messaging in Unumae, at any tier, for any user. This removes
 the primary vector by which exposure turns into harassment. It is listed under safety
 rather than features because that is its actual function.
 

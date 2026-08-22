@@ -1,4 +1,4 @@
-# ONE HUMAN
+# Unumae
 
 > **8 billion people. One today.**
 
@@ -65,5 +65,6 @@ to say yes start sounding excellent.
 
 ## Status
 
-Phases 0–7 of 18 complete. See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md)
+Phases 0–7 of 18 complete. Development runs in Expo Go on Android; Sign in with
+Apple needs a native build and hides itself until then. See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md)
 for detail and [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) for what is outstanding.

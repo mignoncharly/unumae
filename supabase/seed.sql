@@ -6,4 +6,4 @@
 -- Phase 4 seeds a synthetic candidate pool here so that the draw can be
 -- exercised locally without waiting two days for a real cycle.
 
-select 'ONE HUMAN — nothing to seed yet' as status;
+select 'Unumae — nothing to seed yet' as status;

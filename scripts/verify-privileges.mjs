@@ -27,7 +27,19 @@ const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
  * over values the caller already holds, reading no table and revealing nothing
  * about anyone.
  */
-const ANON_ALLOWED = new Set(['draw_rank', 'draw_order', 'pool_hash']);
+const NIL_UUID = '00000000-0000-0000-0000-000000000001';
+
+const ANON_ALLOWED = new Set([
+  // The verification surface (Article 12).
+  'draw_rank',
+  'draw_order',
+  'pool_hash',
+  // Guest viewing is a permanent right (Article 6.1). These three are the
+  // whole of what a person sees without an account.
+  'get_todays_human',
+  'get_portrait_elements',
+  'get_questions',
+]);
 
 const PROBES = [
   ['run_daily_draw', { target_date: '2027-01-01' }],
@@ -46,10 +58,32 @@ const PROBES = [
     { seed: 's', candidate: '00000000-0000-0000-0000-000000000001' },
   ],
   ['pool_hash', { ids: [] }],
+
+  // Phase 7 — reading is open, taking part is not.
+  ['get_todays_human', {}],
+  ['get_portrait_elements', { target_draw: NIL_UUID }],
+  ['get_questions', { target_draw: NIL_UUID }],
+  ['ask_question', { target_draw: NIL_UUID, question_body: 'x'.repeat(20) }],
+  ['vote_question', { target_question: NIL_UUID }],
+  ['unvote_question', { target_question: NIL_UUID }],
+  ['remember_human', { target_draw: NIL_UUID }],
+  ['forget_human', { target_draw: NIL_UUID }],
+  ['do_i_remember', { target_draw: NIL_UUID }],
+  ['publish_due_cycles', {}],
+  ['approve_portrait', { target_portrait: NIL_UUID }],
 ];
 
 /** Tables no anonymous caller may read a single row of. */
-const CLOSED_TABLES = ['profiles', 'draw_candidates', 'draw_invitations'];
+const CLOSED_TABLES = [
+  'profiles',
+  'draw_candidates',
+  'draw_invitations',
+  'portraits',
+  'portrait_elements',
+  'questions',
+  'question_votes',
+  'remembers',
+];
 
 function loadEnv() {
   const path = join(ROOT, '.env');

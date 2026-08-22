@@ -13,8 +13,8 @@ original). This file tracks status only.
 | 4 | Eligibility & daily selection engine | ✅ done | ✅ |
 | 5 | Fairness, transparency & candidate notification | ✅ done | ✅ |
 | 6 | Human Portrait Builder | ✅ done | ✅ |
-| 7 | Today's Human experience | ⬜ next | ✅ |
-| 8 | Human Archive, discovery & One Year Ago | ⬜ | ✅ |
+| 7 | Today's Human experience | ✅ done | ✅ |
+| 8 | Human Archive, discovery & One Year Ago | ⬜ next | ✅ |
 | 9 | Trust & safety | ⬜ | ✅ |
 | 10 | Notifications, localization & translation | ⬜ | ✅ |
 | 11 | Analytics, sharing & landing web | ⬜ | ✅ |
@@ -194,9 +194,40 @@ touch a single eligibility column.
   set before this, so the pool was permanently empty
 - bundle identifier corrected to the registered `com.unumae.app`
 
-## Phase 7 — next
+## Phase 7 — Today's Human experience ✅
 
-Today's Human: the live screen, questions, voting and Remember.
+The first phase where a stranger can actually be met.
+
+- `publish_due_cycles()` at 00:01 UTC: yesterday's human enters the Archive,
+  today's goes live — but only if a person approved the portrait. The human
+  number is assigned at publication, so a cancelled cycle consumes none and
+  the Archive has no meaningless gaps.
+- `get_todays_human()`, `get_portrait_elements()`, `get_questions()` are open
+  to **anon**. `profiles` and `portraits` stay owner-only: publication exposes
+  one chosen row through a function, never a table.
+- Questions, voting and Remember, each behind a function that checks the cycle
+  is live — a rule that belongs next to the data, not in whichever client is
+  calling.
+- Photographs stay in a private bucket. A storage policy makes an object
+  readable exactly when its cycle is live, so "not before publication" is
+  enforced by the same database that decides when publication happened — no
+  service key handed out, no files copied.
+
+Two rules are now unrepresentable rather than merely disabled:
+
+- **No downvote.** `question_votes` has no direction, value or weight column.
+  The only thing a row can say is "this person asked for this question", and a
+  test fails if such a column ever appears.
+- **No Remember count.** `do_i_remember()` answers about the caller; there is
+  no function, view or grant anywhere that counts how many people kept
+  somebody, and a test asserts none appears.
+
+273 tests.
+
+## Phase 8 — next
+
+The Human Archive: Today, Yesterday, One year ago, Random Human, by country and
+by year — and never by "most liked".
 
 ## Working agreements
 

@@ -3,15 +3,15 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: end of Phase 6.
+Last updated: end of Phase 7.
 
 ---
 
-## Yours — needs a human, an account, or a credential I do not hold
+## Yours — needs a human, an account, or a credential I do not hold 
 
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
-| 1 | ⚠️ **Deploy the delete-account Edge Function** | `npx supabase functions deploy delete-account --project-ref qpicjsjxdblrxdrdibge`. Waiting on your access token. | Account deletion, App Store review. |
+| 1 | ⚠️ **Log the Supabase CLI into the right account, then deploy** | Not a missing token — the CLI here is already logged in, but as an account that can see `cook-or-delete`, `oncewasyours` and `kinavela` and **not** `qpicjsjxdblrxdrdibge`, so the Management API answers 403. Run `npx supabase login` as the account that owns onehuman (or add that account to its organisation), and I can deploy. Migrations are unaffected — `db.mjs` uses the direct Postgres connection, not the Management API. | Deploying any Edge Function. |
 | 2 | ⚠️ **Create staging and production Supabase projects** | One project currently serves all three environments. `docs/ENVIRONMENTS.md` has the setup; `app.config.ts` now refuses a non-dev build that has no separate URL. | Safe testing once real data exists. |
 | 3 | ⚠️ **App IDs for the dev and staging bundle identifiers** | `com.unumae.app.dev` and `com.unumae.app.staging` each need an App ID with Sign in with Apple enabled, or auth only works in production builds. | Testing Apple auth before release. |
 | 4 | **Move `docs/supa_keys.md` out of the repo** | Holds the service-role key, database password and JWT secret. Gitignored, never committed. Suggested: `C:\Users\migno\.onehuman\`. | Nothing, until it leaks. |
@@ -23,13 +23,12 @@ Last updated: end of Phase 6.
 
 | # | Item | Phase |
 | --- | --- | --- |
-| 1 | Today's Human screen, questions, voting, Remember | 7 — next |
-| 2 | Signed URLs for portrait photos, so the live cycle can show them | 7 |
-| 3 | Moderation queue, `content_review` → `ready` → `live` transitions | 9 |
-| 4 | Liveness verification before publication (`VERIFICATION_POLICY.md`) | 9 |
-| 5 | Admin console for the daily queue and portrait review | 9 |
-| 6 | Push notifications — the invitation is in-app only today | 10 |
-| 7 | Optional audio/video portrait element | 7 or later |
+| 1 | Human Archive: Today, Yesterday, One year ago, Random, country, year | 8 — next |
+| 2 | Moderation queue, `content_review` → `ready` → `live` transitions | 9 |
+| 3 | Liveness verification before publication (`VERIFICATION_POLICY.md`) | 9 |
+| 4 | Admin console for the daily queue and portrait review | 9 |
+| 5 | Push notifications — the invitation is in-app only today | 10 |
+| 6 | Optional audio/video portrait element | later |
 
 ## Decided this session
 
@@ -48,8 +47,10 @@ Last updated: end of Phase 6.
 - No privileged function or table reachable anonymously
   (`npm run verify:privileges`).
 - `pg_cron` drives the cycle: eligibility refresh 23:50, draw 00:00 for D+2,
-  notify 00:10, expiry sweep every 15 minutes.
-- 247 tests, and a pre-push hook that runs them.
+  notify 00:10, publication 00:01, expiry sweep every 15 minutes.
+- 273 tests, and a pre-push hook that runs them.
+- Anonymous access probe now covers 26 checks across functions, tables and
+  column exposure.
 
 ## Commands worth remembering
 

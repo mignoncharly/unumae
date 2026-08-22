@@ -30,13 +30,22 @@
     "placeholder": "What would you like to ask?",
     "remaining": "{{count}} characters left",
     "empty": "No questions yet. Yours can be the first.",
-    "answered": "Answered"
+    "answered": "Answered",
+    "send": "Send",
+    "submitted": "Sent. A person reads it before it appears.",
+    "moderationNote": "Every question is read before it is shown. Ask what you would ask a stranger you respected.",
+    "voted": "Added to the questions they will see",
+    "askFailed": "Could not send that question. Please try again.",
+    "voteFailed": "Could not register that. Please try again."
   },
   "remember": {
     "action": "Remember this Human",
     "remembered": "Remembered",
     "library": "Humans I remember",
-    "empty": "You have not remembered anyone yet."
+    "empty": "You have not remembered anyone yet.",
+    "added": "Added to your library",
+    "removed": "Removed from your library",
+    "failed": "Could not save that. Please try again."
   },
   "report": {
     "action": "Report",

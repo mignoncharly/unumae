@@ -140,6 +140,31 @@ export type PortraitElementInsert = {
   answer: string;
 };
 
+/**
+ * What a guest sees of another person: a first name, a country, an optional
+ * city, and a photograph. No surname, no age, no user id, and no counts.
+ */
+export type TodaysHumanRow = {
+  draw_id: string;
+  selection_date: string;
+  human_number: number | null;
+  display_name: string;
+  country_code: string;
+  city: string | null;
+  photo_path: string | null;
+  published_at: string | null;
+};
+
+export type PublicQuestionRow = {
+  id: string;
+  body: string;
+  answer: string | null;
+  answered_at: string | null;
+  /** Votes on a question, never on a person (Article 9.3). */
+  votes: number;
+  has_voted: boolean | null;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -214,6 +239,7 @@ export type Database = {
           selection_status: SelectionStatus;
           portrait_status: PortraitStatus;
           portrait_element_key: PortraitElementKeyEnum;
+          question_status: 'pending' | 'approved' | 'rejected';
         }[];
       };
       scheduler_installed: {
@@ -230,6 +256,43 @@ export type Database = {
       };
       submit_my_portrait: {
         Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      get_todays_human: {
+        Args: Record<PropertyKey, never>;
+        Returns: TodaysHumanRow[];
+      };
+      get_portrait_elements: {
+        Args: { target_draw: string };
+        Returns: { element_key: PortraitElementKeyEnum; answer: string }[];
+      };
+      get_questions: {
+        Args: { target_draw: string };
+        Returns: PublicQuestionRow[];
+      };
+      ask_question: {
+        Args: { target_draw: string; question_body: string };
+        Returns: string;
+      };
+      vote_question: {
+        Args: { target_question: string };
+        Returns: boolean;
+      };
+      unvote_question: {
+        Args: { target_question: string };
+        Returns: boolean;
+      };
+      remember_human: {
+        Args: { target_draw: string };
+        Returns: boolean;
+      };
+      forget_human: {
+        Args: { target_draw: string };
+        Returns: boolean;
+      };
+      /** There is no counterpart that counts how many people do. */
+      do_i_remember: {
+        Args: { target_draw: string };
         Returns: boolean;
       };
     };

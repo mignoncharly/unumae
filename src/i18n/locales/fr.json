@@ -30,13 +30,22 @@
     "placeholder": "Que souhaitez-vous demander ?",
     "remaining": "{{count}} caractères restants",
     "empty": "Aucune question pour l'instant. La vôtre peut être la première.",
-    "answered": "Répondu"
+    "answered": "Répondu",
+    "send": "Envoyer",
+    "submitted": "Envoyée. Une personne la lit avant sa publication.",
+    "moderationNote": "Chaque question est lue avant d'être affichée. Demandez ce que vous demanderiez à un inconnu que vous respectez.",
+    "voted": "Ajoutée aux questions qu’ils verront",
+    "askFailed": "Impossible d'envoyer cette question. Veuillez réessayer.",
+    "voteFailed": "Impossible d'enregistrer. Veuillez réessayer."
   },
   "remember": {
     "action": "Se souvenir de ce Human",
     "remembered": "Mémorisé",
     "library": "Les Humans dont je me souviens",
-    "empty": "Vous ne vous souvenez encore de personne."
+    "empty": "Vous ne vous souvenez encore de personne.",
+    "added": "Ajouté à votre bibliothèque",
+    "removed": "Retiré de votre bibliothèque",
+    "failed": "Impossible d'enregistrer. Veuillez réessayer."
   },
   "report": {
     "action": "Signaler",

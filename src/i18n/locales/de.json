@@ -30,13 +30,22 @@
     "placeholder": "Was möchtest du fragen?",
     "remaining": "Noch {{count}} Zeichen",
     "empty": "Noch keine Fragen. Deine kann die erste sein.",
-    "answered": "Beantwortet"
+    "answered": "Beantwortet",
+    "send": "Senden",
+    "submitted": "Gesendet. Ein Mensch liest sie, bevor sie erscheint.",
+    "moderationNote": "Jede Frage wird gelesen, bevor sie erscheint. Frage, was du einem Fremden fragen würdest, den du respektierst.",
+    "voted": "Zu den Fragen hinzugefügt, die sie sehen",
+    "askFailed": "Frage konnte nicht gesendet werden. Bitte versuche es erneut.",
+    "voteFailed": "Konnte nicht gespeichert werden. Bitte versuche es erneut."
   },
   "remember": {
     "action": "An diesen Human erinnern",
     "remembered": "Gemerkt",
     "library": "Humans, an die ich mich erinnere",
-    "empty": "Du hast dir noch niemanden gemerkt."
+    "empty": "Du hast dir noch niemanden gemerkt.",
+    "added": "Zu deiner Bibliothek hinzugefügt",
+    "removed": "Aus deiner Bibliothek entfernt",
+    "failed": "Konnte nicht gespeichert werden. Bitte versuche es erneut."
   },
   "report": {
     "action": "Melden",

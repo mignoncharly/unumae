@@ -437,7 +437,7 @@ APIs. `docs/APP_STORE.md` carries the privacy-label answers, the age-rating
 questionnaire, the required URLs, the "this is not a sweepstake" argument, and
 the four rejections worth anticipating.
 
-481 tests offline, plus four live suites: draw cross-check, anonymous access,
+492 tests offline, plus four live suites: draw cross-check, anonymous access,
 signed-in privilege escalation, and the full-loop simulation.
 
 ## Phase 14 — Internal Alpha, Private Beta & retention validation ✅
@@ -490,10 +490,68 @@ readable in the console's new **Signals** tab.
 The rule it exists to enforce: **if D1 is bad, we buy no users — we fix the
 product.** Full plan in `docs/BETA.md`.
 
-## Phase 15 — next
+## Phase 15 — First viral experiments & 1,000 users ✅
 
-First viral experiments and 1,000 users. Gated on `growth_gate()` passing —
-see `docs/BETA.md`.
+**The transparency numbers**, in the shape the plan asked for:
+
+```
+1,042 Humans waiting
+43 countries
+137 languages
+```
+
+`selection_stats()` is public, including guests — "one in a thousand" is not
+checkable by somebody who cannot see how many are waiting. It counts the pool
+with `is_eligible()` rather than a hand-written copy of the predicate, so it can
+never drift from the function that actually freezes the pool and leave us
+publishing a confident wrong number. It appears on "How selection works", next
+to the claim it substantiates.
+
+`country_representation()` names only countries with **at least five** people
+waiting. A country with two is a country where being drawn identifies you, and
+the Archive would confirm it the same day. The rest are counted in
+`unnamed_countries()` and published alongside, so the arithmetic reconciles — a
+transparency page whose numbers do not add up teaches people to distrust the
+ones that do. The floor is in the database, not the client: the rows are never
+returned, so there is nothing for a caller to ask for.
+
+**Share cards.** `ShareCard` renders at a fixed 1080×1350 off-screen and is
+captured to a PNG, so the exported image is identical from every phone. It
+carries a number, a name, a place and one line in their own words — and no
+count of any kind, because a share card is the most public surface the product
+has and the last place a person should become a score. Both native modules are
+loaded lazily inside a `try`: if the capture is unavailable the button falls
+back to the text share without comment, because a share button that does
+nothing is worse than a share without a picture. Now on the Archive page too.
+
+**The translation job.** The write path has existed since Phase 10; what was
+missing was the thing that decides what still needs translating.
+`pending_translations()` offers only approved, published portraits — sending
+somebody's answers to a vendor before a moderator has looked at them would be a
+leak with a queue in front of it. `record_same_language()` stops the job asking
+about the same French answer every night forever. The Edge Function is written
+and needs a DeepL key; without one it reports "not configured" and changes
+nothing, rather than failing loudly every night or pretending to have worked.
+
+**`docs/GROWTH.md`** carries the four hooks — the TikTok line, the Instagram
+portrait, the X quote, the Reddit claim — and, more usefully, the list of things
+that are forbidden rather than merely discouraged: referral rewards, paid
+placement in the draw, "X people viewed you", featuring "the best" Humans,
+streaks. The TikTok line comes with the constraint that makes it safe: *"12,000
+people met this one stranger"* is a fact about the product and must never become
+a number attached to a person inside the app. A view count is a score with
+better manners, and `tests/stats-schema.test.ts` fails the build if one appears.
+
+**Two guards were wrong, not the code.** The forbidden-column check stripped
+`--` comments but not `/* */` blocks, so a block comment using "reach" as an
+ordinary English word failed the build; its stated intent covered both forms and
+now it does. And the Dynamic Type rule now has exactly one exemption — the share
+card, which is never on screen — named by path, with a second test asserting the
+exemption really is a fixed-size export.
+
+## Phase 16 — next
+
+Scale and AI features.
 
 ## Working agreements
 

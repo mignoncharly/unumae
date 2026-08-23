@@ -75,8 +75,12 @@ for (const file of files) {
 
   const source = readFileSync(join(MIGRATIONS_DIR, file), 'utf8');
 
-  // Comments may name a forbidden column in order to document the ban.
+  // Comments may name a forbidden column in order to document the ban — and
+  // may use an ordinary English word that happens to be one of them. Both
+  // comment forms are stripped: only `--` was, which meant a block comment
+  // containing the word "reach" failed the build.
   const sql = source
+    .replace(/\/\*[\s\S]*?\*\//g, '')
     .split('\n')
     .filter((line) => !line.trim().startsWith('--'))
     .join('\n')

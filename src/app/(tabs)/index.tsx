@@ -7,6 +7,7 @@ import { HumanPortrait } from '@/components/human/HumanPortrait';
 import { AskSheet } from '@/components/questions/AskSheet';
 import { QuestionCard } from '@/components/questions/QuestionCard';
 import { ReportAction } from '@/components/shared/ReportAction';
+import { ShareButton } from '@/components/sharing/ShareButton';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Screen } from '@/components/ui/Screen';
@@ -23,7 +24,6 @@ import {
   useVote,
 } from '@/features/daily-human/hooks';
 import { useReport } from '@/features/moderation/hooks';
-import { shareHuman } from '@/features/sharing/share';
 import { track } from '@/lib/analytics';
 import { useTheme } from '@/theme';
 import { countryName, flagEmoji } from '@/utils/country';
@@ -187,26 +187,17 @@ export default function TodayScreen() {
             one it is allowed: a person passing on somebody they found worth
             passing on (Article 1.8).
           */}
-          <Button
-            label={t('sharing.share')}
-            onPress={() =>
-              void shareHuman(
-                {
-                  humanNumber: today.human.human_number ?? 0,
-                  name: today.human.display_name,
-                  countryName: countryName(
-                    today.human.country_code,
-                    i18n.language
-                  ),
-                  flag: flagEmoji(today.human.country_code),
-                  quote: today.elements[0]?.answer ?? null,
-                  drawId: today.human.draw_id,
-                  isToday: true,
-                },
-                t('sharing.tagline')
-              )
-            }
-            variant="secondary"
+          <ShareButton
+            human={{
+              humanNumber: today.human.human_number ?? 0,
+              name: today.human.display_name,
+              countryName: countryName(today.human.country_code, i18n.language),
+              flag: flagEmoji(today.human.country_code),
+              quote: today.elements[0]?.answer ?? null,
+              drawId: today.human.draw_id,
+              isToday: true,
+            }}
+            photoUri={today.photoUrl}
           />
 
           <ReportAction

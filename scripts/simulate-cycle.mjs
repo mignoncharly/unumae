@@ -501,6 +501,76 @@ async function exerciseAudience(drawId, people, moderator, selected) {
     { headers: { apikey: ANON, Authorization: `Bearer ${ANON}` } }
   );
   step(!countAttempt.ok, 'how many remembered them is visible to nobody');
+
+  /*
+   * The transparency numbers (Article 12).
+   *
+   * Checked here rather than in a unit test because they are only meaningful
+   * against a real pool: the count has to match what the draw would actually
+   * freeze, and the only way to know that is to have people in the database and
+   * ask both questions.
+   */
+  console.log('\nthe numbers');
+  const statsResponse = await fetch(`${URL_BASE}/rest/v1/rpc/selection_stats`, {
+    method: 'POST',
+    headers: {
+      apikey: ANON,
+      Authorization: `Bearer ${ANON}`,
+      'Content-Type': 'application/json',
+    },
+    body: '{}',
+  });
+  const stats = statsResponse.ok ? (await statsResponse.json())[0] : null;
+
+  // Two of the twelve have been drawn, and Article 5.4 takes them out forever.
+  step(
+    stats?.waiting === CANDIDATES - 2,
+    'a guest can see how many are waiting',
+    `${stats?.waiting} of ${CANDIDATES}`
+  );
+  step(stats?.countries > 0, 'and how many countries', `${stats?.countries}`);
+  step(
+    stats?.humans_published >= 1,
+    'and how many Humans there have been',
+    `${stats?.humans_published}`
+  );
+
+  // The floor: with two people per country nothing may be named, and the
+  // unnamed remainder has to account for all of them.
+  const named = await fetch(`${URL_BASE}/rest/v1/rpc/country_representation`, {
+    method: 'POST',
+    headers: {
+      apikey: ANON,
+      Authorization: `Bearer ${ANON}`,
+      'Content-Type': 'application/json',
+    },
+    body: '{}',
+  });
+  const namedRows = named.ok ? await named.json() : [];
+  const unnamedResponse = await fetch(
+    `${URL_BASE}/rest/v1/rpc/unnamed_countries`,
+    {
+      method: 'POST',
+      headers: {
+        apikey: ANON,
+        Authorization: `Bearer ${ANON}`,
+        'Content-Type': 'application/json',
+      },
+      body: '{}',
+    }
+  );
+  const unnamed = unnamedResponse.ok ? (await unnamedResponse.json())[0] : null;
+
+  const namedTotal = namedRows.reduce((sum, row) => sum + row.waiting, 0);
+  step(
+    namedRows.every((row) => row.waiting >= 5),
+    'no country is named with fewer than five waiting'
+  );
+  step(
+    namedTotal + (unnamed?.waiting ?? -1) === stats?.waiting,
+    'the named and unnamed countries add up',
+    `${namedTotal} + ${unnamed?.waiting} = ${stats?.waiting}`
+  );
 }
 
 // ---------------------------------------------------------------------------

@@ -36,14 +36,41 @@ function withoutComments(source: string): string {
  * replace testing with VoiceOver on a device, and they are not meant to.
  */
 describe('text scales with the system setting', () => {
+  /**
+   * The share card is the single exemption, and it is narrow on purpose.
+   *
+   * It is never on screen: it is rendered off-screen at a fixed 1080×1350 and
+   * captured to a PNG. Nothing reads it with a screen reader, nothing sees it
+   * at a larger size, and letting Dynamic Type apply would push text out of the
+   * exported image on exactly the devices whose owners set a larger size.
+   *
+   * Named as a path rather than allowed by a comment, so adding a second one is
+   * a deliberate edit to this list with a reason next to it.
+   */
+  const FIXED_SIZE_EXPORTS = ['src/components/sharing/ShareCard.tsx'];
+
   it('never switches font scaling off', () => {
     // The one line that would silently break Dynamic Type everywhere it is
     // used. Bounding the scale is fine; refusing it is not.
-    const offenders = COMPONENTS.filter((file) =>
-      withoutComments(file.source).includes('allowFontScaling={false}')
+    const offenders = COMPONENTS.filter(
+      (file) =>
+        withoutComments(file.source).includes('allowFontScaling={false}') &&
+        !FIXED_SIZE_EXPORTS.includes(file.path)
     ).map((file) => file.path);
 
     expect(offenders).toEqual([]);
+  });
+
+  it('exempts only files that really are fixed-size exports', () => {
+    // The exemption cannot be used to quietly cover an on-screen component.
+    for (const path of FIXED_SIZE_EXPORTS) {
+      const file = COMPONENTS.find((candidate) => candidate.path === path);
+      expect({ path, found: file !== undefined }).toEqual({
+        path,
+        found: true,
+      });
+      expect(file?.source).toContain('SHARE_CARD_WIDTH');
+    }
   });
 
   it('bounds the scale in one place, on the shared Text component', () => {

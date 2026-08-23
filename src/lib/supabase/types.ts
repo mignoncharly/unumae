@@ -526,6 +526,31 @@ export type Database = {
         Args: { window_days?: number };
         Returns: { metric: string; value: number; detail: string }[];
       };
+      /**
+       * Article 12 — the pool, its countries and its languages. Public,
+       * including guests: "one in a thousand" is not checkable by somebody who
+       * cannot see how many are waiting.
+       */
+      selection_stats: {
+        Args: Record<never, never>;
+        Returns: {
+          waiting: number;
+          countries: number;
+          languages: number;
+          humans_published: number;
+          archive_countries: number;
+        }[];
+      };
+      /** Countries with at least five people waiting. Smaller ones are counted, never named. */
+      country_representation: {
+        Args: Record<never, never>;
+        Returns: { country_code: string; waiting: number }[];
+      };
+      /** The remainder, so the named countries plus this equals `waiting`. */
+      unnamed_countries: {
+        Args: Record<never, never>;
+        Returns: { countries: number; waiting: number }[];
+      };
       /** Last day of Year Zero. Null until the first cycle is published. */
       year_zero_ends: {
         Args: Record<never, never>;

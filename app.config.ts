@@ -151,6 +151,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           'Unumae uses your photo library so you can choose the photograph for your portrait.',
       },
     ],
+    // Sharing a rendered card rather than only a link. Both this and
+    // react-native-view-shot are in Expo Go's bundled modules, but the capture
+    // is still loaded lazily and falls back to a text share if it is missing —
+    // see src/features/sharing/card.ts.
+    'expo-sharing',
   ],
   experiments: {
     typedRoutes: true,

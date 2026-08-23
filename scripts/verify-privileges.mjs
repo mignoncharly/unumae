@@ -51,6 +51,11 @@ const ANON_ALLOWED = new Set([
   // When Year Zero ends is public — the Archive's first day is on the Archive.
   // Who is inside it is derived per row and never asked as a question.
   'year_zero_ends',
+  // Article 12 — the pool, its countries and its languages. A guest who cannot
+  // see how many are waiting cannot check "one in a thousand".
+  'selection_stats',
+  'country_representation',
+  'unnamed_countries',
 ]);
 
 const PROBES = [
@@ -157,6 +162,20 @@ const PROBES = [
   ['retention_cohorts', {}],
   ['participation_mix', {}],
   ['growth_gate', {}],
+
+  // Phase 15 — the transparency numbers are public; the translation queue is not.
+  ['selection_stats', {}],
+  ['country_representation', {}],
+  ['unnamed_countries', {}],
+  ['pending_translations', {}],
+  [
+    'record_same_language',
+    {
+      target_portrait: NIL_UUID,
+      target_element: 'introduction',
+      target_locale: 'fr',
+    },
+  ],
 ];
 
 /** Tables no anonymous caller may read a single row of. */

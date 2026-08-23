@@ -443,5 +443,22 @@
     "joined": "Arrivé pendant l’Année Zéro",
     "explain": "Ils étaient là la première année. C’est un morceau d’histoire, rien de plus — cela n’augmente en rien les chances d’être sélectionné.",
     "yours": "Vous êtes arrivé pendant l’Année Zéro."
+  },
+  "stats": {
+    "title": "Qui attend",
+    "empty": "Personne n’attend encore. Vous seriez le premier.",
+    "waiting_one": "{{formatted}} humain en attente",
+    "waiting_other": "{{formatted}} humains en attente",
+    "countries_one": "{{formatted}} pays",
+    "countries_other": "{{formatted}} pays",
+    "languages_one": "{{formatted}} langue",
+    "languages_other": "{{formatted}} langues",
+    "odds": "Aujourd’hui, l’un d’eux sera choisi. Soit une chance sur {{formatted}}.",
+    "published_one": "{{formatted}} humain à ce jour, de {{countries}} pays.",
+    "published_other": "{{formatted}} humains à ce jour, de {{countries}} pays.",
+    "unnamed_one": "{{people}} de plus dans {{countries}} pays où ils sont trop peu nombreux pour être nommés sans être identifiés.",
+    "unnamed_other": "{{people}} de plus répartis dans {{countries}} pays où ils sont trop peu nombreux pour être nommés sans être identifiés.",
+    "byCountry": "Par pays",
+    "floorNote": "Les pays comptant moins de cinq personnes en attente sont comptabilisés, jamais nommés. Être la seule personne en attente dans un pays, c’est être identifié le jour du tirage."
   }
 }

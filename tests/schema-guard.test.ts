@@ -27,8 +27,11 @@ describe('database schema guard', () => {
 
     for (const file of migrationFiles()) {
       const sql = readFileSync(join(MIGRATIONS_DIR, file), 'utf8');
-      // Strip comments so that documenting the ban does not trip the ban.
+      // Strip comments so that documenting the ban does not trip the ban —
+      // both forms. Only `--` was stripped, so a block comment using "reach"
+      // as an ordinary English word failed the build.
       const statements = sql
+        .replace(/\/\*[\s\S]*?\*\//g, '')
         .split('\n')
         .filter((line) => !line.trim().startsWith('--'))
         .join('\n')

@@ -5,6 +5,7 @@ import { View } from 'react-native';
 
 import { HumanPortrait } from '@/components/human/HumanPortrait';
 import { QuestionCard } from '@/components/questions/QuestionCard';
+import { ShareButton } from '@/components/sharing/ShareButton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Screen } from '@/components/ui/Screen';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -15,6 +16,7 @@ import { getPortraitElements } from '@/features/daily-human/api';
 import { useQuestions } from '@/features/daily-human/hooks';
 import type { PortraitElementKey } from '@/features/portraits/prompts';
 import { useTheme } from '@/theme';
+import { countryName, flagEmoji } from '@/utils/country';
 
 /**
  * One archived Human.
@@ -25,7 +27,7 @@ import { useTheme } from '@/theme';
  */
 export default function HumanScreen() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const { data: human, isLoading } = useHuman(id);
@@ -140,6 +142,23 @@ export default function HumanScreen() {
             ))}
           </View>
         ) : null}
+
+        {/* An archived Human is as worth passing on as today's. Article 1.9 —
+            the Archive is the product, not a backlog. */}
+        <View style={{ marginTop: theme.spacing.xxl }}>
+          <ShareButton
+            human={{
+              humanNumber: human.human_number,
+              name: human.display_name ?? '',
+              countryName: countryName(human.country_code ?? '', i18n.language),
+              flag: flagEmoji(human.country_code ?? ''),
+              quote: elements[0]?.answer ?? null,
+              drawId: human.draw_id,
+              isToday: false,
+            }}
+            photoUri={photoUrl}
+          />
+        </View>
 
         <View style={{ marginTop: theme.spacing.huge, alignItems: 'center' }}>
           <Text color="textTertiary" variant="footnote">

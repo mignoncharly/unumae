@@ -443,5 +443,22 @@
     "joined": "Joined during Year Zero",
     "explain": "They were here in the first year. It is a piece of history, nothing more — it does not make anyone more likely to be selected.",
     "yours": "You joined during Year Zero."
+  },
+  "stats": {
+    "title": "Who is waiting",
+    "empty": "Nobody is waiting yet. You would be the first.",
+    "waiting_one": "{{formatted}} Human waiting",
+    "waiting_other": "{{formatted}} Humans waiting",
+    "countries_one": "{{formatted}} country",
+    "countries_other": "{{formatted}} countries",
+    "languages_one": "{{formatted}} language",
+    "languages_other": "{{formatted}} languages",
+    "odds": "Today, one of them will be chosen. That is a 1 in {{formatted}} chance.",
+    "published_one": "{{formatted}} Human so far, from {{countries}} countries.",
+    "published_other": "{{formatted}} Humans so far, from {{countries}} countries.",
+    "unnamed_one": "{{people}} more in {{countries}} country with too few people to name without identifying them.",
+    "unnamed_other": "{{people}} more across {{countries}} countries with too few people to name without identifying them.",
+    "byCountry": "By country",
+    "floorNote": "Countries with fewer than five people waiting are counted, never named. Being the only person waiting somewhere means being identified the day you are drawn."
   }
 }

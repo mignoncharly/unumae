@@ -2,6 +2,10 @@ import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import {
+  CountryRepresentation,
+  SelectionStats,
+} from '@/components/stats/SelectionStats';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import {
@@ -58,6 +62,15 @@ export default function HowSelectionWorksScreen() {
           {t('howSelection.intro')}
         </Text>
 
+        {/*
+          The claim, and then the number it rests on. Putting them next to each
+          other is the point: "the draw is fair" is an assertion, "1,042 people
+          are waiting and one of them is chosen today" is checkable.
+        */}
+        <View style={{ marginTop: theme.spacing.xxl }}>
+          <SelectionStats />
+        </View>
+
         <Section title={t('howSelection.poolTitle')}>
           {t('howSelection.poolBody', {
             days: POOL_FREEZE_DAYS_BEFORE,
@@ -95,6 +108,14 @@ export default function HowSelectionWorksScreen() {
         <Section title={t('howSelection.safetyTitle')}>
           {t('howSelection.safetyBody')}
         </Section>
+
+        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
+          <Text variant="title3">{t('stats.byCountry')}</Text>
+          <CountryRepresentation />
+          <Text color="textTertiary" variant="footnote">
+            {t('stats.floorNote')}
+          </Text>
+        </View>
 
         <View style={{ marginTop: theme.spacing.xxxl }}>
           <Text color="textTertiary" variant="footnote">

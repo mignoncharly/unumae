@@ -443,5 +443,22 @@
     "joined": "Im Jahr Null dazugekommen",
     "explain": "Sie waren im ersten Jahr dabei. Ein Stück Geschichte, mehr nicht — es macht niemanden wahrscheinlicher auszuwählen.",
     "yours": "Du bist im Jahr Null dazugekommen."
+  },
+  "stats": {
+    "title": "Wer wartet",
+    "empty": "Noch wartet niemand. Du wärst die erste Person.",
+    "waiting_one": "{{formatted}} wartender Mensch",
+    "waiting_other": "{{formatted}} wartende Menschen",
+    "countries_one": "{{formatted}} Land",
+    "countries_other": "{{formatted}} Länder",
+    "languages_one": "{{formatted}} Sprache",
+    "languages_other": "{{formatted}} Sprachen",
+    "odds": "Heute wird eine von ihnen ausgewählt. Das ist eine Chance von 1 zu {{formatted}}.",
+    "published_one": "{{formatted}} Mensch bisher, aus {{countries}} Ländern.",
+    "published_other": "{{formatted}} Menschen bisher, aus {{countries}} Ländern.",
+    "unnamed_one": "{{people}} weitere in {{countries}} Land, in dem zu wenige warten, um sie zu nennen, ohne sie zu identifizieren.",
+    "unnamed_other": "{{people}} weitere in {{countries}} Ländern, in denen zu wenige warten, um sie zu nennen, ohne sie zu identifizieren.",
+    "byCountry": "Nach Land",
+    "floorNote": "Länder mit weniger als fünf wartenden Menschen werden gezählt, aber nie genannt. Die einzige wartende Person in einem Land zu sein heißt, am Tag der Auswahl identifiziert zu werden."
   }
 }

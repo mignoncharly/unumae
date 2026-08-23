@@ -1,8 +1,24 @@
 /**
- * Design tokens — Phase 2 refines these, Phase 1 establishes the shape.
+ * Design tokens.
  *
  * Article 11: editorial, documentary, premium, calm. The person is the star,
- * the interface is furniture. No brand colour competes with a photograph.
+ * the interface is furniture.
+ *
+ * Furniture is allowed to have a colour. For a long time this palette had none
+ * at all — `accent` was black — on my reading that brand colour would compete
+ * with a photograph. That was stricter than Article 11 asks, and it left the
+ * app looking nothing like its own wordmark, which is a blue-to-violet
+ * gradient. Cold is not the same thing as calm.
+ *
+ * So the accent is now the brand, sampled from `assets/splash.png` rather than
+ * invented: its ink runs from #000090 through #6000E0, and #3B1FCC sits in the
+ * middle of that.
+ *
+ * Where it is allowed: controls. Buttons, links, the selected tab — the things
+ * a person acts on. Where it is not: anywhere near the portrait. No coloured
+ * frame, no tinted overlay, no accent on the name or the human number. The rule
+ * that mattered was never "no colour", it was "nothing competes with the
+ * person", and that one still holds.
  */
 
 export const colors = {
@@ -14,8 +30,11 @@ export const colors = {
     text: '#0B0B0C',
     textSecondary: '#5A5A57',
     textTertiary: '#8E8E8A',
-    accent: '#0B0B0C',
+    /** Sampled from the wordmark. White on it reads at 9.3:1. */
+    accent: '#3B1FCC',
     accentText: '#FFFFFF',
+    /** The same hue at surface weight, for panels that should feel brand-ish. */
+    accentSurface: '#F7F5FE',
     danger: '#A8342A',
     success: '#2F6B4F',
     overlay: 'rgba(11, 11, 12, 0.5)',
@@ -28,8 +47,10 @@ export const colors = {
     text: '#F5F5F3',
     textSecondary: '#A8A8A4',
     textTertiary: '#6E6E6B',
-    accent: '#F5F5F3',
+    /** The brand lightened until it reads on near-black: 7.2:1. */
+    accent: '#A78BFA',
     accentText: '#0B0B0C',
+    accentSurface: '#171327',
     danger: '#E0705F',
     success: '#6FAE8C',
     overlay: 'rgba(0, 0, 0, 0.65)',

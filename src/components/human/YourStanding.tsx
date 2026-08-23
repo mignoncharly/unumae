@@ -105,8 +105,17 @@ export function YourStanding({
         gap: theme.spacing.xs,
         ...(centered
           ? {
+              /*
+               * A Quiet Day has nothing else on it, so this is the one place
+               * the line becomes a panel rather than a footnote — it gives the
+               * screen something to be about. Under a portrait it stays a
+               * hairline and a sentence, because there the person is the
+               * subject and this is a margin note.
+               */
               alignItems: 'center' as const,
-              paddingHorizontal: theme.spacing.xl,
+              padding: theme.spacing.xl,
+              backgroundColor: theme.colors.accentSurface,
+              borderRadius: theme.radius.lg,
             }
           : {
               paddingTop: theme.spacing.lg,
@@ -116,9 +125,9 @@ export function YourStanding({
       }}
     >
       <Text
-        color="textSecondary"
+        color={centered ? 'text' : 'textSecondary'}
         style={centered ? { textAlign: 'center' } : undefined}
-        variant="footnote"
+        variant={centered ? 'callout' : 'footnote'}
       >
         {text}
       </Text>

@@ -24,7 +24,8 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.text,
+        // The brand, on the one control visible from every screen.
+        tabBarActiveTintColor: theme.colors.accent,
         tabBarInactiveTintColor: theme.colors.textTertiary,
         tabBarStyle: {
           backgroundColor: theme.colors.background,

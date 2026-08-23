@@ -33,7 +33,14 @@ describe('contrast maths', () => {
 });
 
 /** Every pairing a screen actually produces. */
-const SURFACES = ['background', 'surface', 'surfaceRaised'] as const;
+const SURFACES = [
+  'background',
+  'surface',
+  'surfaceRaised',
+  // The brand tint. Held to the same standard as every other surface, because
+  // text sits on it too — the first value chosen put textTertiary at 2.88.
+  'accentSurface',
+] as const;
 const BODY_TEXT = ['text', 'textSecondary'] as const;
 
 describe.each(['light', 'dark'] as const)('%s theme', (scheme) => {

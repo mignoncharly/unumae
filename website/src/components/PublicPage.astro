@@ -20,6 +20,7 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 <BaseLayout locale={locale} page={page}>
   <main
     id="main-content"
+    tabindex="-1"
     class:list={['public-main', `${page}-public-page`]}
     data-public-page={page}
     data-data-mode={dataMode}
@@ -49,6 +50,7 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
             <ActionLink
               href={localizedPath(locale, 'archive')}
               variant="secondary"
+              analyticsEvent="archive_opened"
             >
               {copy.today.quiet.archiveLink}
             </ActionLink>
@@ -86,6 +88,7 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <img
                   data-today-photo
                   hidden
+                  src="/favicon.svg"
                   width="640"
                   height="800"
                   decoding="async"
@@ -98,7 +101,7 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
               </div>
               <div class="today-human__nameplate">
                 <p data-human-date />
-                <h2 data-human-name />
+                <h2 data-human-name>{copy.today.hero.title}</h2>
                 <p data-human-location />
                 {/* Hidden until the reader says so. A historical note, not a rank. */}
                 <p class="today-human__founding" data-human-founding hidden />

@@ -14,7 +14,7 @@ const copy = homeContent[locale];
 ---
 
 <BaseLayout locale={locale} page="home">
-  <main id="main-content" class="home-main">
+  <main id="main-content" class="home-main" tabindex="-1">
     <section class="home-hero" aria-labelledby="home-title">
       <p class="eyebrow">{copy.hero.eyebrow}</p>
       <h1 id="home-title">
@@ -24,7 +24,10 @@ const copy = homeContent[locale];
       <div class="home-hero__footer">
         <p>{copy.hero.introduction}</p>
         <div class="actions">
-          <ActionLink href={localizedPath(locale, 'how-selection-works')}>
+          <ActionLink
+            href={localizedPath(locale, 'how-selection-works')}
+            analyticsEvent="selection_explainer_opened"
+          >
             {copy.hero.selectionLink}
           </ActionLink>
           <span class="launch-state">{copy.hero.launchState}</span>
@@ -135,7 +138,11 @@ const copy = homeContent[locale];
           </li>
         </ol>
         <p>{copy.archive.removal}</p>
-        <ActionLink href={localizedPath(locale, 'archive')} variant="text">
+        <ActionLink
+          href={localizedPath(locale, 'archive')}
+          variant="text"
+          analyticsEvent="archive_opened"
+        >
           {copy.archive.link}
         </ActionLink>
       </div>
@@ -149,11 +156,12 @@ const copy = homeContent[locale];
         <ActionLink
           href={localizedPath(locale, 'how-selection-works')}
           variant="text"
+          analyticsEvent="selection_explainer_opened"
         >
           {copy.fairness.link}
         </ActionLink>
       </div>
-      <div class="fairness__proof" aria-label={copy.fairness.proofLabel}>
+      <div class="fairness__proof">
         <p class="specimen-label">{copy.fairness.proofLabel}</p>
         <ol>
           {
@@ -175,7 +183,10 @@ const copy = homeContent[locale];
       <p class="eyebrow">{copy.closing.eyebrow}</p>
       <h2 id="closing-title">{copy.closing.title}</h2>
       <p>{copy.closing.body}</p>
-      <ActionLink href={localizedPath(locale, 'about')}>
+      <ActionLink
+        href={localizedPath(locale, 'about')}
+        analyticsEvent="mission_opened"
+      >
         {copy.closing.link}
       </ActionLink>
     </section>

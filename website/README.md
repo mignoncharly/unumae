@@ -11,6 +11,7 @@ Run these from the repository root:
 npm run web:dev
 npm run web:check
 npm run web:build
+npm run web:quality
 ```
 
 Or run the equivalent package scripts from this directory. The development
@@ -56,6 +57,23 @@ The site does not emit an App Store banner or universal-link association yet.
 Those require the real App Store identifier, deployed HTTPS origin, Apple Team
 ID, and a verified association file. Until then every shared URL remains a
 complete web fallback.
+
+## Privacy-conscious measurement
+
+Marketing measurement is disabled unless `PUBLIC_ANALYTICS_ENDPOINT` is set
+to a same-origin path. The allowlist contains only navigation to the selection
+explainer, Archive, and mission page. Payloads contain the event, interface
+language, and source route—no cookie, identifier, Human, story, question,
+Archive entry, impression, or popularity signal. Global Privacy Control and Do
+Not Track disable delivery.
+
+## Quality gate
+
+`npm run web:quality` from the repository root checks types, lint, format,
+build output, HTML, links, metadata, accessibility, responsive behavior,
+privacy signals, five browser profiles, low bandwidth, and Lighthouse’s four
+categories. See `QUALITY.md` for the browser-install command and exact
+coverage.
 
 ## Design review
 

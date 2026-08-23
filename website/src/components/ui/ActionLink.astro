@@ -1,12 +1,19 @@
 ---
+import type { MarketingEvent } from '../../lib/analytics';
+
 interface Props {
   href: string;
   variant?: 'primary' | 'secondary' | 'text';
+  analyticsEvent?: MarketingEvent;
 }
 
-const { href, variant = 'primary' } = Astro.props;
+const { href, variant = 'primary', analyticsEvent } = Astro.props;
 ---
 
-<a class:list={['button-link', `button-link--${variant}`]} href={href}>
+<a
+  class:list={['button-link', `button-link--${variant}`]}
+  href={href}
+  data-analytics-event={analyticsEvent}
+>
   <slot />
 </a>

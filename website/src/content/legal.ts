@@ -33,6 +33,10 @@ export const legalSections: Record<
         body: 'We store a random identifier for your installation, so we can count how many people came back the next day. It is not linked to any advertising profile, it never leaves our database, and it is deleted after 90 days along with the events it belongs to.',
       },
       {
+        title: 'Website measurement without a profile',
+        body: 'On this website, we count only when someone chooses the selection explainer, Archive, or mission page. An event contains only its name, source page, and language, and follows the same 90-day retention. We set no analytics cookie or identifier, send nothing to an advertising service, honor Global Privacy Control and Do Not Track, and never measure a Human, story, question, Archive entry, or popularity.',
+      },
+      {
         title: 'What we never collect',
         body: 'Your precise location — a country is the only place we ask for, and never automatically. Your contacts. Your activity in other apps or on other websites. Anything for advertising: there are no adverts here and no advertising partners.',
       },
@@ -107,6 +111,10 @@ export const legalSections: Record<
         body: "Nous stockons un identifiant aléatoire pour votre installation, afin de compter combien de personnes reviennent le lendemain. Il n'est lié à aucun profil publicitaire, ne quitte jamais notre base, et est supprimé au bout de 90 jours avec les événements concernés.",
       },
       {
+        title: 'Mesure du site sans créer de profil',
+        body: 'Sur ce site, nous comptons uniquement le choix d’ouvrir l’explication de la sélection, les Archives ou la page de mission. Un événement contient seulement son nom, la page d’origine et la langue, avec la même conservation de 90 jours. Aucun cookie ni identifiant analytique, aucun service publicitaire ; nous respectons Global Privacy Control et Do Not Track et ne mesurons jamais un Humain, une histoire, une question, une entrée des Archives ou sa popularité.',
+      },
+      {
         title: 'Ce que nous ne collectons jamais',
         body: "Votre localisation précise — le pays est le seul lieu demandé, et jamais automatiquement. Vos contacts. Votre activité dans d'autres applications ou sur d'autres sites. Quoi que ce soit à des fins publicitaires : il n'y a ici ni publicité ni partenaire publicitaire.",
       },
@@ -179,6 +187,10 @@ export const legalSections: Record<
       {
         title: 'Eine Zahl über deine App, nicht über dich',
         body: 'Wir speichern eine zufällige Kennung für deine Installation, um zu zählen, wie viele Menschen am nächsten Tag wiederkommen. Sie ist mit keinem Werbeprofil verknüpft, verlässt unsere Datenbank nie und wird nach 90 Tagen zusammen mit den Ereignissen gelöscht.',
+      },
+      {
+        title: 'Website-Messung ohne Profil',
+        body: 'Auf dieser Website zählen wir nur, wenn jemand die Auswahlerklärung, das Archiv oder die Missionsseite öffnet. Ein Ereignis enthält nur seinen Namen, die Ausgangsseite und die Sprache und wird ebenfalls 90 Tage aufbewahrt. Wir setzen weder Analyse-Cookie noch Kennung, senden nichts an Werbedienste, beachten Global Privacy Control und Do Not Track und messen niemals einen Menschen, eine Geschichte, eine Frage, einen Archiveintrag oder Beliebtheit.',
       },
       {
         title: 'Was wir nie erheben',

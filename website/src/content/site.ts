@@ -27,6 +27,7 @@ interface SiteCopy {
   languageName: string;
   skipToContent: string;
   navigationLabel: string;
+  footerNavigationLabel: string;
   languageLabel: string;
   homeLabel: string;
   comingSoon: string;
@@ -44,6 +45,7 @@ export const content: Record<Locale, SiteCopy> = {
     lastUpdated: 'Last updated {date}.',
     skipToContent: 'Skip to content',
     navigationLabel: 'Primary navigation',
+    footerNavigationLabel: 'Legal navigation',
     languageLabel: 'Language',
     homeLabel: 'Unumae home',
     comingSoon: 'Coming to iPhone',
@@ -136,6 +138,7 @@ export const content: Record<Locale, SiteCopy> = {
     lastUpdated: 'Dernière mise à jour : {date}.',
     skipToContent: 'Aller au contenu',
     navigationLabel: 'Navigation principale',
+    footerNavigationLabel: 'Navigation juridique',
     languageLabel: 'Langue',
     homeLabel: 'Accueil Unumae',
     comingSoon: 'Bientôt sur iPhone',
@@ -229,6 +232,7 @@ export const content: Record<Locale, SiteCopy> = {
     lastUpdated: 'Zuletzt aktualisiert am {date}.',
     skipToContent: 'Zum Inhalt springen',
     navigationLabel: 'Hauptnavigation',
+    footerNavigationLabel: 'Rechtliche Navigation',
     languageLabel: 'Sprache',
     homeLabel: 'Unumae-Startseite',
     comingSoon: 'Demnächst fürs iPhone',

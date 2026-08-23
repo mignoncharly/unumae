@@ -180,6 +180,10 @@ svg {
   transform: translateY(0);
 }
 
+#main-content:focus {
+  outline: 0;
+}
+
 .site-frame {
   min-height: 100vh;
   display: flex;
@@ -215,6 +219,9 @@ svg {
 }
 
 .wordmark {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-display);
   font-size: 1.45rem;
   font-variation-settings: 'opsz' 48;
@@ -243,8 +250,10 @@ svg {
 .site-footer nav a {
   position: relative;
   min-height: 2.75rem;
+  min-width: 2.75rem;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   color: var(--color-text-secondary);
   font-size: var(--step-footnote);
   font-weight: 560;
@@ -339,6 +348,8 @@ h3 {
   font-family: var(--font-display);
   font-variation-settings: 'opsz' 72;
   font-weight: 420;
+  hyphens: auto;
+  overflow-wrap: anywhere;
 }
 
 h1 {
@@ -853,22 +864,18 @@ code {
 
 @keyframes reveal-up {
   from {
-    opacity: 0;
     transform: translateY(0.75rem);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes digit-settle {
   from {
-    opacity: 0;
     transform: translateY(-0.25em);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -963,10 +970,6 @@ code {
 @media (max-width: 30rem) {
   .site-header ul {
     gap: var(--space-lg);
-  }
-
-  .locale-nav a {
-    min-width: 2.5rem;
   }
 
   .swatch-grid {

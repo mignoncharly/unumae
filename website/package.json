@@ -16,7 +16,13 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "npm run check && npm run lint && npm run format:check && npm run build"
+    "verify": "npm run check && npm run lint && npm run format:check && npm run build",
+    "build:quality": "SITE_ORIGIN=https://quality.unumae.invalid PUBLIC_ANALYTICS_ENDPOINT=/api/marketing-events astro build",
+    "quality:serve": "node scripts/serve-dist.mjs 4321",
+    "quality:static": "html-validate \"dist/**/*.html\" && node scripts/audit-static.mjs",
+    "quality:browsers": "playwright test",
+    "quality:lighthouse": "node scripts/lighthouse.mjs",
+    "quality": "npm run check && npm run lint && npm run format:check && npm run build:quality && npm run quality:static && npm run quality:browsers && npm run quality:lighthouse"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -24,8 +30,12 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.62.1",
     "eslint": "^10.9.0",
     "eslint-plugin-astro": "^3.1.0",
+    "html-validate": "^11.9.0",
+    "lighthouse": "^13.4.1",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^6.0.3",

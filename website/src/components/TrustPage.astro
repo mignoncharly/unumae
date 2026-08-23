@@ -19,7 +19,7 @@ const guidelines = copy.guidelines;
 <BaseLayout locale={locale} page={page}>
   {
     page === 'about' && (
-      <main id="main-content" class="trust-main about-page">
+      <main id="main-content" class="trust-main about-page" tabindex="-1">
         <header class="trust-hero">
           <p class="eyebrow">{about.hero.eyebrow}</p>
           <h1>{about.hero.title}</h1>
@@ -101,7 +101,10 @@ const guidelines = copy.guidelines;
         <section class="trust-closing" aria-labelledby="about-closing-title">
           <h2 id="about-closing-title">{about.closing.title}</h2>
           <p>{about.closing.body}</p>
-          <ActionLink href={localizedPath(locale, 'how-selection-works')}>
+          <ActionLink
+            href={localizedPath(locale, 'how-selection-works')}
+            analyticsEvent="selection_explainer_opened"
+          >
             {about.closing.link}
           </ActionLink>
         </section>
@@ -111,7 +114,7 @@ const guidelines = copy.guidelines;
 
   {
     page === 'how-selection-works' && (
-      <main id="main-content" class="trust-main selection-page">
+      <main id="main-content" class="trust-main selection-page" tabindex="-1">
         <header class="trust-hero">
           <p class="eyebrow">{selection.hero.eyebrow}</p>
           <h1>{selection.hero.title}</h1>
@@ -255,7 +258,7 @@ const guidelines = copy.guidelines;
 
   {
     page === 'community-guidelines' && (
-      <main id="main-content" class="trust-main guidelines-page">
+      <main id="main-content" class="trust-main guidelines-page" tabindex="-1">
         <header class="trust-hero">
           <p class="eyebrow">{guidelines.hero.eyebrow}</p>
           <h1>{guidelines.hero.title}</h1>

@@ -34,7 +34,7 @@ const spaces = [
   noIndex
   omitCanonicalLinks
 >
-  <main id="main-content" class="page-main styleguide">
+  <main id="main-content" class="page-main styleguide" tabindex="-1">
     <section class="page-intro" aria-labelledby="page-title">
       <p class="eyebrow">Internal surface · Phase 2</p>
       <h1 id="page-title">Web design system</h1>
@@ -51,7 +51,7 @@ const spaces = [
         <p class="eyebrow">01 · Foundations</p>
         <h2 id="color-title">Warm monochrome</h2>
       </div>
-      <ul class="swatch-grid" role="list">
+      <ul class="swatch-grid">
         {
           colors.map((color) => (
             <li>
@@ -129,7 +129,7 @@ const spaces = [
         <p class="eyebrow">04 · Rhythm</p>
         <h2 id="spacing-title">The 4-point scale</h2>
       </div>
-      <ul class="spacing-list" role="list">
+      <ul class="spacing-list">
         {
           spaces.map((space) => (
             <li>

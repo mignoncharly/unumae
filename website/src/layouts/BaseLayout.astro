@@ -2,6 +2,7 @@
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { content, type Locale, type RouteKey } from '../content/site';
+import { normalizeAnalyticsEndpoint } from '../lib/analytics';
 import { createPageMetadata } from '../lib/metadata';
 import '../styles/global.css';
 
@@ -36,6 +37,9 @@ const structuredData = JSON.stringify(metadata.structuredData).replace(
   '\\u003c'
 );
 const isSecureSocialImage = metadata.socialImage.url.startsWith('https://');
+const analyticsEndpoint = normalizeAnalyticsEndpoint(
+  import.meta.env.PUBLIC_ANALYTICS_ENDPOINT
+);
 ---
 
 <!doctype html>
@@ -133,12 +137,13 @@ const isSecureSocialImage = metadata.socialImage.url.startsWith('https://');
     }
     <title>{resolvedTitle}</title>
   </head>
-  <body>
+  <body data-route={page} data-analytics-endpoint={analyticsEndpoint}>
     <a class="skip-link" href="#main-content">{copy.skipToContent}</a>
     <div class="site-frame">
       <SiteHeader locale={locale} page={page} />
       <slot />
       <SiteFooter locale={locale} />
     </div>
+    {analyticsEndpoint && <script>import '../scripts/analytics.ts';</script>}
   </body>
 </html>

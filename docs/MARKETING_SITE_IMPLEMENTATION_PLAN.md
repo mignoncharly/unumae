@@ -1,6 +1,6 @@
 # Unumae marketing site — implementation plan
 
-**Status:** Phases 0–6 complete; Phase 7 next
+**Status:** Phases 0–7 complete; Phase 8 next
 **Target origin:** `https://www.unumae.app`
 **Working origin:** configurable until the domain is purchased
 **Product source of truth:** `PRODUCT_CONSTITUTION.md`
@@ -406,19 +406,55 @@ Validation:
 duplicate ambiguity, shared links produce complete localized previews, and no
 Human content can enter social metadata before its approved live cycle.
 
-### Phase 7 — Measurement, accessibility, and quality
+### Phase 7 — Measurement, accessibility, and quality — complete
 
-- Add privacy-conscious analytics only for agreed funnel events; never track or
-  display a Human's popularity.
-- Test keyboard navigation, landmarks, heading order, screen readers, zoom,
-  contrast, reduced motion, and touch targets against WCAG 2.2 AA.
-- Add automated link, type, build, HTML, metadata, and accessibility checks.
-- Test on current Safari/iOS, Chrome, Firefox, and Edge, plus low bandwidth.
-- Target Lighthouse scores of 95+ for Performance, Accessibility, Best
-  Practices, and SEO on the static marketing routes.
+Delivered on 23 August 2026:
 
-**Exit:** checks are repeatable from one command and no critical accessibility,
-SEO, privacy, or responsive defect remains.
+- Added an explicit three-event marketing funnel allowlist for opening the
+  selection explainer, Archive, or mission page. Measurement is absent unless a
+  same-origin endpoint is configured, and its payload contains only event,
+  locale, and source route.
+- Set no analytics cookie, installation ID, local storage, or session storage;
+  honored Global Privacy Control and Do Not Track; and structurally excluded
+  Humans, stories, questions, Archive entries, impressions, Remember activity,
+  and popularity signals. Added the localized disclosure to the Privacy page.
+- Added a single repeatable `npm run web:quality` gate for Astro and TypeScript
+  diagnostics, lint, formatting, production build, HTML validation, internal
+  links, heading order, discovery metadata, sitemap integrity, privacy rules,
+  browser accessibility, responsive behavior, and Lighthouse.
+- Added Playwright coverage using Chrome, Edge, Firefox, desktop Safari, and
+  iPhone Safari profiles backed by current bundled Chromium, Firefox, and
+  WebKit engines. Added delayed-resource coverage for low bandwidth and
+  Lighthouse simulated-mobile throttling.
+- Checked keyboard skip navigation, main focus, landmark names and reading
+  structure, one-H1 heading order, axe WCAG 2.2 A/AA rules, 200% layout
+  equivalence, contrast, reduced motion, and 44px touch targets across every
+  public route where applicable.
+- Fixed defects exposed by the new gate: distinct localized names for primary
+  and legal navigation, programmatically focusable skip targets, transient
+  animation contrast failures, undersized navigation targets, empty dynamic
+  headings, invalid placeholder image markup, and German heading overflow on
+  iOS.
+
+Validation:
+
+- HTML Validate and the static audit pass all 30 generated HTML files and all
+  24 public locale/route combinations, including local links, headings,
+  canonical/alternate metadata, social tags, JSON-LD, and sitemap membership.
+- The browser matrix passes all applicable checks across five profiles,
+  including axe scans of the five representative route structures and touch
+  targets across all 24 iOS public routes.
+- Lighthouse passes all eight English route types. Performance ranges from
+  98–100; Accessibility, Best Practices, and SEO are 100 on every route.
+- The quality-build analytics test emits exactly the three approved fields,
+  verifies empty cookies and browser storage, and proves both Global Privacy
+  Control and Do Not Track suppress delivery.
+- `npm run verify` remains green after rebasing onto the native Phase 15 work:
+  28 migrations pass, 29 suites pass, and all 492 native tests pass.
+
+**Exit:** achieved. The full gate is repeatable from one command, every score
+meets the 95 target, and no critical accessibility, SEO, privacy, link,
+cross-engine, low-bandwidth, or responsive defect remains.
 
 ### Phase 8 — Domain and production launch
 

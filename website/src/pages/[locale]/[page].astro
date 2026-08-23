@@ -1,5 +1,7 @@
 ---
 import RoutePage from '../../components/RoutePage.astro';
+import TrustPage from '../../components/TrustPage.astro';
+import { trustPageKeys, type TrustPageKey } from '../../content/trust';
 import {
   pageKeys,
   translatedLocales,
@@ -21,7 +23,14 @@ interface Props {
   page: PageKey;
 }
 
-const { locale, page } = Astro.props;
+const { locale, page } = Astro.props as Props;
+const isTrustPage = trustPageKeys.includes(page as TrustPageKey);
 ---
 
-<RoutePage locale={locale} page={page} />
+{
+  isTrustPage ? (
+    <TrustPage locale={locale} page={page as TrustPageKey} />
+  ) : (
+    <RoutePage locale={locale} page={page} />
+  )
+}

@@ -1,5 +1,7 @@
 ---
 import RoutePage from '../components/RoutePage.astro';
+import TrustPage from '../components/TrustPage.astro';
+import { trustPageKeys, type TrustPageKey } from '../content/trust';
 import { pageKeys, type PageKey } from '../content/site';
 
 export function getStaticPaths() {
@@ -10,7 +12,14 @@ interface Props {
   page: PageKey;
 }
 
-const { page } = Astro.props;
+const { page } = Astro.props as Props;
+const isTrustPage = trustPageKeys.includes(page as TrustPageKey);
 ---
 
-<RoutePage locale="en" page={page} />
+{
+  isTrustPage ? (
+    <TrustPage locale="en" page={page as TrustPageKey} />
+  ) : (
+    <RoutePage locale="en" page={page} />
+  )
+}

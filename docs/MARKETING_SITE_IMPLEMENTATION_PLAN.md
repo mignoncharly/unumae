@@ -1,6 +1,6 @@
 # Unumae marketing site — implementation plan
 
-**Status:** Phases 0–3 complete; Phase 4 next
+**Status:** Phases 0–4 complete; Phase 5 next
 **Target origin:** `https://www.unumae.app`
 **Working origin:** configurable until the domain is purchased
 **Product source of truth:** `PRODUCT_CONSTITUTION.md`
@@ -263,21 +263,47 @@ Validation:
 careful publication loop, the deliberate absence of social ranking, the
 Archive, and the reproducible equal-chance draw.
 
-### Phase 4 — Trust and explanation pages
+### Phase 4 — Trust and explanation pages — complete
 
-- Build `/about` around the human mission and the deliberate limits of the
-  product.
-- Build `/how-selection-works` from constitutional constants: frozen pool,
-  equal chance, recorded seed, three backups, 12-hour acceptance window, one
-  turn forever, and moderation before publication.
-- Publish `/community-guidelines` from the approved rules in a readable,
-  navigable format.
-- Add `/privacy` and `/terms` only from reviewed legal copy. Until then, these
-  routes must be honest placeholders and must not imply policies that do not
-  exist.
+Delivered on 23 August 2026:
 
-**Exit:** the principal trust claims are specific, consistent with the app,
-and contain no unsupported legal or safety promises.
+- Built `/about` as a finite mission document around ordinary people, one
+  shared day, the Human Archive, guest access, participant rights, deliberate
+  product limits, and an international—not centre-out—point of view.
+- Built `/how-selection-works` from the binding rules: binary eligibility,
+  seven-day account age, minimum age 16, opt-in and rules acceptance, a pool
+  frozen at D−2, recorded pool hash and secure seed, one primary plus three
+  backups, a 12-hour response window, explicit consent, one turn forever,
+  liveness and human review before publication, and Quiet Day as the honest
+  fallback.
+- Distinguished reproducibility from public cryptographic verification. The
+  recorded inputs make the ordering auditable; a public cryptographic verifier
+  remains a future transparency goal and is not claimed as available.
+- Published all nine approved community rules in a readable document with
+  numbered anchors and a table of contents. English remains explicitly
+  canonical, with complete French and German translations.
+- Preserved Privacy and Terms as truthful pre-launch placeholders. Both remain
+  `noindex, follow`; no unreviewed legal text or unsupported safety guarantee
+  was introduced.
+- Added one typed trust-content model and responsive editorial layouts shared
+  across the three locales.
+
+Validation:
+
+- `npm run web:check` passes Astro diagnostics, lint, formatting, and the
+  26-page static build.
+- Headless Chromium reviewed About, selection, and community guidelines at 320,
+  768, and 1440px with no horizontal overflow or external requests.
+- The community page exposes nine rules and nine matching contents links at
+  every target width. English, French, and German render equivalent structures.
+- Both self-hosted fonts report loaded. Keyboard Tab focus lands on the visible
+  skip link with a solid outline; reduced motion resolves to 0.01ms.
+- Browser inspection confirms Privacy and Terms emit `noindex, follow`.
+- `npm run verify` remains green: 22 suites and 364 native tests pass.
+
+**Exit:** achieved. The principal mission, selection, consent, moderation,
+Archive, conduct, and enforcement claims are specific, traceable to approved
+repository policy, and free of invented legal promises.
 
 ### Phase 5 — Public Today and Archive previews
 

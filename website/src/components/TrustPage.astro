@@ -1,0 +1,318 @@
+---
+import ActionLink from './ui/ActionLink.astro';
+import { trustContent, type TrustPageKey } from '../content/trust';
+import { localizedPath, type Locale } from '../content/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+  page: TrustPageKey;
+}
+
+const { locale, page } = Astro.props;
+const copy = trustContent[locale];
+const about = copy.about;
+const selection = copy.selection;
+const guidelines = copy.guidelines;
+---
+
+<BaseLayout locale={locale} page={page}>
+  {
+    page === 'about' && (
+      <main id="main-content" class="trust-main about-page">
+        <header class="trust-hero">
+          <p class="eyebrow">{about.hero.eyebrow}</p>
+          <h1>{about.hero.title}</h1>
+          <p class="introduction">{about.hero.introduction}</p>
+        </header>
+
+        <section
+          class="trust-section promise-section"
+          aria-labelledby="promise-title"
+        >
+          <div class="trust-section__heading">
+            <p class="eyebrow">01 · {about.promise.eyebrow}</p>
+            <h2 id="promise-title">{about.promise.title}</h2>
+          </div>
+          <div class="trust-section__body">
+            <blockquote>{about.promise.quote}</blockquote>
+            <dl class="commitment-list">
+              {about.promise.commitments.map((commitment) => (
+                <div>
+                  <dt>{commitment.term}</dt>
+                  <dd>{commitment.meaning}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        <section class="trust-inverse" aria-labelledby="limits-title">
+          <div class="trust-inverse__inner">
+            <div class="trust-section__heading">
+              <p class="eyebrow">02 · {about.limits.eyebrow}</p>
+              <h2 id="limits-title">{about.limits.title}</h2>
+              <p>{about.limits.introduction}</p>
+            </div>
+            <ol class="limits-list">
+              {about.limits.items.map((item, index) => (
+                <li>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section
+          class="trust-section access-section"
+          aria-labelledby="access-title"
+        >
+          <div class="trust-section__heading">
+            <p class="eyebrow">03 · {about.access.eyebrow}</p>
+            <h2 id="access-title">{about.access.title}</h2>
+            <p>{about.access.body}</p>
+          </div>
+          <ul class="rights-list">
+            {about.access.rights.map((right) => (
+              <li>{right}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section
+          class="trust-section international-section"
+          aria-labelledby="international-title"
+        >
+          <div class="trust-section__heading">
+            <p class="eyebrow">04 · {about.international.eyebrow}</p>
+            <h2 id="international-title">{about.international.title}</h2>
+          </div>
+          <div class="trust-section__body trust-prose">
+            <p>{about.international.body}</p>
+            <p>{about.international.languageNote}</p>
+          </div>
+        </section>
+
+        <section class="trust-closing" aria-labelledby="about-closing-title">
+          <h2 id="about-closing-title">{about.closing.title}</h2>
+          <p>{about.closing.body}</p>
+          <ActionLink href={localizedPath(locale, 'how-selection-works')}>
+            {about.closing.link}
+          </ActionLink>
+        </section>
+      </main>
+    )
+  }
+
+  {
+    page === 'how-selection-works' && (
+      <main id="main-content" class="trust-main selection-page">
+        <header class="trust-hero">
+          <p class="eyebrow">{selection.hero.eyebrow}</p>
+          <h1>{selection.hero.title}</h1>
+          <p class="introduction">{selection.hero.introduction}</p>
+        </header>
+
+        <dl class="trust-facts">
+          {selection.facts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <section
+          class="trust-section eligibility-section"
+          aria-labelledby="eligibility-title"
+        >
+          <div class="trust-section__heading">
+            <p class="eyebrow">{selection.eligibility.eyebrow}</p>
+            <h2 id="eligibility-title">{selection.eligibility.title}</h2>
+            <p>{selection.eligibility.introduction}</p>
+          </div>
+          <div class="trust-section__body">
+            <ul class="criteria-list">
+              {selection.eligibility.criteria.map((criterion) => (
+                <li>
+                  <span aria-hidden="true">✓</span>
+                  {criterion}
+                </li>
+              ))}
+            </ul>
+            <p class="trust-conclusion">{selection.eligibility.conclusion}</p>
+          </div>
+        </section>
+
+        <section
+          class="trust-section draw-section"
+          aria-labelledby="draw-title"
+        >
+          <div class="trust-section__heading">
+            <p class="eyebrow">{selection.draw.eyebrow}</p>
+            <h2 id="draw-title">{selection.draw.title}</h2>
+            <p>{selection.draw.introduction}</p>
+          </div>
+          <ol class="draw-steps">
+            {selection.draw.steps.map((step, index) => (
+              <li>
+                <div class="draw-steps__meta">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <span>{step.time}</span>
+                </div>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section
+          class="trust-inverse forbidden-section"
+          aria-labelledby="forbidden-title"
+        >
+          <div class="trust-inverse__inner">
+            <div class="trust-section__heading">
+              <p class="eyebrow">{selection.exclusions.eyebrow}</p>
+              <h2 id="forbidden-title">{selection.exclusions.title}</h2>
+              <p>{selection.exclusions.introduction}</p>
+            </div>
+            <ul class="forbidden-list">
+              {selection.exclusions.items.map((item) => (
+                <li>
+                  <span aria-hidden="true">×</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section
+          class="trust-section consent-section"
+          aria-labelledby="consent-title"
+        >
+          <div class="trust-section__heading">
+            <p class="eyebrow">{selection.consent.eyebrow}</p>
+            <h2 id="consent-title">{selection.consent.title}</h2>
+            <p>{selection.consent.body}</p>
+          </div>
+          <div class="trust-section__body">
+            <ol class="backup-sequence">
+              {selection.consent.sequence.map((person, index) => (
+                <li>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  {person}
+                </li>
+              ))}
+            </ol>
+            <p class="trust-conclusion">{selection.consent.note}</p>
+          </div>
+        </section>
+
+        <section
+          class="trust-section publication-section"
+          aria-labelledby="publication-title"
+        >
+          <div class="trust-section__heading">
+            <p class="eyebrow">{selection.publication.eyebrow}</p>
+            <h2 id="publication-title">{selection.publication.title}</h2>
+          </div>
+          <div class="trust-section__body publication-cards">
+            <p>{selection.publication.body}</p>
+            <p>{selection.publication.quietDay}</p>
+          </div>
+        </section>
+
+        <section class="audit-section" aria-labelledby="audit-title">
+          <p class="eyebrow">{selection.audit.eyebrow}</p>
+          <div class="audit-section__grid">
+            <div>
+              <h2 id="audit-title">{selection.audit.title}</h2>
+              <p>{selection.audit.body}</p>
+            </div>
+            <div class="audit-record" aria-hidden="true">
+              <span>pool_hash</span>
+              <strong>sha256:••••••••••••</strong>
+              <span>seed</span>
+              <strong>recorded · immutable</strong>
+              <span>result</span>
+              <strong>primary → 01 → 02 → 03</strong>
+            </div>
+          </div>
+          <p class="audit-section__note">{selection.audit.note}</p>
+        </section>
+      </main>
+    )
+  }
+
+  {
+    page === 'community-guidelines' && (
+      <main id="main-content" class="trust-main guidelines-page">
+        <header class="trust-hero">
+          <p class="eyebrow">{guidelines.hero.eyebrow}</p>
+          <h1>{guidelines.hero.title}</h1>
+          <p class="introduction">{guidelines.hero.introduction}</p>
+          <aside class="canonical-note">
+            <p>{guidelines.canonicalNote}</p>
+          </aside>
+        </header>
+
+        <div class="guidelines-layout">
+          <nav class="guidelines-toc" aria-label={guidelines.contentsLabel}>
+            <p class="specimen-label">{guidelines.contentsLabel}</p>
+            <ol>
+              {guidelines.rules.map((rule, index) => (
+                <li>
+                  <a href={`#rule-${index + 1}`}>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    {rule.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          <article class="guidelines-rules">
+            {guidelines.rules.map((rule, index) => (
+              <section
+                id={`rule-${index + 1}`}
+                aria-labelledby={`rule-${index + 1}-title`}
+              >
+                <p class="guideline-number">
+                  {String(index + 1).padStart(2, '0')}
+                </p>
+                <h2 id={`rule-${index + 1}-title`}>{rule.title}</h2>
+                {rule.paragraphs.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+                {rule.examples && (
+                  <blockquote class="rule-examples">
+                    {rule.examples.map((example) => (
+                      <p>{example}</p>
+                    ))}
+                  </blockquote>
+                )}
+                {rule.bullets && (
+                  <ul>
+                    {rule.bullets.map((bullet) => (
+                      <li>{bullet}</li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ))}
+            <p class="guidelines-updated">{guidelines.updated}</p>
+          </article>
+        </div>
+      </main>
+    )
+  }
+</BaseLayout>

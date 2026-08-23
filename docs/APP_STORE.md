@@ -124,6 +124,22 @@ variant becomes:
 dark: { image: './assets/splash-dark.png', backgroundColor: '#0B0B0C' },
 ```
 
+## Developer surfaces
+
+The Settings screen carried a DEVELOPER section — the Supabase project
+reference, the connection status, and links into four internal screens — with
+no guard. It shipped visible to everybody for eleven phases and was caught by a
+screenshot from a real device, not by a test.
+
+Both halves are now closed, because the obvious half is not sufficient:
+
+- the section is behind `__DEV__`, which is false in any release build;
+- `src/app/dev/_layout.tsx` redirects the routes themselves, since the app
+  registers a URL scheme and universal links and `/dev/tokens` stays reachable
+  by deep link whether or not anything points at it.
+
+`tests/dev-surfaces.test.ts` asserts both.
+
 ## Rejections worth anticipating
 
 **"We were unable to locate account deletion."** Give the exact path in the

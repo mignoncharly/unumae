@@ -182,36 +182,52 @@ export default function SettingsScreen() {
         <LanguageSelector />
       </View>
 
-      <View style={{ marginTop: theme.spacing.xxl }}>
-        <Text
-          color="textTertiary"
-          style={{ marginBottom: theme.spacing.sm }}
-          variant="footnote"
-        >
-          {t('settings.developer').toUpperCase()}
-        </Text>
+      {/*
+        Development only.
 
-        <View style={{ gap: theme.spacing.sm }}>
-          <Text color="textSecondary">
-            {t('settings.project')}: {projectRef}
+        This was rendering for everybody. In a production build every user
+        would have seen the Supabase project reference, the connection status,
+        and links into the design-token, component, UX-preview and share-card
+        screens — internal instruments, presented as though they were settings.
+
+        Beyond the untidiness it is an App Store risk: debug surfaces shipped to
+        users read as an unfinished app to a reviewer.
+
+        `__DEV__` is false in any release build, so the whole section and its
+        network check disappear from production.
+      */}
+      {__DEV__ ? (
+        <View style={{ marginTop: theme.spacing.xxl }}>
+          <Text
+            color="textTertiary"
+            style={{ marginBottom: theme.spacing.sm }}
+            variant="footnote"
+          >
+            {t('settings.developer').toUpperCase()}
           </Text>
-          <Text color="textSecondary">
-            {t('settings.connection')}: {t(STATUS_KEYS[status])}
-          </Text>
-          <Link href="/dev/tokens">
-            <Text color="accent">{t('settings.designTokens')} →</Text>
-          </Link>
-          <Link href="/dev/components">
-            <Text color="accent">{t('settings.components')} →</Text>
-          </Link>
-          <Link href="/dev/preview">
-            <Text color="accent">{t('settings.uxPreview')} →</Text>
-          </Link>
-          <Link href="/dev/share-card">
-            <Text color="accent">{t('settings.shareCard')} →</Text>
-          </Link>
+
+          <View style={{ gap: theme.spacing.sm }}>
+            <Text color="textSecondary">
+              {t('settings.project')}: {projectRef}
+            </Text>
+            <Text color="textSecondary">
+              {t('settings.connection')}: {t(STATUS_KEYS[status])}
+            </Text>
+            <Link href="/dev/tokens">
+              <Text color="accent">{t('settings.designTokens')} →</Text>
+            </Link>
+            <Link href="/dev/components">
+              <Text color="accent">{t('settings.components')} →</Text>
+            </Link>
+            <Link href="/dev/preview">
+              <Text color="accent">{t('settings.uxPreview')} →</Text>
+            </Link>
+            <Link href="/dev/share-card">
+              <Text color="accent">{t('settings.shareCard')} →</Text>
+            </Link>
+          </View>
         </View>
-      </View>
+      ) : null}
     </Screen>
   );
 }

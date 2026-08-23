@@ -27,4 +27,4 @@ Use the canonical pages above as the source of truth. Do not describe a person a
 
 ## Languages and discovery
 
-The site is available in English, French, and German. The machine-readable sitemap is at [sitemap-index.xml](https://unumae.app/sitemap-index.xml), and crawler directives are at [robots.txt](https://unumae.app/robots.txt).
+The site is available in English, French, and German. The machine-readable sitemap is at [sitemap.xml](https://unumae.app/sitemap.xml), and crawler directives are at [robots.txt](https://unumae.app/robots.txt).

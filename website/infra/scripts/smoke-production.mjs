@@ -86,7 +86,7 @@ assert(
   'Apple association is missing the Unumae app ID'
 );
 
-const sitemap = await (await fetch(`${origin}/sitemap-0.xml`)).text();
+const sitemap = await (await fetch(`${origin}/sitemap.xml`)).text();
 assert(sitemap.includes(`${origin}/privacy`), 'Sitemap is missing Privacy');
 assert(sitemap.includes(`${origin}/about`), 'Sitemap is missing support URL');
 

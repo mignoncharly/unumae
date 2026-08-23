@@ -7,7 +7,7 @@ ranking or citation by a search engine or AI assistant.
 
 ## Sitemap and robots
 
-- Sitemap index: `https://unumae.app/sitemap-index.xml`
+- Sitemap index: `https://unumae.app/sitemap.xml`
 - Crawler directives: `https://unumae.app/robots.txt`
 - AI orientation: `https://unumae.app/llms.txt`
 
@@ -18,7 +18,7 @@ in `robots.txt`; health checks are also disallowed.
 ## Google Search Console
 
 1. Verify the `unumae.app` domain property (DNS verification is preferred).
-2. Open **Sitemaps** and submit `sitemap-index.xml`.
+2. Open **Sitemaps** and submit `sitemap.xml`.
 3. Use **URL inspection** for the home, Today, Archive, and selection pages;
    request indexing after the first production deployment and after substantial
    editorial changes.
@@ -28,7 +28,7 @@ in `robots.txt`; health checks are also disallowed.
 
 1. Add and verify `https://unumae.app` (importing the verified Google property
    is also supported).
-2. Submit `https://unumae.app/sitemap-index.xml` under **Sitemaps**.
+2. Submit `https://unumae.app/sitemap.xml` under **Sitemaps**.
 3. Use URL inspection for important pages and monitor crawl/index coverage.
 
 ## Content that earns useful citations

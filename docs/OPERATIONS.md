@@ -208,6 +208,51 @@ email would have carried and prints it, so the flow can be tested end to end.
 The app is unchanged: it verifies that code exactly as it would verify one that
 arrived by email.
 
+
+### Setting up SMTP (Resend)
+
+About twenty minutes, and the DNS records are the only fiddly part.
+
+1. **resend.com** → add the domain `unumae.app`.
+2. Add the DNS records it gives you — an MX and a TXT for SPF, a TXT for DKIM.
+   Without them mail is unsigned and lands in spam, which for a sign-in code
+   means people simply cannot get in.
+3. Create an API key.
+4. Supabase → **Authentication → Emails → SMTP Settings**:
+
+| Field | Value |
+| --- | --- |
+| Host | `smtp.resend.com` |
+| Port | `465` |
+| Username | `resend` |
+| Password | the Resend API key |
+| Sender email | something on the verified domain, e.g. `hello@unumae.app` |
+| Sender name | Unumae |
+
+5. **Authentication → Rate Limits** — the email limit defaults to about 30 an
+   hour even with custom SMTP. That is a sign-up ceiling, so raise it before a
+   launch rather than discovering it during one.
+
+Volume is low here: notifications go over Expo push rather than email, sessions
+persist, and Apple sign-in sends nothing at all. Email is essentially new
+accounts and returning sign-ins, so a free tier goes a long way.
+
+### Which templates matter
+
+Supabase ships six. **Two apply**, because this product has no passwords —
+Sign in with Apple and a six-digit email code, and nothing else.
+
+| Template | Applies |
+| --- | --- |
+| Magic link or OTP | **Yes** — a returning address |
+| Confirm sign up | **Yes** — an address seen for the first time |
+| Reset password | No. There is no password to reset |
+| Invite user | No. Signing up is open; nobody is invited |
+| Change email address | No UI for it yet. Wire the template when there is one |
+| Reauthentication | Not used |
+
+Configuring the other four would be dressing up doors that open onto nothing.
+
 ### The fix, in the dashboard
 
 **Authentication → URL Configuration**

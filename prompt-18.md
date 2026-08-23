@@ -861,7 +861,7 @@ Puis :
 10 years ago
 ```
 
-Le produit gagne mécaniquement de la valeur avec le temps.
+Le produit gagne mécaniquement de la valeur avec le temps. 
 
 ---
 

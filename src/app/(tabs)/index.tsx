@@ -23,8 +23,10 @@ import {
   useVote,
 } from '@/features/daily-human/hooks';
 import { useReport } from '@/features/moderation/hooks';
+import { shareHuman } from '@/features/sharing/share';
 import { track } from '@/lib/analytics';
 import { useTheme } from '@/theme';
+import { countryName, flagEmoji } from '@/utils/country';
 
 /**
  * TODAY — the core of the application.
@@ -38,7 +40,7 @@ import { useTheme } from '@/theme';
  */
 export default function TodayScreen() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isAuthenticated = useIsAuthenticated();
 
   const { data: today, isLoading } = useTodaysHuman();
@@ -177,6 +179,33 @@ export default function TodayScreen() {
               })
             }
             variant={remembered ? 'secondary' : 'primary'}
+          />
+
+          {/*
+            Sharing is the only growth mechanism this product has, and the only
+            one it is allowed: a person passing on somebody they found worth
+            passing on (Article 1.8).
+          */}
+          <Button
+            label={t('sharing.share')}
+            onPress={() =>
+              void shareHuman(
+                {
+                  humanNumber: today.human.human_number ?? 0,
+                  name: today.human.display_name,
+                  countryName: countryName(
+                    today.human.country_code,
+                    i18n.language
+                  ),
+                  flag: flagEmoji(today.human.country_code),
+                  quote: today.elements[0]?.answer ?? null,
+                  drawId: today.human.draw_id,
+                  isToday: true,
+                },
+                t('sharing.tagline')
+              )
+            }
+            variant="secondary"
           />
 
           <ReportAction

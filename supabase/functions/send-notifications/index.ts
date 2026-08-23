@@ -96,17 +96,22 @@ Deno.serve(async (request: Request): Promise<Response> => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-  const secret = Deno.env.get('NOTIFICATIONS_SECRET');
 
   if (!supabaseUrl || !serviceRoleKey) {
     console.error('send-notifications: function environment is incomplete');
     return jsonResponse({ error: 'server_misconfigured' }, 500);
   }
 
-  // A shared secret, because this endpoint is called by a scheduler rather
-  // than by a signed-in person. Without it, anyone could make the product
-  // send its whole queue early.
-  if (secret && request.headers.get('x-notifications-secret') !== secret) {
+  /*
+   * Only the service role may fire this.
+   *
+   * The endpoint is called by a scheduler, not by a signed-in person, and
+   * Supabase's `verify_jwt` is satisfied by the anon key that ships inside the
+   * app — so without this check anybody holding the bundle could make the
+   * product send its whole queue early. Comparing against the service role key
+   * needs no additional secret to distribute.
+   */
+  if (request.headers.get('Authorization') !== `Bearer ${serviceRoleKey}`) {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 

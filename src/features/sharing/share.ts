@@ -1,0 +1,90 @@
+import { Share } from 'react-native';
+
+import { track } from '@/lib/analytics';
+import { formatHumanNumber } from '@/utils/cycle';
+
+/**
+ * Sharing a Human.
+ *
+ * A shared link has to be understandable to somebody who has never heard of
+ * this product and has not installed anything — that is the whole point of the
+ * web page it points at. So the message says who, where, and what the product
+ * is, in four lines.
+ *
+ * What it deliberately does not say: how many people saw them, how many
+ * Remembers they have, or anything that would turn a person into a metric.
+ */
+
+/** Where a shared link lands. The domain is not registered yet — see OPEN_ITEMS. */
+export const SHARE_BASE_URL = 'https://unumae.app';
+
+export interface ShareableHuman {
+  humanNumber: number;
+  name: string;
+  countryName: string;
+  flag: string;
+  /** One line from their portrait, if there is a good one to quote. */
+  quote?: string | null;
+  drawId: string;
+  isToday: boolean;
+}
+
+export function shareUrl(human: ShareableHuman): string {
+  return human.isToday
+    ? `${SHARE_BASE_URL}/today`
+    : `${SHARE_BASE_URL}/human/${human.drawId}`;
+}
+
+/**
+ * The message. Built as a pure function so the wording can be tested without
+ * opening a share sheet.
+ */
+export function buildShareMessage(
+  human: ShareableHuman,
+  tagline: string
+): string {
+  const lines = [
+    formatHumanNumber(human.humanNumber),
+    '',
+    human.name,
+    `${human.flag} ${human.countryName}`.trim(),
+  ];
+
+  if (human.quote) {
+    lines.push('', `"${human.quote}"`);
+  }
+
+  lines.push('', tagline, shareUrl(human));
+
+  return lines.join('\n');
+}
+
+/**
+ * Opens the system share sheet.
+ *
+ * Records that sharing started, and separately that it completed — the gap
+ * between those two is the only honest measure of whether a portrait was worth
+ * passing on.
+ */
+export async function shareHuman(
+  human: ShareableHuman,
+  tagline: string
+): Promise<boolean> {
+  track('share_started', { today: human.isToday });
+
+  try {
+    const result = await Share.share({
+      message: buildShareMessage(human, tagline),
+      url: shareUrl(human),
+    });
+
+    const shared = result.action === Share.sharedAction;
+    if (shared) {
+      track('share_completed', { today: human.isToday });
+    }
+    return shared;
+  } catch {
+    // Dismissing a share sheet is not an error worth surfacing.
+    return false;
+  }
+}

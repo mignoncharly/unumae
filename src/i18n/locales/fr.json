@@ -399,5 +399,108 @@
     "showTranslated": "Lire une traduction",
     "showOriginal": "Lire l'original",
     "translated": "Traduit. L'original est à un geste d'ici."
+  },
+  "about": {
+    "title": "À propos",
+    "promise": "Chaque jour, une personne ordinaire est présentée au monde. Vous avez 24 heures pour la rencontrer, lui demander quelque chose et vous souvenir d'elle. Puis c'est au tour de quelqu'un d'autre.",
+    "idea": {
+      "title": "L'idée",
+      "body": "L'essentiel de ce que vous voyez en ligne vient de gens qui cherchent à être vus. Ici c'est l'inverse : quelqu'un tiré au hasard, qui a accepté d'être regardé une fois, et qui ne sera jamais choisi à nouveau."
+    },
+    "notSocial": {
+      "title": "Ce n'est pas un réseau social",
+      "body": "Pas d'abonnés, pas de likes à compter, pas de classements, pas de fil. Vous ne pouvez pas vous construire une audience ici, et rien de ce que nous ajouterons ne changera cela."
+    },
+    "fairness": {
+      "title": "Personne ne peut acheter son tour",
+      "body": "La personne est tirée au hasard parmi toutes celles éligibles. Aucun moyen de payer pour une meilleure chance, aucun boost, aucun sponsor. Nous publions l'empreinte du pool et la graine aléatoire afin que chacun puisse vérifier le résultat."
+    },
+    "archive": {
+      "title": "Tout le monde reste",
+      "body": "À la fin de leurs 24 heures, elles rejoignent l'Archive et y restent. Dans un an, l'application pourra dire : il y a un an aujourd'hui, le monde rencontrait cette personne."
+    }
+  },
+  "sharing": {
+    "share": "Partager",
+    "tagline": "8 milliards de personnes. Une aujourd’hui."
+  },
+  "legal": {
+    "privacyTitle": "Confidentialité",
+    "termsTitle": "Conditions",
+    "lastUpdated": "Dernière mise à jour : {{date}}.",
+    "privacyIntro": "Ce que nous collectons, ce que nous ne collectons jamais, et ce que vous pouvez y faire. Écrit pour être lu.",
+    "privacy": {
+      "whatWeCollect": {
+        "title": "Ce que nous collectons",
+        "body": "Votre adresse e-mail et le profil que vous remplissez : un nom d'utilisateur, un nom, une année de naissance, un pays, et éventuellement une ville et une ligne sur vous. Si vous êtes sélectionné, le portrait que vous écrivez et la photo que vous choisissez. Les questions que vous posez et les Humans dont vous vous souvenez."
+      },
+      "installId": {
+        "title": "Un numéro sur votre application, pas sur vous",
+        "body": "Nous stockons un identifiant aléatoire pour votre installation, afin de compter combien de personnes reviennent le lendemain. Il n'est lié à aucun profil publicitaire, ne quitte jamais notre base, et est supprimé au bout de 90 jours avec les événements concernés."
+      },
+      "whatWeNever": {
+        "title": "Ce que nous ne collectons jamais",
+        "body": "Votre localisation précise — le pays est le seul lieu demandé, et jamais automatiquement. Vos contacts. Votre activité dans d'autres applications ou sur d'autres sites. Quoi que ce soit à des fins publicitaires : il n'y a ici ni publicité ni partenaire publicitaire."
+      },
+      "whoSeesIt": {
+        "title": "Qui le voit",
+        "body": "Votre profil vous est privé. Si vous êtes publié, votre prénom, votre pays, votre ville éventuelle, votre photo et votre portrait deviennent publics — c'est le principe, et vous l'acceptez avant. Personne ne peut lire votre bibliothèque, vos votes, ni les tirages auxquels vous avez participé."
+      },
+      "howLong": {
+        "title": "Combien de temps",
+        "body": "Les statistiques produit pendant 90 jours. Le reste jusqu'à la suppression de votre compte. Les enregistrements du tirage quotidien sont conservés indéfiniment, mais ne contiennent aucun contenu publié — ce sont eux qui rendent l'équité vérifiable."
+      },
+      "yourRights": {
+        "title": "Vos droits",
+        "body": "Exporter tout ce que nous détenons sur vous, masquer votre ville, quitter le tirage, supprimer votre compte, et demander votre retrait de l'Archive si vous avez été publié. Tout cela depuis l'application, sans demander à personne."
+      },
+      "children": {
+        "title": "Âge",
+        "body": "Vous devez avoir au moins 16 ans. Nous demandons une année de naissance pour le vérifier, et pour rien d'autre."
+      },
+      "contact": {
+        "title": "Questions",
+        "body": "Écrivez-nous et une personne vous répondra. Nous n'utilisons pas de système automatisé pour les demandes de confidentialité."
+      }
+    },
+    "termsIntro": "Le minimum légal, gardé court. Les règles de la communauté portent ce qui compte vraiment au quotidien.",
+    "terms": {
+      "whatThisIs": {
+        "title": "Ce que c'est",
+        "body": "Un service qui publie chaque jour une personne tirée au hasard, pendant 24 heures, et conserve une archive de toutes les personnes publiées. Fourni tel quel, et gratuit."
+      },
+      "yourAccount": {
+        "title": "Votre compte",
+        "body": "Un compte par personne, au moins 16 ans, avec une adresse e-mail réelle que vous contrôlez. Vous êtes responsable de ce qui est fait avec votre compte."
+      },
+      "yourContent": {
+        "title": "Votre contenu reste le vôtre",
+        "body": "Votre portrait, vos réponses et vos questions vous appartiennent. Nous n’en revendiquons aucune propriété."
+      },
+      "ourLicence": {
+        "title": "Ce que vous nous autorisez à en faire",
+        "body": "En soumettant un portrait, vous nous autorisez à le publier dans l'application et sur notre site, et à le conserver dans l'Archive. Cette autorisation prend fin si vous demandez votre retrait, à l'exception du numéro et de la date, qui restent afin que l'Archive demeure une séquence complète."
+      },
+      "beingPublished": {
+        "title": "Être publié",
+        "body": "Personne n'est publié sans avoir dit oui. Vous choisissez ce que vous partagez, vous pouvez refuser sans conséquence, et une personne relit chaque portrait avant sa parution."
+      },
+      "whatWeMayDo": {
+        "title": "Ce que nous pouvons faire",
+        "body": "Retirer un contenu contraire aux règles, suspendre ou fermer un compte, et refuser de publier un portrait. Lorsque nous agissons, nous enregistrons qui a décidé et pourquoi, et vous pouvez contester."
+      },
+      "noWarranty": {
+        "title": "Aucune promesse de disponibilité",
+        "body": "Le service peut être interrompu ou modifié. Certains jours, aucun Human n'est publié : c'est voulu, pas une panne."
+      },
+      "ending": {
+        "title": "Y mettre fin",
+        "body": "Vous pouvez supprimer votre compte à tout moment depuis l'application. Nous pouvons fermer un compte qui enfreint les règles de façon répétée, ou que la loi nous oblige à fermer."
+      },
+      "changes": {
+        "title": "Modifications",
+        "body": "Nous mettrons ces conditions à jour à mesure que le produit évolue. Ce qui ne peut pas changer, c'est la promesse en dessous : pas d'abonnés, pas de classements, aucun moyen d'acheter une meilleure chance, et une personne ordinaire par jour."
+      }
+    }
   }
 }

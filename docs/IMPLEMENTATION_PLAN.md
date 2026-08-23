@@ -17,8 +17,8 @@ original). This file tracks status only.
 | 8 | Human Archive, discovery & One Year Ago | ✅ done | ✅ |
 | 9 | Trust & safety | ✅ done | ✅ |
 | 10 | Notifications, localization & translation | ✅ done | ✅ |
-| 11 | Analytics, sharing & landing web | ⬜ next | ✅ |
-| 12 | Accessibility & offline | ⬜ | ✅ |
+| 11 | Analytics, sharing & landing web | ✅ done | ✅ |
+| 12 | Accessibility & offline | ⬜ next | ✅ |
 | 13 | Testing & App Store readiness | ⬜ | ✅ |
 | 14 | Internal Alpha, Private Beta & retention | ⬜ | ✅ |
 | 15 | Viral experiments & 1,000 users | ⬜ | ✅ |
@@ -328,11 +328,48 @@ individually so a partial failure leaves an accurate log.
 
 355 tests.
 
-## Phase 11 — next
+## Phase 11 — Analytics, sharing & landing web ✅
 
-Analytics, sharing and the landing web page: the event list from the plan,
-shareable cards, deep links, and a page that makes a shared link
-understandable without installing anything.
+**Analytics that cannot become tracking.** The plan asks for real product
+numbers from Beta. The difference between that and surveillance is not intent,
+it is which columns exist:
+
+- The event list is an **enum of sixteen values**. "What do you collect?" has an
+  exact answer, and a test counts them.
+- There is no column for an IP address, a user agent, a device model, an
+  advertising id or a location. Not blank — **absent**.
+- No third party receives any of it. It is a table in our own database.
+- Rows are deleted after 90 days by a scheduled job, not by a promise.
+- A guest can **write** an event and read nothing; no policy grants any client
+  a read on that table at all. The KPIs are moderator-only.
+- The five KPIs are the ones the plan named — activation, curiosity,
+  engagement, memory, sharing — and a test asserts DAU/MAU is not among them.
+
+**One honest cost, disclosed rather than buried.** Answering "did people come
+back the next day" is impossible without some per-installation identifier, and
+that number is the single most important one before spending anything on
+growth. So there is a random `install_id`, generated on device, linked to no
+advertising profile, deleted with its events after 90 days — and named
+explicitly on the privacy page rather than left to be discovered.
+
+**Sharing.** A share message built as a pure function so its wording is
+testable: who, where, an optional quote, the tagline, the link. Tests assert it
+never mentions views, Remembers, votes or followers — sharing must not turn a
+person into a metric.
+
+**Landing surface.** `about`, `legal/privacy` and `legal/terms` join the pages
+that already exported to web, so a shared link is understandable to somebody
+who has installed nothing.
+
+399 tests over 24 suites. `send-notifications` deployed, and hardened: it had
+accepted the anon key that ships in the app, which would have let anybody
+trigger the whole send queue. It now requires the service role.
+
+## Phase 12 — next
+
+Accessibility and poor connectivity: Dynamic Type, VoiceOver, contrast, reduced
+motion, captions and alt text; caching so a Human can be read on a bad
+connection.
 
 ## Working agreements
 

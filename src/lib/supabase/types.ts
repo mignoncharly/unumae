@@ -505,6 +505,19 @@ export type Database = {
           translated_text: string;
         }[];
       };
+      /**
+       * Write-only for clients. No policy lets anybody read
+       * `analytics_events` from a client role, ever.
+       */
+      track_events: {
+        Args: { batch_install_id: string; batch: Json };
+        Returns: number;
+      };
+      /** Activation, curiosity, engagement, memory, sharing. Moderators only. */
+      analytics_kpis_guarded: {
+        Args: { window_days?: number };
+        Returns: { metric: string; value: number; detail: string }[];
+      };
     };
     Enums: {
       account_status: AccountStatus;

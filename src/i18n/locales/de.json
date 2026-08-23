@@ -399,5 +399,108 @@
     "showTranslated": "Übersetzung lesen",
     "showOriginal": "Original lesen",
     "translated": "Übersetzt. Das Original ist einen Tipp entfernt."
+  },
+  "about": {
+    "title": "Über",
+    "promise": "Jeden Tag wird ein gewöhnlicher Mensch der Welt vorgestellt. Du hast 24 Stunden, ihn kennenzulernen, etwas zu fragen und dich zu erinnern. Dann ist jemand anderes an der Reihe.",
+    "idea": {
+      "title": "Die Idee",
+      "body": "Das meiste, was du online siehst, kommt von Menschen, die gesehen werden wollen. Hier ist es umgekehrt: jemand, der zufällig gezogen wurde, einmal zugestimmt hat, angesehen zu werden, und nie wieder gezogen wird."
+    },
+    "notSocial": {
+      "title": "Kein soziales Netzwerk",
+      "body": "Keine Follower, keine zählbaren Likes, keine Ranglisten, kein Feed. Du kannst hier kein Publikum aufbauen, und nichts, was wir später hinzufügen, wird das ändern."
+    },
+    "fairness": {
+      "title": "Niemand kann sich seinen Tag kaufen",
+      "body": "Die Person wird zufällig aus allen Berechtigten gezogen. Kein Weg, eine bessere Chance zu kaufen, kein Boost, kein Sponsor. Wir veröffentlichen Pool-Hash und Seed, damit jede und jeder das Ergebnis selbst nachrechnen kann."
+    },
+    "archive": {
+      "title": "Alle bleiben",
+      "body": "Wenn die 24 Stunden vorbei sind, kommen sie ins Archiv und bleiben dort. In einem Jahr kann die App sagen: Heute vor einem Jahr lernte die Welt diesen Menschen kennen."
+    }
+  },
+  "sharing": {
+    "share": "Teilen",
+    "tagline": "8 Milliarden Menschen. Einer heute."
+  },
+  "legal": {
+    "privacyTitle": "Datenschutz",
+    "termsTitle": "Nutzungsbedingungen",
+    "lastUpdated": "Zuletzt aktualisiert am {{date}}.",
+    "privacyIntro": "Was wir erheben, was wir nie erheben, und was du dagegen tun kannst. Zum Lesen geschrieben.",
+    "privacy": {
+      "whatWeCollect": {
+        "title": "Was wir erheben",
+        "body": "Deine E-Mail-Adresse und das Profil, das du ausfüllst: Benutzername, Name, Geburtsjahr, Land und optional Stadt und eine Zeile über dich. Wirst du ausgewählt, das Porträt, das du schreibst, und das Foto, das du wählst. Deine Fragen und die Humans, an die du dich erinnerst."
+      },
+      "installId": {
+        "title": "Eine Zahl über deine App, nicht über dich",
+        "body": "Wir speichern eine zufällige Kennung für deine Installation, um zu zählen, wie viele Menschen am nächsten Tag wiederkommen. Sie ist mit keinem Werbeprofil verknüpft, verlässt unsere Datenbank nie und wird nach 90 Tagen zusammen mit den Ereignissen gelöscht."
+      },
+      "whatWeNever": {
+        "title": "Was wir nie erheben",
+        "body": "Deinen genauen Standort — nur das Land, und nie automatisch. Deine Kontakte. Deine Aktivität in anderen Apps oder auf anderen Websites. Irgendetwas für Werbung: Hier gibt es keine Werbung und keine Werbepartner."
+      },
+      "whoSeesIt": {
+        "title": "Wer es sieht",
+        "body": "Dein Profil ist privat. Wirst du veröffentlicht, werden Vorname, Land, optionale Stadt, Foto und Porträt öffentlich — das ist der Sinn, und du stimmst vorher zu. Niemand sonst kann deine Bibliothek, deine Stimmen oder deine Teilnahmen sehen."
+      },
+      "howLong": {
+        "title": "Wie lange",
+        "body": "Produktdaten 90 Tage. Alles andere, bis du dein Konto löschst. Die Aufzeichnungen der täglichen Auswahl bleiben dauerhaft, enthalten aber keinen veröffentlichten Inhalt — sie machen die Fairness überprüfbar."
+      },
+      "yourRights": {
+        "title": "Deine Rechte",
+        "body": "Alles exportieren, was wir über dich haben, deine Stadt verbergen, die Auswahl verlassen, dein Konto löschen und um Entfernung aus dem Archiv bitten, falls du veröffentlicht wurdest. Alles in der App, ohne jemanden zu fragen."
+      },
+      "children": {
+        "title": "Alter",
+        "body": "Du musst mindestens 16 sein. Wir fragen nach dem Geburtsjahr, um das zu prüfen, und für nichts anderes."
+      },
+      "contact": {
+        "title": "Fragen",
+        "body": "Schreib uns, und ein Mensch antwortet. Für Datenschutzanfragen nutzen wir kein automatisches System."
+      }
+    },
+    "termsIntro": "Das rechtliche Minimum, kurz gehalten. Die Community-Richtlinien tragen das, worauf es im Alltag ankommt.",
+    "terms": {
+      "whatThisIs": {
+        "title": "Was das ist",
+        "body": "Ein Dienst, der täglich eine zufällig gewählte Person für 24 Stunden veröffentlicht und ein Archiv aller Veröffentlichten führt. Er wird so bereitgestellt, wie er ist, und ist kostenlos."
+      },
+      "yourAccount": {
+        "title": "Dein Konto",
+        "body": "Ein Konto pro Person, mindestens 16 Jahre alt, mit einer echten E-Mail-Adresse, die dir gehört. Du bist verantwortlich für das, was mit deinem Konto geschieht."
+      },
+      "yourContent": {
+        "title": "Deine Inhalte bleiben deine",
+        "body": "Dein Porträt, deine Antworten und deine Fragen gehören dir. Wir beanspruchen kein Eigentum daran."
+      },
+      "ourLicence": {
+        "title": "Was du uns damit erlaubst",
+        "body": "Mit dem Einreichen eines Porträts erlaubst du uns, es in der App und auf unserer Website zu veröffentlichen und im Archiv zu behalten. Diese Erlaubnis endet, wenn du um Entfernung bittest — außer für Nummer und Datum, die bleiben, damit das Archiv eine vollständige Folge bleibt."
+      },
+      "beingPublished": {
+        "title": "Veröffentlicht werden",
+        "body": "Niemand wird ohne Zusage veröffentlicht. Du entscheidest, was du teilst, du darfst folgenlos ablehnen, und ein Mensch prüft jedes Porträt vorher."
+      },
+      "whatWeMayDo": {
+        "title": "Was wir tun dürfen",
+        "body": "Inhalte entfernen, die gegen die Richtlinien verstoßen, ein Konto sperren oder beenden und ein Porträt nicht veröffentlichen. Wo wir handeln, halten wir fest, wer entschieden hat und warum, und du kannst widersprechen."
+      },
+      "noWarranty": {
+        "title": "Keine Zusagen zur Verfügbarkeit",
+        "body": "Der Dienst kann unterbrochen oder geändert werden. An manchen Tagen wird kein Human veröffentlicht — so gewollt, kein Fehler."
+      },
+      "ending": {
+        "title": "Beenden",
+        "body": "Du kannst dein Konto jederzeit in der App löschen. Wir können ein Konto beenden, das wiederholt gegen die Regeln verstößt oder das wir rechtlich beenden müssen."
+      },
+      "changes": {
+        "title": "Änderungen",
+        "body": "Wir aktualisieren diese Bedingungen, während das Produkt wächst. Was nicht änderbar ist, ist das Versprechen darunter: keine Follower, keine Ranglisten, kein Kaufen einer besseren Chance, und ein gewöhnlicher Mensch pro Tag."
+      }
+    }
   }
 }

@@ -11,7 +11,7 @@ Last updated: end of Phase 7.
 
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
-| 1 | ⚠️ **Re-authenticate the Supabase CLI, so I can deploy `send-notifications`** | The CLI worked earlier this session and has since reverted to an account that cannot see `qpicjsjxdblrxdrdibge` — `supabase projects list` now shows `cook-or-delete`, `oncewasyours`, `kinavela` instead of `onehuman`, and the Management API answers 403. `npx supabase login` as the owning account fixes it. Migrations are unaffected: `db.mjs` uses the direct Postgres connection. | Deploying `send-notifications`. |
+| 1 | **Register the `unumae.app` domain** | Shared links point at `https://unumae.app` — `SHARE_BASE_URL` in `src/features/sharing/share.ts`. Until that domain exists and serves the exported web build, a shared link goes nowhere. Change the constant if you would rather use a different domain. | Sharing being useful. |
 | 2 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. You said you will run it later — nothing else is waiting on it. | Testing Sign in with Apple and push. |
 | 3 | ~~Appoint the first moderator~~ **— solved, nothing to do** | `charles.nguenkam@gmail.com` and `mignoncharly@yahoo.fr` are seeded in `public.founding_moderators`. Whichever you sign up with, a trigger promotes you to moderator the moment you finish onboarding, and the migration backfilled anyone who already had a profile. Full detail, including how to add and remove moderators later: `docs/MODERATION.md`. | Nothing. |
 | 4 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
@@ -20,10 +20,11 @@ Last updated: end of Phase 7.
 
 | # | Item | Phase |
 | --- | --- | --- |
-| 1 | Analytics, share cards, deep links, landing page | 11 — next |
-| 2 | A translation job to fill portrait_element_translations | later |
-| 3 | Liveness capture flow — the gate exists and is switched off | later, native |
-| 4 | Optional audio/video portrait element | later |
+| 1 | Accessibility and poor connectivity | 12 — next |
+| 2 | Schedule the notification sender (needs pg_net or an external cron) | 12 |
+| 3 | A translation job to fill `portrait_element_translations` | later |
+| 4 | Liveness capture flow — the gate exists and is switched off | later, native |
+| 5 | Optional audio/video portrait element | later |
 
 ## Needs a native build, not Expo Go
 
@@ -44,18 +45,18 @@ picking, storage — runs in Expo Go.
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | 19 applied |
+| Migrations | 20 applied |
 | Edge Functions | `delete-account` deployed and probed. `send-notifications` written but NOT deployed — see Yours #1 |
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min |
-| Notification sending | not scheduled — needs the function deployed, then a cron calling it |
+| Notification sending | deployed; requires the service role. Not yet scheduled — a cron must call it |
 | EAS project | `@mignoncharly/unumae` |
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Moderator bootstrap | seeded by email; promotes automatically on profile creation |
 | Community rules | approved as written, live in EN/FR/DE |
 | Draw verification | database and independent implementation agree |
-| Anonymous access | 72 checks, matches the allowlist |
-| Tests | 364, with a pre-push hook |
+| Anonymous access | 78 checks, matches the allowlist |
+| Tests | 399, with a pre-push hook |
 
 ## Commands worth remembering
 

@@ -46,6 +46,8 @@ const ANON_ALLOWED = new Set([
   'get_archive_countries',
   'get_archive_years',
   'get_portrait_translations',
+  // Writing an event is open to guests; reading anything back is not.
+  'track_events',
 ]);
 
 const PROBES = [
@@ -124,6 +126,12 @@ const PROBES = [
   // Appointing a moderator is not something a moderator may do, let alone a
   // stranger. Service role only.
   ['grant_moderator', { target_email: 'probe@example.com' }],
+
+  // Phase 11 — a guest may write an event and read nothing.
+  // An empty batch, so running the probe does not pollute the analytics table.
+  ['track_events', { batch_install_id: NIL_UUID, batch: [] }],
+  ['analytics_kpis_guarded', {}],
+  ['purge_old_analytics', {}],
   ['revoke_moderator', { target_email: 'probe@example.com' }],
 
   // Phase 7 — reading is open, taking part is not.
@@ -162,6 +170,7 @@ const CLOSED_TABLES = [
   'notification_log',
   'portrait_element_translations',
   'founding_moderators',
+  'analytics_events',
 ];
 
 function loadEnv() {

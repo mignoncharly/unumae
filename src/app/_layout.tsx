@@ -5,10 +5,16 @@ import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import i18n, { initI18n } from '@/i18n';
-import { track } from '@/lib/analytics';
+import { setAnalyticsProvider, track } from '@/lib/analytics';
+import { createSupabaseAnalytics } from '@/lib/analytics/provider';
 import { usePreferences } from '@/stores/preferences';
 
 initI18n();
+
+// First-party analytics: a table in our own database and nowhere else. The
+// no-op provider stays the default so tests and unconfigured builds record
+// nothing at all.
+setAnalyticsProvider(createSupabaseAnalytics());
 
 const queryClient = new QueryClient({
   defaultOptions: {

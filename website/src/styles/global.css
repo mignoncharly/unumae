@@ -219,6 +219,7 @@ svg {
 }
 
 .wordmark {
+  width: 7.75rem;
   min-height: 2.75rem;
   display: inline-flex;
   align-items: center;
@@ -229,6 +230,11 @@ svg {
   letter-spacing: -0.045em;
   line-height: 1;
   text-decoration: none;
+}
+
+.wordmark img {
+  width: 100%;
+  height: auto;
 }
 
 .site-header ul,

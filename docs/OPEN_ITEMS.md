@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: end of Phase 16 — the MVP build is complete.
+Last updated: end of Phase 16 and marketing Phase 8 production launch.
 
 ---
 
@@ -11,8 +11,8 @@ Last updated: end of Phase 16 — the MVP build is complete.
 
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
-| 1 | **Deploy `website/` to `unumae.app`** | The app links out to it for About, Privacy and Terms, and every shared link points there. You are developing it on your own server; until it is live those links go nowhere. | Sharing, and the legal links, being useful. |
-| 2 | **A light version of the wordmark**, if you want a dark splash | The icon and splash are in and wired up. The splash is white in both light and dark mode, because the wordmark's darkest ink measures 1.32:1 against `#0B0B0C` — it would be all but invisible. A light wordmark at `assets/splash-dark.png` is the only thing missing. | Nothing. White reads everywhere. |
+| 1 | **App Store listing URL** | App Store Connect must provide the real listing URL and numeric app ID before the website can advertise it. | App Store badge and smart app banner. |
+| 2 | **A light version of the wordmark**, if you want a dark splash | The icon and splash are wired up. The supplied gradient measures 1.32:1 against `#0B0B0C`, so the splash stays white in both appearance modes. | Nothing. White reads everywhere. |
 | 3 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. Nothing else is waiting on it. | Testing Sign in with Apple and push. |
 | 4 | **Recruit 10–20 people for the internal alpha** | The simulation proves the machinery works. It cannot tell you whether Today's Human is interesting, whether anyone opens the Archive, or whether anyone shares a portrait unprompted. Only real people answer that. `docs/BETA.md` has the four questions to watch for. | The growth gate, and everything after it. |
 | 5 | **Decide the four gate thresholds are right** | D1 25%, D7 10%, participation 15%, share rate 3%. I chose defensible numbers; they are your call, and the point of them is that they are fixed *before* any result exists. Changing them later is legitimate, but it should be a deliberate commit, not a reaction to a disappointing week. | Nothing yet — they bind at step 5 of `docs/BETA.md`. |
@@ -66,6 +66,7 @@ picking, storage, the Signals tab — runs in Expo Go.
 | **Escalation** | **passes — decline and silence both promote a backup who can actually accept** |
 | Nightly jobs | pg_net → Edge Function proven end to end: one queued call produced 30 translations |
 | Tests | 508 offline, plus four live suites |
+| Marketing website | Live at `https://unumae.app`; isolated Nginx site, TLS, monitoring and renewal verified |
 
 ## Commands worth remembering
 

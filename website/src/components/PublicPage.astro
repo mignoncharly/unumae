@@ -13,8 +13,16 @@ interface Props {
 const { locale, page } = Astro.props;
 const copy = publicContent[locale];
 const dataMode = import.meta.env.PUBLIC_DATA_MODE === 'live' ? 'live' : 'off';
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+const supabaseUrl =
+  dataMode === 'live' ? (import.meta.env.PUBLIC_SUPABASE_URL ?? '') : '';
+const supabaseAnonKey =
+  dataMode === 'live' ? (import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '') : '';
+
+if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
+  throw new Error(
+    'PUBLIC_DATA_MODE=live requires PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY.'
+  );
+}
 ---
 
 <BaseLayout locale={locale} page={page}>
@@ -88,11 +96,11 @@ const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <img
                   data-today-photo
                   hidden
-                  src="/favicon.svg"
+                  src="/icons/icon-32.png"
                   width="640"
                   height="800"
                   decoding="async"
-                  fetchpriority="high"
+                  loading="lazy"
                   alt=""
                 />
                 <div class="public-photo-placeholder" data-photo-placeholder>

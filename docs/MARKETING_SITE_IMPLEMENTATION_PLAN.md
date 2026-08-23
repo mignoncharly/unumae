@@ -1,8 +1,8 @@
 # Unumae marketing site — implementation plan
 
-**Status:** Phases 0–7 complete; Phase 8 next
-**Target origin:** `https://www.unumae.app`
-**Working origin:** configurable until the domain is purchased
+**Status:** Phases 0–8 complete
+**Production origin:** `https://unumae.app`
+**Redirect alias:** `https://www.unumae.app`
 **Product source of truth:** `PRODUCT_CONSTITUTION.md`
 
 ## 1. What the site has to communicate
@@ -456,19 +456,56 @@ Validation:
 meets the 95 target, and no critical accessibility, SEO, privacy, link,
 cross-engine, low-bandwidth, or responsive defect remains.
 
-### Phase 8 — Domain and production launch
+### Phase 8 — Domain and production launch — complete
 
-- Build a repeatable static deployment for the Ubuntu host, including cache
-  headers, compression, immutable hashed assets, and safe fallback behavior.
-- After purchase, configure `unumae.app` and `www.unumae.app`, choose one
-  canonical host, redirect the other, and issue TLS certificates.
-- Configure security headers, monitoring, uptime checks, error logging, and a
-  rollback path.
-- Verify sitemap indexing, social-card caches, all locale routes, App Store URL,
-  privacy URL, support URL, and Apple universal-link association.
+Delivered on 23 August 2026:
 
-**Exit:** `https://www.unumae.app` is secure, observable, fast, indexable, and
-can be rolled back without touching the native app backend.
+- Integrated the approved `docs/icon.png` and `docs/splash.png` artwork into
+  the native configuration and web identity, preserving the opaque
+  original-resolution app icon and producing correctly sized RGB browser,
+  touch, and manifest derivatives.
+- Built an isolated Ubuntu deployment boundary with the dedicated
+  `unumae-site` account, release tree, atomic `current`/`previous` links,
+  Nginx vhost and logs, ACME webroot, private Certbot config/work/log trees,
+  certificate name, health timer, renewal timer, and rollback scripts. No
+  existing app root, upstream, service, certificate, or log is referenced.
+- Made `https://unumae.app` canonical. HTTP and ordinary
+  `https://www.unumae.app` requests redirect permanently in one hop, while
+  both names serve the Apple association file directly.
+- Issued a Let's Encrypt certificate covering both names and enabled the
+  dedicated renewal timer. Added HSTS, CSP, framing, MIME-sniffing, referrer,
+  and browser-capability protections.
+- Enabled gzip, immutable one-year caching for hashed Astro assets, bounded
+  caching for brand assets, revalidation for documents, a static health
+  endpoint, dedicated error/access logs, and health checks every five minutes.
+- Published the reviewed Apple association for
+  `UB67843RJK.com.unumae.app` and added native associated domains plus a
+  stable `/today` native redirect.
+- Kept the App Store badge and smart banner absent because no real listing URL
+  exists yet; the live Privacy, Support, and Marketing URLs were verified
+  instead of inventing a store destination.
+
+Validation:
+
+- The repeatable quality gate passes its static audit, privacy checks, WCAG
+  browser matrix, and all eight Lighthouse route structures. Performance is
+  97–99; Accessibility, Best Practices, and SEO are 100 throughout.
+- The production artifact builds with live public data and passed real-browser
+  Today and Archive reads against the anonymous Supabase API.
+- The production smoke suite passed all 24 localized routes, canonical links,
+  HTTP and `www` redirects, security headers, health, sitemap, live mode, and
+  Apple association.
+- TLS is valid for both names through 21 November 2026. Nginx production and
+  bootstrap configurations validate, the initial health service exited
+  successfully, and both dedicated timers are enabled and active.
+- Live probes confirmed gzip delivery and immutable cache headers for hashed
+  assets, a JSON association response on `www`, an indexable robots file and
+  sitemap, and dedicated release/configuration paths.
+
+**Exit:** achieved. `https://www.unumae.app` is secure and redirects to the
+canonical `https://unumae.app`; the site is observable, fast, indexable, and
+has an atomic rollback path that does not touch the native backend or another
+application's resources.
 
 ## 6. Release slices
 
@@ -482,12 +519,10 @@ Release A should be built first. It provides a complete marketing presence
 without waiting for real Humans, an App Store listing, the domain purchase, or
 the full public archive.
 
-## 7. Inputs needed later, not blockers for Release A development
+## 7. Inputs still needed outside the marketing implementation
 
 - Confirmed App Store launch state and final listing URL.
-- Approved privacy policy and Terms of Service.
 - Decision on whether to collect pre-launch email addresses.
-- Purchased domain and DNS access.
 - Consent-cleared real Human portraits when the connected `/today` experience
   replaces preview artwork.
 

@@ -24,6 +24,7 @@ android/
 .env
 .env.*
 !.env.example
+!website/.env.production.example
 
 # supabase
 supabase/.branches/

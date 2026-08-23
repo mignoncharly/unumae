@@ -1,0 +1,23 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["UB67843RJK.com.unumae.app"],
+        "components": [
+          {
+            "/": "/today",
+            "comment": "Open the current Human in the app."
+          },
+          {
+            "/": "/archive",
+            "comment": "Open the Human Archive in the app."
+          },
+          {
+            "/": "/human/*",
+            "comment": "Open a specific published Human in the app."
+          }
+        ]
+      }
+    ]
+  }
+}

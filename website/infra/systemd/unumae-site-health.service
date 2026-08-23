@@ -1,0 +1,20 @@
+[Unit]
+Description=Unumae website local HTTPS health check
+After=network-online.target nginx.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=unumae-site
+Group=unumae-site
+ExecStart=/usr/local/libexec/unumae-site-health
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictSUIDSGID=true

@@ -71,7 +71,7 @@ probability, and the code has no mechanism to.
 | Support URL | `https://unumae.app/about` |
 | Marketing URL | `https://unumae.app` |
 
-All three are served by `website/`, which must be deployed before submission.
+All three are live and were verified on 23 August 2026.
 
 ### Account deletion
 
@@ -102,19 +102,22 @@ sign-in path. Configured for `com.unumae.app`.
 | Permission strings | Photo library string written and translated |
 | Age gate | 16, enforced by trigger |
 | Privacy policy reachable | Links out to the site from Settings |
+| App icon | Approved 1254×1254 opaque RGB artwork configured in `app.config.ts` |
+| Launch screen | Approved wordmark on white in both appearance modes for contrast |
+| Required website URLs | Live at `https://unumae.app` |
+| Universal links | Association published for the reviewed Team ID and bundle |
 
 ## What still needs a person
 
 | Item | Why it cannot be done here |
 | --- | --- |
-| ~~App icon~~ **— done** | `assets/icon.png`, 1254×1254, opaque, square, no pre-rounded corners. Wired in `app.config.ts`. |
-| **Launch screen** | `assets/splash.png` — the wordmark, wired in. **White on both light and dark**: the wordmark's darkest ink is rgb(0, 6, 140), which measures 1.32:1 against `#0B0B0C` where 3:1 is the floor. A light version of the wordmark would let dark mode be dark. |
+| **Light wordmark**, if a dark splash is wanted | The supplied gradient measures only 1.32:1 against `#0B0B0C`, so the current splash correctly stays white in both appearance modes. |
 | **Screenshots** | 6.7" and 6.5" required. They need a real published Human, so they come after the first live cycle. |
 | **Description and keywords** | Marketing copy; the site's homepage is the natural source. |
-| **Deploy the website** | The three URLs above must resolve before submission. |
+| **App Store listing URL** | Add the badge and smart banner only after App Store Connect provides the real URL and numeric app ID. |
 | **First build** | `eas build --profile production --platform ios` |
 
-Both are in `app.config.ts`. If a light wordmark is ever drawn, the dark
+If a light wordmark is ever drawn, the dark
 variant becomes:
 
 ```ts

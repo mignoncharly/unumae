@@ -172,6 +172,37 @@ if (
   fail('Analytics endpoint is not same-origin');
 }
 
+for (const route of ['/today', '/archive']) {
+  const html = read(routeFile(route));
+  if (!html.includes('data-data-mode="off"')) {
+    fail(`${route}: quality build must keep public data disabled`);
+  }
+  if (
+    /data-supabase-url=["']/.test(html) ||
+    /data-supabase-anon-key=["']/.test(html)
+  ) {
+    fail(`${route}: disabled public data exposed a backend configuration`);
+  }
+}
+
+const health = read(new URL('healthz', dist)).trim();
+if (health !== 'ok') {
+  fail('Static health endpoint is missing or invalid');
+}
+
+const association = JSON.parse(
+  read(new URL('.well-known/apple-app-site-association', dist))
+);
+const associationDetail = association.applinks?.details?.[0];
+if (
+  !associationDetail?.appIDs?.includes('UB67843RJK.com.unumae.app') ||
+  !['/today', '/archive', '/human/*'].every((path) =>
+    associationDetail.components?.some((component) => component['/'] === path)
+  )
+) {
+  fail('Apple association does not contain the reviewed app ID and routes');
+}
+
 const sitemap = read(new URL('sitemap-0.xml', dist));
 if (sitemap.includes('/dev/') || sitemap.includes('/404')) {
   fail('Internal routes entered the sitemap');

@@ -190,6 +190,27 @@ if (health !== 'ok') {
   fail('Static health endpoint is missing or invalid');
 }
 
+for (const [asset, maximumBytes] of [
+  ['editorial/today-empty-chair.webp', 100_000],
+  ['editorial/archive-folios.webp', 60_000],
+  ['editorial/archive-threshold.webp', 60_000],
+]) {
+  const path = new URL(asset, dist);
+  if (!existsSync(path)) {
+    fail(`Missing editorial fallback: ${asset}`);
+  }
+  const bytes = readFileSync(path);
+  if (
+    bytes.subarray(0, 4).toString('ascii') !== 'RIFF' ||
+    bytes.subarray(8, 12).toString('ascii') !== 'WEBP'
+  ) {
+    fail(`${asset}: expected a WebP file`);
+  }
+  if (bytes.length > maximumBytes) {
+    fail(`${asset}: exceeds the reviewed transfer budget`);
+  }
+}
+
 const association = JSON.parse(
   read(new URL('.well-known/apple-app-site-association', dist))
 );

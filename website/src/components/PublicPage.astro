@@ -104,7 +104,18 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
                   alt=""
                 />
                 <div class="public-photo-placeholder" data-photo-placeholder>
-                  <span aria-hidden="true">U</span>
+                  <img
+                    src="/editorial/today-empty-chair.webp"
+                    width="960"
+                    height="1200"
+                    loading="lazy"
+                    decoding="async"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span class="editorial-fallback-label">
+                    {copy.archive.entry.editorialFallback}
+                  </span>
                 </div>
               </div>
               <div class="today-human__nameplate">

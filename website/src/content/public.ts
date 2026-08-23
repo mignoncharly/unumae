@@ -66,6 +66,7 @@ interface PublicCopy {
       removed: string;
       removedBody: string;
       photoAlt: string;
+      editorialFallback: string;
     };
   };
 }
@@ -188,6 +189,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
         removedBody:
           'Their number and date stay so the Archive remains a complete sequence. Their identity and story do not.',
         photoAlt: 'Portrait of',
+        editorialFallback: 'Editorial image · Portrait unavailable',
       },
     },
   },
@@ -309,6 +311,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
         removedBody:
           'Son numéro et la date restent pour préserver la séquence. Son identité et son histoire disparaissent.',
         photoAlt: 'Portrait de',
+        editorialFallback: 'Image éditoriale · Portrait indisponible',
       },
     },
   },
@@ -429,6 +432,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
         removedBody:
           'Nummer und Datum bleiben für die vollständige Reihenfolge. Identität und Geschichte nicht.',
         photoAlt: 'Porträt von',
+        editorialFallback: 'Redaktionelles Bild · Porträt nicht verfügbar',
       },
     },
   },

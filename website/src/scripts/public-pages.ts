@@ -6,6 +6,11 @@ import {
 } from '../content/public';
 import type { Locale } from '../content/site';
 
+const archiveEditorialFallbacks = [
+  '/editorial/archive-folios.webp',
+  '/editorial/archive-threshold.webp',
+] as const;
+
 const root = document.querySelector<HTMLElement>('[data-public-page]');
 
 if (root) {
@@ -131,14 +136,20 @@ if (root) {
 
       const image = query<HTMLImageElement>('[data-today-photo]');
       const placeholder = query<HTMLElement>('[data-photo-placeholder]');
+      image.hidden = true;
+      placeholder.hidden = false;
+
       if (photoUrl) {
-        image.src = photoUrl;
         image.alt = `${copy.archive.entry.photoAlt} ${human.display_name}`;
-        image.hidden = false;
-        placeholder.hidden = true;
-      } else {
-        image.hidden = true;
-        placeholder.hidden = false;
+        image.onload = () => {
+          image.hidden = false;
+          placeholder.hidden = true;
+        };
+        image.onerror = () => {
+          image.hidden = true;
+          placeholder.hidden = false;
+        };
+        image.src = photoUrl;
       }
 
       const portraitList = query<HTMLDListElement>('[data-portrait-list]');
@@ -205,6 +216,22 @@ if (root) {
     media.className = 'archive-entry__media';
     media.setAttribute('aria-hidden', 'true');
 
+    const fallbackIndex =
+      Math.abs(entry.human_number ?? 0) % archiveEditorialFallbacks.length;
+    const fallbackImage = document.createElement('img');
+    fallbackImage.src =
+      archiveEditorialFallbacks[fallbackIndex] ?? archiveEditorialFallbacks[0];
+    fallbackImage.alt = '';
+    fallbackImage.width = 640;
+    fallbackImage.height = 800;
+    fallbackImage.loading = 'lazy';
+    fallbackImage.decoding = 'async';
+
+    const fallbackLabel = document.createElement('span');
+    fallbackLabel.className = 'editorial-fallback-label';
+    fallbackLabel.textContent = copy.archive.entry.editorialFallback;
+    media.append(fallbackImage, fallbackLabel);
+
     if (entry.photo_path) {
       void client.signPhoto(entry.photo_path).then((photoUrl) => {
         if (!photoUrl || !media.isConnected) {
@@ -217,7 +244,12 @@ if (root) {
         image.height = 400;
         image.loading = 'lazy';
         image.decoding = 'async';
-        media.replaceChildren(image);
+        image.onload = () => {
+          if (media.isConnected) {
+            media.replaceChildren(image);
+          }
+        };
+        image.src = photoUrl;
       });
     }
 

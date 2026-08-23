@@ -1,0 +1,183 @@
+---
+import CampaignStudy from './design/CampaignStudy.astro';
+import ActionLink from './ui/ActionLink.astro';
+import { homeContent } from '../content/home';
+import { localizedPath, type Locale } from '../content/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = homeContent[locale];
+---
+
+<BaseLayout locale={locale} page="home">
+  <main id="main-content" class="home-main">
+    <section class="home-hero" aria-labelledby="home-title">
+      <p class="eyebrow">{copy.hero.eyebrow}</p>
+      <h1 id="home-title">
+        <span>{copy.hero.firstLine}</span>
+        <em>{copy.hero.secondLine}</em>
+      </h1>
+      <div class="home-hero__footer">
+        <p>{copy.hero.introduction}</p>
+        <div class="actions">
+          <ActionLink href={localizedPath(locale, 'how-selection-works')}>
+            {copy.hero.selectionLink}
+          </ActionLink>
+          <span class="launch-state">{copy.hero.launchState}</span>
+        </div>
+      </div>
+      <span class="home-hero__marker" aria-hidden="true">01 / 01</span>
+    </section>
+
+    <section class="home-section premise" aria-labelledby="premise-title">
+      <div class="section-heading">
+        <p class="eyebrow">01 · {copy.premise.eyebrow}</p>
+        <h2 id="premise-title">{copy.premise.title}</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-lede">{copy.premise.body}</p>
+        <dl class="premise__facts">
+          {
+            copy.premise.facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <section class="home-section portrait" aria-labelledby="portrait-title">
+      <div class="section-heading">
+        <p class="eyebrow">02 · {copy.portrait.eyebrow}</p>
+        <h2 id="portrait-title">{copy.portrait.title}</h2>
+        <p>{copy.portrait.body}</p>
+      </div>
+      <div class="portrait__preview">
+        <CampaignStudy
+          label={copy.portrait.previewLabel}
+          detail={copy.portrait.previewDetail}
+        />
+        <div class="portrait__prompts">
+          <p class="specimen-label">{copy.portrait.promptsLabel}</p>
+          <ol>
+            {
+              copy.portrait.prompts.map((prompt, index) => (
+                <li>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <p>{prompt}</p>
+                </li>
+              ))
+            }
+          </ol>
+          <p class="portrait__disclaimer">{copy.portrait.disclaimer}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section day" aria-labelledby="day-title">
+      <div class="section-heading">
+        <p class="eyebrow">03 · {copy.day.eyebrow}</p>
+        <h2 id="day-title">{copy.day.title}</h2>
+        <p>{copy.day.introduction}</p>
+      </div>
+      <ol class="day__timeline">
+        {
+          copy.day.stages.map((stage) => (
+            <li>
+              <span>{stage.number}</span>
+              <div>
+                <h3>{stage.title}</h3>
+                <p>{stage.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="manifesto" aria-labelledby="manifesto-title">
+      <div class="manifesto__inner">
+        <p class="eyebrow">04 · {copy.manifesto.eyebrow}</p>
+        <h2 id="manifesto-title">{copy.manifesto.title}</h2>
+        <p class="manifesto__lede">{copy.manifesto.body}</p>
+        <ul>
+          {copy.manifesto.exclusions.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="manifesto__conclusion">{copy.manifesto.conclusion}</p>
+      </div>
+    </section>
+
+    <section class="home-section archive-story" aria-labelledby="archive-title">
+      <div class="section-heading">
+        <p class="eyebrow">05 · {copy.archive.eyebrow}</p>
+        <h2 id="archive-title">{copy.archive.title}</h2>
+        <p>{copy.archive.body}</p>
+      </div>
+      <div class="archive-story__body">
+        <ol class="archive-story__modes">
+          {
+            copy.archive.modes.map((mode, index) => (
+              <li>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                {mode}
+              </li>
+            ))
+          }
+          <li class="archive-story__rule">
+            <span aria-hidden="true">×</span>{copy.archive.rule}
+          </li>
+        </ol>
+        <p>{copy.archive.removal}</p>
+        <ActionLink href={localizedPath(locale, 'archive')} variant="text">
+          {copy.archive.link}
+        </ActionLink>
+      </div>
+    </section>
+
+    <section class="home-section fairness" aria-labelledby="fairness-title">
+      <div class="section-heading">
+        <p class="eyebrow">06 · {copy.fairness.eyebrow}</p>
+        <h2 id="fairness-title">{copy.fairness.title}</h2>
+        <p>{copy.fairness.body}</p>
+        <ActionLink
+          href={localizedPath(locale, 'how-selection-works')}
+          variant="text"
+        >
+          {copy.fairness.link}
+        </ActionLink>
+      </div>
+      <div class="fairness__proof" aria-label={copy.fairness.proofLabel}>
+        <p class="specimen-label">{copy.fairness.proofLabel}</p>
+        <ol>
+          {
+            copy.fairness.proof.map((step, index) => (
+              <li>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <dl>
+                  <dt>{step.label}</dt>
+                  <dd>{step.value}</dd>
+                </dl>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="closing-invitation" aria-labelledby="closing-title">
+      <p class="eyebrow">{copy.closing.eyebrow}</p>
+      <h2 id="closing-title">{copy.closing.title}</h2>
+      <p>{copy.closing.body}</p>
+      <ActionLink href={localizedPath(locale, 'about')}>
+        {copy.closing.link}
+      </ActionLink>
+    </section>
+  </main>
+</BaseLayout>

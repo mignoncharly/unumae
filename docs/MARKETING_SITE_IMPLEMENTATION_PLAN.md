@@ -1,6 +1,6 @@
 # Unumae marketing site — implementation plan
 
-**Status:** Phases 0–2 complete; Phase 3 next
+**Status:** Phases 0–3 complete; Phase 4 next
 **Target origin:** `https://www.unumae.app`
 **Working origin:** configurable until the domain is purchased
 **Product source of truth:** `PRODUCT_CONSTITUTION.md`
@@ -221,19 +221,47 @@ Validation:
 width, keyboard and contrast states are explicit, motion is optional, and local
 fonts introduce no late swap or external request.
 
-### Phase 3 — Marketing homepage
+### Phase 3 — Marketing homepage — complete
 
-- Implement the finite homepage narrative above.
-- Create a distinctive, typographic hero without stock startup gradients or a
-  fake phone mockup as the sole idea.
-- Use short, confident copy based on the Product Constitution rather than
-  generic “connect the world” claims.
-- Add only truthful calls to action for the current release state.
-- Optimize all imagery with responsive sources, explicit dimensions, modern
-  formats, and lazy loading below the fold.
+Delivered on 23 August 2026:
 
-**Exit:** a first-time visitor can explain Unumae, the daily loop, and what
-makes it different after scanning the page for 20 seconds.
+- Replaced the generic landing route with a finite eight-frame editorial story:
+  opening promise, premise, labelled portrait-format preview, daily sequence,
+  anti-social-network manifesto, Archive, fairness proof, and closing invitation.
+- Added one typed homepage content model with equivalent English, French, and
+  German copy. Product language matches the Constitution and future operational
+  steps are explicitly framed as the launch state.
+- Built a full-height typographic opening and responsive twelve-column magazine
+  layouts without a stock gradient, fake phone, testimonial, invented Human, or
+  popularity metric.
+- Reused the abstract CSS campaign composition and localized its caption. It is
+  clearly labelled as a format preview that represents no person or story, so
+  this phase adds no raster imagery requiring responsive source generation.
+- Described the complete day as selected, invited, guided story, liveness plus
+  human review, one global 24-hour window, and Archive—without claiming those
+  pre-launch operations are currently live.
+- Explained Archive discovery by time, country, or chance, never popularity,
+  while preserving a Human’s right to request story removal.
+- Added only truthful internal links to the selection method, Archive preview,
+  and About page. The close states that no download or waitlist exists yet.
+
+Validation:
+
+- `npm run web:check` passes Astro diagnostics, lint, formatting, and the
+  26-page static build.
+- Headless Chromium screenshots were reviewed at 320, 768, 1024, and 1440px.
+  All eight frames render in order with no horizontal overflow or external
+  requests, and both self-hosted typefaces load.
+- French and German homepages render their localized hero and manifesto without
+  overflow at 768px.
+- Keyboard Tab focus lands on the visible skip link with a solid outline.
+  Reduced-motion animations and transitions resolve to 0.01ms.
+- `npm run verify` remains green after the remote Phase 9–10 integration:
+  22 suites and 364 native tests pass.
+
+**Exit:** achieved. A quick scan communicates one Human, one global day, the
+careful publication loop, the deliberate absence of social ranking, the
+Archive, and the reproducible equal-chance draw.
 
 ### Phase 4 — Trust and explanation pages
 

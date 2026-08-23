@@ -1,3 +1,15 @@
+---
+interface Props {
+  label?: string;
+  detail?: string;
+}
+
+const {
+  label = 'Campaign study',
+  detail = 'Abstract composition · no Human shown',
+} = Astro.props;
+---
+
 <figure class="campaign-study">
   <div class="campaign-study__crop" aria-hidden="true">
     <span class="campaign-study__sun"></span>
@@ -6,7 +18,7 @@
     <span class="campaign-study__grain"></span>
   </div>
   <figcaption>
-    <span>Campaign study</span>
-    <span>Abstract composition · no Human shown</span>
+    <span>{label}</span>
+    <span>{detail}</span>
   </figcaption>
 </figure>

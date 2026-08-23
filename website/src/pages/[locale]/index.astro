@@ -1,5 +1,5 @@
 ---
-import RoutePage from '../../components/RoutePage.astro';
+import HomePage from '../../components/HomePage.astro';
 import { translatedLocales, type Locale } from '../../content/site';
 
 export function getStaticPaths() {
@@ -16,4 +16,4 @@ interface Props {
 const { locale } = Astro.props;
 ---
 
-<RoutePage locale={locale} page="home" />
+<HomePage locale={locale} />

@@ -116,7 +116,8 @@
     "notifications": "Notifications",
     "accessibility": "Accessibilité",
     "haptics": "Vibration",
-    "hapticsHint": "Une légère vibration quand quelque chose est enregistré. Rien d'autre."
+    "hapticsHint": "Une légère vibration quand quelque chose est enregistré. Rien d'autre.",
+    "shareCard": "Carte de partage"
   },
   "connection": {
     "checking": "Vérification…",

@@ -207,6 +207,9 @@ export default function SettingsScreen() {
           <Link href="/dev/preview">
             <Text color="accent">{t('settings.uxPreview')} →</Text>
           </Link>
+          <Link href="/dev/share-card">
+            <Text color="accent">{t('settings.shareCard')} →</Text>
+          </Link>
         </View>
       </View>
     </Screen>

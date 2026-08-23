@@ -116,7 +116,8 @@
     "notifications": "Notifications",
     "accessibility": "Accessibility",
     "haptics": "Vibration",
-    "hapticsHint": "A light tap when something is saved. Nothing else."
+    "hapticsHint": "A light tap when something is saved. Nothing else.",
+    "shareCard": "Share card"
   },
   "connection": {
     "checking": "Checking…",

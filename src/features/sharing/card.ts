@@ -51,7 +51,21 @@ function loadSharing(): SharingModule | null {
 
 /** Whether a card can be rendered at all in this build. */
 export function canRenderCard(): boolean {
-  return loadViewShot() !== null && loadSharing() !== null;
+  const { viewShot, sharing } = cardCapabilities();
+  return viewShot && sharing;
+}
+
+/**
+ * Which half is missing, for the developer screen.
+ *
+ * The two modules fail independently and for different reasons, and "sharing
+ * is broken" is a much harder thing to act on than "view-shot did not load".
+ */
+export function cardCapabilities(): { viewShot: boolean; sharing: boolean } {
+  return {
+    viewShot: loadViewShot() !== null,
+    sharing: loadSharing() !== null,
+  };
 }
 
 /**

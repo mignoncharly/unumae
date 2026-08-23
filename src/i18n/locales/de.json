@@ -116,7 +116,8 @@
     "notifications": "Mitteilungen",
     "accessibility": "Barrierefreiheit",
     "haptics": "Vibration",
-    "hapticsHint": "Ein leichtes Tippen, wenn etwas gespeichert wird. Sonst nichts."
+    "hapticsHint": "Ein leichtes Tippen, wenn etwas gespeichert wird. Sonst nichts.",
+    "shareCard": "Teilen-Karte"
   },
   "connection": {
     "checking": "Wird geprüft…",

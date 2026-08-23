@@ -1,6 +1,7 @@
+import { Image } from 'expo-image';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { useTheme } from '@/theme';
@@ -81,7 +82,11 @@ export function HumanPortrait({
       {photoUri ? (
         <Image
           accessibilityIgnoresInvertColors
-          accessibilityLabel={name}
+          // Described rather than named: a screen reader saying only "Aya"
+          // does not tell you it is a photograph of her.
+          alt={t('portrait.photoOf', { name })}
+          cachePolicy="disk"
+          contentFit="cover"
           source={{ uri: photoUri }}
           style={{
             width: '100%',
@@ -89,6 +94,7 @@ export function HumanPortrait({
             borderRadius: theme.radius.md,
             backgroundColor: theme.colors.surface,
           }}
+          transition={200}
         />
       ) : null}
 

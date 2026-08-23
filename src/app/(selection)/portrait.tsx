@@ -18,6 +18,7 @@ import {
   submitMyPortrait,
   uploadPortraitPhoto,
 } from '@/features/portraits/api';
+import { prepareForUpload } from '@/features/portraits/image';
 import {
   assessCompleteness,
   PORTRAIT_PROMPTS,
@@ -104,8 +105,15 @@ export default function PortraitScreen() {
     setBusy(true);
     setError(undefined);
     try {
-      await uploadPortraitPhoto(userId, portraitId, asset.uri);
-      setPhotoUri(asset.uri);
+      // Downscaled first: a 10MB camera original is the difference between a
+      // portrait being submitted and abandoned on a weak connection.
+      const prepared = await prepareForUpload(
+        asset.uri,
+        asset.width,
+        asset.height
+      );
+      await uploadPortraitPhoto(userId, portraitId, prepared.uri);
+      setPhotoUri(prepared.uri);
       setHasPhoto(true);
       setToast(t('portrait.photoSaved'));
     } catch (caught) {

@@ -18,8 +18,8 @@ original). This file tracks status only.
 | 9 | Trust & safety | ✅ done | ✅ |
 | 10 | Notifications, localization & translation | ✅ done | ✅ |
 | 11 | Analytics, sharing & landing web | ✅ done | ✅ |
-| 12 | Accessibility & offline | ⬜ next | ✅ |
-| 13 | Testing & App Store readiness | ⬜ | ✅ |
+| 12 | Accessibility & offline | ✅ done | ✅ |
+| 13 | Testing & App Store readiness | ⬜ next | ✅ |
 | 14 | Internal Alpha, Private Beta & retention | ⬜ | ✅ |
 | 15 | Viral experiments & 1,000 users | ⬜ | ✅ |
 | 16 | Scale & AI features | ⬜ | ❌ post-launch |
@@ -365,11 +365,49 @@ who has installed nothing.
 accepted the anon key that ships in the app, which would have let anybody
 trigger the whole send queue. It now requires the service role.
 
-## Phase 12 — next
+## Phase 12 — Accessibility & poor connectivity ✅
 
-Accessibility and poor connectivity: Dynamic Type, VoiceOver, contrast, reduced
-motion, captions and alt text; caching so a Human can be read on a bad
-connection.
+**Contrast is proved, not assumed.** `src/theme/contrast.ts` implements the WCAG
+relative-luminance maths, and 38 tests check every text-on-surface pairing in
+both themes. Body text meets AA on background, surface and surfaceRaised;
+tertiary text, danger and success meet AA for large text; the primary button's
+label is readable on its own fill. A colour that looks fine on a laptop in a
+dark room can be unreadable outdoors, and that is not something to review by
+eye.
+
+**Dynamic Type is bounded, never refused.** `Text` sets a per-variant
+`maxFontSizeMultiplier` — tighter for display text, which starts at 40pt, and
+generous for body copy. A test fails if `allowFontScaling={false}` appears
+anywhere: bounding the scale is fine, refusing it is not. Title variants carry
+`accessibilityRole="header"`, so a screen reader can offer to jump between
+headings.
+
+**Offline.** TanStack Query persists to AsyncStorage, so a cycle read once stays
+readable without a connection. What persists is an **allowlist** — today's
+Human, questions, the Archive — so a private query added later is not cached by
+default. Profiles, libraries, moderation queues and permissions never touch
+disk, and a failed query is never cached: showing a stale error to somebody who
+has come back online is worse than showing nothing.
+
+**Poor connections.** Images moved to `expo-image` with disk caching, and a
+photograph is downscaled to 1600px before upload. A camera original is 3–12MB
+and the app displays it at about 400pt; on the connections much of the world
+actually has, that is the difference between a portrait being submitted and
+abandoned halfway.
+
+An offline notice states plainly that what you are reading came from the last
+time you had a connection — not an error, and not a modal.
+
+Haptics: exactly one, a light confirmation, switchable off. No celebration and
+no error buzz — a vibration that rewards would make Remember a score.
+
+465 tests over 27 suites.
+
+## Phase 13 — next
+
+Testing and App Store readiness: RLS and privilege tests against the live
+project, the end-to-end flows from the plan, and everything App Store review
+asks for.
 
 ## Working agreements
 

@@ -20,8 +20,8 @@ Last updated: end of Phase 7.
 
 | # | Item | Phase |
 | --- | --- | --- |
-| 1 | Accessibility and poor connectivity | 12 — next |
-| 2 | Schedule the notification sender (needs pg_net or an external cron) | 12 |
+| 1 | Testing & App Store readiness | 13 — next |
+| 2 | Schedule the notification sender (needs pg_net or an external cron) | 13 |
 | 3 | A translation job to fill `portrait_element_translations` | later |
 | 4 | Liveness capture flow — the gate exists and is switched off | later, native |
 | 5 | Optional audio/video portrait element | later |
@@ -56,7 +56,7 @@ picking, storage — runs in Expo Go.
 | Community rules | approved as written, live in EN/FR/DE |
 | Draw verification | database and independent implementation agree |
 | Anonymous access | 78 checks, matches the allowlist |
-| Tests | 399, with a pre-push hook |
+| Tests | 465, with a pre-push hook |
 
 ## Commands worth remembering
 

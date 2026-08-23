@@ -1,4 +1,5 @@
-import { Image, View } from 'react-native';
+import { Image } from 'expo-image';
+import { View } from 'react-native';
 
 import { useTheme } from '@/theme';
 
@@ -40,7 +41,9 @@ export function Avatar({ uri, name, size = 'md' }: AvatarProps) {
     return (
       <Image
         accessibilityIgnoresInvertColors
-        accessibilityLabel={name}
+        alt={name}
+        cachePolicy="disk"
+        contentFit="cover"
         source={{ uri }}
         style={shared}
       />

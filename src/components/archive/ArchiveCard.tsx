@@ -1,6 +1,7 @@
+import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { CountryBadge } from '@/components/human/CountryBadge';
 import { Text } from '@/components/ui/Text';
@@ -90,13 +91,19 @@ export function ArchiveCard({
     >
       <Image
         accessibilityIgnoresInvertColors
-        source={photoUrl ? { uri: photoUrl } : undefined}
+        // The card already announces the name and number, so the thumbnail
+        // adds nothing for a screen reader and is skipped.
+        alt=""
+        cachePolicy="disk"
+        contentFit="cover"
+        source={photoUrl ? { uri: photoUrl } : null}
         style={{
           width: 56,
           height: 70,
           borderRadius: theme.radius.sm,
           backgroundColor: theme.colors.surface,
         }}
+        transition={150}
       />
 
       <View style={{ flex: 1, gap: theme.spacing.xxs }}>

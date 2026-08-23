@@ -113,7 +113,10 @@
     "portrait": "Votre portrait",
     "project": "Projet Supabase",
     "moderation": "Modération",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "accessibility": "Accessibilité",
+    "haptics": "Vibration",
+    "hapticsHint": "Une légère vibration quand quelque chose est enregistré. Rien d'autre."
   },
   "connection": {
     "checking": "Vérification…",
@@ -279,7 +282,8 @@
         "label": "Ce que je dirais au monde",
         "hint": "Vous avez l'attention de beaucoup de gens pour une journée."
       }
-    }
+    },
+    "photoOf": "Photo de {{name}}"
   },
   "rules": {
     "title": "Règles de la communauté",
@@ -407,5 +411,8 @@
   "legal": {
     "privacyTitle": "Confidentialité",
     "termsTitle": "Conditions"
+  },
+  "offline": {
+    "notice": "Vous êtes hors ligne. Voici ce que vous avez vu en dernier."
   }
 }

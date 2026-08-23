@@ -1,12 +1,15 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { OfflineNotice } from '@/components/shared/OfflineNotice';
 import i18n, { initI18n } from '@/i18n';
 import { setAnalyticsProvider, track } from '@/lib/analytics';
 import { createSupabaseAnalytics } from '@/lib/analytics/provider';
+import { persistOptions } from '@/lib/offline/persist';
 import { usePreferences } from '@/stores/preferences';
 
 initI18n();
@@ -22,6 +25,14 @@ const queryClient = new QueryClient({
       // The cycle changes once a day; there is nothing to poll aggressively.
       staleTime: 60_000,
       retry: 2,
+      /*
+       * Keep results in memory for a day.
+       *
+       * This is what makes the persisted cache useful: without it a query is
+       * garbage collected five minutes after the last screen using it
+       * unmounts, and there would be nothing left to write to disk.
+       */
+      gcTime: 24 * 60 * 60 * 1000,
     },
   },
 });
@@ -41,9 +52,14 @@ export default function RootLayout() {
   }, [locale]);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={persistOptions}
+    >
       <SafeAreaProvider>
         <StatusBar style="auto" />
+        {/* Above the navigator, so it is visible on every screen. */}
+        <OfflineNotice />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="(auth)" options={{ presentation: 'modal' }} />
@@ -53,6 +69,6 @@ export default function RootLayout() {
           />
         </Stack>
       </SafeAreaProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }

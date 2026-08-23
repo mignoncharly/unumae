@@ -113,7 +113,10 @@
     "portrait": "Your portrait",
     "project": "Supabase project",
     "moderation": "Moderation",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "accessibility": "Accessibility",
+    "haptics": "Vibration",
+    "hapticsHint": "A light tap when something is saved. Nothing else."
   },
   "connection": {
     "checking": "Checking…",
@@ -279,7 +282,8 @@
         "label": "Something I'd tell the world",
         "hint": "You have the attention of a lot of people for one day."
       }
-    }
+    },
+    "photoOf": "Photograph of {{name}}"
   },
   "rules": {
     "title": "Community rules",
@@ -407,5 +411,8 @@
   "legal": {
     "privacyTitle": "Privacy",
     "termsTitle": "Terms"
+  },
+  "offline": {
+    "notice": "You are offline. This is what you saw last."
   }
 }

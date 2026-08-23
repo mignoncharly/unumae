@@ -23,8 +23,39 @@ interface TextProps extends RNTextProps {
 }
 
 /**
- * Every string on screen goes through here, so Dynamic Type and colour
- * tokens are applied in one place rather than per component (Article 11).
+ * How far each variant may grow under Dynamic Type.
+ *
+ * Nothing is capped at 1 — that would be refusing to scale, which is the thing
+ * this is meant to support. Large display text is capped tighter than body
+ * text because it starts big: at 40pt, a 2× multiplier leaves no room for a
+ * name, and a name that does not fit is worse than a name that grows less.
+ */
+const MAX_SCALE: Record<TextVariant, number> = {
+  display: 1.6,
+  title1: 1.7,
+  title2: 1.8,
+  title3: 1.9,
+  callout: 2.2,
+  body: 2.4,
+  footnote: 2.4,
+  caption: 2.4,
+  // The countdown is monospaced and sits on one line; past this it wraps and
+  // the digits stop lining up.
+  mono: 1.8,
+};
+
+/** Headings, so a screen reader can offer "jump to next heading". */
+const HEADING_VARIANTS = new Set<TextVariant>([
+  'display',
+  'title1',
+  'title2',
+  'title3',
+]);
+
+/**
+ * Every string on screen goes through here, so Dynamic Type, heading semantics
+ * and colour tokens are applied in one place rather than per component
+ * (Article 11).
  */
 export function Text({
   variant = 'body',
@@ -56,6 +87,10 @@ export function Text({
 
   return (
     <RNText
+      // Scaling is on — it is only bounded. `allowFontScaling={false}` appears
+      // nowhere in this codebase, and a test keeps it that way.
+      accessibilityRole={HEADING_VARIANTS.has(variant) ? 'header' : undefined}
+      maxFontSizeMultiplier={MAX_SCALE[variant]}
       style={[variantStyle, { color: theme.colors[color] }, style]}
       {...rest}
     />

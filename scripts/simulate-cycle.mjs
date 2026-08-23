@@ -263,6 +263,20 @@ async function runCycle(date, people, moderator, { publish }) {
   const acceptedValue = accepted.ok ? await accepted.json() : false;
   step(acceptedValue === true, 'they accepted, inside the 12-hour window');
 
+  const acceptedJourneyResponse = await asUser(
+    selected.token,
+    '/rest/v1/rpc/my_human_journey',
+    { method: 'POST', body: JSON.stringify({}) }
+  );
+  const [acceptedJourney] = acceptedJourneyResponse.ok
+    ? await acceptedJourneyResponse.json()
+    : [];
+  step(
+    acceptedJourney?.selection_status === 'accepted' &&
+      acceptedJourney?.invitation_response === 'accepted',
+    'the app journey coordinator points them to their portrait'
+  );
+
   const started = await asUser(
     selected.token,
     '/rest/v1/rpc/start_my_portrait',
@@ -275,6 +289,20 @@ async function runCycle(date, people, moderator, { publish }) {
   if (!step(Boolean(portraitId), 'a portrait draft was created')) {
     return null;
   }
+
+  const draftJourneyResponse = await asUser(
+    selected.token,
+    '/rest/v1/rpc/my_human_journey',
+    { method: 'POST', body: JSON.stringify({}) }
+  );
+  const [draftJourney] = draftJourneyResponse.ok
+    ? await draftJourneyResponse.json()
+    : [];
+  step(
+    draftJourney?.portrait_id === portraitId &&
+      draftJourney?.portrait_status === 'draft',
+    'the draft can be resumed through the journey coordinator'
+  );
 
   const answers = [
     ['introduction', 'I fix bicycles and I am not very good at endings.'],
@@ -321,6 +349,20 @@ async function runCycle(date, people, moderator, { publish }) {
   const submittedValue = submitted.ok ? await submitted.json() : false;
   step(submittedValue === true, 'the portrait was submitted for review');
 
+  const reviewJourneyResponse = await asUser(
+    selected.token,
+    '/rest/v1/rpc/my_human_journey',
+    { method: 'POST', body: JSON.stringify({}) }
+  );
+  const [reviewJourney] = reviewJourneyResponse.ok
+    ? await reviewJourneyResponse.json()
+    : [];
+  step(
+    reviewJourney?.selection_status === 'content_review' &&
+      reviewJourney?.portrait_status === 'submitted',
+    'the selected-person status reports moderation review'
+  );
+
   // Nothing reaches the world unreviewed (Article 1.12).
   const queue = await asUser(
     moderator.token,
@@ -349,6 +391,20 @@ async function runCycle(date, people, moderator, { publish }) {
   );
   step(reviewed.ok, 'a moderator approved it');
 
+  const readyJourneyResponse = await asUser(
+    selected.token,
+    '/rest/v1/rpc/my_human_journey',
+    { method: 'POST', body: JSON.stringify({}) }
+  );
+  const [readyJourney] = readyJourneyResponse.ok
+    ? await readyJourneyResponse.json()
+    : [];
+  step(
+    readyJourney?.selection_status === 'ready' &&
+      readyJourney?.portrait_status === 'approved',
+    'the selected-person status reports approval'
+  );
+
   if (!publish) {
     // An older cycle: mark it as having run and finished, so the Archive has
     // something in it.
@@ -361,12 +417,39 @@ async function runCycle(date, people, moderator, { publish }) {
     });
     await rpc('assign_human_number', { target_draw: row.id });
     step(true, 'it went into the Archive');
+
+    const archivedJourneyResponse = await asUser(
+      selected.token,
+      '/rest/v1/rpc/my_human_journey',
+      { method: 'POST', body: JSON.stringify({}) }
+    );
+    const [archivedJourney] = archivedJourneyResponse.ok
+      ? await archivedJourneyResponse.json()
+      : [];
+    step(
+      archivedJourney?.selection_status === 'completed' &&
+        Boolean(archivedJourney?.human_number),
+      'the selected-person journey ends in the Archive'
+    );
     return { drawId: row.id, selected };
   }
 
   const published = await rpc('publish_due_cycles');
   const count = published.ok ? await published.json() : 0;
   step(count >= 1, 'it went live', `${count} cycle(s) published`);
+
+  const liveJourneyResponse = await asUser(
+    selected.token,
+    '/rest/v1/rpc/my_human_journey',
+    { method: 'POST', body: JSON.stringify({}) }
+  );
+  const [liveJourney] = liveJourneyResponse.ok
+    ? await liveJourneyResponse.json()
+    : [];
+  step(
+    liveJourney?.selection_status === 'live',
+    'the selected-person journey opens answering while live'
+  );
 
   return { drawId: row.id, selected };
 }
@@ -666,6 +749,60 @@ async function exerciseAudience(drawId, people, moderator, selected) {
   });
   const visible = afterApproval.ok ? await afterApproval.json() : [];
   step(visible.length === 3, 'after review, all three are visible');
+
+  // The selected person uses the same caller-scoped API as the app's Answer
+  // screen. Nobody else can write an answer, and the answer becomes public on
+  // the existing question surface rather than through a test-only shortcut.
+  const answered = await asUser(
+    selected.token,
+    '/rest/v1/rpc/answer_question',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        target_question: questionIds[0],
+        answer_body: 'People often mistake quietness for a lack of warmth.',
+      }),
+    }
+  );
+  step(
+    answered.ok && (await answered.json()) === true,
+    'Today’s Human answered an approved question'
+  );
+
+  const impersonatedAnswer = await asUser(
+    askers[0].token,
+    '/rest/v1/rpc/answer_question',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        target_question: questionIds[1],
+        answer_body: 'This must not be published.',
+      }),
+    }
+  );
+  step(
+    impersonatedAnswer.ok && (await impersonatedAnswer.json()) === false,
+    'another person cannot answer for the Human'
+  );
+
+  const afterAnswer = await fetch(`${URL_BASE}/rest/v1/rpc/get_questions`, {
+    method: 'POST',
+    headers: {
+      apikey: ANON,
+      Authorization: `Bearer ${ANON}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ target_draw: drawId }),
+  });
+  const answeredQuestions = afterAnswer.ok ? await afterAnswer.json() : [];
+  step(
+    answeredQuestions.some(
+      (item) =>
+        item.id === questionIds[0] &&
+        item.answer === 'People often mistake quietness for a lack of warmth.'
+    ),
+    'the answer is visible through the public questions API'
+  );
 
   // Voting twice must not count twice.
   const voter = askers[0];

@@ -41,6 +41,70 @@
     "voteFailed": "Could not register that. Please try again.",
     "sectionIntro": "One meaningful question can open an unexpected door."
   },
+  "journey": {
+    "eyebrow": "Your Human day",
+    "statusTitle": "The Selection",
+    "statusIntro": "Your place in the journey, from invitation to the Human Archive.",
+    "dateLabel": "Your day: {{date}}",
+    "viewStatus": "View your status",
+    "none": "No active selection",
+    "noneBody": "If the draw chooses you, your invitation and every next step will appear here.",
+    "promiseTitle": "Your story stays yours",
+    "promiseBody": "You choose what to share and which questions to answer. There are no scores, followers, or public popularity counts.",
+    "actions": {
+      "respond": {
+        "title": "The draw chose you",
+        "body": "Your invitation is waiting. Nothing is published unless you say yes.",
+        "cta": "Open invitation"
+      },
+      "write-portrait": {
+        "title": "Your portrait is waiting",
+        "body": "Continue in your own time. Your saved answers are here when you return.",
+        "cta": "Continue your portrait"
+      },
+      "await-review": {
+        "title": "Your portrait is being reviewed",
+        "body": "A person is checking it for safety. Your words will not be rewritten."
+      },
+      "await-live": {
+        "title": "Your portrait is ready",
+        "body": "Everything is approved. On your date, you will become Today’s Human."
+      },
+      "answer-questions": {
+        "title": "The world can ask you today",
+        "body": "Answer any approved questions you want, and leave the rest unanswered.",
+        "cta": "Answer the world"
+      },
+      "archived": {
+        "title": "Your day is in the Archive",
+        "body": "Your portrait now has its permanent place in the Human Archive.",
+        "cta": "View your Human page"
+      },
+      "rejected": {
+        "title": "This selection has ended",
+        "body": "This portrait could not be published. No unfinished or unapproved story is ever made public.",
+        "cta": "View details"
+      }
+    },
+    "answerTitle": "Answer the world",
+    "answerIntro": "The questions people most want to ask you, after a person has reviewed them.",
+    "optionalTitle": "Every answer is optional",
+    "optionalBody": "There is no target and no pressure. Answer only what feels meaningful to you, while your day is live.",
+    "noQuestions": "No approved questions yet",
+    "noQuestionsBody": "If questions arrive and pass review, they will appear here in the order people asked to hear them.",
+    "yourAnswer": "Your answer",
+    "answerHint": "Write in your own words. You can update this while your day is live.",
+    "answerPlaceholder": "What would you like to say?",
+    "characters": "{{count}} characters left",
+    "saveAnswer": "Publish answer",
+    "updateAnswer": "Update answer",
+    "answerSaved": "Your answer is live.",
+    "answerFailed": "Could not publish that answer. Check that your Human day is still live and try again.",
+    "votes_one": "{{count}} person asked this",
+    "votes_other": "{{count}} people asked this",
+    "notLive": "Questions are not open now",
+    "notLiveBody": "You can answer approved questions only during your Human day."
+  },
   "remember": {
     "action": "Remember this Human",
     "remembered": "Remembered",

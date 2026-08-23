@@ -8,6 +8,7 @@ import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { useTheme } from '@/theme';
 import { formatHumanNumber } from '@/utils/cycle';
+import type { CycleDate } from '@/utils/cycle';
 
 import { CountryBadge } from './CountryBadge';
 import { Timer } from './Timer';
@@ -40,6 +41,8 @@ export interface HumanPortraitProps {
   translations?: Record<string, string>;
   /** Live humans show a countdown; archived ones show nothing. */
   showTimer?: boolean;
+  /** The server's UTC cycle, so a stale view can never count into tomorrow. */
+  cycleDate?: CycleDate;
   /**
    * Joined during Year Zero. A historical note and nothing else — it confers
    * no advantage in the draw, which is enforced in the database rather than
@@ -63,6 +66,7 @@ export function HumanPortrait({
   elements,
   translations,
   showTimer = false,
+  cycleDate,
   founding = false,
 }: HumanPortraitProps) {
   const theme = useTheme();
@@ -170,7 +174,13 @@ export function HumanPortrait({
               {t('founding.joined')}
             </Text>
           ) : null}
-          {showTimer ? <Timer /> : null}
+          {showTimer ? (
+            cycleDate ? (
+              <Timer cycleDate={cycleDate} />
+            ) : (
+              <Timer />
+            )
+          ) : null}
         </View>
       </View>
 

@@ -15,6 +15,7 @@ import type { PortraitElementKey } from './prompts';
 export interface PortraitWithElements {
   portrait: PortraitRow;
   answers: Partial<Record<PortraitElementKey, string>>;
+  photoUrl: string | null;
 }
 
 export async function getMyPortrait(): Promise<PortraitWithElements | null> {
@@ -48,7 +49,15 @@ export async function getMyPortrait(): Promise<PortraitWithElements | null> {
     answers[element.element_key] = element.answer;
   }
 
-  return { portrait, answers };
+  let photoUrl: string | null = null;
+  if (portrait.photo_path) {
+    const { data } = await supabase.storage
+      .from('portraits')
+      .createSignedUrl(portrait.photo_path, 3600);
+    photoUrl = data?.signedUrl ?? null;
+  }
+
+  return { portrait, answers, photoUrl };
 }
 
 /**

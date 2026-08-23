@@ -5,6 +5,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AppLifecycle } from '@/components/shared/AppLifecycle';
+import { JourneyGate } from '@/components/shared/JourneyGate';
+import { NotificationCoordinator } from '@/components/shared/NotificationCoordinator';
 import { OfflineNotice } from '@/components/shared/OfflineNotice';
 import { OnboardingGate } from '@/components/shared/OnboardingGate';
 import i18n, { initI18n } from '@/i18n';
@@ -63,9 +66,12 @@ export default function RootLayout() {
         <StatusBar style={theme.scheme === 'dark' ? 'light' : 'dark'} />
         {/* Above the navigator, so it is visible on every screen. */}
         <OfflineNotice />
+        <AppLifecycle />
+        <NotificationCoordinator />
         {/* Renders nothing; sends a signed-in person with no profile to finish
             it, which is the only way to be eligible for the draw. */}
         <OnboardingGate />
+        <JourneyGate />
         <Stack
           screenOptions={{
             contentStyle: { backgroundColor: theme.colors.background },
@@ -83,6 +89,7 @@ export default function RootLayout() {
             name="(onboarding)"
             options={{ presentation: 'modal', gestureEnabled: false }}
           />
+          <Stack.Screen name="(selection)" />
         </Stack>
       </SafeAreaProvider>
     </PersistQueryClientProvider>

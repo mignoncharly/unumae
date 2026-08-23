@@ -103,6 +103,23 @@ export type DailyDrawPublicRow = {
 export type PortraitStatus =
   'draft' | 'submitted' | 'in_review' | 'approved' | 'rejected';
 
+export type InvitationResponse = 'accepted' | 'declined' | 'expired';
+
+export type HumanJourneyRow = {
+  draw_id: string;
+  selection_date: string;
+  selection_status: SelectionStatus;
+  invitation_id: string;
+  notified_at: string;
+  acceptance_deadline: string;
+  invitation_response: InvitationResponse | null;
+  portrait_id: string | null;
+  portrait_status: PortraitStatus | null;
+  portrait_submitted_at: string | null;
+  portrait_reviewed_at: string | null;
+  human_number: number | null;
+};
+
 export type PortraitElementKeyEnum =
   | 'introduction'
   | 'where_im_from'
@@ -326,6 +343,10 @@ export type Database = {
           question_status: 'pending' | 'approved' | 'rejected';
         }[];
       };
+      my_human_journey: {
+        Args: Record<PropertyKey, never>;
+        Returns: HumanJourneyRow[];
+      };
       scheduler_installed: {
         Args: Record<PropertyKey, never>;
         Returns: { installed: boolean; detail: string; checked_at: string }[];
@@ -357,6 +378,10 @@ export type Database = {
       ask_question: {
         Args: { target_draw: string; question_body: string };
         Returns: string;
+      };
+      answer_question: {
+        Args: { target_question: string; answer_body: string };
+        Returns: boolean;
       };
       vote_question: {
         Args: { target_question: string };

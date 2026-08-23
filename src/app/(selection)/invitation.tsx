@@ -119,7 +119,7 @@ export default function InvitationScreen() {
               accept.mutate(undefined, {
                 onSuccess: () => {
                   track('selection_accepted');
-                  router.replace('/');
+                  router.replace('/(selection)/portrait');
                 },
                 onError: (caught) => setError(t(toAppError(caught).messageKey)),
               });

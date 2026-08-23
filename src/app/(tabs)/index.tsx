@@ -8,6 +8,7 @@ import { RememberAction } from '@/components/human/RememberAction';
 import { YourStanding } from '@/components/human/YourStanding';
 import { AskSheet } from '@/components/questions/AskSheet';
 import { QuestionCard } from '@/components/questions/QuestionCard';
+import { JourneyCard } from '@/components/selection/JourneyCard';
 import { ReportAction } from '@/components/shared/ReportAction';
 import { ShareButton } from '@/components/sharing/ShareButton';
 import { Button } from '@/components/ui/Button';
@@ -137,6 +138,8 @@ export default function TodayScreen() {
             {t('common.tagline').toUpperCase()}
           </Text>
         </View>
+        <JourneyCard />
+        <View style={{ height: theme.spacing.xl }} />
         <HumanPortrait
           city={today.human.city}
           countryCode={today.human.country_code}
@@ -149,6 +152,7 @@ export default function TodayScreen() {
           humanNumber={today.human.human_number ?? 0}
           name={today.human.display_name}
           photoUri={today.photoUrl}
+          cycleDate={today.human.selection_date}
           showTimer
         />
 

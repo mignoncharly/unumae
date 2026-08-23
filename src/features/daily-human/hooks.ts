@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useIsAuthenticated } from '@/features/auth/useSession';
+import { getCycleDate } from '@/utils/cycle';
 
 import {
   askQuestion,
@@ -21,6 +22,10 @@ export function useTodaysHuman() {
   return useQuery({
     queryKey: todayKeys.human,
     queryFn: getTodaysHuman,
+    // Persisted data may hydrate before the boundary refetch completes. Never
+    // render yesterday's person as Today during that short window.
+    select: (today) =>
+      today?.human.selection_date === getCycleDate() ? today : null,
     // The cycle changes once a day. Nothing here rewards polling.
     staleTime: 5 * 60 * 1000,
   });

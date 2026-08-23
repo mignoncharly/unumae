@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import * as ImagePicker from 'expo-image-picker';
 import { Stack, router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -27,6 +28,7 @@ import {
   PORTRAIT_PROMPTS,
   type PortraitElementKey,
 } from '@/features/portraits/prompts';
+import { journeyKeys } from '@/features/selection/journeyApi';
 import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
@@ -43,6 +45,7 @@ export default function PortraitScreen() {
   const theme = useTheme();
   const { t } = useTranslation();
   const session = useSession();
+  const queryClient = useQueryClient();
   const userId = session.session?.user.id;
 
   const [portraitId, setPortraitId] = useState<string | null>(null);
@@ -67,6 +70,7 @@ export default function PortraitScreen() {
           setPortraitId(existing.portrait.id);
           setAnswers(existing.answers);
           setHasPhoto(existing.portrait.photo_path !== null);
+          setPhotoUri(existing.photoUrl);
         } else {
           const created = await startMyPortrait();
           if (!active) return;
@@ -141,7 +145,8 @@ export default function PortraitScreen() {
     try {
       await submitMyPortrait();
       track('portrait_completed');
-      router.replace('/');
+      await queryClient.invalidateQueries({ queryKey: journeyKeys.all });
+      router.replace('/(selection)/status');
     } catch (caught) {
       setError(t(toAppError(caught).messageKey));
     } finally {
@@ -193,7 +198,7 @@ export default function PortraitScreen() {
             {t('portrait.photo').toUpperCase()}
           </Text>
 
-          {photoUri || hasPhoto ? (
+          {photoUri ? (
             <Image
               accessibilityIgnoresInvertColors
               accessibilityLabel={t('portrait.photo')}

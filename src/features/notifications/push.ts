@@ -24,7 +24,7 @@ export const isExpoGo =
 
 export type PushUnavailableReason = 'expo-go' | 'web' | 'module-missing';
 
-function loadModule(): NotificationsModule | null {
+export function loadNotificationsModule(): NotificationsModule | null {
   if (cached !== undefined) {
     return cached;
   }
@@ -51,7 +51,7 @@ export function pushUnavailableReason(): PushUnavailableReason | null {
   if (isExpoGo) {
     return 'expo-go';
   }
-  if (!loadModule()) {
+  if (!loadNotificationsModule()) {
     return 'module-missing';
   }
   return null;
@@ -68,7 +68,7 @@ export function isPushAvailable(): boolean {
  * normal answer, not an error — the product works entirely without it.
  */
 export async function registerForPush(): Promise<string | null> {
-  const notifications = loadModule();
+  const notifications = loadNotificationsModule();
   if (!notifications) {
     return null;
   }

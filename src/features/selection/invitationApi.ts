@@ -5,6 +5,7 @@ import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 
 import type { PendingInvitation } from './invitation';
+import { journeyKeys } from './journeyApi';
 
 /**
  * The candidate's side of the acceptance window.
@@ -57,8 +58,12 @@ export function useAnswerInvitation() {
   const queryClient = useQueryClient();
   const userId = session.session?.user.id ?? 'anonymous';
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: invitationKeys.pending(userId) });
+  const invalidate = () => {
+    void queryClient.invalidateQueries({
+      queryKey: invitationKeys.pending(userId),
+    });
+    void queryClient.invalidateQueries({ queryKey: journeyKeys.all });
+  };
 
   const accept = useMutation({
     mutationFn: async () => {

@@ -41,6 +41,70 @@
     "voteFailed": "Impossible d'enregistrer. Veuillez réessayer.",
     "sectionIntro": "Une question sincère peut ouvrir une porte inattendue."
   },
+  "journey": {
+    "eyebrow": "Votre journée Human",
+    "statusTitle": "La Sélection",
+    "statusIntro": "Votre parcours, de l’invitation jusqu’aux Archives humaines.",
+    "dateLabel": "Votre journée : {{date}}",
+    "viewStatus": "Voir votre statut",
+    "none": "Aucune sélection active",
+    "noneBody": "Si la Sélection vous choisit, votre invitation et chaque étape suivante apparaîtront ici.",
+    "promiseTitle": "Votre histoire reste la vôtre",
+    "promiseBody": "Vous choisissez ce que vous partagez et les questions auxquelles vous répondez. Il n’y a ni scores, ni abonnés, ni compteur public de popularité.",
+    "actions": {
+      "respond": {
+        "title": "La Sélection vous a choisi",
+        "body": "Votre invitation vous attend. Rien n’est publié sans votre accord.",
+        "cta": "Ouvrir l’invitation"
+      },
+      "write-portrait": {
+        "title": "Votre portrait vous attend",
+        "body": "Continuez à votre rythme. Vos réponses enregistrées seront là à votre retour.",
+        "cta": "Continuer votre portrait"
+      },
+      "await-review": {
+        "title": "Votre portrait est en cours d’examen",
+        "body": "Une personne vérifie sa sécurité. Vos mots ne seront pas réécrits."
+      },
+      "await-live": {
+        "title": "Votre portrait est prêt",
+        "body": "Tout est approuvé. À la date prévue, vous deviendrez le Human du jour."
+      },
+      "answer-questions": {
+        "title": "Le monde peut vous questionner aujourd’hui",
+        "body": "Répondez aux questions approuvées de votre choix et laissez les autres sans réponse.",
+        "cta": "Répondre au monde"
+      },
+      "archived": {
+        "title": "Votre journée est dans les Archives",
+        "body": "Votre portrait a désormais sa place permanente dans les Archives humaines.",
+        "cta": "Voir votre page Human"
+      },
+      "rejected": {
+        "title": "Cette sélection est terminée",
+        "body": "Ce portrait n’a pas pu être publié. Une histoire inachevée ou non approuvée n’est jamais rendue publique.",
+        "cta": "Voir les détails"
+      }
+    },
+    "answerTitle": "Répondre au monde",
+    "answerIntro": "Les questions que les gens souhaitent le plus vous poser, après leur vérification.",
+    "optionalTitle": "Chaque réponse est facultative",
+    "optionalBody": "Il n’y a ni objectif ni pression. Répondez seulement à ce qui vous semble important pendant votre journée.",
+    "noQuestions": "Aucune question approuvée pour l’instant",
+    "noQuestionsBody": "Si des questions arrivent et sont approuvées, elles apparaîtront ici dans l’ordre choisi par les gens.",
+    "yourAnswer": "Votre réponse",
+    "answerHint": "Écrivez avec vos propres mots. Vous pouvez la modifier pendant votre journée.",
+    "answerPlaceholder": "Que souhaitez-vous dire ?",
+    "characters": "{{count}} caractères restants",
+    "saveAnswer": "Publier la réponse",
+    "updateAnswer": "Modifier la réponse",
+    "answerSaved": "Votre réponse est en ligne.",
+    "answerFailed": "Impossible de publier cette réponse. Vérifiez que votre journée Human est toujours en cours et réessayez.",
+    "votes_one": "{{count}} personne souhaite le savoir",
+    "votes_other": "{{count}} personnes souhaitent le savoir",
+    "notLive": "Les questions ne sont pas ouvertes",
+    "notLiveBody": "Vous pouvez répondre aux questions approuvées uniquement pendant votre journée Human."
+  },
   "remember": {
     "action": "Se souvenir de ce Human",
     "remembered": "Mémorisé",

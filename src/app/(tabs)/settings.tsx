@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { CountryBadge } from '@/components/human/CountryBadge';
+import { JourneyCard } from '@/components/selection/JourneyCard';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
@@ -42,6 +43,12 @@ export default function SettingsScreen() {
           authenticated && profile ? profile.display_name : t('settings.title')
         }
       />
+
+      {authenticated ? (
+        <View style={{ marginBottom: theme.spacing.xl }}>
+          <JourneyCard includeHistory />
+        </View>
+      ) : null}
 
       {authenticated && profile ? (
         <Surface tone="accent" style={{ gap: theme.spacing.lg }}>

@@ -41,6 +41,70 @@
     "voteFailed": "Konnte nicht gespeichert werden. Bitte versuche es erneut.",
     "sectionIntro": "Eine ehrliche Frage kann eine unerwartete Tür öffnen."
   },
+  "journey": {
+    "eyebrow": "Dein Human-Tag",
+    "statusTitle": "Die Auswahl",
+    "statusIntro": "Dein Weg von der Einladung bis ins Human-Archiv.",
+    "dateLabel": "Dein Tag: {{date}}",
+    "viewStatus": "Status ansehen",
+    "none": "Keine aktive Auswahl",
+    "noneBody": "Wenn die Auswahl dich zieht, erscheinen hier deine Einladung und alle nächsten Schritte.",
+    "promiseTitle": "Deine Geschichte bleibt deine",
+    "promiseBody": "Du entscheidest, was du teilst und welche Fragen du beantwortest. Es gibt keine Punkte, Follower oder öffentlichen Beliebtheitszahlen.",
+    "actions": {
+      "respond": {
+        "title": "Die Auswahl hat dich gezogen",
+        "body": "Deine Einladung wartet. Nichts wird veröffentlicht, wenn du nicht Ja sagst.",
+        "cta": "Einladung öffnen"
+      },
+      "write-portrait": {
+        "title": "Dein Porträt wartet",
+        "body": "Mach in deinem Tempo weiter. Deine gespeicherten Antworten sind bei deiner Rückkehr da.",
+        "cta": "Porträt fortsetzen"
+      },
+      "await-review": {
+        "title": "Dein Porträt wird geprüft",
+        "body": "Ein Mensch prüft es auf Sicherheit. Deine Worte werden nicht umgeschrieben."
+      },
+      "await-live": {
+        "title": "Dein Porträt ist bereit",
+        "body": "Alles ist freigegeben. An deinem Datum wirst du zum Human des Tages."
+      },
+      "answer-questions": {
+        "title": "Heute kann die Welt dich fragen",
+        "body": "Beantworte jede freigegebene Frage, die du möchtest, und lass den Rest offen.",
+        "cta": "Der Welt antworten"
+      },
+      "archived": {
+        "title": "Dein Tag ist im Archiv",
+        "body": "Dein Porträt hat jetzt seinen dauerhaften Platz im Human-Archiv.",
+        "cta": "Deine Human-Seite ansehen"
+      },
+      "rejected": {
+        "title": "Diese Auswahl ist beendet",
+        "body": "Dieses Porträt konnte nicht veröffentlicht werden. Eine unfertige oder ungeprüfte Geschichte wird niemals öffentlich.",
+        "cta": "Details ansehen"
+      }
+    },
+    "answerTitle": "Der Welt antworten",
+    "answerIntro": "Die Fragen, die Menschen dir am liebsten stellen möchten, nachdem sie geprüft wurden.",
+    "optionalTitle": "Jede Antwort ist freiwillig",
+    "optionalBody": "Es gibt kein Ziel und keinen Druck. Antworte nur auf das, was dir wichtig erscheint, solange dein Tag live ist.",
+    "noQuestions": "Noch keine freigegebenen Fragen",
+    "noQuestionsBody": "Wenn Fragen eintreffen und die Prüfung bestehen, erscheinen sie hier in der gewünschten Reihenfolge.",
+    "yourAnswer": "Deine Antwort",
+    "answerHint": "Schreib in deinen eigenen Worten. Du kannst dies aktualisieren, solange dein Tag live ist.",
+    "answerPlaceholder": "Was möchtest du sagen?",
+    "characters": "Noch {{count}} Zeichen",
+    "saveAnswer": "Antwort veröffentlichen",
+    "updateAnswer": "Antwort aktualisieren",
+    "answerSaved": "Deine Antwort ist live.",
+    "answerFailed": "Die Antwort konnte nicht veröffentlicht werden. Prüfe, ob dein Human-Tag noch live ist, und versuche es erneut.",
+    "votes_one": "{{count}} Person möchte das wissen",
+    "votes_other": "{{count}} Personen möchten das wissen",
+    "notLive": "Fragen sind jetzt nicht offen",
+    "notLiveBody": "Du kannst freigegebene Fragen nur während deines Human-Tages beantworten."
+  },
   "remember": {
     "action": "An diesen Human erinnern",
     "remembered": "Gemerkt",

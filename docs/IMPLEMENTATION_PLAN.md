@@ -19,8 +19,8 @@ original). This file tracks status only.
 | 10 | Notifications, localization & translation | ✅ done | ✅ |
 | 11 | Analytics, sharing & landing web | ✅ done | ✅ |
 | 12 | Accessibility & offline | ✅ done | ✅ |
-| 13 | Testing & App Store readiness | ⬜ next | ✅ |
-| 14 | Internal Alpha, Private Beta & retention | ⬜ | ✅ |
+| 13 | Testing & App Store readiness | ✅ done | ✅ |
+| 14 | Internal Alpha, Private Beta & retention | ⬜ next | ✅ |
 | 15 | Viral experiments & 1,000 users | ⬜ | ✅ |
 | 16 | Scale & AI features | ⬜ | ❌ post-launch |
 | 17 | Monetization, Android & full web/PWA | ⬜ | ❌ post-launch |
@@ -403,11 +403,47 @@ no error buzz — a vibration that rewards would make Remember a score.
 
 465 tests over 27 suites.
 
-## Phase 13 — next
+## Phase 13 — Testing & App Store readiness ✅
 
-Testing and App Store readiness: RLS and privilege tests against the live
-project, the end-to-end flows from the plan, and everything App Store review
-asks for.
+**`npm run verify:security` attacks the live database as a real signed-in
+user.** The earlier probe asked what an anonymous stranger can reach; this asks
+the harder question — what can somebody who has legitimately signed up do that
+they should not. It creates two throwaway accounts, attacks with one against
+the other, and deletes both. 31 checks, covering: reading another profile,
+setting your own `selection_eligible` / `verification_level` / `account_status`,
+rewriting your own birth year, inserting yourself into `moderators`, calling
+every moderator function, driving the draw, reading who was drawn, and writing
+into somebody else's storage folder.
+
+**It found a live bug on its first honest run.** The Phase 7 storage policy
+decided whether a photograph was published by joining `daily_draws` — but
+clients hold only *column-level* SELECT on that table, and `id`, which the join
+needs, is deliberately not granted. Evaluating the policy raised `permission
+denied for table daily_draws`, and because Postgres evaluates every permissive
+SELECT policy, that aborted **all** reads of the portraits bucket. Not only
+unpublished ones: an author could not read back their own upload, and no signed
+URL could be created for today's Human. The main screen would have shown no
+photograph at all.
+
+What surfaced it was the *control* assertion — the check that the permitted
+case still works — added specifically so a refusal could not be mistaken for a
+policy doing its job. Without it the suite would have reported success while
+the feature was broken. Fixed by moving the decision into a security definer
+function, in `20260823020000` and `20260823030000`.
+
+**App Store**: the iOS privacy manifest is in `app.config.ts` —
+`NSPrivacyTracking: false`, six collected data types, three required-reason
+APIs. `docs/APP_STORE.md` carries the privacy-label answers, the age-rating
+questionnaire, the required URLs, the "this is not a sweepstake" argument, and
+the four rejections worth anticipating.
+
+465 tests offline, plus three live suites: draw cross-check, anonymous access,
+and signed-in privilege escalation.
+
+## Phase 14 — next
+
+Internal Alpha and Private Beta: running the loop with real people, and
+measuring whether they come back before spending anything on growth.
 
 ## Working agreements
 

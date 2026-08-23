@@ -24,6 +24,7 @@ amended. Every feature request is measured against it.
 | [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) | What is waiting on you, and what is waiting on me |
 | [MODERATION.md](./docs/MODERATION.md) | Who can moderate, and how the first one comes to exist |
 | [SURFACES.md](./docs/SURFACES.md) | Which pages live in the app and which on the website |
+| [APP_STORE.md](./docs/APP_STORE.md) | Review answers, and what still needs a person |
 | [VERIFICATION_POLICY.md](./docs/VERIFICATION_POLICY.md) | Who may enter the draw, and who may be published |
 | [COMMUNITY_RULES.md](./docs/COMMUNITY_RULES.md) | The rules users accept |
 | [ENVIRONMENTS.md](./docs/ENVIRONMENTS.md) | Three environments, three Supabase projects |
@@ -70,6 +71,6 @@ to say yes start sounding excellent.
 
 ## Status
 
-Phases 0–12 of 18 complete. Development runs in Expo Go on Android; Sign in with
+Phases 0–13 of 18 complete. Development runs in Expo Go on Android; Sign in with
 Apple needs a native build and hides itself until then. See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md)
 for detail and [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) for what is outstanding.

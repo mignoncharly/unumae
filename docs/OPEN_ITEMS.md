@@ -12,16 +12,17 @@ Last updated: end of Phase 7.
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
 | 1 | **Deploy `website/` to `unumae.app`** | The app links out to it for About, Privacy and Terms, and every shared link points there. You are developing it on your own server; until it is live those links go nowhere. `npm run web:build` produces the static site. | Sharing, and the legal links, being useful. |
-| 2 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. You said you will run it later — nothing else is waiting on it. | Testing Sign in with Apple and push. |
-| 3 | ~~Appoint the first moderator~~ **— solved, nothing to do** | `charles.nguenkam@gmail.com` and `mignoncharly@yahoo.fr` are seeded in `public.founding_moderators`. Whichever you sign up with, a trigger promotes you to moderator the moment you finish onboarding, and the migration backfilled anyone who already had a profile. Full detail, including how to add and remove moderators later: `docs/MODERATION.md`. | Nothing. |
-| 4 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
+| 2 | **App icon and launch screen** | 1024x1024, no transparency, no rounded corners; and the wordmark for the launch screen. Design decisions, not generated placeholders. docs/APP_STORE.md says where they go once they exist. | App Store submission. |
+| 3 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. You said you will run it later — nothing else is waiting on it. | Testing Sign in with Apple and push. |
+| 4 | ~~Appoint the first moderator~~ **— solved, nothing to do** | `charles.nguenkam@gmail.com` and `mignoncharly@yahoo.fr` are seeded in `public.founding_moderators`. Whichever you sign up with, a trigger promotes you to moderator the moment you finish onboarding, and the migration backfilled anyone who already had a profile. Full detail, including how to add and remove moderators later: `docs/MODERATION.md`. | Nothing. |
+| 5 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
 
 ## Mine — code, and already planned
 
 | # | Item | Phase |
 | --- | --- | --- |
-| 1 | Testing & App Store readiness | 13 — next |
-| 2 | Schedule the notification sender (needs pg_net or an external cron) | 13 |
+| 1 | Internal Alpha and Private Beta | 14 — next |
+| 2 | Schedule the notification sender (needs pg_net or an external cron) | 14 |
 | 3 | A translation job to fill `portrait_element_translations` | later |
 | 4 | Liveness capture flow — the gate exists and is switched off | later, native |
 | 5 | Optional audio/video portrait element | later |
@@ -45,7 +46,7 @@ picking, storage — runs in Expo Go.
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | 20 applied |
+| Migrations | 22 applied |
 | Edge Functions | `delete-account` deployed and probed. `send-notifications` written but NOT deployed — see Yours #1 |
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min |
@@ -56,7 +57,8 @@ picking, storage — runs in Expo Go.
 | Community rules | approved as written, live in EN/FR/DE |
 | Draw verification | database and independent implementation agree |
 | Anonymous access | 78 checks, matches the allowlist |
-| Tests | 465, with a pre-push hook |
+| Signed-in privilege escalation | 31 checks, all refused (`npm run verify:security`) |
+| Tests | 465 offline, plus three live suites |
 
 ## Commands worth remembering
 

@@ -12,6 +12,7 @@ import { setAnalyticsProvider, track } from '@/lib/analytics';
 import { createSupabaseAnalytics } from '@/lib/analytics/provider';
 import { persistOptions } from '@/lib/offline/persist';
 import { usePreferences } from '@/stores/preferences';
+import { useTheme } from '@/theme';
 
 initI18n();
 
@@ -39,6 +40,7 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
+  const theme = useTheme();
   const locale = usePreferences((state) => state.locale);
 
   useEffect(() => {
@@ -58,13 +60,23 @@ export default function RootLayout() {
       persistOptions={persistOptions}
     >
       <SafeAreaProvider>
-        <StatusBar style="auto" />
+        <StatusBar style={theme.scheme === 'dark' ? 'light' : 'dark'} />
         {/* Above the navigator, so it is visible on every screen. */}
         <OfflineNotice />
         {/* Renders nothing; sends a signed-in person with no profile to finish
             it, which is the only way to be eligible for the draw. */}
         <OnboardingGate />
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack
+          screenOptions={{
+            contentStyle: { backgroundColor: theme.colors.background },
+            headerBackButtonDisplayMode: 'minimal',
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: theme.colors.background },
+            headerTintColor: theme.colors.text,
+            headerTitleStyle: { color: theme.colors.text, fontWeight: '600' },
+            headerShown: false,
+          }}
+        >
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="(auth)" options={{ presentation: 'modal' }} />
           <Stack.Screen

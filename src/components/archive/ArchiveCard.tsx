@@ -1,3 +1,4 @@
+import Feather from '@expo/vector-icons/Feather';
 import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -83,10 +84,14 @@ export function ArchiveCard({
         flexDirection: 'row',
         alignItems: 'center',
         gap: theme.spacing.lg,
-        paddingVertical: theme.spacing.lg,
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: theme.colors.border,
-        opacity: pressed ? 0.6 : 1,
+        padding: theme.spacing.md,
+        marginBottom: theme.spacing.md,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: theme.colors.border,
+        borderRadius: theme.radius.xl,
+        backgroundColor: theme.colors.surfaceRaised,
+        opacity: pressed ? 0.65 : 1,
+        ...theme.shadows.subtle,
       })}
     >
       <Image
@@ -98,21 +103,35 @@ export function ArchiveCard({
         contentFit="cover"
         source={photoUrl ? { uri: photoUrl } : null}
         style={{
-          width: 56,
-          height: 70,
-          borderRadius: theme.radius.sm,
-          backgroundColor: theme.colors.surface,
+          width: 86,
+          height: 108,
+          borderRadius: theme.radius.lg,
+          backgroundColor: theme.colors.surfaceMuted,
         }}
         transition={150}
       />
 
       <View style={{ flex: 1, gap: theme.spacing.xxs }}>
-        <Text color="textTertiary" variant="caption">
-          {formatHumanNumber(humanNumber)} · {selectionDate}
+        <Text
+          color="accent"
+          variant="caption"
+          style={{ fontWeight: '700', letterSpacing: 0.5 }}
+        >
+          {formatHumanNumber(humanNumber)}
         </Text>
-        <Text variant="callout">{displayName}</Text>
+        <Text variant="title3" style={{ fontWeight: '600' }}>
+          {displayName}
+        </Text>
         {countryCode ? <CountryBadge countryCode={countryCode} /> : null}
+        <Text color="textTertiary" variant="caption">
+          {selectionDate}
+        </Text>
       </View>
+      <Feather
+        color={theme.colors.textTertiary}
+        name="chevron-right"
+        size={20}
+      />
     </Pressable>
   );
 }

@@ -13,18 +13,23 @@ interface PreferencesState {
   /** null means "follow the system language". */
   locale: SupportedLocale | null;
   setLocale: (locale: SupportedLocale | null) => void;
+  /** Theme override. System keeps the app native to the device setting. */
+  appearance: 'system' | 'light' | 'dark';
+  setAppearance: (appearance: 'system' | 'light' | 'dark') => void;
 }
 
 export const usePreferences = create<PreferencesState>()(
   persist(
     (set) => ({
       locale: null,
+      appearance: 'system',
       setLocale: (locale) => {
         set({ locale });
         if (locale) {
           void i18n.changeLanguage(locale);
         }
       },
+      setAppearance: (appearance) => set({ appearance }),
     }),
     {
       name: 'onehuman.preferences',

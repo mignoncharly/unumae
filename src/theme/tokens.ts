@@ -10,49 +10,77 @@
  * app looking nothing like its own wordmark, which is a blue-to-violet
  * gradient. Cold is not the same thing as calm.
  *
- * So the accent is now the brand, sampled from `assets/splash.png` rather than
- * invented: its ink runs from #000090 through #6000E0, and #3B1FCC sits in the
- * middle of that.
+ * The accent family is now the brand: cobalt for action, indigo for depth and
+ * violet for the private Remember state. It follows the wordmark while keeping
+ * readable contrast in both appearance modes.
  *
- * Where it is allowed: controls. Buttons, links, the selected tab — the things
- * a person acts on. Where it is not: anywhere near the portrait. No coloured
- * frame, no tinted overlay, no accent on the name or the human number. The rule
- * that mattered was never "no colour", it was "nothing competes with the
- * person", and that one still holds.
+ * Colour establishes hierarchy in controls and quiet hero surfaces. It never
+ * overlays or recolours a portrait; the person remains the highest-contrast
+ * element in the composition.
  */
 
 export const colors = {
   light: {
-    background: '#FFFFFF',
-    surface: '#F7F7F5',
+    background: '#F7F8FC',
+    surface: '#FFFFFF',
     surfaceRaised: '#FFFFFF',
-    border: '#E4E4E1',
-    text: '#0B0B0C',
-    textSecondary: '#5A5A57',
-    textTertiary: '#8E8E8A',
+    surfaceMuted: '#F0F2F8',
+    surfaceWarm: '#FBF7F3',
+    border: '#E1E4EE',
+    borderStrong: '#CCD2E2',
+    text: '#11121A',
+    textSecondary: '#555B6C',
+    textTertiary: '#777E91',
     /** Sampled from the wordmark. White on it reads at 9.3:1. */
-    accent: '#3B1FCC',
+    accent: '#315CF5',
     accentText: '#FFFFFF',
     /** The same hue at surface weight, for panels that should feel brand-ish. */
-    accentSurface: '#F7F5FE',
-    danger: '#A8342A',
-    success: '#2F6B4F',
+    accentSurface: '#EEF2FF',
+    accentStrong: '#2735B8',
+    violet: '#6F3FF5',
+    violetSurface: '#F3EFFF',
+    danger: '#B43A46',
+    dangerSurface: '#FFF0F1',
+    success: '#25745A',
+    successSurface: '#EAF7F1',
+    warning: '#93621C',
+    warningSurface: '#FFF7E8',
+    brandDark: '#0B0B0C',
+    brandBlue: '#2735B8',
+    brandViolet: '#6F3FF5',
+    onBrand: '#FFFFFF',
+    onBrandSecondary: '#BFC3CF',
     overlay: 'rgba(11, 11, 12, 0.5)',
   },
   dark: {
     background: '#0B0B0C',
-    surface: '#151517',
-    surfaceRaised: '#1D1D20',
-    border: '#2A2A2D',
-    text: '#F5F5F3',
-    textSecondary: '#A8A8A4',
-    textTertiary: '#6E6E6B',
+    surface: '#16161A',
+    surfaceRaised: '#202027',
+    surfaceMuted: '#12131A',
+    surfaceWarm: '#1B1717',
+    border: '#2B2C35',
+    borderStrong: '#414453',
+    text: '#F7F7FA',
+    textSecondary: '#B1B5C2',
+    textTertiary: '#898F9F',
     /** The brand lightened until it reads on near-black: 7.2:1. */
-    accent: '#A78BFA',
+    accent: '#7D9AFF',
     accentText: '#0B0B0C',
-    accentSurface: '#171327',
-    danger: '#E0705F',
-    success: '#6FAE8C',
+    accentSurface: '#182044',
+    accentStrong: '#AAB9FF',
+    violet: '#B69AFF',
+    violetSurface: '#241A3A',
+    danger: '#FF8B95',
+    dangerSurface: '#351B20',
+    success: '#7ED0AE',
+    successSurface: '#143127',
+    warning: '#E7BA70',
+    warningSurface: '#332817',
+    brandDark: '#0B0B0C',
+    brandBlue: '#2735B8',
+    brandViolet: '#6F3FF5',
+    onBrand: '#FFFFFF',
+    onBrandSecondary: '#BFC3CF',
     overlay: 'rgba(0, 0, 0, 0.65)',
   },
 } as const;
@@ -77,6 +105,7 @@ export const radius = {
   md: 8,
   lg: 12,
   xl: 20,
+  xxl: 28,
   full: 9999,
 } as const;
 
@@ -94,7 +123,8 @@ export const typography = {
     title3: 20,
     title2: 24,
     title1: 30,
-    display: 40,
+    display: 44,
+    hero: 52,
   },
   weights: {
     regular: '400',

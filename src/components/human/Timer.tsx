@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
+import { Icon } from '@/components/ui/Icon';
 import { Text } from '@/components/ui/Text';
+import { useTheme } from '@/theme';
 import {
   formatCountdown,
   getCycleDate,
@@ -25,6 +28,7 @@ interface TimerProps {
  * surrounding words are localised. Monospaced so the digits do not jitter.
  */
 export function Timer({ cycleDate, now }: TimerProps) {
+  const theme = useTheme();
   const { t } = useTranslation();
   const date = cycleDate ?? getCycleDate(now);
   const frozen = now !== undefined;
@@ -51,12 +55,32 @@ export function Timer({ cycleDate, now }: TimerProps) {
   });
 
   return (
-    <Text
+    <View
       accessibilityLabel={label}
-      color={remaining.expired ? 'textTertiary' : 'textSecondary'}
-      variant="mono"
+      accessible
+      style={{
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        backgroundColor: theme.colors.accentSurface,
+        borderRadius: theme.radius.full,
+        flexDirection: 'row',
+        gap: theme.spacing.sm,
+        minHeight: 40,
+        paddingHorizontal: theme.spacing.md,
+      }}
     >
-      {label}
-    </Text>
+      <Icon
+        color={remaining.expired ? 'textTertiary' : 'accent'}
+        name="clock"
+        size={15}
+      />
+      <Text
+        color={remaining.expired ? 'textTertiary' : 'textSecondary'}
+        variant="mono"
+        style={{ fontSize: 14 }}
+      >
+        {label}
+      </Text>
+    </View>
   );
 }

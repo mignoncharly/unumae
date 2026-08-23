@@ -7,6 +7,7 @@ import {
 import { useTheme, type ColorToken } from '@/theme';
 
 export type TextVariant =
+  | 'hero'
   | 'display'
   | 'title1'
   | 'title2'
@@ -31,6 +32,7 @@ interface TextProps extends RNTextProps {
  * name, and a name that does not fit is worse than a name that grows less.
  */
 const MAX_SCALE: Record<TextVariant, number> = {
+  hero: 1.5,
   display: 1.6,
   title1: 1.7,
   title2: 1.8,
@@ -46,6 +48,7 @@ const MAX_SCALE: Record<TextVariant, number> = {
 
 /** Headings, so a screen reader can offer "jump to next heading". */
 const HEADING_VARIANTS = new Set<TextVariant>([
+  'hero',
   'display',
   'title1',
   'title2',
@@ -75,7 +78,7 @@ export function Text({
       : {
           fontSize: theme.typography.sizes[variant],
           fontWeight:
-            variant === 'display' || variant === 'title1'
+            variant === 'hero' || variant === 'display' || variant === 'title1'
               ? theme.typography.weights.bold
               : theme.typography.weights.regular,
           lineHeight:

@@ -1,13 +1,17 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { OperationsPanel } from '@/components/moderation/OperationsPanel';
 import { SignalsPanel } from '@/components/moderation/SignalsPanel';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Pill } from '@/components/ui/Pill';
 import { Screen } from '@/components/ui/Screen';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { Toast } from '@/components/ui/Toast';
 import {
@@ -47,7 +51,7 @@ export default function AdminScreen() {
   if (isLoading) {
     return (
       <Screen>
-        <Text color="textSecondary">{t('common.loading')}</Text>
+        <Skeleton height={180} radius={theme.radius.xl} />
       </Screen>
     );
   }
@@ -57,7 +61,7 @@ export default function AdminScreen() {
       <>
         <Stack.Screen options={{ headerShown: true, title: '' }} />
         <Screen>
-          <EmptyState title={t('moderation.notModerator')} />
+          <EmptyState icon="lock" title={t('moderation.notModerator')} />
         </Screen>
       </>
     );
@@ -69,40 +73,30 @@ export default function AdminScreen() {
         options={{ headerShown: true, title: t('moderation.title') }}
       />
       <Screen>
-        <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
-          {(
-            [
-              'portraits',
-              'questions',
-              'reports',
-              'signals',
-              'operations',
-            ] as Tab[]
-          ).map((value) => (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityState={{ selected: tab === value }}
-              key={value}
-              onPress={() => setTab(value)}
-              style={{
-                paddingHorizontal: theme.spacing.lg,
-                minHeight: 44,
-                justifyContent: 'center',
-                borderRadius: theme.radius.full,
-                borderWidth: 1,
-                borderColor:
-                  tab === value ? theme.colors.accent : theme.colors.border,
-              }}
-            >
-              <Text
-                color={tab === value ? 'text' : 'textSecondary'}
-                variant="footnote"
-              >
-                {t(`moderation.${value}`)}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+        <PageHeader
+          subtitle={t('moderation.everyDecisionLogged')}
+          title={t('moderation.title')}
+        />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+            {(
+              [
+                'portraits',
+                'questions',
+                'reports',
+                'signals',
+                'operations',
+              ] as Tab[]
+            ).map((value) => (
+              <Pill
+                key={value}
+                onPress={() => setTab(value)}
+                selected={tab === value}
+                label={t(`moderation.${value}`)}
+              />
+            ))}
+          </View>
+        </ScrollView>
 
         <View style={{ marginTop: theme.spacing.xl }}>
           {tab === 'portraits' ? (
@@ -191,12 +185,6 @@ export default function AdminScreen() {
 
           {tab === 'operations' ? <OperationsPanel /> : null}
         </View>
-
-        <View style={{ marginTop: theme.spacing.xxxl }}>
-          <Text color="textTertiary" variant="footnote">
-            {t('moderation.everyDecisionLogged')}
-          </Text>
-        </View>
       </Screen>
 
       <Toast
@@ -228,14 +216,7 @@ function QueueItem({
   const { t } = useTranslation();
 
   return (
-    <View
-      style={{
-        paddingVertical: theme.spacing.lg,
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: theme.colors.border,
-        gap: theme.spacing.sm,
-      }}
-    >
+    <Surface style={{ gap: theme.spacing.sm, marginBottom: theme.spacing.md }}>
       <Text variant="callout">{title}</Text>
       <Text color="textTertiary" variant="footnote">
         {meta}
@@ -253,6 +234,6 @@ function QueueItem({
           variant="secondary"
         />
       </View>
-    </View>
+    </Surface>
   );
 }

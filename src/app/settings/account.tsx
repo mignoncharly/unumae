@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { deleteMyAccount } from '@/features/profiles/api';
 import { toAppError } from '@/lib/errors';
@@ -44,12 +46,15 @@ export default function AccountScreen() {
         options={{ headerShown: true, title: t('settings.deleteAccount') }}
       />
       <Screen>
-        <Text variant="title3">{t('settings.deleteAccount')}</Text>
+        <PageHeader
+          subtitle={t('settings.deleteExplain')}
+          title={t('settings.deleteAccount')}
+        />
 
-        <View style={{ marginTop: theme.spacing.lg, gap: theme.spacing.md }}>
+        <Surface tone="warm" style={{ gap: theme.spacing.md }}>
           <Text color="textSecondary">{t('settings.deleteExplain')}</Text>
           <Text color="textSecondary">{t('settings.deleteArchiveNote')}</Text>
-        </View>
+        </Surface>
 
         <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
           {confirming ? (
@@ -59,6 +64,7 @@ export default function AccountScreen() {
                 disabled={busy}
                 label={t('settings.deleteConfirmAction')}
                 onPress={handleDelete}
+                variant="danger"
               />
               <Button
                 label={t('common.cancel')}
@@ -70,7 +76,7 @@ export default function AccountScreen() {
             <Button
               label={t('settings.deleteAccount')}
               onPress={() => setConfirming(true)}
-              variant="secondary"
+              variant="danger"
             />
           )}
 

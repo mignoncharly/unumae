@@ -28,18 +28,26 @@ export default function TabsLayout() {
         tabBarActiveTintColor: theme.colors.accent,
         tabBarInactiveTintColor: theme.colors.textTertiary,
         tabBarStyle: {
-          backgroundColor: theme.colors.background,
+          backgroundColor: theme.colors.surfaceRaised,
           borderTopColor: theme.colors.border,
+          height: 82,
+          paddingBottom: 12,
+          paddingTop: 8,
+          ...theme.shadows.subtle,
         },
+        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
+        tabBarIconStyle: { marginBottom: 1 },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: t('tabs.today'),
-          // A person, because that is what the tab contains.
+          // Sunrise signals the daily reveal; You keeps the person icon.
+          // Distinct silhouettes make both destinations recognisable at a
+          // glance, including when labels are truncated or obscured.
           tabBarIcon: ({ color, size }) => (
-            <Feather color={color} name="user" size={size} />
+            <Feather color={color} name="sunrise" size={size} />
           ),
         }}
       />
@@ -56,9 +64,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: t('tabs.settings'),
+          title: t('tabs.you'),
           tabBarIcon: ({ color, size }) => (
-            <Feather color={color} name="settings" size={size} />
+            <Feather color={color} name="user" size={size} />
           ),
         }}
       />

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { HumanPortrait } from '@/components/human/HumanPortrait';
+import { RememberAction } from '@/components/human/RememberAction';
 import { YourStanding } from '@/components/human/YourStanding';
 import { AskSheet } from '@/components/questions/AskSheet';
 import { QuestionCard } from '@/components/questions/QuestionCard';
@@ -11,8 +12,11 @@ import { ReportAction } from '@/components/shared/ReportAction';
 import { ShareButton } from '@/components/sharing/ShareButton';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { Screen } from '@/components/ui/Screen';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { Toast } from '@/components/ui/Toast';
 import { useIsAuthenticated } from '@/features/auth/useSession';
@@ -26,6 +30,7 @@ import {
 } from '@/features/daily-human/hooks';
 import { useReport } from '@/features/moderation/hooks';
 import { track } from '@/lib/analytics';
+import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 import { countryName, flagEmoji } from '@/utils/country';
 
@@ -44,7 +49,7 @@ export default function TodayScreen() {
   const { t, i18n } = useTranslation();
   const isAuthenticated = useIsAuthenticated();
 
-  const { data: today, isLoading } = useTodaysHuman();
+  const { data: today, isLoading, isError, error, refetch } = useTodaysHuman();
   const drawId = today?.human.draw_id;
 
   const { data: questions } = useQuestions(drawId);
@@ -72,13 +77,24 @@ export default function TodayScreen() {
   if (isLoading) {
     return (
       <Screen>
-        <View style={{ gap: theme.spacing.lg, marginTop: theme.spacing.xxl }}>
-          <Skeleton height={20} width="40%" />
-          <Skeleton height={44} width="70%" />
-          <Skeleton height={280} />
-          <Skeleton />
-          <Skeleton width="85%" />
+        <Surface tone="accent" style={{ gap: theme.spacing.lg }}>
+          <Skeleton height={16} width="34%" />
+          <Skeleton height={420} radius={theme.radius.xl} />
+          <Skeleton height={52} width="62%" />
+          <Skeleton height={36} width="48%" radius={theme.radius.full} />
+        </Surface>
+        <View style={{ gap: theme.spacing.lg, marginTop: theme.spacing.xl }}>
+          <Skeleton height={150} radius={theme.radius.xl} />
+          <Skeleton height={150} radius={theme.radius.xl} />
         </View>
+      </Screen>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Screen contentContainerStyle={{ justifyContent: 'center' }}>
+        <ErrorState error={toAppError(error)} onRetry={() => void refetch()} />
       </Screen>
     );
   }
@@ -112,6 +128,15 @@ export default function TodayScreen() {
   return (
     <>
       <Screen>
+        <View style={{ marginBottom: theme.spacing.lg }}>
+          <Text
+            color="accent"
+            variant="caption"
+            style={{ fontWeight: '700', letterSpacing: 1.4 }}
+          >
+            {t('common.tagline').toUpperCase()}
+          </Text>
+        </View>
         <HumanPortrait
           city={today.human.city}
           countryCode={today.human.country_code}
@@ -127,23 +152,19 @@ export default function TodayScreen() {
           showTimer
         />
 
-        <View style={{ marginTop: theme.spacing.huge, gap: theme.spacing.md }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text color="textTertiary" variant="footnote">
-              {t('questions.title').toUpperCase()}
-            </Text>
-            <Button
-              label={t('questions.ask')}
-              onPress={() => requireAccount(() => setAskOpen(true))}
-              variant="secondary"
-            />
-          </View>
+        <View style={{ marginTop: theme.spacing.huge, gap: theme.spacing.lg }}>
+          <SectionHeader
+            caption={t('questions.sectionIntro')}
+            title={t('questions.title')}
+            action={
+              <Button
+                icon="edit-3"
+                label={t('questions.ask')}
+                onPress={() => requireAccount(() => setAskOpen(true))}
+                variant="ghost"
+              />
+            }
+          />
 
           {questions && questions.length > 0 ? (
             questions.map((question) => (
@@ -169,7 +190,14 @@ export default function TodayScreen() {
               />
             ))
           ) : (
-            <Text color="textSecondary">{t('questions.empty')}</Text>
+            <EmptyState
+              action={{
+                label: t('questions.ask'),
+                onPress: () => requireAccount(() => setAskOpen(true)),
+              }}
+              icon="message-circle"
+              title={t('questions.empty')}
+            />
           )}
         </View>
 
@@ -178,8 +206,10 @@ export default function TodayScreen() {
             No count, here or anywhere. Remember is a private library, and the
             number of people who kept someone is not a score (Article 9.4).
           */}
-          <Button
+          <RememberAction
             label={remembered ? t('remember.remembered') : t('remember.action')}
+            supportingText={t('remember.meaning')}
+            remembered={Boolean(remembered)}
             onPress={() =>
               requireAccount(() => {
                 remember.mutate(!remembered);
@@ -189,7 +219,6 @@ export default function TodayScreen() {
                 );
               })
             }
-            variant={remembered ? 'secondary' : 'primary'}
           />
 
           {/*
@@ -224,7 +253,20 @@ export default function TodayScreen() {
         <YourStanding />
 
         {/* You reach the end, and it is finished. */}
-        <View style={{ marginTop: theme.spacing.huge, alignItems: 'center' }}>
+        <View
+          style={{
+            marginTop: theme.spacing.huge,
+            alignItems: 'center',
+            gap: theme.spacing.sm,
+          }}
+        >
+          <View
+            style={{
+              height: 1,
+              width: 48,
+              backgroundColor: theme.colors.borderStrong,
+            }}
+          />
           <Text color="textTertiary" variant="footnote">
             {t('today.endOfStory')}
           </Text>

@@ -1,11 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { BrandHero } from '@/components/ui/BrandHero';
 import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { TextField } from '@/components/ui/TextField';
 import { useCreateProfile } from '@/features/profiles/hooks';
@@ -27,6 +30,7 @@ export default function OnboardingProfileScreen() {
   const theme = useTheme();
   const { t } = useTranslation();
   const createProfile = useCreateProfile();
+  const [step, setStep] = useState(1);
 
   const {
     control,
@@ -56,14 +60,47 @@ export default function OnboardingProfileScreen() {
     }
   }
 
+  if (step < 3) {
+    const first = step === 1;
+    return (
+      <Screen
+        scroll={false}
+        contentContainerStyle={{ justifyContent: 'center' }}
+      >
+        <BrandHero
+          body={t(first ? 'onboarding.ideaBody' : 'onboarding.philosophyBody')}
+          step={t('onboarding.step', { current: step, total: 3 })}
+          title={t(
+            first ? 'onboarding.ideaTitle' : 'onboarding.philosophyTitle'
+          )}
+        />
+        <View style={{ gap: theme.spacing.md, marginTop: theme.spacing.xl }}>
+          <Button
+            icon={first ? 'globe' : 'heart'}
+            label={t('onboarding.continue')}
+            onPress={() => setStep((current) => current + 1)}
+          />
+          {step === 2 ? (
+            <Button
+              label={t('common.back')}
+              onPress={() => setStep(1)}
+              variant="ghost"
+            />
+          ) : null}
+        </View>
+      </Screen>
+    );
+  }
+
   return (
     <Screen>
-      <Text variant="title2">{t('profile.title')}</Text>
-      <Text color="textSecondary" style={{ marginTop: theme.spacing.md }}>
-        {t('profile.subtitle')}
-      </Text>
+      <BrandHero
+        body={t('onboarding.profileBody')}
+        step={t('onboarding.step', { current: 3, total: 3 })}
+        title={t('onboarding.profileTitle')}
+      />
 
-      <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.lg }}>
+      <Surface style={{ marginTop: theme.spacing.xl, gap: theme.spacing.lg }}>
         <Controller
           control={control}
           name="username"
@@ -175,7 +212,7 @@ export default function OnboardingProfileScreen() {
         <Text color="textTertiary" variant="footnote">
           {t('profile.privacyNote')}
         </Text>
-      </View>
+      </Surface>
     </Screen>
   );
 }

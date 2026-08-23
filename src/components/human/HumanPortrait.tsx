@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
+import { Icon } from '@/components/ui/Icon';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { useTheme } from '@/theme';
 import { formatHumanNumber } from '@/utils/cycle';
@@ -47,8 +49,9 @@ export interface HumanPortraitProps {
 }
 
 /**
- * The editorial layout. Article 11: the person is the star, the interface is
- * furniture — so there is no card, no border, no chrome around them.
+ * The editorial layout. Article 11: the person is the star, so the portrait
+ * dominates a quiet branded hero and every answer receives a readable,
+ * consistent story surface.
  */
 export function HumanPortrait({
   humanNumber,
@@ -70,51 +73,106 @@ export function HumanPortrait({
 
   return (
     <View style={{ gap: theme.spacing.xl }}>
-      <Text color="textTertiary" variant="mono">
-        {formatHumanNumber(humanNumber)}
-      </Text>
-
-      <View style={{ gap: theme.spacing.xs }}>
-        <Text variant="display">{name}</Text>
-        <CountryBadge city={city} countryCode={countryCode} />
-        {age != null ? (
-          <Text color="textTertiary" variant="footnote">
-            {age}
+      <View
+        style={{
+          backgroundColor: showTimer
+            ? theme.colors.accentSurface
+            : theme.colors.surfaceMuted,
+          borderRadius: theme.radius.xxl,
+          gap: theme.spacing.lg,
+          overflow: 'hidden',
+          padding: theme.spacing.lg,
+        }}
+      >
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text
+            color="accent"
+            variant="mono"
+            style={{ fontSize: 12, fontWeight: '700', letterSpacing: 1.2 }}
+          >
+            {formatHumanNumber(humanNumber)}
           </Text>
-        ) : null}
-        {/*
+          {showTimer ? (
+            <Text
+              color="textTertiary"
+              variant="caption"
+              style={{ fontWeight: '600' }}
+            >
+              {t('today.title').toUpperCase()}
+            </Text>
+          ) : null}
+        </View>
+
+        {photoUri ? (
+          <View
+            style={{
+              borderRadius: theme.radius.xl,
+              overflow: 'hidden',
+              ...theme.shadows.raised,
+            }}
+          >
+            <Image
+              accessibilityIgnoresInvertColors
+              alt={t('portrait.photoOf', { name })}
+              cachePolicy="disk"
+              contentFit="cover"
+              source={{ uri: photoUri }}
+              style={{
+                width: '100%',
+                aspectRatio: 4 / 5,
+                backgroundColor: theme.colors.surfaceMuted,
+              }}
+              transition={200}
+            />
+          </View>
+        ) : (
+          <View
+            accessibilityLabel={t('portrait.photoOf', { name })}
+            accessible
+            style={{
+              alignItems: 'center',
+              aspectRatio: 4 / 5,
+              backgroundColor: theme.colors.surfaceRaised,
+              borderRadius: theme.radius.xl,
+              justifyContent: 'center',
+            }}
+          >
+            <Icon color="textTertiary" name="user" size={40} />
+          </View>
+        )}
+
+        <View
+          style={{ gap: theme.spacing.sm, paddingHorizontal: theme.spacing.xs }}
+        >
+          <Text variant="hero" style={{ letterSpacing: -1.6 }}>
+            {name}
+          </Text>
+          <CountryBadge city={city} countryCode={countryCode} />
+          {age != null ? (
+            <Text color="textTertiary" variant="footnote">
+              {age}
+            </Text>
+          ) : null}
+          {/*
           Deliberately the quietest line on the screen: tertiary, footnote, no
           colour, no pill, no icon. It marks when somebody arrived, and Article
           11 says the person is the star — a badge that competed with their name
           would turn arriving early into a rank.
         */}
-        {founding === true ? (
-          <Text color="textTertiary" variant="footnote">
-            {t('founding.joined')}
-          </Text>
-        ) : null}
+          {founding === true ? (
+            <Text color="textTertiary" variant="footnote">
+              {t('founding.joined')}
+            </Text>
+          ) : null}
+          {showTimer ? <Timer /> : null}
+        </View>
       </View>
-
-      {showTimer ? <Timer /> : null}
-
-      {photoUri ? (
-        <Image
-          accessibilityIgnoresInvertColors
-          // Described rather than named: a screen reader saying only "Aya"
-          // does not tell you it is a photograph of her.
-          alt={t('portrait.photoOf', { name })}
-          cachePolicy="disk"
-          contentFit="cover"
-          source={{ uri: photoUri }}
-          style={{
-            width: '100%',
-            aspectRatio: 4 / 5,
-            borderRadius: theme.radius.md,
-            backgroundColor: theme.colors.surface,
-          }}
-          transition={200}
-        />
-      ) : null}
 
       {/*
         Article 9.6 — a translation is added, never substituted. Somebody's own
@@ -136,24 +194,67 @@ export function HumanPortrait({
         </Pressable>
       ) : null}
 
-      <View style={{ gap: theme.spacing.xxl }}>
+      <View style={{ gap: theme.spacing.xl }}>
         {elements.map((element) => {
           const translated = translations?.[element.id];
           const reading =
             showTranslation && translated ? translated : element.answer;
 
           return (
-            <View key={element.id} style={{ gap: theme.spacing.sm }}>
-              <Text color="textTertiary" variant="footnote">
-                {element.prompt.toUpperCase()}
+            <Surface
+              key={element.id}
+              tone={element === elements[0] ? 'warm' : 'default'}
+              style={{ gap: theme.spacing.md }}
+            >
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  gap: theme.spacing.sm,
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: theme.colors.accentSurface,
+                    borderRadius: theme.radius.full,
+                    height: 28,
+                    width: 28,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Icon
+                    color="accent"
+                    name={
+                      element === elements[0] ? 'message-circle' : 'feather'
+                    }
+                    size={14}
+                  />
+                </View>
+                <Text
+                  color="textTertiary"
+                  variant="caption"
+                  style={{ flex: 1, fontWeight: '700', letterSpacing: 0.8 }}
+                >
+                  {element.prompt.toUpperCase()}
+                </Text>
+              </View>
+              <Text
+                variant={element === elements[0] ? 'title3' : 'callout'}
+                style={
+                  element === elements[0]
+                    ? { fontStyle: 'italic', lineHeight: 30 }
+                    : undefined
+                }
+              >
+                {reading}
               </Text>
-              <Text variant="callout">{reading}</Text>
               {showTranslation && translated ? (
                 <Text color="textTertiary" variant="caption">
                   {t('translation.translated')}
                 </Text>
               ) : null}
-            </View>
+            </Surface>
           );
         })}
       </View>

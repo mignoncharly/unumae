@@ -6,7 +6,10 @@ import { Image, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { TextField } from '@/components/ui/TextField';
 import { Toast } from '@/components/ui/Toast';
@@ -149,7 +152,11 @@ export default function PortraitScreen() {
   if (loading) {
     return (
       <Screen>
-        <Text color="textSecondary">{t('common.loading')}</Text>
+        <Skeleton height={80} radius={theme.radius.xl} />
+        <View style={{ gap: theme.spacing.lg, marginTop: theme.spacing.xl }}>
+          <Skeleton height={320} radius={theme.radius.xl} />
+          <Skeleton height={112} radius={theme.radius.xl} />
+        </View>
       </Screen>
     );
   }
@@ -161,6 +168,7 @@ export default function PortraitScreen() {
         <Screen>
           <EmptyState
             body={t('portrait.notSelectedBody')}
+            icon="feather"
             title={t('portrait.notSelected')}
           />
         </Screen>
@@ -174,13 +182,13 @@ export default function PortraitScreen() {
         options={{ headerShown: true, title: t('portrait.title') }}
       />
       <Screen>
-        <Text variant="title2">{t('portrait.heading')}</Text>
-        <Text color="textSecondary" style={{ marginTop: theme.spacing.md }}>
-          {t('portrait.intro')}
-        </Text>
+        <PageHeader
+          subtitle={t('portrait.intro')}
+          title={t('portrait.heading')}
+        />
 
         {/* Photo first: it is the only required element that is not a prompt. */}
-        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
+        <Surface tone="accent" style={{ gap: theme.spacing.md }}>
           <Text color="textTertiary" variant="footnote">
             {t('portrait.photo').toUpperCase()}
           </Text>
@@ -193,14 +201,15 @@ export default function PortraitScreen() {
               style={{
                 width: '100%',
                 aspectRatio: 4 / 5,
-                borderRadius: theme.radius.md,
-                backgroundColor: theme.colors.surface,
+                borderRadius: theme.radius.xl,
+                backgroundColor: theme.colors.surfaceMuted,
               }}
             />
           ) : null}
 
           <Button
             disabled={busy}
+            icon="camera"
             label={
               hasPhoto ? t('portrait.photoChange') : t('portrait.photoAdd')
             }
@@ -210,9 +219,9 @@ export default function PortraitScreen() {
           <Text color="textTertiary" variant="footnote">
             {t('portrait.photoHint')}
           </Text>
-        </View>
+        </Surface>
 
-        <View style={{ marginTop: theme.spacing.xxxl, gap: theme.spacing.xxl }}>
+        <View style={{ marginTop: theme.spacing.xl, gap: theme.spacing.lg }}>
           {PORTRAIT_PROMPTS.map((prompt) => (
             <TextField
               hint={t(prompt.hintKey)}
@@ -229,7 +238,10 @@ export default function PortraitScreen() {
           ))}
         </View>
 
-        <View style={{ marginTop: theme.spacing.xxxl, gap: theme.spacing.md }}>
+        <Surface
+          tone="accent"
+          style={{ marginTop: theme.spacing.xl, gap: theme.spacing.md }}
+        >
           <Text color="textSecondary">
             {completeness.canSubmit
               ? t('portrait.readyToSubmit')
@@ -243,6 +255,7 @@ export default function PortraitScreen() {
 
           <Button
             disabled={!completeness.canSubmit || busy}
+            icon="send"
             label={t('portrait.submit')}
             onPress={handleSubmit}
           />
@@ -256,7 +269,7 @@ export default function PortraitScreen() {
               {error}
             </Text>
           ) : null}
-        </View>
+        </Surface>
       </Screen>
 
       <Toast

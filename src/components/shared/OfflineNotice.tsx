@@ -1,3 +1,4 @@
+import Feather from '@expo/vector-icons/Feather';
 import NetInfo from '@react-native-community/netinfo';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,13 +38,17 @@ export function OfflineNotice() {
     <View
       accessibilityLiveRegion="polite"
       style={{
-        backgroundColor: theme.colors.surface,
+        alignItems: 'center',
+        backgroundColor: theme.colors.warningSurface,
         borderBottomColor: theme.colors.border,
         borderBottomWidth: 1,
         paddingVertical: theme.spacing.sm,
         paddingHorizontal: theme.spacing.lg,
+        flexDirection: 'row',
+        gap: theme.spacing.sm,
       }}
     >
+      <Feather color={theme.colors.warning} name="wifi-off" size={15} />
       <Text color="textSecondary" variant="footnote">
         {t('offline.notice')}
       </Text>

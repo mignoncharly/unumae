@@ -1,3 +1,4 @@
+import Feather from '@expo/vector-icons/Feather';
 import { useEffect, useState } from 'react';
 import { Animated, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -89,16 +90,38 @@ export function Toast({
     >
       <View
         style={{
-          backgroundColor: theme.colors.surfaceRaised,
+          alignItems: 'center',
+          backgroundColor:
+            theme.scheme === 'dark'
+              ? theme.colors.surfaceRaised
+              : theme.colors.text,
           borderColor: theme.colors.border,
           borderWidth: 1,
           borderRadius: theme.radius.lg,
           paddingVertical: theme.spacing.md,
           paddingHorizontal: theme.spacing.lg,
+          flexDirection: 'row',
+          gap: theme.spacing.md,
           ...theme.shadows.subtle,
         }}
       >
-        <Text style={{ color: toneColor }}>{message}</Text>
+        <Feather
+          color={tone === 'neutral' ? theme.colors.accent : toneColor}
+          name={
+            tone === 'success'
+              ? 'check-circle'
+              : tone === 'danger'
+                ? 'alert-circle'
+                : 'bookmark'
+          }
+          size={18}
+        />
+        <Text
+          color={theme.scheme === 'dark' ? 'text' : 'accentText'}
+          style={{ flex: 1 }}
+        >
+          {message}
+        </Text>
       </View>
     </Animated.View>
   );

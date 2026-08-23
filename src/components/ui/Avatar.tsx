@@ -5,13 +5,14 @@ import { useTheme } from '@/theme';
 
 import { Text } from './Text';
 
-export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
+export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl' | 'hero';
 
 const SIZES: Record<AvatarSize, number> = {
   sm: 32,
   md: 44,
   lg: 64,
   xl: 96,
+  hero: 120,
 };
 
 interface AvatarProps {

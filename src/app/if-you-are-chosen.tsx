@@ -1,8 +1,12 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
+import { ArticleSection } from '@/components/ui/ArticleSection';
+import { Icon } from '@/components/ui/Icon';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import {
   ACCEPTANCE_WINDOW_HOURS,
@@ -25,14 +29,7 @@ import { useTheme } from '@/theme';
  * the product does.
  */
 function Step({ title, body }: { title: string; body: string }) {
-  const theme = useTheme();
-
-  return (
-    <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.sm }}>
-      <Text variant="title3">{title}</Text>
-      <Text color="textSecondary">{body}</Text>
-    </View>
-  );
+  return <ArticleSection title={title}>{body}</ArticleSection>;
 }
 
 export default function IfYouAreChosenScreen() {
@@ -45,29 +42,24 @@ export default function IfYouAreChosenScreen() {
     <>
       <Stack.Screen options={{ headerShown: true, title: t('chosen.title') }} />
       <Screen>
-        <Text variant="title1">{t('chosen.heading')}</Text>
-        <Text
-          color="textSecondary"
-          style={{ marginTop: theme.spacing.md }}
-          variant="callout"
-        >
-          {t('chosen.intro')}
-        </Text>
+        <PageHeader subtitle={t('chosen.intro')} title={t('chosen.heading')} />
 
-        <Step
-          body={t('chosen.acceptBody', { hours: ACCEPTANCE_WINDOW_HOURS })}
-          title={t('chosen.acceptTitle')}
-        />
-        <Step
-          body={t('chosen.writeBody', {
-            min: PORTRAIT_ELEMENTS_MIN,
-            max: PORTRAIT_ELEMENTS_MAX,
-          })}
-          title={t('chosen.writeTitle')}
-        />
-        <Step body={t('chosen.reviewBody')} title={t('chosen.reviewTitle')} />
-        <Step body={t('chosen.liveBody')} title={t('chosen.liveTitle')} />
-        <Step body={t('chosen.afterBody')} title={t('chosen.afterTitle')} />
+        <View style={{ gap: theme.spacing.md }}>
+          <Step
+            body={t('chosen.acceptBody', { hours: ACCEPTANCE_WINDOW_HOURS })}
+            title={t('chosen.acceptTitle')}
+          />
+          <Step
+            body={t('chosen.writeBody', {
+              min: PORTRAIT_ELEMENTS_MIN,
+              max: PORTRAIT_ELEMENTS_MAX,
+            })}
+            title={t('chosen.writeTitle')}
+          />
+          <Step body={t('chosen.reviewBody')} title={t('chosen.reviewTitle')} />
+          <Step body={t('chosen.liveBody')} title={t('chosen.liveTitle')} />
+          <Step body={t('chosen.afterBody')} title={t('chosen.afterTitle')} />
+        </View>
 
         {/*
           The reassurances, listed rather than buried in a paragraph. These are
@@ -75,21 +67,30 @@ export default function IfYouAreChosenScreen() {
           four are false here — which is only worth anything if it is said
           plainly and before somebody has to trust it.
         */}
-        <View style={{ marginTop: theme.spacing.xxxl, gap: theme.spacing.md }}>
+        <Surface
+          tone="accent"
+          style={{ marginTop: theme.spacing.xl, gap: theme.spacing.md }}
+        >
           <Text variant="title3">{t('chosen.neverTitle')}</Text>
           {nevers.map((key) => (
-            <Text color="textSecondary" key={key}>
-              · {t(`chosen.${key}`)}
-            </Text>
+            <View
+              key={key}
+              style={{ flexDirection: 'row', gap: theme.spacing.sm }}
+            >
+              <Icon color="success" name="check" size={17} />
+              <Text color="textSecondary" style={{ flex: 1 }}>
+                {t(`chosen.${key}`)}
+              </Text>
+            </View>
           ))}
-        </View>
+        </Surface>
 
         <View
           style={{
             marginTop: theme.spacing.xxxl,
-            paddingTop: theme.spacing.lg,
-            borderTopWidth: StyleSheet.hairlineWidth,
-            borderTopColor: theme.colors.border,
+            padding: theme.spacing.lg,
+            backgroundColor: theme.colors.surfaceWarm,
+            borderRadius: theme.radius.lg,
           }}
         >
           <Text color="textTertiary" variant="footnote">

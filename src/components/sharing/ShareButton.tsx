@@ -67,6 +67,7 @@ export function ShareButton({
     <>
       <Button
         disabled={busy}
+        icon="send"
         label={t('sharing.share')}
         onPress={() => void handleShare()}
         variant="secondary"

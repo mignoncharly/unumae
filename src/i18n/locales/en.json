@@ -6,12 +6,14 @@
     "retry": "Try again",
     "cancel": "Cancel",
     "close": "Close",
-    "error": "Something went wrong"
+    "error": "Something went wrong",
+    "back": "Back"
   },
   "tabs": {
     "today": "Today",
     "archive": "Archive",
-    "settings": "Settings"
+    "settings": "Settings",
+    "you": "You"
   },
   "today": {
     "title": "Today",
@@ -36,7 +38,8 @@
     "moderationNote": "Every question is read before it is shown. Ask what you would ask a stranger you respected.",
     "voted": "Added to the questions they will see",
     "askFailed": "Could not send that question. Please try again.",
-    "voteFailed": "Could not register that. Please try again."
+    "voteFailed": "Could not register that. Please try again.",
+    "sectionIntro": "One meaningful question can open an unexpected door."
   },
   "remember": {
     "action": "Remember this Human",
@@ -45,7 +48,8 @@
     "empty": "You have not remembered anyone yet.",
     "added": "Added to your library",
     "removed": "Removed from your library",
-    "failed": "Could not save that. Please try again."
+    "failed": "Could not save that. Please try again.",
+    "meaning": "Keep this person and their story in your private archive."
   },
   "report": {
     "action": "Report",
@@ -84,7 +88,10 @@
     "notFound": "That Human is not in the Archive.",
     "noMatch": "Nobody here yet",
     "noMatchBody": "No Human matches that filter. Try another country or year.",
-    "dayIsOver": "Their day was {{date}}."
+    "dayIsOver": "Their day was {{date}}.",
+    "explore": "Explore the Human Archive",
+    "exploreHint": "A growing record of people, places and ordinary lives.",
+    "recent": "Recently featured"
   },
   "settings": {
     "title": "Settings",
@@ -117,7 +124,18 @@
     "accessibility": "Accessibility",
     "haptics": "Vibration",
     "hapticsHint": "A light tap when something is saved. Nothing else.",
-    "shareCard": "Share card"
+    "shareCard": "Share card",
+    "subtitle": "Your place in Unumae, shaped around privacy and choice.",
+    "guestTitle": "A quiet place to meet people",
+    "profile": "Profile",
+    "eligibilityHint": "See your status and how the draw works.",
+    "experience": "Experience",
+    "notificationsHint": "Only the moments you choose.",
+    "appearance": "Appearance",
+    "privacySafety": "Privacy & safety",
+    "privacyHint": "Control your location and export your data.",
+    "aboutUnumae": "About Unumae",
+    "accountActions": "Account actions"
   },
   "connection": {
     "checking": "Checking…",
@@ -146,7 +164,10 @@
     "emailFailed": "Could not send the code. Check the address and try again.",
     "codeInvalid": "That code is not valid or has expired.",
     "appleUnavailable": "Sign in with Apple is not available on this device.",
-    "appleNeedsBuild": "Sign in with Apple needs a development build — it cannot work in Expo Go. Use the email code below."
+    "appleNeedsBuild": "Sign in with Apple needs a development build — it cannot work in Expo Go. Use the email code below.",
+    "valueTitle": "Meet one person from Earth. Every day.",
+    "valueBody": "Read real stories, ask something meaningful, and keep the people you do not want to forget.",
+    "codePlaceholder": "Your code"
   },
   "errors": {
     "notFound": "This page does not exist.",
@@ -171,7 +192,30 @@
     "save": "Save",
     "saveFailed": "Could not save your profile. Please try again.",
     "finish": "Finish setting up your profile",
-    "privacyNote": "Your country is the only location we ever require. We never ask where you are."
+    "privacyNote": "Your country is the only location we ever require. We never ask where you are.",
+    "edit": "Edit profile",
+    "editSubtitle": "Keep it personal and simple. Nothing here becomes a popularity signal.",
+    "languages": "Languages",
+    "languagesHint": "Comma-separated language codes, for example en, de."
+  },
+  "onboarding": {
+    "step": "Step {{current}} of {{total}}",
+    "ideaTitle": "8 billion people. One today.",
+    "ideaBody": "Each day, the world pauses for one real person and the story only they can tell.",
+    "philosophyTitle": "No followers. No popularity contest.",
+    "philosophyBody": "Attention is shared by chance, not earned through numbers. Everyone gets the same possibility of being seen.",
+    "profileTitle": "One day, it could be you.",
+    "profileBody": "Tell us only what is needed for the fair daily selection. You stay in control of what becomes public.",
+    "continue": "Continue"
+  },
+  "appearance": {
+    "title": "Appearance",
+    "subtitle": "Choose how Unumae looks on this device.",
+    "options": {
+      "system": "Follow system",
+      "light": "Light",
+      "dark": "Dark"
+    }
   },
   "eligibility": {
     "title": "The daily draw",

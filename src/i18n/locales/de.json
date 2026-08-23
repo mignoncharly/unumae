@@ -6,12 +6,14 @@
     "retry": "Erneut versuchen",
     "cancel": "Abbrechen",
     "close": "Schließen",
-    "error": "Etwas ist schiefgelaufen"
+    "error": "Etwas ist schiefgelaufen",
+    "back": "Zurück"
   },
   "tabs": {
     "today": "Heute",
     "archive": "Archiv",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "you": "Du"
   },
   "today": {
     "title": "Heute",
@@ -36,7 +38,8 @@
     "moderationNote": "Jede Frage wird gelesen, bevor sie erscheint. Frage, was du einem Fremden fragen würdest, den du respektierst.",
     "voted": "Zu den Fragen hinzugefügt, die sie sehen",
     "askFailed": "Frage konnte nicht gesendet werden. Bitte versuche es erneut.",
-    "voteFailed": "Konnte nicht gespeichert werden. Bitte versuche es erneut."
+    "voteFailed": "Konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "sectionIntro": "Eine ehrliche Frage kann eine unerwartete Tür öffnen."
   },
   "remember": {
     "action": "An diesen Human erinnern",
@@ -45,7 +48,8 @@
     "empty": "Du hast dir noch niemanden gemerkt.",
     "added": "Zu deiner Bibliothek hinzugefügt",
     "removed": "Aus deiner Bibliothek entfernt",
-    "failed": "Konnte nicht gespeichert werden. Bitte versuche es erneut."
+    "failed": "Konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "meaning": "Bewahre diese Person und ihre Geschichte in deinem privaten Archiv."
   },
   "report": {
     "action": "Melden",
@@ -84,7 +88,10 @@
     "notFound": "Dieser Human ist nicht im Archiv.",
     "noMatch": "Hier ist noch niemand",
     "noMatchBody": "Kein Human passt zu diesem Filter. Versuche ein anderes Land oder Jahr.",
-    "dayIsOver": "Ihr Tag war der {{date}}."
+    "dayIsOver": "Ihr Tag war der {{date}}.",
+    "explore": "Das Human Archive entdecken",
+    "exploreHint": "Eine wachsende Sammlung von Menschen, Orten und gewöhnlichen Leben.",
+    "recent": "Kürzlich vorgestellt"
   },
   "settings": {
     "title": "Einstellungen",
@@ -117,7 +124,18 @@
     "accessibility": "Barrierefreiheit",
     "haptics": "Vibration",
     "hapticsHint": "Ein leichtes Tippen, wenn etwas gespeichert wird. Sonst nichts.",
-    "shareCard": "Teilen-Karte"
+    "shareCard": "Teilen-Karte",
+    "subtitle": "Dein Platz in Unumae – gestaltet für Privatsphäre und freie Entscheidungen.",
+    "guestTitle": "Ein ruhiger Ort, um Menschen zu begegnen",
+    "profile": "Profil",
+    "eligibilityHint": "Sieh deinen Status und wie die Auswahl funktioniert.",
+    "experience": "Erlebnis",
+    "notificationsHint": "Nur die Momente, die du auswählst.",
+    "appearance": "Darstellung",
+    "privacySafety": "Datenschutz & Sicherheit",
+    "privacyHint": "Bestimme über deinen Ort und exportiere deine Daten.",
+    "aboutUnumae": "Über Unumae",
+    "accountActions": "Kontoaktionen"
   },
   "connection": {
     "checking": "Wird geprüft…",
@@ -146,7 +164,10 @@
     "emailFailed": "Code konnte nicht gesendet werden. Prüfe die Adresse und versuche es erneut.",
     "codeInvalid": "Dieser Code ist ungültig oder abgelaufen.",
     "appleUnavailable": "Anmelden mit Apple ist auf diesem Gerät nicht verfügbar.",
-    "appleNeedsBuild": "Anmelden mit Apple braucht einen Development Build — in Expo Go funktioniert es nicht. Nutze den E-Mail-Code unten."
+    "appleNeedsBuild": "Anmelden mit Apple braucht einen Development Build — in Expo Go funktioniert es nicht. Nutze den E-Mail-Code unten.",
+    "valueTitle": "Begegne jeden Tag einem Menschen von der Erde.",
+    "valueBody": "Lies echte Geschichten, stell eine ehrliche Frage und bewahre die Menschen, die du nicht vergessen möchtest.",
+    "codePlaceholder": "Dein Code"
   },
   "errors": {
     "notFound": "Diese Seite existiert nicht.",
@@ -171,7 +192,30 @@
     "save": "Speichern",
     "saveFailed": "Dein Profil konnte nicht gespeichert werden. Bitte versuche es erneut.",
     "finish": "Profil fertig einrichten",
-    "privacyNote": "Dein Land ist der einzige Ort, den wir je verlangen. Wir fragen nie, wo du bist."
+    "privacyNote": "Dein Land ist der einzige Ort, den wir je verlangen. Wir fragen nie, wo du bist.",
+    "edit": "Profil bearbeiten",
+    "editSubtitle": "Persönlich und einfach. Nichts hier wird zu einem Beliebtheitssignal.",
+    "languages": "Sprachen",
+    "languagesHint": "Sprachcodes durch Kommas getrennt, zum Beispiel de, en."
+  },
+  "onboarding": {
+    "step": "Schritt {{current}} von {{total}}",
+    "ideaTitle": "8 Milliarden Menschen. Einer heute.",
+    "ideaBody": "Jeden Tag hält die Welt für einen echten Menschen und die Geschichte inne, die nur er erzählen kann.",
+    "philosophyTitle": "Keine Follower. Kein Beliebtheitswettbewerb.",
+    "philosophyBody": "Aufmerksamkeit wird durch Zufall geteilt, nicht durch Zahlen verdient. Alle haben dieselbe Möglichkeit, gesehen zu werden.",
+    "profileTitle": "Eines Tages könntest du es sein.",
+    "profileBody": "Sag uns nur, was für die faire tägliche Auswahl nötig ist. Du bestimmst, was öffentlich wird.",
+    "continue": "Weiter"
+  },
+  "appearance": {
+    "title": "Darstellung",
+    "subtitle": "Wähle, wie Unumae auf diesem Gerät aussieht.",
+    "options": {
+      "system": "Systemeinstellung",
+      "light": "Hell",
+      "dark": "Dunkel"
+    }
   },
   "eligibility": {
     "title": "Die tägliche Auswahl",

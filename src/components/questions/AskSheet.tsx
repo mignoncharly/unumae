@@ -69,6 +69,7 @@ export function AskSheet({ visible, onClose, onSubmit }: AskSheetProps) {
 
         <Button
           disabled={!canSubmit}
+          icon="send"
           label={t('questions.send')}
           onPress={handleSubmit}
         />

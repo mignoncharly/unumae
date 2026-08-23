@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppleSignInButton } from '@/components/shared/AppleSignInButton';
+import { BrandHero } from '@/components/ui/BrandHero';
 import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
@@ -69,12 +70,13 @@ export default function SignInScreen() {
 
   return (
     <Screen>
-      <Text variant="title2">{t('auth.signIn')}</Text>
-      <Text color="textSecondary" style={{ marginTop: theme.spacing.md }}>
-        {t('auth.signInPrompt')}
-      </Text>
+      <BrandHero body={t('auth.valueBody')} title={t('auth.valueTitle')} />
 
-      <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.lg }}>
+      <View style={{ marginTop: theme.spacing.xl, gap: theme.spacing.lg }}>
+        <Text variant="title3" style={{ fontWeight: '600' }}>
+          {t('auth.signIn')}
+        </Text>
+        <Text color="textSecondary">{t('auth.signInPrompt')}</Text>
         <AppleSignInButton onPress={handleApple} />
 
         <TextField
@@ -96,7 +98,7 @@ export default function SignInScreen() {
         />
       </View>
 
-      <View style={{ marginTop: theme.spacing.xxxl, gap: theme.spacing.md }}>
+      <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
         <Text color="textTertiary" variant="footnote">
           {t('auth.guestNotice')}
         </Text>

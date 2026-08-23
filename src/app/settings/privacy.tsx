@@ -2,9 +2,13 @@ import * as Clipboard from 'expo-clipboard';
 import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch, View } from 'react-native';
+import { View } from 'react-native';
 
+import { ArticleSection } from '@/components/ui/ArticleSection';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { ListGroup, ListRow, SettingsSwitch } from '@/components/ui/ListGroup';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { Toast } from '@/components/ui/Toast';
@@ -51,35 +55,29 @@ export default function PrivacyScreen() {
         options={{ headerShown: true, title: t('privacy.title') }}
       />
       <Screen>
-        <Text variant="title3">{t('privacy.heading')}</Text>
-        <Text color="textSecondary" style={{ marginTop: theme.spacing.md }}>
-          {t('privacy.countryNote')}
-        </Text>
+        <PageHeader
+          subtitle={t('privacy.countryNote')}
+          title={t('privacy.heading')}
+        />
 
         {profile?.city ? (
-          <View
-            style={{
-              marginTop: theme.spacing.xxl,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: theme.spacing.lg,
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <Text>{t('privacy.hideCity')}</Text>
-              <Text color="textTertiary" variant="footnote">
-                {t('privacy.hideCityHint', { city: profile.city })}
-              </Text>
-            </View>
-            <Switch
-              accessibilityLabel={t('privacy.hideCity')}
-              onValueChange={(value) =>
-                updateProfile.mutate({ city_hidden: value })
+          <ListGroup>
+            <ListRow
+              first
+              icon="map-pin"
+              subtitle={t('privacy.hideCityHint', { city: profile.city })}
+              title={t('privacy.hideCity')}
+              trailing={
+                <SettingsSwitch
+                  label={t('privacy.hideCity')}
+                  onValueChange={(value) =>
+                    updateProfile.mutate({ city_hidden: value })
+                  }
+                  value={profile.city_hidden}
+                />
               }
-              value={profile.city_hidden}
             />
-          </View>
+          </ListGroup>
         ) : null}
 
         <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
@@ -89,6 +87,7 @@ export default function PrivacyScreen() {
           <Text color="textSecondary">{t('privacy.exportExplain')}</Text>
           <Button
             disabled={busy}
+            icon="download"
             label={t('privacy.export')}
             onPress={handleExport}
             variant="secondary"
@@ -100,16 +99,25 @@ export default function PrivacyScreen() {
           ) : null}
         </View>
 
-        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.sm }}>
-          <Text color="textTertiary" variant="footnote">
-            {t('privacy.neverCollected').toUpperCase()}
-          </Text>
-          {['location', 'contacts', 'tracking', 'ads'].map((key) => (
-            <Text color="textSecondary" key={key}>
-              · {t(`privacy.never.${key}`)}
-            </Text>
-          ))}
-        </View>
+        <ArticleSection
+          icon="shield"
+          title={t('privacy.neverCollected')}
+          tone="accent"
+        >
+          <View style={{ gap: theme.spacing.md }}>
+            {['location', 'contacts', 'tracking', 'ads'].map((key) => (
+              <View
+                key={key}
+                style={{ flexDirection: 'row', gap: theme.spacing.sm }}
+              >
+                <Icon color="success" name="check" size={17} />
+                <Text color="textSecondary" style={{ flex: 1 }}>
+                  {t(`privacy.never.${key}`)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </ArticleSection>
       </Screen>
 
       <Toast

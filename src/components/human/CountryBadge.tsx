@@ -28,13 +28,22 @@ export function CountryBadge({
       accessibilityLabel={countryName(countryCode, i18n.language)}
       accessible
       style={{
+        alignSelf: 'flex-start',
         flexDirection: 'row',
         alignItems: 'center',
         gap: theme.spacing.sm,
+        backgroundColor: theme.colors.surfaceMuted,
+        borderRadius: theme.radius.full,
+        minHeight: 36,
+        paddingHorizontal: theme.spacing.md,
       }}
     >
-      {flag ? <Text variant="callout">{flag}</Text> : null}
-      <Text color="textSecondary" variant="callout">
+      {flag ? <Text>{flag}</Text> : null}
+      <Text
+        color="textSecondary"
+        variant="footnote"
+        style={{ fontWeight: '600' }}
+      >
         {label}
       </Text>
     </View>

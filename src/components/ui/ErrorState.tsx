@@ -5,6 +5,8 @@ import type { AppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 
 import { Button } from './Button';
+import { Icon } from './Icon';
+import { Surface } from './Surface';
 import { Text } from './Text';
 
 interface ErrorStateProps {
@@ -22,14 +24,26 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
   const { t } = useTranslation();
 
   return (
-    <View
+    <Surface
+      tone="warm"
       style={{
         alignItems: 'center',
-        paddingVertical: theme.spacing.xxxl,
-        paddingHorizontal: theme.spacing.xl,
         gap: theme.spacing.md,
+        paddingVertical: theme.spacing.xxxl,
       }}
     >
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: theme.colors.dangerSurface,
+          borderRadius: theme.radius.full,
+          height: 56,
+          justifyContent: 'center',
+          width: 56,
+        }}
+      >
+        <Icon color="danger" name="wifi-off" size={24} />
+      </View>
       <Text variant="title3" color="danger" style={{ textAlign: 'center' }}>
         {t(error.messageKey)}
       </Text>
@@ -40,6 +54,6 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
           variant="secondary"
         />
       ) : null}
-    </View>
+    </Surface>
   );
 }

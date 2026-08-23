@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/theme';
@@ -11,6 +17,8 @@ interface ScreenProps {
    * nothing in this app loads more content as you reach the end.
    */
   scroll?: boolean;
+  padded?: boolean;
+  contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
 /**
@@ -25,7 +33,12 @@ interface ScreenProps {
  * With the inset on an outer frame, scrolled content is clipped at the frame
  * edge and cannot reach the status bar at all.
  */
-export function Screen({ children, scroll = true }: ScreenProps) {
+export function Screen({
+  children,
+  scroll = true,
+  padded = true,
+  contentContainerStyle,
+}: ScreenProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -35,16 +48,34 @@ export function Screen({ children, scroll = true }: ScreenProps) {
   ];
 
   if (!scroll) {
-    return <View style={frame}>{children}</View>;
+    return (
+      <View
+        style={[
+          frame,
+          padded && styles.content,
+          padded && { paddingBottom: insets.bottom + theme.spacing.xl },
+          contentContainerStyle,
+        ]}
+      >
+        {children}
+      </View>
+    );
   }
 
   return (
     <View style={frame}>
       <ScrollView
-        contentContainerStyle={{
-          padding: theme.spacing.xl,
-          paddingBottom: insets.bottom + theme.spacing.xxxl,
-        }}
+        contentInsetAdjustmentBehavior="never"
+        keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          padded && styles.content,
+          padded && {
+            paddingBottom: insets.bottom + theme.spacing.huge,
+          },
+          contentContainerStyle,
+        ]}
       >
         {children}
       </ScrollView>
@@ -54,4 +85,11 @@ export function Screen({ children, scroll = true }: ScreenProps) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  content: {
+    alignSelf: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    width: '100%',
+    maxWidth: 680,
+  },
 });

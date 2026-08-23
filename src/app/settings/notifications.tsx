@@ -1,10 +1,13 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Switch, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
+import { ListGroup, ListRow, SettingsSwitch } from '@/components/ui/ListGroup';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { Toast } from '@/components/ui/Toast';
 import {
@@ -72,44 +75,43 @@ export default function NotificationsScreen() {
         options={{ headerShown: true, title: t('notifications.title') }}
       />
       <Screen>
-        <Text variant="title3">{t('notifications.heading')}</Text>
-        <Text color="textSecondary" style={{ marginTop: theme.spacing.md }}>
-          {t('notifications.intro')}
-        </Text>
+        <PageHeader
+          subtitle={t('notifications.intro')}
+          title={t('notifications.heading')}
+        />
 
-        <View style={{ marginTop: theme.spacing.xxl }}>
+        <ListGroup>
           {CATEGORIES.map((key) => (
-            <View
+            <ListRow
+              first={key === CATEGORIES[0]}
+              icon={
+                key === 'daily'
+                  ? 'sunrise'
+                  : key === 'selected'
+                    ? 'award'
+                    : key === 'answered'
+                      ? 'message-circle'
+                      : 'calendar'
+              }
               key={key}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: theme.spacing.lg,
-                paddingVertical: theme.spacing.lg,
-                borderTopWidth: StyleSheet.hairlineWidth,
-                borderTopColor: theme.colors.border,
-              }}
-            >
-              <View style={{ flex: 1, gap: theme.spacing.xxs }}>
-                <Text>{t(`notifications.categories.${key}.label`)}</Text>
-                <Text color="textTertiary" variant="footnote">
-                  {t(`notifications.categories.${key}.example`)}
-                </Text>
-              </View>
-              <Switch
-                accessibilityLabel={t(`notifications.categories.${key}.label`)}
-                onValueChange={(value) => toggle(key, value)}
-                value={settings?.[key] ?? false}
-              />
-            </View>
+              subtitle={t(`notifications.categories.${key}.example`)}
+              title={t(`notifications.categories.${key}.label`)}
+              trailing={
+                <SettingsSwitch
+                  label={t(`notifications.categories.${key}.label`)}
+                  onValueChange={(value) => toggle(key, value)}
+                  value={settings?.[key] ?? false}
+                />
+              }
+            />
           ))}
-        </View>
+        </ListGroup>
 
         <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
           {available ? (
             <Button
               disabled={busy}
+              icon="bell"
               label={t('notifications.enable')}
               onPress={handleEnable}
               variant="secondary"
@@ -129,11 +131,11 @@ export default function NotificationsScreen() {
           ) : null}
         </View>
 
-        <View style={{ marginTop: theme.spacing.xxl }}>
+        <Surface tone="accent" style={{ marginTop: theme.spacing.xxl }}>
           <Text color="textTertiary" variant="footnote">
             {t('notifications.promise')}
           </Text>
-        </View>
+        </Surface>
       </Screen>
 
       <Toast

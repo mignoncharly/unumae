@@ -1,3 +1,4 @@
+import Feather from '@expo/vector-icons/Feather';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -67,7 +68,13 @@ export function LanguageSelector() {
             }}
           >
             <Text>{option.label}</Text>
-            {selected ? <Text color="textSecondary">✓</Text> : null}
+            {selected ? (
+              <Feather
+                color={theme.colors.accent}
+                name="check-circle"
+                size={20}
+              />
+            ) : null}
           </Pressable>
         );
       })}

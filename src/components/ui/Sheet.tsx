@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, Pressable, View } from 'react-native';
+import { Modal, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -43,8 +43,10 @@ export function Sheet({ visible, onClose, title, children }: SheetProps) {
       <View
         style={{
           backgroundColor: theme.colors.surfaceRaised,
-          borderTopLeftRadius: theme.radius.xl,
-          borderTopRightRadius: theme.radius.xl,
+          borderColor: theme.colors.border,
+          borderTopLeftRadius: theme.radius.xxl,
+          borderTopRightRadius: theme.radius.xxl,
+          borderWidth: 1,
           padding: theme.spacing.xl,
           paddingBottom: insets.bottom + theme.spacing.xl,
           gap: theme.spacing.lg,
@@ -59,8 +61,17 @@ export function Sheet({ visible, onClose, title, children }: SheetProps) {
             backgroundColor: theme.colors.border,
           }}
         />
-        {title ? <Text variant="title3">{title}</Text> : null}
-        {children}
+        {title ? (
+          <Text variant="title2" style={{ fontWeight: '600' }}>
+            {title}
+          </Text>
+        ) : null}
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {children}
+        </ScrollView>
       </View>
     </Modal>
   );

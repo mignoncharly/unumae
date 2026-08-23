@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { BrandHero } from '@/components/ui/BrandHero';
 import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
-import { Text } from '@/components/ui/Text';
 import { TextField } from '@/components/ui/TextField';
 import { sendEmailCode, verifyEmailCode } from '@/features/auth/api';
 import { track } from '@/lib/analytics';
@@ -62,10 +62,10 @@ export default function VerifyScreen() {
 
   return (
     <Screen>
-      <Text variant="title2">{t('auth.codeTitle')}</Text>
-      <Text color="textSecondary" style={{ marginTop: theme.spacing.md }}>
-        {t('auth.codeSent', { email })}
-      </Text>
+      <BrandHero
+        body={t('auth.codeSent', { email })}
+        title={t('auth.codeTitle')}
+      />
 
       <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.lg }}>
         <TextField
@@ -77,7 +77,7 @@ export default function VerifyScreen() {
           label={t('auth.codeLabel')}
           maxLength={CODE_MAX_LENGTH}
           onChangeText={setCode}
-          placeholder="000000"
+          placeholder={t('auth.codePlaceholder')}
           textContentType="oneTimeCode"
           value={code}
         />

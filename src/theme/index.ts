@@ -1,5 +1,7 @@
 import { useColorScheme } from 'react-native';
 
+import { usePreferences } from '@/stores/preferences';
+
 import { colors, tokens, type ColorScheme } from './tokens';
 
 export * from './tokens';
@@ -9,7 +11,11 @@ export * from './tokens';
  * theming system to configure, only light and dark.
  */
 export function useTheme() {
-  const scheme: ColorScheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const systemScheme: ColorScheme =
+    useColorScheme() === 'dark' ? 'dark' : 'light';
+  const appearance = usePreferences((state) => state.appearance);
+  const scheme: ColorScheme =
+    appearance === 'light' || appearance === 'dark' ? appearance : systemScheme;
 
   return {
     scheme,

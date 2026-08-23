@@ -1,3 +1,4 @@
+import Feather from '@expo/vector-icons/Feather';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
@@ -51,9 +52,18 @@ export function ReportAction({ onReport, onBlock }: ReportActionProps) {
         onPress={() => setOpen(true)}
         style={{ minHeight: 44, justifyContent: 'center' }}
       >
-        <Text color="textTertiary" variant="footnote">
-          {t('report.action')}
-        </Text>
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: theme.spacing.sm,
+          }}
+        >
+          <Feather color={theme.colors.textTertiary} name="flag" size={14} />
+          <Text color="textTertiary" variant="footnote">
+            {t('report.action')}
+          </Text>
+        </View>
       </Pressable>
 
       <Sheet
@@ -70,9 +80,27 @@ export function ReportAction({ onReport, onBlock }: ReportActionProps) {
                 setOpen(false);
                 onReport(reason);
               }}
-              style={{ minHeight: 44, justifyContent: 'center' }}
+              style={{
+                minHeight: 52,
+                justifyContent: 'center',
+                borderBottomColor: theme.colors.border,
+                borderBottomWidth: 1,
+              }}
             >
-              <Text>{t(`report.reasons.${reason}`)}</Text>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  gap: theme.spacing.md,
+                }}
+              >
+                <Feather
+                  color={theme.colors.textTertiary}
+                  name="circle"
+                  size={14}
+                />
+                <Text>{t(`report.reasons.${reason}`)}</Text>
+              </View>
             </Pressable>
           ))}
 

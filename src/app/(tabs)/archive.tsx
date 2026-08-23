@@ -1,12 +1,16 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { ArchiveCard } from '@/components/archive/ArchiveCard';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Pill } from '@/components/ui/Pill';
 import { Screen } from '@/components/ui/Screen';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
 import {
@@ -17,6 +21,7 @@ import {
   useRandomHuman,
 } from '@/features/archive/hooks';
 import { track } from '@/lib/analytics';
+import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 import { countryName, flagEmoji } from '@/utils/country';
 
@@ -34,7 +39,13 @@ export default function ArchiveScreen() {
   const [country, setCountry] = useState<string | null>(null);
   const [year, setYear] = useState<number | null>(null);
 
-  const { data: entries, isLoading } = useArchive({ country, year });
+  const {
+    data: entries,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useArchive({ country, year });
   const { data: anniversaries } = useAnniversaries();
   const { data: countries } = useArchiveCountries();
   const { data: years } = useArchiveYears();
@@ -50,18 +61,16 @@ export default function ArchiveScreen() {
 
   return (
     <Screen>
-      <Text variant="title1">{t('archive.title')}</Text>
-      <Text
-        color="textSecondary"
-        style={{ marginTop: theme.spacing.sm }}
-        variant="callout"
-      >
-        {t('archive.subtitle')}
-      </Text>
+      <PageHeader
+        eyebrow={t('common.tagline')}
+        subtitle={t('archive.subtitle')}
+        title={t('archive.title')}
+      />
 
       {/* One year ago today. Empty until the Archive is old enough to have one. */}
       {anniversaries && anniversaries.length > 0 ? (
-        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
+        <View style={{ gap: theme.spacing.md }}>
+          <SectionHeader title={t('archive.oneYearAgo')} />
           {anniversaries.map((entry) => (
             <View key={entry.years_ago} style={{ gap: theme.spacing.xs }}>
               <Text color="textTertiary" variant="footnote">
@@ -83,9 +92,10 @@ export default function ArchiveScreen() {
         </View>
       ) : null}
 
-      <View style={{ marginTop: theme.spacing.xxl }}>
+      <View style={{ marginTop: theme.spacing.xl }}>
         <Button
           disabled={randomHuman.isPending}
+          icon="shuffle"
           label={t('archive.randomHuman')}
           onPress={() =>
             randomHuman.mutate(country, {
@@ -102,8 +112,16 @@ export default function ArchiveScreen() {
 
       {/* Filters. Alphabetical and chronological — never ordered by count. */}
       {countries && countries.length > 0 ? (
-        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.sm }}>
-          <Text color="textTertiary" variant="footnote">
+        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
+          <SectionHeader
+            title={t('archive.explore')}
+            caption={t('archive.exploreHint')}
+          />
+          <Text
+            color="textTertiary"
+            variant="caption"
+            style={{ fontWeight: '700', letterSpacing: 1 }}
+          >
             {t('archive.byCountry').toUpperCase()}
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -131,7 +149,11 @@ export default function ArchiveScreen() {
 
       {years && years.length > 0 ? (
         <View style={{ marginTop: theme.spacing.lg, gap: theme.spacing.sm }}>
-          <Text color="textTertiary" variant="footnote">
+          <Text
+            color="textTertiary"
+            variant="caption"
+            style={{ fontWeight: '700', letterSpacing: 1 }}
+          >
             {t('archive.byYear').toUpperCase()}
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -155,31 +177,41 @@ export default function ArchiveScreen() {
       ) : null}
 
       <View style={{ marginTop: theme.spacing.xxl }}>
-        {isLoading ? (
-          <View style={{ gap: theme.spacing.lg }}>
-            <Skeleton height={70} />
-            <Skeleton height={70} />
-            <Skeleton height={70} />
-          </View>
-        ) : entries && entries.length > 0 ? (
-          entries.map((entry) => (
-            <ArchiveCard
-              countryCode={entry.country_code}
-              displayName={entry.display_name}
-              humanNumber={entry.human_number}
-              isRemoved={entry.is_removed}
-              key={entry.draw_id}
-              onPress={() => openHuman(entry.draw_id)}
-              photoPath={entry.photo_path}
-              selectionDate={entry.selection_date}
+        <SectionHeader title={t('archive.recent')} />
+        <View style={{ marginTop: theme.spacing.lg }}>
+          {isLoading ? (
+            <View style={{ gap: theme.spacing.lg }}>
+              <Skeleton height={134} radius={theme.radius.xl} />
+              <Skeleton height={134} radius={theme.radius.xl} />
+              <Skeleton height={134} radius={theme.radius.xl} />
+            </View>
+          ) : isError ? (
+            <ErrorState
+              error={toAppError(error)}
+              onRetry={() => void refetch()}
             />
-          ))
-        ) : (
-          <EmptyState
-            {...(country || year ? { body: t('archive.noMatchBody') } : {})}
-            title={country || year ? t('archive.noMatch') : t('archive.empty')}
-          />
-        )}
+          ) : entries && entries.length > 0 ? (
+            entries.map((entry) => (
+              <ArchiveCard
+                countryCode={entry.country_code}
+                displayName={entry.display_name}
+                humanNumber={entry.human_number}
+                isRemoved={entry.is_removed}
+                key={entry.draw_id}
+                onPress={() => openHuman(entry.draw_id)}
+                photoPath={entry.photo_path}
+                selectionDate={entry.selection_date}
+              />
+            ))
+          ) : (
+            <EmptyState
+              {...(country || year ? { body: t('archive.noMatchBody') } : {})}
+              title={
+                country || year ? t('archive.noMatch') : t('archive.empty')
+              }
+            />
+          )}
+        </View>
       </View>
     </Screen>
   );
@@ -194,29 +226,5 @@ function Chip({
   selected: boolean;
   onPress: () => void;
 }) {
-  const theme = useTheme();
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ selected }}
-      onPress={onPress}
-      style={{
-        paddingHorizontal: theme.spacing.lg,
-        minHeight: 44,
-        justifyContent: 'center',
-        borderRadius: theme.radius.full,
-        borderWidth: 1,
-        borderColor: selected ? theme.colors.accent : theme.colors.border,
-        backgroundColor: selected ? theme.colors.accent : 'transparent',
-      }}
-    >
-      <Text
-        color={selected ? 'accentText' : 'textSecondary'}
-        variant="footnote"
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
+  return <Pill label={label} onPress={onPress} selected={selected} />;
 }

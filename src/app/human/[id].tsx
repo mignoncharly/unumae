@@ -7,6 +7,7 @@ import { HumanPortrait } from '@/components/human/HumanPortrait';
 import { QuestionCard } from '@/components/questions/QuestionCard';
 import { ShareButton } from '@/components/sharing/ShareButton';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { Screen } from '@/components/ui/Screen';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
@@ -15,6 +16,7 @@ import { useHuman } from '@/features/archive/hooks';
 import { getPortraitElements } from '@/features/daily-human/api';
 import { useQuestions } from '@/features/daily-human/hooks';
 import type { PortraitElementKey } from '@/features/portraits/prompts';
+import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 import { countryName, flagEmoji } from '@/utils/country';
 
@@ -30,7 +32,7 @@ export default function HumanScreen() {
   const { t, i18n } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const { data: human, isLoading } = useHuman(id);
+  const { data: human, isLoading, isError, error, refetch } = useHuman(id);
   const { data: questions } = useQuestions(human?.is_removed ? undefined : id);
 
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
@@ -68,12 +70,26 @@ export default function HumanScreen() {
     );
   }
 
+  if (isError) {
+    return (
+      <>
+        <Stack.Screen options={{ headerShown: true, title: '' }} />
+        <Screen contentContainerStyle={{ justifyContent: 'center' }}>
+          <ErrorState
+            error={toAppError(error)}
+            onRetry={() => void refetch()}
+          />
+        </Screen>
+      </>
+    );
+  }
+
   if (!human) {
     return (
       <>
         <Stack.Screen options={{ headerShown: true, title: '' }} />
         <Screen>
-          <EmptyState title={t('archive.notFound')} />
+          <EmptyState icon="book-open" title={t('archive.notFound')} />
         </Screen>
       </>
     );

@@ -3,9 +3,12 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { BrandHero } from '@/components/ui/BrandHero';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Screen } from '@/components/ui/Screen';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import {
   formatTimeLeft,
@@ -59,7 +62,7 @@ export default function InvitationScreen() {
   if (isLoading) {
     return (
       <Screen>
-        <Text color="textSecondary">{t('common.loading')}</Text>
+        <Skeleton height={280} radius={theme.radius.xxl} />
       </Screen>
     );
   }
@@ -71,6 +74,7 @@ export default function InvitationScreen() {
         <Screen>
           <EmptyState
             body={t('invitation.noneBody')}
+            icon="mail"
             title={t('invitation.none')}
           />
         </Screen>
@@ -82,17 +86,15 @@ export default function InvitationScreen() {
     <>
       <Stack.Screen options={{ headerShown: true, title: '' }} />
       <Screen>
-        <Text variant="display">{t('invitation.title')}</Text>
+        <BrandHero
+          body={t('invitation.body', { date: invitation.selectionDate })}
+          title={t('invitation.title')}
+        />
 
-        <Text
-          color="textSecondary"
-          style={{ marginTop: theme.spacing.lg }}
-          variant="callout"
+        <Surface
+          tone="accent"
+          style={{ marginTop: theme.spacing.xl, gap: theme.spacing.sm }}
         >
-          {t('invitation.body', { date: invitation.selectionDate })}
-        </Text>
-
-        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.sm }}>
           <Text color="textTertiary" variant="footnote">
             {t('invitation.windowLabel').toUpperCase()}
           </Text>
@@ -105,11 +107,12 @@ export default function InvitationScreen() {
           <Text color="textTertiary" variant="footnote">
             {t('invitation.windowHint')}
           </Text>
-        </View>
+        </Surface>
 
         <View style={{ marginTop: theme.spacing.xxxl, gap: theme.spacing.md }}>
           <Button
             disabled={accept.isPending || (left?.expired ?? false)}
+            icon="check"
             label={t('invitation.accept')}
             onPress={() => {
               setError(undefined);
@@ -125,6 +128,7 @@ export default function InvitationScreen() {
 
           <Button
             disabled={decline.isPending}
+            icon="x"
             label={t('invitation.decline')}
             onPress={() => {
               setError(undefined);

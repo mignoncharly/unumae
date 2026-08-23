@@ -57,7 +57,7 @@ export function Skeleton({
         height,
         opacity,
         borderRadius: radius ?? theme.radius.sm,
-        backgroundColor: theme.colors.surface,
+        backgroundColor: theme.colors.surfaceMuted,
       }}
     />
   );

@@ -15,10 +15,13 @@ allowed to be long, and no chrome competing with the person.
 
 Three consequences that decide most design arguments before they start:
 
-1. **No card around a Human.** A card is a container of content. A person is not
-   content. Portraits sit directly on the background.
-2. **No brand colour.** The accent is near-black in light mode and near-white in
-   dark. Nothing in the palette competes with a photograph.
+1. **The portrait owns the hero.** A Human is never reduced to a generic profile
+   row. Portraits are large, image-led and surrounded by quiet editorial
+   context; archive cards remain recognisably about a person rather than a
+   metric.
+2. **Brand colour guides, it does not compete.** Cobalt, indigo and violet mark
+   navigation, actions and selected states. Warm and neutral reading surfaces
+   keep the photograph and the Human's words dominant.
 3. **The screen ends.** Every screen reaches a bottom. Nothing loads more.
 
 ## Tokens
@@ -28,7 +31,7 @@ Three consequences that decide most design arguments before they start:
 
 | Family | Notes |
 | --- | --- |
-| `colors` | Light and dark, identical key sets. Warm off-whites, not pure grey |
+| `colors` | Light and dark, identical key sets. Layered warm-neutral surfaces, semantic state surfaces, and the cobalt/indigo/violet brand family |
 | `spacing` | 4pt scale, `none` → `huge` (64), monotonic |
 | `radius` | `sm` 4 → `xl` 20, plus `full` |
 | `typography` | `caption` 12 → `display` 40, plus a mono family for numbers |
@@ -69,7 +72,7 @@ full mock screen lives in **Settings → UX preview**.
 | Component | Notes |
 | --- | --- |
 | `Text` | Every string goes through it. Variants, colour tokens, one place for Dynamic Type |
-| `Button` | Primary and secondary. 44pt minimum target |
+| `Button` | Primary, secondary, ghost and destructive variants with optional Feather icons. 44pt minimum target |
 | `Avatar` | Image, or a single initial — never a surname (Article 6.3) |
 | `Screen` | Safe-area scroll container that ends |
 | `Skeleton` | Calm pulse, never a shimmer sweep |
@@ -85,6 +88,13 @@ full mock screen lives in **Settings → UX preview**.
 | `ReportAction` | Always reachable, never prominent |
 | `LanguageSelector` | Each language named in its own language |
 | `TextField` | Added in Phase 3. Label, hint, error; the error replaces the hint |
+| `Surface` | The shared elevated, muted, accent, violet and warm reading surfaces |
+| `PageHeader` / `SectionHeader` | Consistent hierarchy for utility and editorial screens |
+| `ListGroup` / `ListRow` | Native-feeling grouped settings and preference sections |
+| `Pill` | Archive filters and compact selected states |
+| `BrandHero` | Wordmark-led dark brand moment for auth, onboarding and invitations |
+| `ArticleSection` | Reusable long-form section treatment for rules and explanatory pages |
+| `RememberAction` | Signature private-archive interaction; never a public Like |
 
 ## Rules that are enforced, not just documented
 

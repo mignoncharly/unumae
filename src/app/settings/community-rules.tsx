@@ -3,8 +3,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { ArticleSection } from '@/components/ui/ArticleSection';
 import { Button } from '@/components/ui/Button';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { acceptCommunityRules } from '@/features/portraits/api';
 import { useMyProfile } from '@/features/profiles/hooks';
@@ -55,27 +58,26 @@ export default function CommunityRulesScreen() {
     <>
       <Stack.Screen options={{ headerShown: true, title: t('rules.title') }} />
       <Screen>
-        <Text variant="title2">{t('rules.heading')}</Text>
-        <Text
-          color="textSecondary"
-          style={{ marginTop: theme.spacing.md }}
-          variant="callout"
-        >
-          {t('rules.intro')}
-        </Text>
+        <PageHeader subtitle={t('rules.intro')} title={t('rules.heading')} />
 
-        <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.xl }}>
+        <View style={{ gap: theme.spacing.md }}>
           {RULE_KEYS.map((key, index) => (
-            <View key={key} style={{ gap: theme.spacing.sm }}>
-              <Text variant="title3">
-                {index + 1}. {t(`rules.${key}.title`)}
-              </Text>
-              <Text color="textSecondary">{t(`rules.${key}.body`)}</Text>
-            </View>
+            <ArticleSection
+              icon={
+                index === 0 ? 'user' : index === 4 ? 'shield' : 'message-circle'
+              }
+              key={key}
+              title={`${index + 1}. ${t(`rules.${key}.title`)}`}
+            >
+              {t(`rules.${key}.body`)}
+            </ArticleSection>
           ))}
         </View>
 
-        <View style={{ marginTop: theme.spacing.xxxl, gap: theme.spacing.md }}>
+        <Surface
+          tone="accent"
+          style={{ marginTop: theme.spacing.xl, gap: theme.spacing.md }}
+        >
           {accepted ? (
             <Text color="textSecondary">{t('rules.alreadyAccepted')}</Text>
           ) : (
@@ -98,7 +100,7 @@ export default function CommunityRulesScreen() {
               {error}
             </Text>
           ) : null}
-        </View>
+        </Surface>
       </Screen>
     </>
   );

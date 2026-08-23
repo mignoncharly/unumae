@@ -1,6 +1,8 @@
+import Feather from '@expo/vector-icons/Feather';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { useTheme } from '@/theme';
 
@@ -28,25 +30,51 @@ export function QuestionCard({
   const { t } = useTranslation();
 
   return (
-    <View
-      style={{
-        gap: theme.spacing.md,
-        paddingVertical: theme.spacing.lg,
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: theme.colors.border,
-      }}
-    >
-      <Text variant="callout">{question}</Text>
+    <Surface style={{ gap: theme.spacing.md }}>
+      <View
+        style={{
+          alignItems: 'flex-start',
+          flexDirection: 'row',
+          gap: theme.spacing.md,
+        }}
+      >
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: theme.colors.accentSurface,
+            borderRadius: theme.radius.full,
+            height: 34,
+            justifyContent: 'center',
+            width: 34,
+          }}
+        >
+          <Feather
+            color={theme.colors.accent}
+            name="message-circle"
+            size={16}
+          />
+        </View>
+        <Text variant="callout" style={{ flex: 1, fontWeight: '500' }}>
+          {question}
+        </Text>
+      </View>
 
       {answer ? (
         <View
           style={{
+            backgroundColor: theme.colors.surfaceWarm,
+            borderRadius: theme.radius.lg,
             gap: theme.spacing.xs,
-            paddingLeft: theme.spacing.lg,
-            borderLeftWidth: 2,
-            borderLeftColor: theme.colors.border,
+            padding: theme.spacing.lg,
           }}
         >
+          <Text
+            color="accent"
+            variant="caption"
+            style={{ fontWeight: '700', letterSpacing: 0.8 }}
+          >
+            {t('questions.answered').toUpperCase()}
+          </Text>
           <Text>{answer}</Text>
         </View>
       ) : null}
@@ -65,18 +93,27 @@ export function QuestionCard({
           disabled={!canVote}
           onPress={onVote}
           style={({ pressed }) => ({
-            flexDirection: 'row',
             alignItems: 'center',
+            backgroundColor: hasVoted
+              ? theme.colors.accentSurface
+              : theme.colors.surfaceMuted,
+            borderRadius: theme.radius.full,
+            flexDirection: 'row',
             gap: theme.spacing.sm,
             minHeight: 44,
-            paddingRight: theme.spacing.sm,
-            opacity: !canVote ? 0.4 : pressed ? 0.6 : 1,
+            paddingHorizontal: theme.spacing.md,
+            opacity: !canVote ? 0.4 : pressed ? 0.62 : 1,
           })}
         >
-          <Text color={hasVoted ? 'accent' : 'textTertiary'}>
-            {hasVoted ? '▲' : '△'}
-          </Text>
-          <Text color={hasVoted ? 'text' : 'textSecondary'} variant="footnote">
+          <Feather
+            color={hasVoted ? theme.colors.accent : theme.colors.textTertiary}
+            name="arrow-up"
+            size={16}
+          />
+          <Text
+            color={hasVoted ? 'accent' : 'textSecondary'}
+            variant="footnote"
+          >
             {t('questions.askThis')}
           </Text>
         </Pressable>
@@ -89,6 +126,6 @@ export function QuestionCard({
           {votes}
         </Text>
       </View>
-    </View>
+    </Surface>
   );
 }

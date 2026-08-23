@@ -1,0 +1,216 @@
+---
+import { homeContent } from '../../content/home';
+import { socialContent } from '../../content/social';
+import type { Locale } from '../../content/site';
+import {
+  prepareHumanShareCard,
+  wrapSocialQuote,
+  type HumanShareCardInput,
+} from '../../lib/share-card';
+
+interface Props {
+  locale: Locale;
+  mode?: 'brand' | 'template' | 'human';
+  human?: HumanShareCardInput;
+}
+
+const { locale, mode = 'brand', human } = Astro.props;
+if (mode === 'human' && !human) {
+  throw new Error('Human social-card mode requires Human data.');
+}
+
+const copy = socialContent[locale];
+const tagline = homeContent[locale].hero;
+const approved =
+  mode === 'human' && human ? prepareHumanShareCard(human) : null;
+const firstName = approved?.firstName ?? copy.templateFirstName;
+const country = approved?.country ?? copy.templateCountry;
+const quote = approved?.quote ?? copy.templateQuote;
+const quoteLines = wrapSocialQuote(quote);
+const accessibleLabel =
+  mode === 'brand'
+    ? copy.imageAlt
+    : `${copy.templateLabel}: ${firstName}, ${country}. ${quote}`;
+---
+
+<svg
+  class:list={[
+    'social-card',
+    {
+      'social-card--fr': locale === 'fr',
+      'social-card--de': locale === 'de',
+    },
+  ]}
+  data-social-card
+  data-card-locale={locale}
+  data-card-mode={mode}
+  viewBox="0 0 1200 630"
+  width="1200"
+  height="630"
+  role="img"
+  aria-label={accessibleLabel}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <rect width="1200" height="630" fill="#f7f7f5"></rect>
+  <rect x="38" y="38" width="1124" height="554" fill="#ffffff"></rect>
+  <line x1="76" y1="102" x2="1124" y2="102" stroke="#0b0b0c"></line>
+  <text x="76" y="82" class="social-card__wordmark">Unumae</text>
+  <text x="1124" y="82" text-anchor="end" class="social-card__meta">
+    00:00–23:59 UTC
+  </text>
+
+  {
+    mode === 'brand' ? (
+      <>
+        <text x="76" y="174" class="social-card__eyebrow">
+          {copy.cardEyebrow}
+        </text>
+        <text x="72" y="320" class="social-card__display">
+          {tagline.firstLine}
+        </text>
+        <text
+          x="72"
+          y="438"
+          class="social-card__display social-card__display--italic"
+        >
+          {tagline.secondLine}
+        </text>
+        <text
+          x="1124"
+          y="548"
+          text-anchor="end"
+          class="social-card__supporting"
+        >
+          {copy.cardSupporting}
+        </text>
+      </>
+    ) : (
+      <>
+        <text x="76" y="164" class="social-card__eyebrow">
+          {copy.templateLabel}
+        </text>
+        <text x="72" y="285" class="social-card__name">
+          {firstName}
+        </text>
+        <text x="76" y="340" class="social-card__country">
+          {country}
+        </text>
+        <text x="650" y="212" class="social-card__quote">
+          {quoteLines.map((line, index) => (
+            <tspan x="650" dy={index === 0 ? 0 : 48}>
+              {index === 0 ? `“${line}` : line}
+              {index === quoteLines.length - 1 ? '”' : ''}
+            </tspan>
+          ))}
+        </text>
+        <text x="76" y="524" class="social-card__tagline">
+          {tagline.firstLine}
+        </text>
+        <text
+          x="76"
+          y="562"
+          class="social-card__tagline social-card__tagline--italic"
+        >
+          {tagline.secondLine}
+        </text>
+        {mode === 'template' && (
+          <text
+            x="1124"
+            y="552"
+            text-anchor="end"
+            class="social-card__template-note"
+          >
+            TEMPLATE · NO HUMAN SHOWN
+          </text>
+        )}
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .social-card {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #f7f7f5;
+  }
+
+  .social-card text {
+    fill: #0b0b0c;
+  }
+
+  .social-card__wordmark,
+  .social-card__display,
+  .social-card__name,
+  .social-card__quote,
+  .social-card__tagline {
+    font-family: 'Newsreader Variable', Georgia, serif;
+  }
+
+  .social-card__wordmark {
+    font-size: 30px;
+    font-weight: 650;
+  }
+
+  .social-card__meta,
+  .social-card__eyebrow,
+  .social-card__country,
+  .social-card__template-note {
+    font-family: 'Inter Variable', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .social-card__meta,
+  .social-card__template-note {
+    font-size: 14px;
+  }
+
+  .social-card__eyebrow,
+  .social-card__country {
+    font-size: 18px;
+  }
+
+  .social-card__display {
+    font-size: 122px;
+    font-weight: 430;
+    letter-spacing: -6px;
+  }
+
+  .social-card__display--italic,
+  .social-card__tagline--italic {
+    font-style: italic;
+  }
+
+  .social-card--fr .social-card__display,
+  .social-card--de .social-card__display {
+    font-size: 108px;
+    letter-spacing: -5px;
+  }
+
+  .social-card__supporting {
+    font-family: 'Inter Variable', Arial, sans-serif;
+    font-size: 22px;
+  }
+
+  .social-card__name {
+    font-size: 106px;
+    font-weight: 450;
+    letter-spacing: -4px;
+  }
+
+  .social-card__quote {
+    font-size: 38px;
+    font-style: italic;
+  }
+
+  .social-card__tagline {
+    font-size: 34px;
+  }
+
+  .social-card__template-note {
+    fill: #6a6a66;
+  }
+</style>

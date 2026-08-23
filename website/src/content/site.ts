@@ -110,20 +110,18 @@ export const content: Record<Locale, SiteCopy> = {
       privacy: {
         title: 'Privacy policy',
         description:
-          'Unumae’s privacy policy is awaiting legal review and will be published before launch.',
+          'How Unumae handles profiles, portraits, product analytics, and Archive data—and the controls every person keeps.',
         eyebrow: 'Legal',
         introduction:
-          'The privacy policy is still being prepared. We will publish reviewed copy here before any public launch or data collection through this website.',
-        notice: 'No website waitlist or analytics is active.',
+          'A plain-language account of what Unumae collects, what becomes public, how long information is kept, and the choices every person retains.',
       },
       terms: {
         title: 'Terms of service',
         description:
-          'Unumae’s terms of service are awaiting legal review and will be published before launch.',
+          'The terms for using Unumae, owning your content, consenting to publication, and leaving the service.',
         eyebrow: 'Legal',
         introduction:
-          'The terms of service are still being prepared. We will publish reviewed copy here before the product becomes publicly available.',
-        notice: 'This placeholder is not a legal agreement.',
+          'The rules for accounts, content ownership, publication permission, moderation, availability, and ending your use of Unumae.',
       },
     },
     facts: [
@@ -205,21 +203,18 @@ export const content: Record<Locale, SiteCopy> = {
       privacy: {
         title: 'Politique de confidentialité',
         description:
-          'La politique de confidentialité d’Unumae attend une validation juridique et sera publiée avant le lancement.',
+          'Comment Unumae traite les profils, portraits, données produit et Archives—et les choix conservés par chaque personne.',
         eyebrow: 'Juridique',
         introduction:
-          'La politique de confidentialité est en préparation. Un texte validé sera publié ici avant tout lancement public ou collecte de données sur ce site.',
-        notice:
-          'Aucune liste d’attente ni mesure d’audience n’est active sur ce site.',
+          'Une présentation claire des données recueillies, de ce qui devient public, de leur durée de conservation et des choix de chaque personne.',
       },
       terms: {
         title: 'Conditions d’utilisation',
         description:
-          'Les conditions d’utilisation d’Unumae attendent une validation juridique et seront publiées avant le lancement.',
+          'Les conditions d’utilisation d’Unumae, de propriété des contenus, de consentement à la publication et de départ du service.',
         eyebrow: 'Juridique',
         introduction:
-          'Les conditions d’utilisation sont en préparation. Un texte validé sera publié ici avant la mise à disposition publique du produit.',
-        notice: 'Cette page temporaire ne constitue pas un accord juridique.',
+          'Les règles relatives aux comptes, aux contenus, à la publication, à la modération, à la disponibilité et à la fin d’utilisation d’Unumae.',
       },
     },
     facts: [
@@ -301,20 +296,18 @@ export const content: Record<Locale, SiteCopy> = {
       privacy: {
         title: 'Datenschutzerklärung',
         description:
-          'Unumaes Datenschutzerklärung wartet auf die rechtliche Prüfung und wird vor dem Start veröffentlicht.',
+          'Wie Unumae Profile, Porträts, Produktdaten und das Archiv behandelt—und welche Entscheidungen jeder Mensch behält.',
         eyebrow: 'Rechtliches',
         introduction:
-          'Die Datenschutzerklärung wird noch vorbereitet. Geprüfter Text erscheint hier vor jedem öffentlichen Start oder jeder Datenerhebung über diese Website.',
-        notice: 'Auf dieser Website sind weder Warteliste noch Analysen aktiv.',
+          'Eine klare Darstellung dessen, was Unumae erhebt, was öffentlich wird, wie lange Daten bleiben und welche Wahl jeder Mensch behält.',
       },
       terms: {
         title: 'Nutzungsbedingungen',
         description:
-          'Unumaes Nutzungsbedingungen warten auf die rechtliche Prüfung und werden vor dem Start veröffentlicht.',
+          'Die Bedingungen für die Nutzung von Unumae, eigene Inhalte, die Zustimmung zur Veröffentlichung und das Verlassen des Dienstes.',
         eyebrow: 'Rechtliches',
         introduction:
-          'Die Nutzungsbedingungen werden noch vorbereitet. Geprüfter Text erscheint hier, bevor das Produkt öffentlich verfügbar wird.',
-        notice: 'Dieser Platzhalter ist keine rechtliche Vereinbarung.',
+          'Die Regeln für Konten, Eigentum an Inhalten, Veröffentlichung, Moderation, Verfügbarkeit und das Beenden der Nutzung von Unumae.',
       },
     },
     facts: [

@@ -21,10 +21,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) =>
-        !['/privacy', '/terms', '/dev/styleguide'].some((suffix) =>
-          new URL(page).pathname.endsWith(suffix)
-        ),
+      filter: (page) => !new URL(page).pathname.startsWith('/dev/'),
       i18n: {
         defaultLocale: 'en',
         locales: { en: 'en', fr: 'fr', de: 'de' },

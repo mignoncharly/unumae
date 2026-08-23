@@ -1,0 +1,64 @@
+---
+import SocialCard from '../../../components/design/SocialCard.astro';
+import { locales, type Locale } from '../../../content/site';
+import '../../../styles/global.css';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({
+    params: { locale },
+    props: { locale },
+  }));
+}
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1200, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link
+      rel="preload"
+      href="/fonts/inter-variable-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/newsreader-variable-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <title>Unumae social-card render target</title>
+  </head>
+  <body>
+    <SocialCard locale={locale} mode="brand" />
+  </body>
+</html>
+
+<style is:global>
+  html {
+    min-width: 0;
+  }
+
+  body {
+    width: 1200px;
+    height: 630px;
+    min-height: 0;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .social-card {
+    width: 1200px;
+    height: 630px;
+  }
+</style>

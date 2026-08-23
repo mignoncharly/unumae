@@ -1,6 +1,6 @@
 # Unumae marketing site — implementation plan
 
-**Status:** Phases 0–5 complete; Phase 6 next
+**Status:** Phases 0–6 complete; Phase 7 next
 **Target origin:** `https://www.unumae.app`
 **Working origin:** configurable until the domain is purchased
 **Product source of truth:** `PRODUCT_CONSTITUTION.md`
@@ -351,19 +351,60 @@ Validation:
 Archive remains finite and non-competitive, and live reads cannot exceed the
 reviewed anonymous function allowlist.
 
-### Phase 6 — Localization, sharing, and discovery
+### Phase 6 — Localization, sharing, and discovery — complete
 
-- Translate site copy into French and German and add locale-aware navigation.
-- Add canonical URLs, `hreflang`, Open Graph, X card metadata, structured data,
-  favicon/app icons, and per-route social descriptions.
-- Create a share-card template aligned with the specified format: Today's
-  Human, first name, country, one approved quote, and the product tagline.
-- Add universal/deep-link metadata once the domain and Apple association file
-  can be verified. Web remains the fallback when the app is absent.
-- Ensure social previews never expose content before its approved live cycle.
+Delivered on 23 August 2026:
 
-**Exit:** every locale is indexable without duplicate-content ambiguity, and a
-shared link produces a complete, attractive preview.
+- Audited the existing English, French, and German route parity and kept English
+  canonical with unprefixed URLs. Each public route has three locale alternates
+  plus `x-default`, and the localized navigation preserves the current page.
+- Added localized Open Graph and X large-card metadata to every public route:
+  route-specific titles and descriptions, canonical URL, locale and alternates,
+  1200×630 image, dimensions, MIME type, and accessible image description.
+- Added Schema.org JSON-LD graphs containing the Unumae organization, website,
+  and localized page. About uses `AboutPage`, the Archive uses
+  `CollectionPage`, and all other public routes use `WebPage`.
+- Added an original SVG favicon, 32px browser icon, 180px Apple touch icon,
+  192px and 512px web-manifest icons, and a browser-mode web manifest. No native
+  App Store icon decision was implied or replaced.
+- Created original, localized EN/FR/DE social images with repository fonts and
+  no person or story. The guarded Human template follows the required Today’s
+  Human, first name, country, approved quote, and product-tagline composition.
+- Made the Human template reject anything that is not currently live, quote
+  approved, non-removed, complete, and within the reviewed layout limits.
+  Candidate, invitation, draft, review, completed, and removed content cannot
+  enter a generated Today preview.
+- Updated stale pre-review metadata for the now-published Privacy and Terms
+  pages and restored all localized legal routes to the sitemap. Every
+  `/dev/…` review/render route remains `noindex`, has no social metadata or
+  canonical URL, and is excluded from the sitemap.
+- Deliberately withheld App Store banner and universal-link metadata. The real
+  App Store ID, deployed HTTPS origin, Apple Team ID, and verified association
+  file are still unavailable; shared URLs therefore remain complete web
+  fallbacks instead of advertising an unverified deep link.
+
+Validation:
+
+- `SITE_ORIGIN=https://preview.unumae.invalid npm run web:check` passes Astro
+  diagnostics, lint, formatting, and the 30-page static build.
+- A static-output audit checks all 24 public locale/route combinations for one
+  canonical, complete `hreflang` set, localized Open Graph locale, X card,
+  absolute secure social image, parseable JSON-LD, and correct page schema.
+- Sitemap inspection confirms localized Privacy and Terms routes are present
+  and every internal route is absent. Internal HTML contains `noindex` and no
+  canonical, Open Graph, X, or structured discovery metadata.
+- Browser measurements confirm all three cards render at 1200×630 with both
+  self-hosted fonts, no clipped localized display copy, and a clean Human
+  template. PNG headers confirm exact card and icon dimensions.
+- Direct gate checks accept a valid live/approved card and reject review,
+  unapproved, removed, and oversized content. Static HTML contains no App Store
+  or custom-scheme metadata before association is verified.
+- `npm run verify` remains green: 26 migrations pass, 28 suites pass, and all
+  481 native tests pass.
+
+**Exit:** achieved. Every public locale is independently indexable without
+duplicate ambiguity, shared links produce complete localized previews, and no
+Human content can enter social metadata before its approved live cycle.
 
 ### Phase 7 — Measurement, accessibility, and quality
 

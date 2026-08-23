@@ -1,0 +1,79 @@
+---
+import SocialCard from '../../components/design/SocialCard.astro';
+import { locales } from '../../content/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  locale="en"
+  page="home"
+  title="Share-card templates — Unumae"
+  description="Internal review surface for localized Unumae social cards."
+  noIndex
+  omitCanonicalLinks
+>
+  <main id="main-content" class="share-card-review">
+    <header>
+      <p class="eyebrow">Internal surface · Phase 6</p>
+      <h1>Share-card templates</h1>
+      <p>
+        Generic cards are safe for every static page. The Human template names
+        its required fields but represents no person or story.
+      </p>
+    </header>
+
+    <section aria-labelledby="brand-cards-title">
+      <h2 id="brand-cards-title">Localized public defaults</h2>
+      <div class="share-card-review__grid">
+        {locales.map((locale) => <SocialCard locale={locale} mode="brand" />)}
+      </div>
+    </section>
+
+    <section aria-labelledby="human-template-title">
+      <h2 id="human-template-title">Approved-live Human template</h2>
+      <p>
+        Rendering real content requires a live publication status and an
+        approved quote. Draft, review, completed, and removed stories fail the
+        template gate.
+      </p>
+      <SocialCard locale="en" mode="template" />
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .share-card-review {
+    width: min(100%, var(--content-width));
+    margin-inline: auto;
+    padding: var(--space-section) var(--gutter);
+  }
+
+  .share-card-review header,
+  .share-card-review section {
+    max-width: 75rem;
+  }
+
+  .share-card-review header {
+    margin-bottom: var(--space-section);
+  }
+
+  .share-card-review h1 {
+    margin: var(--space-lg) 0;
+    font-family: var(--font-display);
+    font-size: var(--step-title-1);
+    font-weight: 450;
+  }
+
+  .share-card-review section + section {
+    margin-top: var(--space-section);
+  }
+
+  .share-card-review__grid {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .share-card-review :global(.social-card) {
+    outline: var(--rule);
+  }
+</style>

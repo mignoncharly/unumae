@@ -26,9 +26,16 @@ const copy = content[locale];
 const site =
   Astro.site ?? new URL(import.meta.env.SITE_ORIGIN ?? 'http://localhost:4321');
 const metadata = createPageMetadata(locale, page, site);
+const resolvedTitle = title ?? metadata.title;
+const resolvedDescription = description ?? metadata.description;
 const englishAlternate = metadata.alternates.find(
   (alternate) => alternate.locale === 'en'
 );
+const structuredData = JSON.stringify(metadata.structuredData).replace(
+  /</g,
+  '\\u003c'
+);
+const isSecureSocialImage = metadata.socialImage.url.startsWith('https://');
 ---
 
 <!doctype html>
@@ -38,6 +45,10 @@ const englishAlternate = metadata.alternates.find(
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#f7f7f5" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icons/icon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link
       rel="preload"
       href="/fonts/inter-variable-latin.woff2"
@@ -52,7 +63,7 @@ const englishAlternate = metadata.alternates.find(
       type="font/woff2"
       crossorigin
     />
-    <meta name="description" content={description ?? metadata.description} />
+    <meta name="description" content={resolvedDescription} />
     {
       (noIndex || metadata.noIndex) && (
         <meta name="robots" content="noindex, follow" />
@@ -78,7 +89,49 @@ const englishAlternate = metadata.alternates.find(
         />
       )
     }
-    <title>{title ?? metadata.title}</title>
+    {
+      !omitCanonicalLinks && (
+        <>
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="Unumae" />
+          <meta property="og:title" content={resolvedTitle} />
+          <meta property="og:description" content={resolvedDescription} />
+          <meta property="og:url" content={metadata.canonical} />
+          <meta property="og:locale" content={metadata.openGraphLocale} />
+          {metadata.openGraphLocaleAlternates.map((alternate) => (
+            <meta property="og:locale:alternate" content={alternate} />
+          ))}
+          <meta property="og:image" content={metadata.socialImage.url} />
+          {isSecureSocialImage && (
+            <meta
+              property="og:image:secure_url"
+              content={metadata.socialImage.url}
+            />
+          )}
+          <meta property="og:image:type" content={metadata.socialImage.type} />
+          <meta
+            property="og:image:width"
+            content={String(metadata.socialImage.width)}
+          />
+          <meta
+            property="og:image:height"
+            content={String(metadata.socialImage.height)}
+          />
+          <meta property="og:image:alt" content={metadata.socialImage.alt} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={resolvedTitle} />
+          <meta name="twitter:description" content={resolvedDescription} />
+          <meta name="twitter:image" content={metadata.socialImage.url} />
+          <meta name="twitter:image:alt" content={metadata.socialImage.alt} />
+          <script
+            is:inline
+            type="application/ld+json"
+            set:html={structuredData}
+          />
+        </>
+      )
+    }
+    <title>{resolvedTitle}</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">{copy.skipToContent}</a>

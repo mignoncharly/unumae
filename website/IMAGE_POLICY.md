@@ -38,6 +38,7 @@ applies to every image committed to or loaded by the marketing site.
 
 ## Current state
 
-Phase 2 uses one CSS-built abstract campaign study in the internal component
-page. It contains no photograph, generated bitmap, or representation of a real
-or fictional Human, so there is no external image credit yet.
+The site uses a CSS-built abstract campaign study, repository-authored web
+icons, and localized typographic social cards. None depicts a real or fictional
+Human. The approved-live share-card template is structurally gated and its
+internal preview contains field labels rather than a demo person or story.

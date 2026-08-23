@@ -44,8 +44,21 @@ Archive entries, Random Human, countries, and years. It does not read tables,
 display Remember totals, or expose country/year counts. Portrait paths are
 resolved through short-lived signed URLs.
 
+## Sharing and discovery
+
+Every public route emits localized canonical and alternate links, Open Graph
+and X large-card metadata, and a Schema.org graph. Generic EN, FR, and DE cards
+are used for static previews, so no candidate or draft Human can enter a social
+cache. The guarded Human template is reviewable at `/dev/share-card`; it only
+accepts live content with an explicitly approved quote.
+
+The site does not emit an App Store banner or universal-link association yet.
+Those require the real App Store identifier, deployed HTTPS origin, Apple Team
+ID, and a verified association file. Until then every shared URL remains a
+complete web fallback.
+
 ## Design review
 
-The internal `/dev/styleguide` route is excluded from indexing and the sitemap.
+Internal `/dev/…` routes are excluded from indexing and the sitemap.
 See `DESIGN_SYSTEM.md`, `IMAGE_POLICY.md`, `IMAGE_CREDITS.md`, and
 `FONT_PROVENANCE.md` for the decisions behind it.

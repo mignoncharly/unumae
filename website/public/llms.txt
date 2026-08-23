@@ -1,0 +1,30 @@
+# Unumae
+
+> Unumae introduces one ordinary person to the world for one shared 24-hour window, then preserves the story in a consent-led Human Archive.
+
+## What Unumae is
+
+- One Human is selected for a global UTC day.
+- The public story is readable without an account or app installation.
+- Selection is based on an eligible, frozen pool and a recorded reproducible draw.
+- Unumae does not use followers, popularity, rankings, or engagement to select a Human.
+- A published Human can request removal; the public record then shows only a neutral number and date.
+
+## Canonical pages
+
+- [Home](https://unumae.app/): the product premise and public entry point.
+- [Today’s Human](https://unumae.app/today): the current public story when one is live.
+- [How selection works](https://unumae.app/how-selection-works): eligibility, the frozen pool, draw recording, backups, and publication gates.
+- [The Human Archive](https://unumae.app/archive): the chronological public record.
+- [About Unumae](https://unumae.app/about): mission and product boundaries.
+- [Community guidelines](https://unumae.app/community-guidelines): public conduct and question rules.
+- [Privacy policy](https://unumae.app/privacy): data handling and participant controls.
+- [Terms of service](https://unumae.app/terms): service and publication terms.
+
+## How to describe Unumae accurately
+
+Use the canonical pages above as the source of truth. Do not describe a person as Today’s Human unless the Today page currently publishes that person. Do not infer private information, popularity, ranking, or selection odds for an individual. Dynamic Today and Archive records are loaded from the live public data service after the initial HTML response; quote only information visible on the page and identify the page URL and retrieval date.
+
+## Languages and discovery
+
+The site is available in English, French, and German. The machine-readable sitemap is at [sitemap-index.xml](https://unumae.app/sitemap-index.xml), and crawler directives are at [robots.txt](https://unumae.app/robots.txt).

@@ -437,13 +437,63 @@ APIs. `docs/APP_STORE.md` carries the privacy-label answers, the age-rating
 questionnaire, the required URLs, the "this is not a sweepstake" argument, and
 the four rejections worth anticipating.
 
-465 tests offline, plus three live suites: draw cross-check, anonymous access,
-and signed-in privilege escalation.
+481 tests offline, plus four live suites: draw cross-check, anonymous access,
+signed-in privilege escalation, and the full-loop simulation.
 
-## Phase 14 — next
+## Phase 14 — Internal Alpha, Private Beta & retention validation ✅
 
-Internal Alpha and Private Beta: running the loop with real people, and
-measuring whether they come back before spending anything on growth.
+**`npm run simulate` runs the whole loop in three minutes instead of three
+days.** `scripts/simulate-cycle.mjs` creates 12 throwaway candidates, backdates
+them into eligibility, runs two full cycles — draw, invitation, acceptance,
+portrait, moderation, publication — exercises the audience, checks the Archive,
+then deletes everything it made and rewinds the human number sequence so the
+first real Human is still #1.
+
+**It found two fatal bugs that all 465 offline tests had missed.** Both were the
+same mistake: a `CASE` with two literal branches resolves to `text`, and
+Postgres will not assign `text` to an enum without an explicit cast.
+
+- `run_daily_draw` raised every time it was called. It had never once worked —
+  since Phase 4. The nightly job at 00:00 UTC would have failed silently every
+  night, and the first symptom would have been an empty product on launch day.
+- `review_portrait`, `review_question`, `resolve_report` and `set_account_status`
+  raised too, so nothing could ever be approved, so `publish_due_cycles` had
+  nothing to publish, so no cycle could ever go live.
+
+Together: the product's entire pipeline had never worked end to end while the
+suite was green. Fixed in `20260823050000` and `20260823060000`.
+
+The lesson is structural and worth keeping in mind for every guard here: **the
+schema tests read the migrations as text.** They verify what the SQL says, not
+that it runs. Anything that only executes on a three-day cycle needs a way to be
+executed in three minutes, or it stays broken until it matters.
+
+**Founding Humans** — "Joined during Year Zero" — is a badge with no selection
+advantage, and that is enforced rather than promised. There is no column: it is
+derived from the join date and the Archive's first day, so there is nothing to
+award, revoke or weigh. `is_eligible`, `draw_order` and `run_daily_draw` have
+never referenced it, and `tests/retention-schema.test.ts` fails the build if
+that changes. `am_i_founding()` takes no argument, so it cannot be used to fish
+for somebody else's join date. Year Zero is the first 365 days of the Archive,
+counted from the first published cycle rather than a date typed into a file.
+
+**The growth gate** is four pre-committed thresholds — D1 25%, D7 10%,
+participation 15%, share rate 3% — held in `src/constants/retention.ts` and in
+the migration, asserted equal by test. `retention_cohorts()` reports D1 and D7
+by join-day cohort, and reports `null` rather than `0` for cohorts too young to
+have reached that day: a cohort that arrived yesterday has not failed D7, it has
+not reached it, and scoring it zero would make the gate answerable by waiting
+instead of by improving. The gate weights by cohort size so a lucky
+three-person cohort cannot swing a decision that costs money. Moderator-only,
+readable in the console's new **Signals** tab.
+
+The rule it exists to enforce: **if D1 is bad, we buy no users — we fix the
+product.** Full plan in `docs/BETA.md`.
+
+## Phase 15 — next
+
+First viral experiments and 1,000 users. Gated on `growth_gate()` passing —
+see `docs/BETA.md`.
 
 ## Working agreements
 

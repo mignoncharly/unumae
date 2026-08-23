@@ -12,7 +12,7 @@ import { websiteLinks } from '@/constants/links';
 import { signOut } from '@/features/auth/api';
 import { useSession } from '@/features/auth/useSession';
 import { useAmIModerator } from '@/features/moderation/hooks';
-import { useMyProfile } from '@/features/profiles/hooks';
+import { useAmIFounding, useMyProfile } from '@/features/profiles/hooks';
 import { projectRef } from '@/lib/env';
 import { checkConnection, type ConnectionStatus } from '@/lib/supabase';
 import { useTheme } from '@/theme';
@@ -30,6 +30,7 @@ function AccountSection() {
   const session = useSession();
   const { data: profile, isLoading } = useMyProfile();
   const { data: isModerator } = useAmIModerator();
+  const { data: isFounding } = useAmIFounding();
 
   if (session.status === 'loading') {
     return null;
@@ -67,6 +68,20 @@ function AccountSection() {
         <Text color="textTertiary" variant="footnote">
           @{profile.username}
         </Text>
+      ) : null}
+
+      {/*
+        Stated with the sentence that keeps it honest. Being early is worth
+        remembering; it is not worth anything in the draw, and saying so here
+        is cheaper than answering it later.
+      */}
+      {profile && isFounding === true ? (
+        <View style={{ gap: theme.spacing.xs }}>
+          <Text variant="footnote">{t('founding.yours')}</Text>
+          <Text color="textTertiary" variant="caption">
+            {t('founding.explain')}
+          </Text>
+        </View>
       ) : null}
 
       <Button

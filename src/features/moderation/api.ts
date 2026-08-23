@@ -1,3 +1,5 @@
+import type { GrowthGateCheck } from '@/constants/retention';
+import { GATE_WINDOW_DAYS } from '@/constants/retention';
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 import type {
@@ -167,4 +169,99 @@ export async function setAccountStatus(
       cause: error,
     });
   }
+}
+
+// --- signals -----------------------------------------------------------------
+//
+// Retention, participation and the growth gate. Every one of these refuses in
+// the database unless the caller is a moderator, so what follows is a reader,
+// not a permission.
+
+export interface RetentionCohort {
+  cohortDate: string;
+  installs: number;
+  returnedD1: number;
+  /** Null while the cohort is too young to have reached that day — not zero. */
+  d1Percent: number | null;
+  returnedD7: number;
+  d7Percent: number | null;
+}
+
+export async function getRetentionCohorts(
+  windowDays = GATE_WINDOW_DAYS
+): Promise<RetentionCohort[]> {
+  const { data, error } = await getSupabase().rpc('retention_cohorts', {
+    window_days: windowDays,
+  });
+
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((row) => ({
+    cohortDate: row.cohort_date,
+    installs: row.installs,
+    returnedD1: row.returned_d1,
+    d1Percent: row.d1_percent,
+    returnedD7: row.returned_d7,
+    d7Percent: row.d7_percent,
+  }));
+}
+
+export interface ParticipationSegment {
+  segment: 'participants' | 'watchers';
+  installs: number;
+  percent: number;
+}
+
+export async function getParticipationMix(
+  windowDays = GATE_WINDOW_DAYS
+): Promise<ParticipationSegment[]> {
+  const { data, error } = await getSupabase().rpc('participation_mix', {
+    window_days: windowDays,
+  });
+
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((row) => ({
+    segment: row.segment as ParticipationSegment['segment'],
+    installs: row.installs,
+    percent: row.percent,
+  }));
+}
+
+export interface GateCheck {
+  check: GrowthGateCheck;
+  actual: number;
+  threshold: number;
+  passed: boolean;
+}
+
+/**
+ * The four pre-committed thresholds.
+ *
+ * The thresholds come back from the database rather than being read from
+ * src/constants/retention.ts, so this screen shows what the gate actually
+ * enforced. If the two ever drift, tests/retention-schema.test.ts fails the
+ * build before anyone sees a comforting number here.
+ */
+export async function getGrowthGate(
+  windowDays = GATE_WINDOW_DAYS
+): Promise<GateCheck[]> {
+  const { data, error } = await getSupabase().rpc('growth_gate', {
+    window_days: windowDays,
+  });
+
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((row) => ({
+    check: row.check_name as GrowthGateCheck,
+    actual: row.actual,
+    threshold: row.threshold,
+    passed: row.passed,
+  }));
 }

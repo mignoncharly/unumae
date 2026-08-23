@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: end of Phase 7.
+Last updated: end of Phase 14.
 
 ---
 
@@ -11,18 +11,19 @@ Last updated: end of Phase 7.
 
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
-| 1 | **Deploy `website/` to `unumae.app`** | The app links out to it for About, Privacy and Terms, and every shared link points there. You are developing it on your own server; until it is live those links go nowhere. `npm run web:build` produces the static site. | Sharing, and the legal links, being useful. |
-| 2 | **App icon and launch screen** | 1024x1024, no transparency, no rounded corners; and the wordmark for the launch screen. Design decisions, not generated placeholders. docs/APP_STORE.md says where they go once they exist. | App Store submission. |
-| 3 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. You said you will run it later — nothing else is waiting on it. | Testing Sign in with Apple and push. |
-| 4 | ~~Appoint the first moderator~~ **— solved, nothing to do** | `charles.nguenkam@gmail.com` and `mignoncharly@yahoo.fr` are seeded in `public.founding_moderators`. Whichever you sign up with, a trigger promotes you to moderator the moment you finish onboarding, and the migration backfilled anyone who already had a profile. Full detail, including how to add and remove moderators later: `docs/MODERATION.md`. | Nothing. |
-| 5 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
+| 1 | **Deploy `website/` to `unumae.app`** | The app links out to it for About, Privacy and Terms, and every shared link points there. You are developing it on your own server; until it is live those links go nowhere. | Sharing, and the legal links, being useful. |
+| 2 | **App icon and launch screen** | 1024x1024, no transparency, no rounded corners; and the wordmark for the launch screen. Design decisions, not generated placeholders. `docs/APP_STORE.md` says where they go once they exist. | App Store submission. |
+| 3 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. Nothing else is waiting on it. | Testing Sign in with Apple and push. |
+| 4 | **Recruit 10–20 people for the internal alpha** | The simulation proves the machinery works. It cannot tell you whether Today's Human is interesting, whether anyone opens the Archive, or whether anyone shares a portrait unprompted. Only real people answer that. `docs/BETA.md` has the four questions to watch for. | Phase 15. |
+| 5 | **Decide the four gate thresholds are right** | D1 25%, D7 10%, participation 15%, share rate 3%. I chose defensible numbers; they are your call, and the point of them is that they are fixed *before* any result exists. Changing them later is legitimate, but it should be a deliberate commit, not a reaction to a disappointing week. | Nothing yet — they bind at step 5 of `docs/BETA.md`. |
+| 6 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
 
 ## Mine — code, and already planned
 
 | # | Item | Phase |
 | --- | --- | --- |
-| 1 | Internal Alpha and Private Beta | 14 — next |
-| 2 | Schedule the notification sender (needs pg_net or an external cron) | 14 |
+| 1 | First viral experiments and 1,000 users | 15 — next |
+| 2 | Schedule the notification sender (needs pg_net or an external cron) | 15 |
 | 3 | A translation job to fill `portrait_element_translations` | later |
 | 4 | Liveness capture flow — the gate exists and is switched off | later, native |
 | 5 | Optional audio/video portrait element | later |
@@ -35,37 +36,41 @@ exercised there, and are flagged rather than reworked:
 | Feature | Why | State |
 | --- | --- | --- |
 | Sign in with Apple | Expo Go signs its own bundle, so it cannot carry this app's entitlement | Implemented; hides itself and explains why. Email code works everywhere. |
-| Push notifications (Phase 10) | Expo Go has no push credentials for this bundle | Not built yet |
-| Liveness check (Phase 9) | Camera-based SDK, likely a native module | Not built yet |
+| Push notifications | Expo Go has no push credentials for this bundle | Built; needs a dev build to test |
+| Liveness check | Camera-based SDK, likely a native module | Not built yet |
 
 Everything else — the draw, portraits, questions, voting, Remember, image
-picking, storage — runs in Expo Go.
+picking, storage, the Signals tab — runs in Expo Go.
 
 ## Deployed and verified against the live project
 
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | 22 applied |
-| Edge Functions | `delete-account` deployed and probed. `send-notifications` written but NOT deployed — see Yours #1 |
+| Migrations | 26 applied |
+| Edge Functions | `delete-account` deployed and probed; `send-notifications` deployed, not yet scheduled |
 | Storage buckets | `avatars`, `portraits` — both private |
-| Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min |
-| Notification sending | deployed; requires the service role. Not yet scheduled — a cron must call it |
+| Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min, analytics purge 03:30 |
 | EAS project | `@mignoncharly/unumae` |
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Moderator bootstrap | seeded by email; promotes automatically on profile creation |
-| Community rules | approved as written, live in EN/FR/DE |
 | Draw verification | database and independent implementation agree |
-| Anonymous access | 78 checks, matches the allowlist |
-| Signed-in privilege escalation | 31 checks, all refused (`npm run verify:security`) |
-| Tests | 465 offline, plus three live suites |
+| Anonymous access | 84 checks, matches the allowlist |
+| Signed-in privilege escalation | 31 checks, all refused |
+| **Full loop, end to end** | **passes — draw, invitation, acceptance, portrait, moderation, publication, audience, Archive** |
+| Tests | 481 offline, plus four live suites |
 
 ## Commands worth remembering
 
 ```bash
-npm run verify          # typecheck, lint, format, migrations, tests — offline
-npm run verify:live     # draw cross-check + anonymous access probe — needs network
-npm run db:push         # apply pending migrations
-npx supabase functions deploy delete-account --project-ref qpicjsjxdblrxdrdibge
-eas build --profile development --platform ios
+npm run verify            # typecheck, lint, format, migrations, tests — offline
+npm run verify:live       # draw cross-check + anonymous access probe
+npm run verify:security   # attacks the live database as a signed-in user
+npm run simulate          # the whole loop in three minutes; cleans up after itself
+npm run db:push           # apply pending migrations
+npm run db:list           # confirm remote matches local — always check after a push
 ```
+
+⚠️ Run `npm run simulate` after any migration that touches the draw, the
+moderation path, or publication. Two fatal bugs shipped past 465 green tests
+because the schema guards read SQL as text and cannot tell you it runs.

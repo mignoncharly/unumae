@@ -28,7 +28,8 @@
     "web:dev": "npm --prefix website run dev",
     "web:build": "npm --prefix website run build",
     "web:check": "npm --prefix website run verify",
-    "verify:security": "node scripts/verify-security.mjs"
+    "verify:security": "node scripts/verify-security.mjs",
+    "simulate": "node scripts/simulate-cycle.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

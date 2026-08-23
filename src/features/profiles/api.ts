@@ -86,3 +86,18 @@ export async function deleteMyAccount(): Promise<void> {
 
   await getSupabase().auth.signOut();
 }
+
+/**
+ * Whether you joined during Year Zero.
+ *
+ * A badge and nothing else. It carries no advantage in the draw — see
+ * supabase/migrations/20260823070000_founding_and_retention.sql, where it is
+ * derived from your join date rather than stored, so there is no field anyone
+ * could grant, revoke or weigh.
+ */
+export async function amIFounding(): Promise<boolean> {
+  const { data, error } = await getSupabase().rpc('am_i_founding');
+  // Not knowing is the same as no badge. It is decoration; failing the screen
+  // over it would be absurd.
+  return error ? false : (data ?? false);
+}

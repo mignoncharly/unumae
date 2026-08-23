@@ -347,7 +347,30 @@
     "openReports_one": "{{count}} offene Meldung",
     "openReports_other": "{{count}} offene Meldungen",
     "actionFailed": "Das ging nicht durch. Bitte versuche es erneut.",
-    "everyDecisionLogged": "Jede Entscheidung wird mit Urheber und Grund festgehalten. Moderation ist Macht über Menschen, und eine Entscheidung, die niemand nachprüfen kann, ist eine, für die niemand einsteht."
+    "everyDecisionLogged": "Jede Entscheidung wird mit Urheber und Grund festgehalten. Moderation ist Macht über Menschen, und eine Entscheidung, die niemand nachprüfen kann, ist eine, für die niemand einsteht.",
+    "signals": "Signale",
+    "signalsIntro": "Kommen die Menschen wieder? Gemessen, bevor irgendetwas ausgegeben wird.",
+    "cohorts": "Kohorten",
+    "cohortDate": "Dazugekommen",
+    "installs": "Installationen",
+    "d1": "T1",
+    "d7": "T7",
+    "tooEarly": "zu früh",
+    "participation": "Beteiligung",
+    "participants": "Machen mit",
+    "watchers": "Schauen nur zu",
+    "gate": "Wachstumsschwelle",
+    "gateIntro": "Alle vier müssen erfüllt sein, bevor ein einziger Nutzer gekauft wird. Die Schwellen wurden vorher festgelegt.",
+    "gatePass": "Erfüllt",
+    "gateFail": "Noch nicht",
+    "gateBlocked": "Keine Nutzer kaufen. Das Produkt verbessern.",
+    "gateOpen": "Die Schwelle ist erreicht.",
+    "checks": {
+      "d1_retention": "Am nächsten Tag wiedergekommen",
+      "d7_retention": "Am siebten Tag noch da",
+      "participation": "Gefragt, abgestimmt, erinnert oder geteilt",
+      "share_rate": "Ein Porträt aus der App geschickt"
+    }
   },
   "privacy": {
     "title": "Datenschutz",
@@ -414,5 +437,11 @@
   },
   "offline": {
     "notice": "Du bist offline. Das hast du zuletzt gesehen."
+  },
+  "founding": {
+    "badge": "Gründungsmensch",
+    "joined": "Im Jahr Null dazugekommen",
+    "explain": "Sie waren im ersten Jahr dabei. Ein Stück Geschichte, mehr nicht — es macht niemanden wahrscheinlicher auszuwählen.",
+    "yours": "Du bist im Jahr Null dazugekommen."
   }
 }

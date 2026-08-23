@@ -48,6 +48,9 @@ const ANON_ALLOWED = new Set([
   'get_portrait_translations',
   // Writing an event is open to guests; reading anything back is not.
   'track_events',
+  // When Year Zero ends is public — the Archive's first day is on the Archive.
+  // Who is inside it is derived per row and never asked as a question.
+  'year_zero_ends',
 ]);
 
 const PROBES = [
@@ -146,6 +149,14 @@ const PROBES = [
   ['do_i_remember', { target_draw: NIL_UUID }],
   ['publish_due_cycles', {}],
   ['approve_portrait', { target_portrait: NIL_UUID }],
+
+  // Phase 14 — the badge is readable, the retention numbers are not.
+  ['year_zero_ends', {}],
+  ['am_i_founding', {}],
+  ['joined_in_year_zero', { joined: '2026-01-01T00:00:00Z' }],
+  ['retention_cohorts', {}],
+  ['participation_mix', {}],
+  ['growth_gate', {}],
 ];
 
 /** Tables no anonymous caller may read a single row of. */

@@ -1,8 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useSession } from '@/features/auth/useSession';
+import { useIsAuthenticated, useSession } from '@/features/auth/useSession';
 
-import { createMyProfile, getMyProfile, updateMyProfile } from './api';
+import {
+  amIFounding,
+  createMyProfile,
+  getMyProfile,
+  updateMyProfile,
+} from './api';
 import type { CreateProfileInput, UpdateProfileInput } from './schema';
 
 export const profileKeys = {
@@ -57,4 +62,21 @@ export function useNeedsOnboarding(): boolean {
   const { data, isLoading } = useMyProfile();
 
   return session.status === 'authenticated' && !isLoading && data === null;
+}
+
+/**
+ * Am I a Founding Human?
+ *
+ * Answers about you and nobody else — the database function takes no argument.
+ * It changes at most once, when Year Zero closes, so it is cached for a day.
+ */
+export function useAmIFounding() {
+  const isAuthenticated = useIsAuthenticated();
+
+  return useQuery({
+    queryKey: ['am-i-founding'] as const,
+    queryFn: amIFounding,
+    enabled: isAuthenticated,
+    staleTime: 24 * 60 * 60 * 1000,
+  });
 }

@@ -112,6 +112,7 @@ export default function HumanScreen() {
             prompt: t(`portrait.prompts.${element.key}.label`),
             answer: element.answer,
           }))}
+          founding={human.founding}
           humanNumber={human.human_number}
           name={human.display_name ?? ''}
           photoUri={photoUrl}

@@ -158,6 +158,12 @@ export type TodaysHumanRow = {
   city: string | null;
   photo_path: string | null;
   published_at: string | null;
+  /**
+   * Joined during Year Zero. Derived from the join date, never stored, and
+   * carrying no advantage of any kind — a Founding Human is drawn on exactly
+   * the same terms as anybody else.
+   */
+  founding: boolean | null;
 };
 
 export type PublicQuestionRow = {
@@ -192,6 +198,8 @@ export type ArchiveEntryRow = {
 export type ArchiveHumanRow = ArchiveEntryRow & {
   portrait_id: string | null;
   published_at: string | null;
+  /** See TodaysHumanRow.founding. Null once the account is gone. */
+  founding: boolean | null;
 };
 
 export type AnniversaryRow = Omit<ArchiveEntryRow, 'city'> & {
@@ -517,6 +525,49 @@ export type Database = {
       analytics_kpis_guarded: {
         Args: { window_days?: number };
         Returns: { metric: string; value: number; detail: string }[];
+      };
+      /** Last day of Year Zero. Null until the first cycle is published. */
+      year_zero_ends: {
+        Args: Record<never, never>;
+        Returns: string | null;
+      };
+      /** Whether you joined during Year Zero. Yours only, never anybody else's. */
+      am_i_founding: {
+        Args: Record<never, never>;
+        Returns: boolean | null;
+      };
+      /**
+       * D1 and D7 by join-day cohort. Percentages are null while a cohort is
+       * too young to have reached that day — never zero. Moderators only.
+       */
+      retention_cohorts: {
+        Args: { window_days?: number };
+        Returns: {
+          cohort_date: string;
+          installs: number;
+          returned_d1: number;
+          d1_percent: number | null;
+          returned_d7: number;
+          d7_percent: number | null;
+        }[];
+      };
+      /** Participants against watchers. Moderators only. */
+      participation_mix: {
+        Args: { window_days?: number };
+        Returns: { segment: string; installs: number; percent: number }[];
+      };
+      /**
+       * The four pre-committed thresholds that gate paid growth. Moderators
+       * only. See docs/BETA.md.
+       */
+      growth_gate: {
+        Args: { window_days?: number };
+        Returns: {
+          check_name: string;
+          actual: number;
+          threshold: number;
+          passed: boolean;
+        }[];
       };
     };
     Enums: {

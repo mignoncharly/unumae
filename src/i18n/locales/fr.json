@@ -347,7 +347,30 @@
     "openReports_one": "{{count}} signalement ouvert",
     "openReports_other": "{{count}} signalements ouverts",
     "actionFailed": "L'action n'a pas abouti. Veuillez réessayer.",
-    "everyDecisionLogged": "Chaque décision est enregistrée avec son auteur et son motif. La modération est un pouvoir exercé sur des personnes, et une décision que personne ne peut relire est une décision dont personne ne répond."
+    "everyDecisionLogged": "Chaque décision est enregistrée avec son auteur et son motif. La modération est un pouvoir exercé sur des personnes, et une décision que personne ne peut relire est une décision dont personne ne répond.",
+    "signals": "Signaux",
+    "signalsIntro": "Les gens reviennent-ils ? Mesuré avant la moindre dépense.",
+    "cohorts": "Cohortes",
+    "cohortDate": "Arrivée",
+    "installs": "Installations",
+    "d1": "J1",
+    "d7": "J7",
+    "tooEarly": "trop tôt",
+    "participation": "Participation",
+    "participants": "Participent",
+    "watchers": "Regardent seulement",
+    "gate": "Seuil de croissance",
+    "gateIntro": "Les quatre doivent passer avant d’acheter un seul utilisateur. Les seuils ont été fixés à l’avance.",
+    "gatePass": "Atteint",
+    "gateFail": "Pas encore",
+    "gateBlocked": "N’achetez aucun utilisateur. Corrigez le produit.",
+    "gateOpen": "Le seuil est franchi.",
+    "checks": {
+      "d1_retention": "Revenus le lendemain",
+      "d7_retention": "Encore là au septième jour",
+      "participation": "Ont demandé, voté, gardé en mémoire ou partagé",
+      "share_rate": "Ont envoyé un portrait hors de l’app"
+    }
   },
   "privacy": {
     "title": "Confidentialité",
@@ -414,5 +437,11 @@
   },
   "offline": {
     "notice": "Vous êtes hors ligne. Voici ce que vous avez vu en dernier."
+  },
+  "founding": {
+    "badge": "Humain fondateur",
+    "joined": "Arrivé pendant l’Année Zéro",
+    "explain": "Ils étaient là la première année. C’est un morceau d’histoire, rien de plus — cela n’augmente en rien les chances d’être sélectionné.",
+    "yours": "Vous êtes arrivé pendant l’Année Zéro."
   }
 }

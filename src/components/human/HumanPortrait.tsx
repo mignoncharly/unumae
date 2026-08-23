@@ -38,6 +38,12 @@ export interface HumanPortraitProps {
   translations?: Record<string, string>;
   /** Live humans show a countdown; archived ones show nothing. */
   showTimer?: boolean;
+  /**
+   * Joined during Year Zero. A historical note and nothing else — it confers
+   * no advantage in the draw, which is enforced in the database rather than
+   * promised here.
+   */
+  founding?: boolean | null;
 }
 
 /**
@@ -54,6 +60,7 @@ export function HumanPortrait({
   elements,
   translations,
   showTimer = false,
+  founding = false,
 }: HumanPortraitProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -73,6 +80,17 @@ export function HumanPortrait({
         {age != null ? (
           <Text color="textTertiary" variant="footnote">
             {age}
+          </Text>
+        ) : null}
+        {/*
+          Deliberately the quietest line on the screen: tertiary, footnote, no
+          colour, no pill, no icon. It marks when somebody arrived, and Article
+          11 says the person is the star — a badge that competed with their name
+          would turn arriving early into a rank.
+        */}
+        {founding === true ? (
+          <Text color="textTertiary" variant="footnote">
+            {t('founding.joined')}
           </Text>
         ) : null}
       </View>

@@ -4,9 +4,12 @@ import { useIsAuthenticated } from '@/features/auth/useSession';
 
 import {
   amIModerator,
+  getGrowthGate,
+  getParticipationMix,
   getPortraitQueue,
   getQuestionQueue,
   getReportQueue,
+  getRetentionCohorts,
   reportContent,
   resolveReport,
   reviewPortrait,
@@ -20,6 +23,9 @@ export const moderationKeys = {
   portraits: ['moderation-portraits'] as const,
   questions: ['moderation-questions'] as const,
   reports: ['moderation-reports'] as const,
+  cohorts: ['moderation-cohorts'] as const,
+  participation: ['moderation-participation'] as const,
+  gate: ['moderation-gate'] as const,
 };
 
 export function useAmIModerator() {
@@ -111,5 +117,42 @@ export function useBlock() {
   return useMutation({
     mutationFn: ({ userId, blocked }: { userId: string; blocked: boolean }) =>
       setBlocked(userId, blocked),
+  });
+}
+
+/**
+ * Signals.
+ *
+ * Slow-moving by nature — a cohort's D7 cannot change more than once a day —
+ * so these are cached for an hour. Nobody needs to watch retention update live,
+ * and a number that flickers invites the kind of staring that this product is
+ * built to avoid.
+ */
+const SIGNALS_STALE_TIME = 60 * 60 * 1000;
+
+export function useRetentionCohorts(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.cohorts,
+    queryFn: () => getRetentionCohorts(),
+    enabled,
+    staleTime: SIGNALS_STALE_TIME,
+  });
+}
+
+export function useParticipationMix(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.participation,
+    queryFn: () => getParticipationMix(),
+    enabled,
+    staleTime: SIGNALS_STALE_TIME,
+  });
+}
+
+export function useGrowthGate(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.gate,
+    queryFn: () => getGrowthGate(),
+    enabled,
+    staleTime: SIGNALS_STALE_TIME,
   });
 }

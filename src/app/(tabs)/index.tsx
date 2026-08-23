@@ -110,6 +110,7 @@ export default function TodayScreen() {
             prompt: t(`portrait.prompts.${element.key}.label`),
             answer: element.answer,
           }))}
+          founding={today.human.founding}
           humanNumber={today.human.human_number ?? 0}
           name={today.human.display_name}
           photoUri={today.photoUrl}

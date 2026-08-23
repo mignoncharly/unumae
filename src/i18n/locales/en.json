@@ -347,7 +347,30 @@
     "openReports_one": "{{count}} open report",
     "openReports_other": "{{count}} open reports",
     "actionFailed": "That did not go through. Please try again.",
-    "everyDecisionLogged": "Every decision here is recorded with who made it and why. Moderation is a power over people, and a decision nobody can review is a decision nobody can be held to."
+    "everyDecisionLogged": "Every decision here is recorded with who made it and why. Moderation is a power over people, and a decision nobody can review is a decision nobody can be held to.",
+    "signals": "Signals",
+    "signalsIntro": "Do people come back? Measured before anything is spent.",
+    "cohorts": "Cohorts",
+    "cohortDate": "Joined",
+    "installs": "Installs",
+    "d1": "D1",
+    "d7": "D7",
+    "tooEarly": "too early",
+    "participation": "Participation",
+    "participants": "Take part",
+    "watchers": "Watch only",
+    "gate": "Growth gate",
+    "gateIntro": "All four must pass before a single user is bought. Thresholds were set in advance.",
+    "gatePass": "Clear",
+    "gateFail": "Not yet",
+    "gateBlocked": "Do not buy users. Fix the product.",
+    "gateOpen": "The gate is open.",
+    "checks": {
+      "d1_retention": "Came back the next day",
+      "d7_retention": "Still here on day seven",
+      "participation": "Asked, voted, Remembered or shared",
+      "share_rate": "Sent a portrait out of the app"
+    }
   },
   "privacy": {
     "title": "Privacy",
@@ -414,5 +437,11 @@
   },
   "offline": {
     "notice": "You are offline. This is what you saw last."
+  },
+  "founding": {
+    "badge": "Founding Human",
+    "joined": "Joined during Year Zero",
+    "explain": "They were here in the first year. It is a piece of history, nothing more — it does not make anyone more likely to be selected.",
+    "yours": "You joined during Year Zero."
   }
 }

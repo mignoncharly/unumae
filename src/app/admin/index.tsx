@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { OperationsPanel } from '@/components/moderation/OperationsPanel';
 import { SignalsPanel } from '@/components/moderation/SignalsPanel';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -18,7 +19,7 @@ import {
 } from '@/features/moderation/hooks';
 import { useTheme } from '@/theme';
 
-type Tab = 'portraits' | 'questions' | 'reports' | 'signals';
+type Tab = 'portraits' | 'questions' | 'reports' | 'signals' | 'operations';
 
 /**
  * The moderation console.
@@ -69,32 +70,38 @@ export default function AdminScreen() {
       />
       <Screen>
         <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
-          {(['portraits', 'questions', 'reports', 'signals'] as Tab[]).map(
-            (value) => (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ selected: tab === value }}
-                key={value}
-                onPress={() => setTab(value)}
-                style={{
-                  paddingHorizontal: theme.spacing.lg,
-                  minHeight: 44,
-                  justifyContent: 'center',
-                  borderRadius: theme.radius.full,
-                  borderWidth: 1,
-                  borderColor:
-                    tab === value ? theme.colors.accent : theme.colors.border,
-                }}
+          {(
+            [
+              'portraits',
+              'questions',
+              'reports',
+              'signals',
+              'operations',
+            ] as Tab[]
+          ).map((value) => (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ selected: tab === value }}
+              key={value}
+              onPress={() => setTab(value)}
+              style={{
+                paddingHorizontal: theme.spacing.lg,
+                minHeight: 44,
+                justifyContent: 'center',
+                borderRadius: theme.radius.full,
+                borderWidth: 1,
+                borderColor:
+                  tab === value ? theme.colors.accent : theme.colors.border,
+              }}
+            >
+              <Text
+                color={tab === value ? 'text' : 'textSecondary'}
+                variant="footnote"
               >
-                <Text
-                  color={tab === value ? 'text' : 'textSecondary'}
-                  variant="footnote"
-                >
-                  {t(`moderation.${value}`)}
-                </Text>
-              </Pressable>
-            )
-          )}
+                {t(`moderation.${value}`)}
+              </Text>
+            </Pressable>
+          ))}
         </View>
 
         <View style={{ marginTop: theme.spacing.xl }}>
@@ -181,6 +188,8 @@ export default function AdminScreen() {
           ) : null}
 
           {tab === 'signals' ? <SignalsPanel /> : null}
+
+          {tab === 'operations' ? <OperationsPanel /> : null}
         </View>
 
         <View style={{ marginTop: theme.spacing.xxxl }}>

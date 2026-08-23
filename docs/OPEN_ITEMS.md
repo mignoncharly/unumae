@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: end of Phase 15.
+Last updated: end of Phase 16 — the MVP build is complete.
 
 ---
 
@@ -19,14 +19,19 @@ Last updated: end of Phase 15.
 | 6 | **Check the share card on a real device** | Settings → Developer → Share card. It names which of the two native modules loaded, renders the card scaled to fit, and captures it to a real PNG that it then displays — the preview proves the layout, only the capture proves the capture. | Nothing — the fallback works. |
 | 7 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
 
-## Mine — code, and already planned
+## Mine — code
 
-| # | Item | Phase |
+The MVP build is finished. Everything below is deliberately deferred, with the
+reasoning in `docs/DEFERRED.md`.
+
+| # | Item | Why deferred |
 | --- | --- | --- |
-| 1 | Scale and AI features | 16 — next |
-| 2 | Schedule the notification sender and the translation job (both deployed; both need pg_net or an external cron to run nightly) | 16 |
-| 3 | Liveness capture flow — the gate exists and is switched off | later, native |
-| 4 | Optional audio/video portrait element | later |
+| 1 | AI Interview Assistant | The plan excludes it from the MVP in as many words. It would put a language model between a person and their own words before we know whether the guided prompts are enough. |
+| 2 | Human Story Engine | Needs a corpus that does not exist yet, and a definition of "interesting" that is not engagement — which this product has deliberately made unmeasurable per person. |
+| 3 | Where Are They Now? | Needs five years. Nothing to build; nothing must be broken in the meantime. |
+| 4 | Monetization, Android, full PWA | Phase 17, macro-phase H, post-launch. |
+| 5 | Liveness capture flow | The gate exists in `app_settings` and is switched off. Native, and a real decision about user cost. |
+| 6 | Optional audio/video portrait element | Later. |
 
 ## Needs a native build, not Expo Go
 
@@ -47,18 +52,20 @@ picking, storage, the Signals tab — runs in Expo Go.
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | 28 applied |
-| Edge Functions | `delete-account`, `send-notifications`, `translate-portraits` — all deployed and probed |
+| Migrations | 32 applied |
+| Edge Functions | `delete-account`, `send-notifications`, `translate-portraits` — deployed, and now **scheduled** via pg_net |
 | Storage buckets | `avatars`, `portraits` — both private |
-| Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min, analytics purge 03:30 |
+| Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send 00:15, translate 01:00, purge 03:30, expiry sweep every 15 min. Full table in `docs/OPERATIONS.md` |
 | EAS project | `@mignoncharly/unumae` |
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Moderator bootstrap | seeded by email; promotes automatically on profile creation |
 | Draw verification | database and independent implementation agree |
-| Anonymous access | 89 checks, matches the allowlist |
+| Anonymous access | 96 checks, matches the allowlist |
 | Signed-in privilege escalation | 31 checks, all refused |
 | **Full loop, end to end** | **passes — draw, invitation, acceptance, portrait, moderation, publication, audience, Archive** |
-| Tests | 492 offline, plus four live suites |
+| **Escalation** | **passes — decline and silence both promote a backup who can actually accept** |
+| Nightly jobs | pg_net → Edge Function proven end to end: one queued call produced 30 translations |
+| Tests | 508 offline, plus four live suites |
 
 ## Commands worth remembering
 
@@ -69,8 +76,13 @@ npm run verify:security   # attacks the live database as a signed-in user
 npm run simulate          # the whole loop in three minutes; cleans up after itself
 npm run db:push           # apply pending migrations
 npm run db:list           # confirm remote matches local — always check after a push
+npm run db:settings       # give the nightly jobs their credentials
 ```
 
-⚠️ Run `npm run simulate` after any migration that touches the draw, the
-moderation path, or publication. Two fatal bugs shipped past 465 green tests
-because the schema guards read SQL as text and cannot tell you it runs.
+⚠️ Run `npm run simulate` after any migration touching the draw, moderation,
+publication or escalation. Four bugs have been found this way — two of them
+fatal and invisible to a green test suite — because the schema guards read SQL
+as text and cannot tell you it runs.
+
+Operational detail, including the full nightly schedule and what each instrument
+means: `docs/OPERATIONS.md`.

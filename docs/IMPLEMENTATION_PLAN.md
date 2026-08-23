@@ -437,7 +437,7 @@ APIs. `docs/APP_STORE.md` carries the privacy-label answers, the age-rating
 questionnaire, the required URLs, the "this is not a sweepstake" argument, and
 the four rejections worth anticipating.
 
-492 tests offline, plus four live suites: draw cross-check, anonymous access,
+508 tests offline, plus four live suites: draw cross-check, anonymous access,
 signed-in privilege escalation, and the full-loop simulation.
 
 ## Phase 14 — Internal Alpha, Private Beta & retention validation ✅
@@ -554,9 +554,75 @@ now it does. And the Dynamic Type rule now has exactly one exemption — the sha
 card, which is never on screen — named by path, with a second test asserting the
 exemption really is a fixed-size export.
 
-## Phase 16 — next
+## Phase 16 — Scale & AI features ✅
 
-Scale and AI features.
+The plan classifies this phase as macro-phase **H — Scale**, `❌ post-launch`,
+and excludes the AI features from the MVP in as many words ("PHASE 37 — AI
+Interview Assistant. *Pas au MVP*"). So the scale infrastructure is built and
+the three product features are designed in `docs/DEFERRED.md` rather than
+shipped. Recording the decision is the point: it means it was made, not
+forgotten.
+
+**The backup candidate system had never once been executed.** A cycle only
+escalates when somebody declines or goes quiet, which in production means
+waiting twelve hours for a deadline nobody watches — so the code that rescues a
+cycle was the least exercised code in the product and the most expensive to
+have wrong. A silent failure there does not look like an error; it looks like a
+Quiet Day for a cycle with three willing people queued behind the first.
+
+The simulation now runs both paths. Declining escalates immediately; silence
+escalates when the fifteen-minute sweep finds the expired deadline. Twelve
+checks, including the one that mattered — that the promoted backup receives a
+*new invitation*, because `escalate_draw` moves the queue and only
+`notify_selected_candidate` writes the thing `accept_selection` looks for. A
+promotion without an invitation is a cycle nobody can accept. All twelve passed
+first time; the escalation code was right.
+
+**Three instruments, and none of them is wired to anything.** That is the whole
+risk of this phase: at scale the tempting move is to let the measurements steer
+the product, and every one of those moves breaks something written down.
+`country_balance` watches pool share against Archive share and never corrects
+it (Article 5.2 — the draw takes eligibility and chance). `integrity_signals`
+reports and never feeds eligibility (Article 5.5 — declining costs nothing).
+`moderation_health` reports queue *ages*, because a portrait waiting is a cycle
+waiting and nobody tells the person. `tests/scale-schema.test.ts` fails the
+build if the draw ever learns any of it.
+
+**The anti-fraud bill from Phase 11 came due.** The usual answer to
+multi-accounting is device fingerprinting, and this schema cannot do it —
+`analytics_events` has nowhere to put an IP address, a device model or an
+advertising identifier, and a test asserts those columns do not exist. So the
+signals are weak and honest: signup bursts, abandoned cycles, the verification
+mix, country-and-year collisions. They catch the careless, not the determined.
+The real defence is raising `verification_level`, which costs real users
+something and should be decided deliberately rather than drifted into.
+
+**The nightly jobs now actually run.** Two Edge Functions had been deployed and
+nothing had ever called them. pg_cron runs SQL and Edge Functions speak HTTP, so
+`invoke_function` bridges them with pg_net, and every invocation records a row
+in `job_runs` — including its failures. A scheduled job nobody can see the
+result of is indistinguishable from one that is not running, which is exactly
+how `run_daily_draw` stayed broken from Phase 4 to Phase 14.
+
+Verified end to end rather than by its return value: pg_net says *queued*, not
+*worked*. Given a simulated cycle with real portraits, one queued call produced
+30 translations without anything being invoked by hand.
+
+**Two more bugs the simulation found.** `country_balance` raised on every call —
+in plpgsql the OUT parameters of `returns table` are in scope for the whole
+body, so `country_code` was both a variable and a column and every unqualified
+reference was ambiguous. Nothing offline could have caught it: the function
+refuses anyone who is not a moderator, so the service role cannot execute it
+either. And the Supabase pattern for pg_net credentials — database settings —
+is refused on this project, because `postgres` is not a superuser. They live in
+a table with RLS on and no policy instead, which is better: a GUC is invisible,
+nothing audits it, and its value leaks into any error quoting the statement that
+set it.
+
+## Phase 17 — deferred
+
+Monetization, Android and full web/PWA. Macro-phase H, post-launch. See
+`docs/DEFERRED.md`.
 
 ## Working agreements
 

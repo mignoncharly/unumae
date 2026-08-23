@@ -371,7 +371,8 @@
       "d7_retention": "Still here on day seven",
       "participation": "Asked, voted, Remembered or shared",
       "share_rate": "Sent a portrait out of the app"
-    }
+    },
+    "operations": "Operations"
   },
   "privacy": {
     "title": "Privacy",
@@ -461,5 +462,30 @@
     "unnamed_other": "{{people}} more across {{countries}} countries with too few people to name without identifying them.",
     "byCountry": "By country",
     "floorNote": "Countries with fewer than five people waiting are counted, never named. Being the only person waiting somewhere means being identified the day you are drawn."
+  },
+  "operations": {
+    "health": "Queue health",
+    "queueWarning": "A portrait has been waiting {{hours}} hours. Nobody has told them anything.",
+    "measures": {
+      "portraits_waiting": "Portraits waiting",
+      "oldest_portrait_hours": "Oldest portrait, hours",
+      "questions_waiting": "Questions waiting",
+      "oldest_question_hours": "Oldest question, hours",
+      "reports_open": "Reports open",
+      "cycles_at_risk": "Cycles without a portrait"
+    },
+    "jobs": "Nightly jobs",
+    "jobsIntro": "A job nobody can see the result of is the same as a job that is not running.",
+    "jobsEmpty": "Nothing has run yet.",
+    "balance": "Country balance",
+    "balanceIntro": "Share of the pool, then share of the Archive. Watched, never corrected — the draw takes eligibility and chance, and nothing else.",
+    "integrity": "Integrity signals",
+    "integrityIntro": "Weak on purpose. This schema keeps no device or location data, so these catch the careless and not the determined. The real defence is raising verification.",
+    "signals": {
+      "signup_bursts": "Signup bursts",
+      "abandoned_cycles": "Abandoned cycles",
+      "email_only_pool": "Email-only in the pool",
+      "country_year_collisions": "Country and year collisions"
+    }
   }
 }

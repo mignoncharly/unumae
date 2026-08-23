@@ -551,6 +551,42 @@ export type Database = {
         Args: Record<never, never>;
         Returns: { countries: number; waiting: number }[];
       };
+      /**
+       * Pool share against Archive share, per country. A monitor: the draw
+       * takes eligibility and chance and nothing else (Article 5.2), and
+       * tests/scale-schema.test.ts fails the build if it ever learns this.
+       */
+      country_balance: {
+        Args: Record<never, never>;
+        Returns: {
+          country_code: string;
+          waiting: number;
+          pool_share: number;
+          published: number;
+          archive_share: number;
+          drift: number;
+        }[];
+      };
+      /** Weak, honest fraud signals from data already kept. Moderators only. */
+      integrity_signals: {
+        Args: { window_days?: number };
+        Returns: { signal: string; count: number; detail: string }[];
+      };
+      /** Queue ages rather than queue sizes. Moderators only. */
+      moderation_health: {
+        Args: Record<never, never>;
+        Returns: { measure: string; value: number; detail: string }[];
+      };
+      /** What the nightly jobs did. Moderators only. */
+      job_history: {
+        Args: { limit_rows?: number };
+        Returns: {
+          job: string;
+          ran_at: string;
+          ok: boolean;
+          detail: string | null;
+        }[];
+      };
       /** Last day of Year Zero. Null until the first cycle is published. */
       year_zero_ends: {
         Args: Record<never, never>;

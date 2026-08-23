@@ -375,6 +375,212 @@ async function runCycle(date, people, moderator, { publish }) {
 // The audience
 // ---------------------------------------------------------------------------
 
+/**
+ * The backup candidate system (Article 5.6).
+ *
+ * Nothing had ever executed this path. A cycle only escalates when somebody
+ * declines or goes quiet, which in production means waiting twelve hours for a
+ * deadline nobody watches — so the code that rescues a cycle was the least
+ * exercised code in the product, and the most expensive to have wrong. A silent
+ * failure here does not show up as an error; it shows up as a Quiet Day for a
+ * cycle that had three willing people queued behind the first.
+ *
+ * Two ways out of a cycle, and they are different code paths:
+ *
+ *   declining  — escalates immediately, because the candidate has answered
+ *   silence    — escalates when the sweep finds the expired deadline
+ */
+async function exerciseEscalation(date, people) {
+  console.log(`\nescalation ${date}`);
+
+  const draw = await rpc('run_daily_draw', { target_date: date });
+  if (!step(draw.ok, 'a cycle was drawn to decline', `HTTP ${draw.status}`)) {
+    return;
+  }
+  await rpc('notify_selected_candidate', { target_date: date });
+
+  const before = await svc(
+    `/rest/v1/daily_draws?selection_date=eq.${date}&select=id,selected_user_id,backup_1,backup_2,selection_status`
+  );
+  const [row] = await before.json();
+  const first = people.find((person) => person.id === row?.selected_user_id);
+  const expectedNext = row?.backup_1;
+
+  if (!step(Boolean(first), 'the first candidate is one of ours')) {
+    return;
+  }
+  step(Boolean(expectedNext), 'a backup was drawn alongside them');
+
+  // --- declining ---------------------------------------------------------
+  const declined = await asUser(first.token, '/rest/v1/rpc/decline_selection', {
+    method: 'POST',
+    body: JSON.stringify({}),
+  });
+  step(
+    declined.ok && (await declined.json()) === true,
+    'the first candidate declined'
+  );
+
+  const after = await svc(
+    `/rest/v1/daily_draws?selection_date=eq.${date}&select=id,selected_user_id,backup_1,selection_status`
+  );
+  const [promoted] = await after.json();
+
+  step(
+    promoted?.selected_user_id === expectedNext,
+    'the first backup was promoted',
+    `status ${promoted?.selection_status}`
+  );
+  step(
+    promoted?.selected_user_id !== row?.selected_user_id,
+    'the person who declined is no longer the Human'
+  );
+
+  // The promotion is worthless if the promoted person cannot actually accept:
+  // escalate_draw moves the queue, and only notify_selected_candidate writes
+  // the invitation that accept_selection looks for.
+  const second = people.find(
+    (person) => person.id === promoted?.selected_user_id
+  );
+  const invitation = await asUser(
+    second.token,
+    '/rest/v1/rpc/my_pending_invitation',
+    { method: 'POST', body: JSON.stringify({}) }
+  );
+  const pending = invitation.ok ? await invitation.json() : [];
+  step(
+    pending.length > 0,
+    'the backup was actually invited, not just recorded'
+  );
+
+  const accepted = await asUser(second.token, '/rest/v1/rpc/accept_selection', {
+    method: 'POST',
+    body: JSON.stringify({}),
+  });
+  step(accepted.ok && (await accepted.json()) === true, 'and could accept');
+
+  // --- no penalty --------------------------------------------------------
+  // Article 5.5 says declining costs nothing. The structural version of that
+  // promise: the person who declined is still eligible for tomorrow.
+  const stillEligible = await rpc('is_eligible', { candidate_id: first.id });
+  step(
+    stillEligible.ok && (await stillEligible.json()) === true,
+    'declining cost them nothing — still eligible'
+  );
+
+  // --- silence -----------------------------------------------------------
+  // Backdate the deadline rather than waiting twelve hours, then let the sweep
+  // that runs every fifteen minutes in production find it.
+  const silentDate = utcDate(-3);
+  const silentDraw = await rpc('run_daily_draw', { target_date: silentDate });
+  if (!step(silentDraw.ok, 'a second cycle was drawn, to be ignored')) {
+    return;
+  }
+  await rpc('notify_selected_candidate', { target_date: silentDate });
+
+  const silentBefore = await svc(
+    `/rest/v1/daily_draws?selection_date=eq.${silentDate}&select=id,selected_user_id,backup_1`
+  );
+  const [silentRow] = await silentBefore.json();
+
+  await svc(
+    `/rest/v1/draw_invitations?draw_id=eq.${silentRow.id}&response=is.null`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({
+        acceptance_deadline: new Date(Date.now() - 60_000).toISOString(),
+      }),
+    }
+  );
+
+  const swept = await rpc('expire_stale_invitations');
+  const sweptCount = swept.ok ? await swept.json() : 0;
+  step(
+    sweptCount >= 1,
+    'the sweep expired the silent invitation',
+    `${sweptCount}`
+  );
+
+  const silentAfter = await svc(
+    `/rest/v1/daily_draws?selection_date=eq.${silentDate}&select=selected_user_id,selection_status`
+  );
+  const [silentPromoted] = await silentAfter.json();
+  step(
+    silentPromoted?.selected_user_id === silentRow?.backup_1,
+    'silence promoted the backup too',
+    `status ${silentPromoted?.selection_status}`
+  );
+}
+
+/**
+ * The Phase 16 instruments.
+ *
+ * Every one of them refuses unless the caller is a moderator, which means the
+ * service role cannot execute them and neither can any offline test — the only
+ * way to find out whether the SQL runs is to call it as a moderator against
+ * real rows. That is exactly the gap that hid two fatal bugs in Phase 14, so
+ * these are run here rather than trusted.
+ */
+async function exerciseInstruments(moderator) {
+  console.log('\nthe instruments');
+
+  const call = async (fn, label) => {
+    const response = await asUser(moderator.token, `/rest/v1/rpc/${fn}`, {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+    if (!response.ok) {
+      // The message, not just the status. A 400 from PostgREST carries the
+      // Postgres error, and that is the whole reason this script exists.
+      const text = await response.text();
+      step(false, label, `HTTP ${response.status} ${text.slice(0, 200)}`);
+      return null;
+    }
+
+    const body = await response.json();
+    step(true, label, `${body.length} row(s)`);
+    return body;
+  };
+
+  const balance = await call('country_balance', 'country balance reads');
+  const signals = await call('integrity_signals', 'integrity signals read');
+  const health = await call('moderation_health', 'moderation health reads');
+
+  // The shares have to reconcile, or the numbers are decoration.
+  if (balance?.length) {
+    const poolShare = balance.reduce(
+      (sum, row) => sum + Number(row.pool_share),
+      0
+    );
+    step(
+      Math.abs(poolShare - 100) < 0.5,
+      'the pool shares add up to 100%',
+      `${poolShare.toFixed(1)}%`
+    );
+  }
+
+  step(
+    signals?.some((row) => row.signal === 'email_only_pool'),
+    'the verification mix is reported'
+  );
+  step(
+    health?.some((row) => row.measure === 'oldest_portrait_hours'),
+    'the queue is measured by age, not only by size'
+  );
+
+  // And the thing that must stay true: a guest cannot read any of it.
+  const leak = await fetch(`${URL_BASE}/rest/v1/rpc/country_balance`, {
+    method: 'POST',
+    headers: {
+      apikey: ANON,
+      Authorization: `Bearer ${ANON}`,
+      'Content-Type': 'application/json',
+    },
+    body: '{}',
+  });
+  step(!leak.ok, 'a guest cannot read any of it', `HTTP ${leak.status}`);
+}
+
 async function exerciseAudience(drawId, people, moderator, selected) {
   console.log('\nthe audience');
 
@@ -621,6 +827,11 @@ try {
   if (today) {
     await exerciseAudience(today.drawId, people, moderator, today.selected);
   }
+
+  // Two days back, so it cannot collide with the cycles above.
+  await exerciseEscalation(utcDate(-2), people);
+
+  await exerciseInstruments(moderator);
 
   console.log('\nthe archive');
   const archive = await fetch(`${URL_BASE}/rest/v1/rpc/get_archive`, {

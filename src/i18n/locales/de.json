@@ -371,7 +371,8 @@
       "d7_retention": "Am siebten Tag noch da",
       "participation": "Gefragt, abgestimmt, erinnert oder geteilt",
       "share_rate": "Ein Porträt aus der App geschickt"
-    }
+    },
+    "operations": "Betrieb"
   },
   "privacy": {
     "title": "Datenschutz",
@@ -461,5 +462,30 @@
     "unnamed_other": "{{people}} weitere in {{countries}} Ländern, in denen zu wenige warten, um sie zu nennen, ohne sie zu identifizieren.",
     "byCountry": "Nach Land",
     "floorNote": "Länder mit weniger als fünf wartenden Menschen werden gezählt, aber nie genannt. Die einzige wartende Person in einem Land zu sein heißt, am Tag der Auswahl identifiziert zu werden."
+  },
+  "operations": {
+    "health": "Zustand der Warteschlangen",
+    "queueWarning": "Ein Porträt wartet seit {{hours}} Stunden. Niemand hat ihnen etwas gesagt.",
+    "measures": {
+      "portraits_waiting": "Wartende Porträts",
+      "oldest_portrait_hours": "Ältestes Porträt, Stunden",
+      "questions_waiting": "Wartende Fragen",
+      "oldest_question_hours": "Älteste Frage, Stunden",
+      "reports_open": "Offene Meldungen",
+      "cycles_at_risk": "Zyklen ohne Porträt"
+    },
+    "jobs": "Nächtliche Jobs",
+    "jobsIntro": "Ein Job, dessen Ergebnis niemand sieht, ist dasselbe wie ein Job, der nicht läuft.",
+    "jobsEmpty": "Bisher ist nichts gelaufen.",
+    "balance": "Länderverteilung",
+    "balanceIntro": "Anteil am Pool, dann Anteil am Archiv. Beobachtet, nie korrigiert — die Auswahl kennt nur Berechtigung und Zufall.",
+    "integrity": "Integritätssignale",
+    "integrityIntro": "Absichtlich schwach. Dieses Schema speichert weder Gerät noch Ort, also finden sie Unachtsame, nicht Entschlossene. Der echte Schutz ist eine strengere Verifizierung.",
+    "signals": {
+      "signup_bursts": "Anmeldeschübe",
+      "abandoned_cycles": "Abgebrochene Zyklen",
+      "email_only_pool": "Nur per E-Mail verifiziert",
+      "country_year_collisions": "Land- und Jahrgangs-Kollisionen"
+    }
   }
 }

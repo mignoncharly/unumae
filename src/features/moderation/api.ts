@@ -265,3 +265,95 @@ export async function getGrowthGate(
     passed: row.passed,
   }));
 }
+
+// --- Phase 16 instruments ----------------------------------------------------
+//
+// Monitors, all three. None of them is an input to anything: the draw takes
+// eligibility and chance (Article 5.2), declining costs nothing (Article 5.5),
+// and there are four notification categories and no more. A moderator reads
+// these and decides what to do as a person.
+
+export interface CountryBalanceRow {
+  countryCode: string;
+  waiting: number;
+  poolShare: number;
+  published: number;
+  archiveShare: number;
+  /** Archive share minus pool share. Negative is under-represented so far. */
+  drift: number;
+}
+
+export async function getCountryBalance(): Promise<CountryBalanceRow[]> {
+  const { data, error } = await getSupabase().rpc('country_balance');
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((row) => ({
+    countryCode: row.country_code,
+    waiting: row.waiting,
+    poolShare: row.pool_share,
+    published: row.published,
+    archiveShare: row.archive_share,
+    drift: row.drift,
+  }));
+}
+
+export interface IntegritySignal {
+  signal: string;
+  count: number;
+  detail: string;
+}
+
+export async function getIntegritySignals(): Promise<IntegritySignal[]> {
+  const { data, error } = await getSupabase().rpc('integrity_signals');
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+  return data ?? [];
+}
+
+export interface HealthMeasure {
+  measure: string;
+  value: number;
+  detail: string;
+}
+
+export async function getModerationHealth(): Promise<HealthMeasure[]> {
+  const { data, error } = await getSupabase().rpc('moderation_health');
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+  return data ?? [];
+}
+
+export interface JobRun {
+  job: string;
+  ranAt: string;
+  ok: boolean;
+  detail: string | null;
+}
+
+/**
+ * What the nightly jobs did.
+ *
+ * A scheduled job nobody can see the result of is indistinguishable from a
+ * scheduled job that is not running — which is exactly how the daily draw
+ * managed to be broken from Phase 4 to Phase 14 without anybody noticing.
+ */
+export async function getJobHistory(): Promise<JobRun[]> {
+  const { data, error } = await getSupabase().rpc('job_history', {
+    limit_rows: 20,
+  });
+
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((row) => ({
+    job: row.job,
+    ranAt: row.ran_at,
+    ok: row.ok,
+    detail: row.detail,
+  }));
+}

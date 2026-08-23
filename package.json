@@ -30,7 +30,8 @@
     "web:check": "npm --prefix website run verify",
     "web:quality": "npm --prefix website run quality",
     "verify:security": "node scripts/verify-security.mjs",
-    "simulate": "node scripts/simulate-cycle.mjs"
+    "simulate": "node scripts/simulate-cycle.mjs",
+    "db:settings": "node scripts/db-settings.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

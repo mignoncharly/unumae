@@ -4,7 +4,11 @@ import { useIsAuthenticated } from '@/features/auth/useSession';
 
 import {
   amIModerator,
+  getCountryBalance,
   getGrowthGate,
+  getIntegritySignals,
+  getJobHistory,
+  getModerationHealth,
   getParticipationMix,
   getPortraitQueue,
   getQuestionQueue,
@@ -26,6 +30,10 @@ export const moderationKeys = {
   cohorts: ['moderation-cohorts'] as const,
   participation: ['moderation-participation'] as const,
   gate: ['moderation-gate'] as const,
+  countryBalance: ['moderation-country-balance'] as const,
+  integrity: ['moderation-integrity'] as const,
+  health: ['moderation-health'] as const,
+  jobs: ['moderation-jobs'] as const,
 };
 
 export function useAmIModerator() {
@@ -152,6 +160,50 @@ export function useGrowthGate(enabled: boolean) {
   return useQuery({
     queryKey: moderationKeys.gate,
     queryFn: () => getGrowthGate(),
+    enabled,
+    staleTime: SIGNALS_STALE_TIME,
+  });
+}
+
+/**
+ * The Phase 16 instruments.
+ *
+ * Cached for an hour like the other signals. Country drift and queue age move
+ * on the scale of days, and a number that flickers invites the kind of watching
+ * this product exists to avoid.
+ */
+export function useCountryBalance(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.countryBalance,
+    queryFn: getCountryBalance,
+    enabled,
+    staleTime: SIGNALS_STALE_TIME,
+  });
+}
+
+export function useIntegritySignals(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.integrity,
+    queryFn: getIntegritySignals,
+    enabled,
+    staleTime: SIGNALS_STALE_TIME,
+  });
+}
+
+/** Refetched more eagerly: a portrait waiting is a cycle waiting. */
+export function useModerationHealth(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.health,
+    queryFn: getModerationHealth,
+    enabled,
+    staleTime: 60 * 1000,
+  });
+}
+
+export function useJobHistory(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.jobs,
+    queryFn: getJobHistory,
     enabled,
     staleTime: SIGNALS_STALE_TIME,
   });

@@ -371,7 +371,8 @@
       "d7_retention": "Encore là au septième jour",
       "participation": "Ont demandé, voté, gardé en mémoire ou partagé",
       "share_rate": "Ont envoyé un portrait hors de l’app"
-    }
+    },
+    "operations": "Exploitation"
   },
   "privacy": {
     "title": "Confidentialité",
@@ -461,5 +462,30 @@
     "unnamed_other": "{{people}} de plus répartis dans {{countries}} pays où ils sont trop peu nombreux pour être nommés sans être identifiés.",
     "byCountry": "Par pays",
     "floorNote": "Les pays comptant moins de cinq personnes en attente sont comptabilisés, jamais nommés. Être la seule personne en attente dans un pays, c’est être identifié le jour du tirage."
+  },
+  "operations": {
+    "health": "Santé des files",
+    "queueWarning": "Un portrait attend depuis {{hours}} heures. Personne ne leur a rien dit.",
+    "measures": {
+      "portraits_waiting": "Portraits en attente",
+      "oldest_portrait_hours": "Portrait le plus ancien, heures",
+      "questions_waiting": "Questions en attente",
+      "oldest_question_hours": "Question la plus ancienne, heures",
+      "reports_open": "Signalements ouverts",
+      "cycles_at_risk": "Cycles sans portrait"
+    },
+    "jobs": "Tâches nocturnes",
+    "jobsIntro": "Une tâche dont personne ne voit le résultat équivaut à une tâche qui ne tourne pas.",
+    "jobsEmpty": "Rien n’a encore tourné.",
+    "balance": "Équilibre par pays",
+    "balanceIntro": "Part du vivier, puis part des Archives. Observé, jamais corrigé — le tirage ne prend que l’éligibilité et le hasard.",
+    "integrity": "Signaux d’intégrité",
+    "integrityIntro": "Volontairement faibles. Ce schéma ne conserve ni appareil ni localisation : ils repèrent les négligents, pas les déterminés. La vraie défense est de renforcer la vérification.",
+    "signals": {
+      "signup_bursts": "Rafales d’inscriptions",
+      "abandoned_cycles": "Cycles abandonnés",
+      "email_only_pool": "Vérifiés par e-mail seul",
+      "country_year_collisions": "Collisions pays et année"
+    }
   }
 }

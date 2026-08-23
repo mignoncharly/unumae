@@ -163,6 +163,14 @@ const PROBES = [
   ['participation_mix', {}],
   ['growth_gate', {}],
 
+  // Phase 16 — every instrument is moderator-only, and the job credentials are
+  // reachable by nobody at all.
+  ['country_balance', {}],
+  ['integrity_signals', {}],
+  ['moderation_health', {}],
+  ['job_history', {}],
+  ['invoke_function', { function_name: 'send-notifications' }],
+
   // Phase 15 — the transparency numbers are public; the translation queue is not.
   ['selection_stats', {}],
   ['country_representation', {}],
@@ -201,6 +209,8 @@ const CLOSED_TABLES = [
   'portrait_element_translations',
   'founding_moderators',
   'analytics_events',
+  'job_runs',
+  'job_secrets',
 ];
 
 function loadEnv() {

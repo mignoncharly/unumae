@@ -609,8 +609,26 @@ export type Database = {
           job: string;
           ran_at: string;
           ok: boolean;
+          job_status: 'queued' | 'succeeded' | 'failed';
           detail: string | null;
         }[];
+      };
+      /** Active scheduler and moderation alerts. Moderators only. */
+      operational_alerts: {
+        Args: Record<never, never>;
+        Returns: {
+          alert_id: number;
+          code: string;
+          severity: 'warning' | 'critical';
+          message: string;
+          detected_at: string;
+          draw_id: string | null;
+          job_run_id: number | null;
+        }[];
+      };
+      resolve_operational_alert: {
+        Args: { target_alert: number };
+        Returns: boolean;
       };
       /** Last day of Year Zero. Null until the first cycle is published. */
       year_zero_ends: {

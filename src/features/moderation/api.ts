@@ -331,7 +331,18 @@ export interface JobRun {
   job: string;
   ranAt: string;
   ok: boolean;
+  status: 'queued' | 'succeeded' | 'failed';
   detail: string | null;
+}
+
+export interface OperationalAlert {
+  id: number;
+  code: string;
+  severity: 'warning' | 'critical';
+  message: string;
+  detectedAt: string;
+  drawId: string | null;
+  jobRunId: number | null;
 }
 
 /**
@@ -354,6 +365,34 @@ export async function getJobHistory(): Promise<JobRun[]> {
     job: row.job,
     ranAt: row.ran_at,
     ok: row.ok,
+    status: row.job_status,
     detail: row.detail,
   }));
+}
+
+export async function getOperationalAlerts(): Promise<OperationalAlert[]> {
+  const { data, error } = await getSupabase().rpc('operational_alerts');
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((row) => ({
+    id: row.alert_id,
+    code: row.code,
+    severity: row.severity,
+    message: row.message,
+    detectedAt: row.detected_at,
+    drawId: row.draw_id,
+    jobRunId: row.job_run_id,
+  }));
+}
+
+export async function resolveOperationalAlert(id: number): Promise<boolean> {
+  const { data, error } = await getSupabase().rpc('resolve_operational_alert', {
+    target_alert: id,
+  });
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+  return data;
 }

@@ -9,6 +9,7 @@ import {
   getIntegritySignals,
   getJobHistory,
   getModerationHealth,
+  getOperationalAlerts,
   getParticipationMix,
   getPortraitQueue,
   getQuestionQueue,
@@ -16,6 +17,7 @@ import {
   getRetentionCohorts,
   reportContent,
   resolveReport,
+  resolveOperationalAlert,
   reviewPortrait,
   reviewQuestion,
   setAccountStatus,
@@ -34,6 +36,7 @@ export const moderationKeys = {
   integrity: ['moderation-integrity'] as const,
   health: ['moderation-health'] as const,
   jobs: ['moderation-jobs'] as const,
+  alerts: ['moderation-operational-alerts'] as const,
 };
 
 export function useAmIModerator() {
@@ -206,5 +209,25 @@ export function useJobHistory(enabled: boolean) {
     queryFn: getJobHistory,
     enabled,
     staleTime: SIGNALS_STALE_TIME,
+  });
+}
+
+/** Active failures are operational, so poll rather than caching for an hour. */
+export function useOperationalAlerts(enabled: boolean) {
+  return useQuery({
+    queryKey: moderationKeys.alerts,
+    queryFn: getOperationalAlerts,
+    enabled,
+    staleTime: 30 * 1000,
+    refetchInterval: enabled ? 30 * 1000 : false,
+  });
+}
+
+export function useResolveOperationalAlert() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: resolveOperationalAlert,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: moderationKeys.alerts }),
   });
 }

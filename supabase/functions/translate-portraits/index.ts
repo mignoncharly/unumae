@@ -64,17 +64,22 @@ async function translate(
     ? 'https://api-free.deepl.com'
     : 'https://api.deepl.com';
 
-  const response = await fetch(`${host}/v2/translate`, {
-    method: 'POST',
-    headers: {
-      Authorization: `DeepL-Auth-Key ${key}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      text: [text],
-      target_lang: DEEPL_TARGET[target],
-    }),
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${host}/v2/translate`, {
+      method: 'POST',
+      headers: {
+        Authorization: `DeepL-Auth-Key ${key}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text: [text],
+        target_lang: DEEPL_TARGET[target],
+      }),
+    });
+  } catch {
+    return null;
+  }
 
   if (!response.ok) {
     return null;
@@ -84,9 +89,13 @@ async function translate(
   return body.translations?.[0] ?? null;
 }
 
-Deno.serve(async (request) => {
+Deno.serve(async (request: Request): Promise<Response> => {
   if (request.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
+  }
+
+  if (request.method !== 'POST') {
+    return jsonResponse({ error: 'method_not_allowed' }, 405);
   }
 
   const url = Deno.env.get('SUPABASE_URL');
@@ -97,19 +106,40 @@ Deno.serve(async (request) => {
     return jsonResponse({ error: 'Not configured' }, 500);
   }
 
+  if (request.headers.get('Authorization') !== `Bearer ${serviceKey}`) {
+    return jsonResponse({ error: 'unauthorized' }, 401);
+  }
+
+  const payload = (await request.json().catch(() => ({}))) as {
+    jobRunId?: number;
+  };
+  const supabase = createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  const finish = async (succeeded: boolean, detail: string) => {
+    if (typeof payload.jobRunId === 'number') {
+      await supabase.rpc('complete_job_run', {
+        target_run: payload.jobRunId,
+        succeeded,
+        result_detail: detail,
+      });
+    }
+  };
+
   if (!deeplKey) {
     // Not an error. The product works without translations — the original is
     // always there, and it is the version that governs.
+    await finish(true, 'Translation is disabled; originals remain available');
     return jsonResponse({ configured: false, translated: 0 }, 200);
   }
-
-  const supabase = createClient(url, serviceKey);
 
   const { data, error } = await supabase.rpc('pending_translations', {
     batch_size: 50,
   });
 
   if (error) {
+    await finish(false, 'Translation queue could not be read');
     return jsonResponse({ error: error.message }, 500);
   }
 
@@ -161,8 +191,12 @@ Deno.serve(async (request) => {
     translated += 1;
   }
 
+  const succeeded = failed === 0;
+  const detail = `${translated} translated, ${skipped} already in target language, ${failed} failed, ${pending.length} queued`;
+  await finish(succeeded, detail);
+
   return jsonResponse(
     { configured: true, pending: pending.length, translated, skipped, failed },
-    200
+    succeeded ? 200 : 502
   );
 });

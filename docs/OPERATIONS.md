@@ -22,13 +22,14 @@ because at scale the tempting move is to let the numbers steer the product.
 | UTC | Job | What it does |
 | --- | --- | --- |
 | 23:50 | `refresh_selection_eligibility` | Recomputes who is in the pool |
-| 00:00 | `run_daily_draw(D+2)` | Freezes the pool and draws, two days ahead |
-| 00:01 | `publish_due_cycles` | Today's approved portrait goes live |
-| 00:10 | `notify_selected_candidate` | Writes the invitation |
-| 00:15 | `send-notifications` | Edge Function, via pg_net |
+| 00:00 | `run_daily_draw_job(D+2)` | Freezes the pool, draws two days ahead, records the outcome |
+| 00:01 | `publish_due_cycles_job` | Publishes or records why today's cycle did not publish |
+| 00:10 | `notify_selected_candidate_job` | Writes the invitation and records the outcome |
 | 01:00 | `translate-portraits` | Edge Function, via pg_net |
 | 03:30 | `purge_old_analytics` | Ninety-day retention, enforced |
-| every 15 min | `expire_stale_invitations` | Expires, escalates, notifies the backup |
+| every 5 min | `expire_invitations_job` | Expires, escalates, and immediately notifies the backup |
+| every 5 min | `invoke_notifications_if_due` | Retries due push/email delivery without creating empty job rows |
+| every 5 min | `refresh_operational_alerts` | Detects failed/stalled jobs, aging review, and at-risk cycles |
 
 pg_cron runs SQL; Edge Functions speak HTTP. `invoke_function` bridges the two
 with pg_net.
@@ -47,6 +48,17 @@ npm run db:settings
 That reads `docs/supa_keys.md` and prints neither value. Re-run it after
 rotating the key.
 
+The notification Edge Function also needs two function secrets for the
+selection-email fallback:
+
+```bash
+npx supabase secrets set RESEND_API_KEY=... NOTIFICATION_FROM_EMAIL=selection@unumae.app
+```
+
+`NOTIFICATION_FROM_EMAIL` must belong to a domain verified by the configured
+Resend account. These are Edge Function secrets, not Expo client variables and
+must never be placed in `.env` under an `EXPO_PUBLIC_` name.
+
 This started as database settings, which is the pattern Supabase's own
 documentation uses. It does not work here: the project's `postgres` role is not
 a superuser, so `alter database … set` on a custom parameter is refused. The
@@ -61,10 +73,18 @@ leaks into any error that quotes the statement that set it.
 select * from public.job_history(20);
 ```
 
-Every invocation records a row in `public.job_runs`, including the failures —
-`pg_net is not installed`, `job_secrets is missing …`. A job that fails by
-raising is a job whose failure nobody sees until they open a log they have never
-opened. A row is visible from the console.
+Every invocation records a `queued`, `succeeded`, or `failed` row in
+`public.job_runs`, including configuration failures such as `pg_net is not
+installed` or missing job secrets. Queuing an HTTP request is not success: the
+notification and translation Edge Functions complete their own job row after
+the provider/database work finishes. The Operations console also keeps active
+alerts for failed or stalled work until it recovers or a moderator resolves it.
+
+Notification attempts are recorded separately in
+`public.notification_deliveries`. Only a provider-accepted push or email writes
+the logical dedupe row in `notification_log`; failed attempts remain retryable.
+Destinations are stored only as SHA-256 hashes. Selection falls back to the
+verified account email when no registered device accepts its push.
 
 This is not paranoia. `run_daily_draw` was broken from Phase 4 to Phase 14 and
 nothing noticed, because a scheduled job nobody can see the result of is

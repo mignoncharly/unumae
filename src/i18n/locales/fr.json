@@ -505,6 +505,10 @@
   },
   "notifications": {
     "title": "Notifications",
+    "actions": {
+      "accept": "Accepter",
+      "decline": "Refuser"
+    },
     "heading": "Ce que nous pouvons vous dire",
     "intro": "Quatre choses, et rien d'autre. Nous ne vous écrirons jamais pour vous faire revenir.",
     "enable": "Autoriser les notifications",
@@ -574,6 +578,22 @@
     "floorNote": "Les pays comptant moins de cinq personnes en attente sont comptabilisés, jamais nommés. Être la seule personne en attente dans un pays, c’est être identifié le jour du tirage."
   },
   "operations": {
+    "alerts": "Alertes actives",
+    "alertsIntro": "Les échecs et les files d’attente vieillissantes restent ici jusqu’à leur rétablissement ou leur résolution.",
+    "alertsEmpty": "Aucune alerte opérationnelle active.",
+    "resolveAlert": "Marquer comme résolue",
+    "detectedAt": "Détectée le {{date}} UTC",
+    "alertCodes": {
+      "job_failed": "Échec d’une tâche planifiée",
+      "job_stalled": "Une tâche planifiée est bloquée",
+      "portrait_queue_age": "La révision d’un portrait prend du retard",
+      "cycle_at_risk": "La journée Human est menacée"
+    },
+    "jobStatuses": {
+      "queued": "En attente",
+      "succeeded": "Réussie",
+      "failed": "Échouée"
+    },
     "health": "Santé des files",
     "queueWarning": "Un portrait attend depuis {{hours}} heures. Personne ne leur a rien dit.",
     "measures": {

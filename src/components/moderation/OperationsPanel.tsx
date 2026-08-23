@@ -1,12 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
+import { Button } from '@/components/ui/Button';
+import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import {
   useCountryBalance,
   useIntegritySignals,
   useJobHistory,
   useModerationHealth,
+  useOperationalAlerts,
+  useResolveOperationalAlert,
 } from '@/features/moderation/hooks';
 import { useTheme } from '@/theme';
 import { countryName, flagEmoji } from '@/utils/country';
@@ -31,6 +35,8 @@ export function OperationsPanel() {
 
   const { data: health } = useModerationHealth(true);
   const { data: jobs } = useJobHistory(true);
+  const { data: alerts } = useOperationalAlerts(true);
+  const resolveAlert = useResolveOperationalAlert();
   const { data: balance } = useCountryBalance(true);
   const { data: integrity } = useIntegritySignals(true);
 
@@ -39,6 +45,50 @@ export function OperationsPanel() {
 
   return (
     <View style={{ gap: theme.spacing.xxl }}>
+      <Section title={t('operations.alerts')}>
+        <Text color="textTertiary" variant="footnote">
+          {t('operations.alertsIntro')}
+        </Text>
+        {alerts && alerts.length > 0 ? (
+          alerts.map((alert) => (
+            <Surface
+              key={alert.id}
+              padding="md"
+              tone={alert.severity === 'critical' ? 'warm' : 'muted'}
+              style={{ gap: theme.spacing.sm }}
+            >
+              <Text
+                color={alert.severity === 'critical' ? 'danger' : 'text'}
+                variant="callout"
+              >
+                {t(`operations.alertCodes.${alert.code}`, {
+                  defaultValue: alert.code,
+                })}
+              </Text>
+              <Text color="textSecondary" variant="footnote">
+                {alert.message}
+              </Text>
+              <Text color="textTertiary" variant="caption">
+                {t('operations.detectedAt', {
+                  date: alert.detectedAt.slice(0, 16).replace('T', ' '),
+                })}
+              </Text>
+              <Button
+                disabled={resolveAlert.isPending}
+                label={t('operations.resolveAlert')}
+                onPress={() => resolveAlert.mutate(alert.id)}
+                style={{ alignSelf: 'flex-start' }}
+                variant="ghost"
+              />
+            </Surface>
+          ))
+        ) : (
+          <Text color="textTertiary" variant="footnote">
+            {t('operations.alertsEmpty')}
+          </Text>
+        )}
+      </Section>
+
       <Section title={t('operations.health')}>
         {/*
           A portrait waiting is a cycle waiting, and unlike everything else that
@@ -72,10 +122,12 @@ export function OperationsPanel() {
             .slice(0, 8)
             .map((run, index) => (
               <Row
-                hint={run.detail ?? ''}
+                hint={`${run.ranAt.slice(0, 16).replace('T', ' ')} UTC${
+                  run.detail ? ` · ${run.detail}` : ''
+                }`}
                 key={`${run.job}-${run.ranAt}-${index}`}
-                label={`${run.ok ? '' : '⚠ '}${run.job}`}
-                value={run.ranAt.slice(0, 16).replace('T', ' ')}
+                label={run.job}
+                value={t(`operations.jobStatuses.${run.status}`)}
               />
             ))
         ) : (

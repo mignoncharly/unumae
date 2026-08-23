@@ -133,7 +133,7 @@ async function cleanup() {
    * happened must not sit in the Archive with a human number.
    */
   const removed = await svc(
-    `/rest/v1/daily_draws?selection_date=gte.${utcDate(-7)}&selection_date=lte.${utcDate(2)}`,
+    `/rest/v1/daily_draws?selection_date=gte.${utcDate(-7)}&selection_date=lte.${utcDate(7)}`,
     { method: 'DELETE', headers: { Prefer: 'return=representation' } }
   );
   const removedRows = removed.ok ? await removed.json() : [];
@@ -216,7 +216,12 @@ async function makeCandidate(index) {
 // One cycle
 // ---------------------------------------------------------------------------
 
-async function runCycle(date, people, moderator, { publish }) {
+async function runCycle(
+  date,
+  people,
+  moderator,
+  { publish, finalDate = date }
+) {
   console.log(`\ncycle ${date}`);
 
   const draw = await rpc('run_daily_draw', { target_date: date });
@@ -405,6 +410,19 @@ async function runCycle(date, people, moderator, { publish }) {
     'the selected-person status reports approval'
   );
 
+  // Real invitations always happen before the D-1 cutoff. The simulation
+  // therefore completes consent on a future scheduler date, then moves the
+  // approved fixture to the day whose Today/Archive behavior it is exercising.
+  if (finalDate !== date) {
+    const moved = await svc(`/rest/v1/daily_draws?id=eq.${row.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ selection_date: finalDate }),
+    });
+    if (!step(moved.ok, `the approved fixture moved to ${finalDate}`)) {
+      return null;
+    }
+  }
+
   if (!publish) {
     // An older cycle: mark it as having run and finished, so the Archive has
     // something in it.
@@ -554,7 +572,7 @@ async function exerciseEscalation(date, people) {
   // --- silence -----------------------------------------------------------
   // Backdate the deadline rather than waiting twelve hours, then let the sweep
   // that runs every fifteen minutes in production find it.
-  const silentDate = utcDate(-3);
+  const silentDate = utcDate(3);
   const silentDraw = await rpc('run_daily_draw', { target_date: silentDate });
   if (!step(silentDraw.ok, 'a second cycle was drawn, to be ignored')) {
     return;
@@ -595,6 +613,83 @@ async function exerciseEscalation(date, people) {
   );
 }
 
+/** Recovery is automatic when the selected account leaves the usable pool. */
+async function exerciseAccountRecovery(date, people) {
+  console.log(`\naccount recovery ${date}`);
+
+  const draw = await rpc('run_daily_draw', { target_date: date });
+  if (!step(draw.ok, 'a recovery cycle was drawn', `HTTP ${draw.status}`)) {
+    return;
+  }
+  await rpc('notify_selected_candidate', { target_date: date });
+
+  const before = await svc(
+    `/rest/v1/daily_draws?selection_date=eq.${date}&select=id,selected_user_id,backup_1`
+  );
+  const [row] = await before.json();
+  const selected = people.find((person) => person.id === row?.selected_user_id);
+  if (
+    !step(
+      Boolean(selected && row?.backup_1),
+      'the cycle has a selected person and backup'
+    )
+  ) {
+    return;
+  }
+
+  const leftPool = await asUser(
+    selected.token,
+    `/rest/v1/profiles?id=eq.${selected.id}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ wants_selection: false }),
+    }
+  );
+  step(leftPool.ok, 'the selected person left the pool before publication');
+
+  const after = await svc(
+    `/rest/v1/daily_draws?id=eq.${row.id}&select=selected_user_id,selection_status`
+  );
+  const [recovered] = await after.json();
+  step(
+    recovered?.selected_user_id === row.backup_1 &&
+      recovered?.selection_status === 'awaiting_acceptance',
+    'the backup was promoted and invited immediately',
+    `status ${recovered?.selection_status}`
+  );
+
+  await asUser(selected.token, `/rest/v1/profiles?id=eq.${selected.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ wants_selection: true }),
+  });
+}
+
+/** No invitation or promotion may cross 22:00 UTC on D-1. */
+async function exerciseQuietDay(date) {
+  console.log(`\nquiet day cutoff ${date}`);
+
+  const draw = await rpc('run_daily_draw', { target_date: date });
+  if (
+    !step(draw.ok, 'a past-cutoff cycle was recorded', `HTTP ${draw.status}`)
+  ) {
+    return;
+  }
+  const notification = await rpc('notify_selected_candidate', {
+    target_date: date,
+  });
+  const invitation = notification.ok ? await notification.json() : 'error';
+
+  const state = await svc(
+    `/rest/v1/daily_draws?selection_date=eq.${date}&select=selection_status`
+  );
+  const [row] = await state.json();
+  step(
+    invitation === null && row?.selection_status === 'cancelled',
+    'the cutoff produced a Quiet Day instead of a late invitation',
+    `status ${row?.selection_status}`
+  );
+}
+
 /**
  * The Phase 16 instruments.
  *
@@ -628,6 +723,11 @@ async function exerciseInstruments(moderator) {
   const balance = await call('country_balance', 'country balance reads');
   const signals = await call('integrity_signals', 'integrity signals read');
   const health = await call('moderation_health', 'moderation health reads');
+  await rpc('refresh_operational_alerts');
+  const alerts = await call(
+    'operational_alerts',
+    'active operational alerts read'
+  );
 
   // The shares have to reconcile, or the numbers are decoration.
   if (balance?.length) {
@@ -650,6 +750,7 @@ async function exerciseInstruments(moderator) {
     health?.some((row) => row.measure === 'oldest_portrait_hours'),
     'the queue is measured by age, not only by size'
   );
+  step(Array.isArray(alerts), 'scheduler and queue alerts are observable');
 
   // And the thing that must stay true: a guest cannot read any of it.
   const leak = await fetch(`${URL_BASE}/rest/v1/rpc/country_balance`, {
@@ -662,6 +763,21 @@ async function exerciseInstruments(moderator) {
     body: '{}',
   });
   step(!leak.ok, 'a guest cannot read any of it', `HTTP ${leak.status}`);
+
+  const alertLeak = await fetch(`${URL_BASE}/rest/v1/rpc/operational_alerts`, {
+    method: 'POST',
+    headers: {
+      apikey: ANON,
+      Authorization: `Bearer ${ANON}`,
+      'Content-Type': 'application/json',
+    },
+    body: '{}',
+  });
+  step(
+    !alertLeak.ok,
+    'a guest cannot read operational alerts',
+    `HTTP ${alertLeak.status}`
+  );
 }
 
 async function exerciseAudience(drawId, people, moderator, selected) {
@@ -956,17 +1072,22 @@ try {
   // Yesterday's cycle is archived rather than published, so the Archive has
   // something to show and today has a predecessor. Its return value is not
   // needed — only its existence is.
-  await runCycle(utcDate(-1), people, moderator, { publish: false });
-  const today = await runCycle(utcDate(0), people, moderator, {
+  await runCycle(utcDate(4), people, moderator, {
+    publish: false,
+    finalDate: utcDate(-1),
+  });
+  const today = await runCycle(utcDate(5), people, moderator, {
     publish: true,
+    finalDate: utcDate(0),
   });
 
   if (today) {
     await exerciseAudience(today.drawId, people, moderator, today.selected);
   }
 
-  // Two days back, so it cannot collide with the cycles above.
-  await exerciseEscalation(utcDate(-2), people);
+  await exerciseEscalation(utcDate(2), people);
+  await exerciseAccountRecovery(utcDate(6), people);
+  await exerciseQuietDay(utcDate(-4));
 
   await exerciseInstruments(moderator);
 

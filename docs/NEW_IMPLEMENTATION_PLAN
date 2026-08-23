@@ -295,16 +295,18 @@
 
   ### Phase 1 — Repair cycle operations and notifications
 
-  1. Run notification delivery frequently enough for promoted backups, or enqueue delivery immediately on invitation creation.
-  2. Add transactional email fallback for selection.
-  3. Implement actionable Accept/Decline notifications where supported.
-  4. Add the 22:00 UTC Quiet Day cutoff and prevent late escalation.
-  5. Automatically escalate after portrait rejection, withdrawal, suspension, or pre-publication deletion.
-  6. Record actual draw, publish, notification, and translation outcomes—not merely queued HTTP requests.
-  7. Add operational alerts for failed draw/publication and aging moderation queues.
-  8. Implement anniversary notification selection and notification-open routing.
+  1. [x] Run notification delivery frequently enough for promoted backups, or enqueue delivery immediately on invitation creation.
+  2. [x] Add transactional email fallback for selection.
+  3. [x] Implement actionable Accept/Decline notifications where supported.
+  4. [x] Add the 22:00 UTC Quiet Day cutoff and prevent late escalation.
+  5. [x] Automatically escalate after portrait rejection, withdrawal, suspension, or pre-publication deletion.
+  6. [x] Record actual draw, publish, notification, and translation outcomes—not merely queued HTTP requests.
+  7. [x] Add operational alerts for failed draw/publication and aging moderation queues.
+  8. [x] Implement anniversary notification selection and notification-open routing.
 
   Exit criterion: every candidate transition is timely, observable, recoverable, and tested against real scheduler timing.
+
+  Implementation note (2026-08-24): completed in three database migrations, both scheduled Edge Functions, native notification coordination, the moderator Operations surface, and the production-path cycle simulator. Deployment, provider credentials, and a live `npm run simulate` remain release-environment verification steps.
 
   ### Phase 2 — Complete safety and privacy
 

@@ -505,6 +505,10 @@
   },
   "notifications": {
     "title": "Mitteilungen",
+    "actions": {
+      "accept": "Annehmen",
+      "decline": "Ablehnen"
+    },
     "heading": "Was wir dir sagen dürfen",
     "intro": "Vier Dinge, und sonst nichts. Wir schreiben dir nie, um dich zurückzuholen.",
     "enable": "Mitteilungen erlauben",
@@ -574,6 +578,22 @@
     "floorNote": "Länder mit weniger als fünf wartenden Menschen werden gezählt, aber nie genannt. Die einzige wartende Person in einem Land zu sein heißt, am Tag der Auswahl identifiziert zu werden."
   },
   "operations": {
+    "alerts": "Aktive Warnungen",
+    "alertsIntro": "Fehler und alternde Warteschlangen bleiben hier, bis sie behoben oder als erledigt markiert werden.",
+    "alertsEmpty": "Keine aktiven Betriebswarnungen.",
+    "resolveAlert": "Als erledigt markieren",
+    "detectedAt": "Erkannt am {{date}} UTC",
+    "alertCodes": {
+      "job_failed": "Geplanter Job fehlgeschlagen",
+      "job_stalled": "Geplanter Job hängt fest",
+      "portrait_queue_age": "Porträtprüfung dauert zu lange",
+      "cycle_at_risk": "Human-Tag ist gefährdet"
+    },
+    "jobStatuses": {
+      "queued": "Wartet",
+      "succeeded": "Erfolgreich",
+      "failed": "Fehlgeschlagen"
+    },
     "health": "Zustand der Warteschlangen",
     "queueWarning": "Ein Porträt wartet seit {{hours}} Stunden. Niemand hat ihnen etwas gesagt.",
     "measures": {

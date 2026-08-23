@@ -145,6 +145,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     'expo-router',
     'expo-localization',
     'expo-status-bar',
+    'expo-notifications',
     'expo-secure-store',
     'expo-apple-authentication',
     [

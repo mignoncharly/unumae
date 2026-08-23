@@ -505,6 +505,10 @@
   },
   "notifications": {
     "title": "Notifications",
+    "actions": {
+      "accept": "Accept",
+      "decline": "Decline"
+    },
     "heading": "What we may tell you",
     "intro": "Four things, and nothing else. We will never message you to bring you back.",
     "enable": "Allow notifications",
@@ -574,6 +578,22 @@
     "floorNote": "Countries with fewer than five people waiting are counted, never named. Being the only person waiting somewhere means being identified the day you are drawn."
   },
   "operations": {
+    "alerts": "Active alerts",
+    "alertsIntro": "Failures and aging queues stay here until they recover or a moderator resolves them.",
+    "alertsEmpty": "No active operational alerts.",
+    "resolveAlert": "Mark resolved",
+    "detectedAt": "Detected {{date}} UTC",
+    "alertCodes": {
+      "job_failed": "Scheduled job failed",
+      "job_stalled": "Scheduled job is stalled",
+      "portrait_queue_age": "Portrait review is aging",
+      "cycle_at_risk": "Human day is at risk"
+    },
+    "jobStatuses": {
+      "queued": "Waiting",
+      "succeeded": "Succeeded",
+      "failed": "Failed"
+    },
     "health": "Queue health",
     "queueWarning": "A portrait has been waiting {{hours}} hours. Nobody has told them anything.",
     "measures": {

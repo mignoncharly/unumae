@@ -65,9 +65,10 @@ describe('there are exactly four reasons to send anything', () => {
 
   it('sends nothing unless the matching switch is on', () => {
     const due = functionBody('notifications_due');
-    expect(due).toContain('s.daily = true');
-    expect(due).toContain('s.selected = true');
-    expect(due).toContain('s.answered = true');
+    expect(due).toContain('r.wants_daily');
+    expect(due).toContain('r.wants_selected');
+    expect(due).toContain('r.wants_answered');
+    expect(due).toContain('r.wants_anniversary');
   });
 
   it('defaults the two product categories to off', () => {
@@ -90,12 +91,39 @@ describe('nobody is told the same thing twice', () => {
   it('skips anyone already sent that key', () => {
     const due = functionBody('notifications_due');
     const guards = due.match(/from public\.notification_log l/g) ?? [];
-    expect(guards.length).toBeGreaterThanOrEqual(3);
+    expect(guards.length).toBeGreaterThanOrEqual(4);
   });
 
   it('never tells somebody about their own day', () => {
     expect(functionBody('notifications_due')).toContain(
-      'p.id <> d.selected_user_id'
+      'r.id <> d.selected_user_id'
+    );
+  });
+
+  it('derives anniversaries only from a person’s private Remember library', () => {
+    const due = functionBody('notifications_due');
+    expect(due).toContain('from public.remembers remembered');
+    expect(due).toContain("'anniversary'::public.notification_category");
+    expect(due).toContain("today.value - interval '1 year'");
+  });
+
+  it('marks the logical event sent only after a provider accepts a channel', () => {
+    const record = functionBody('record_notification_delivery');
+    expect(record).toContain('if delivery_succeeded then');
+    expect(record).toContain('insert into public.notification_log');
+  });
+});
+
+describe('delivery is timely and private', () => {
+  it('checks for newly due messages every five minutes', () => {
+    expect(FLAT).toContain("'unumae-send-notifications', '*/5 * * * *'");
+  });
+
+  it('stores only a fixed-length destination hash', () => {
+    expect(FLAT).toContain('destination_hash text not null');
+    expect(FLAT).toContain('check (char_length(destination_hash) = 64)');
+    expect(FLAT).toContain(
+      'revoke all on public.notification_deliveries from anon, authenticated'
     );
   });
 });
@@ -160,6 +188,14 @@ describe('what a person is told they may receive', () => {
   it.each(Object.entries(locales))('%s promises no nagging', (_l, t) => {
     expect(t.notifications.promise.length).toBeGreaterThan(40);
   });
+
+  it.each(Object.entries(locales))(
+    '%s translates invitation actions',
+    (_l, t) => {
+      expect(t.notifications.actions.accept).toBeTruthy();
+      expect(t.notifications.actions.decline).toBeTruthy();
+    }
+  );
 
   it.each(Object.entries(locales))(
     '%s offers the original alongside a translation',

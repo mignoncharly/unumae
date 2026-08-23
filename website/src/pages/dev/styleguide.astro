@@ -1,0 +1,171 @@
+---
+import CampaignStudy from '../../components/design/CampaignStudy.astro';
+import CountdownPreview from '../../components/design/CountdownPreview.astro';
+import ActionLink from '../../components/ui/ActionLink.astro';
+import Divider from '../../components/ui/Divider.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const colors = [
+  { name: 'Background', token: '--color-background', value: '#FFFFFF' },
+  { name: 'Warm surface', token: '--color-surface', value: '#F7F7F5' },
+  { name: 'Ink', token: '--color-text', value: '#0B0B0C' },
+  { name: 'Secondary ink', token: '--color-text-secondary', value: '#5A5A57' },
+  { name: 'Divider', token: '--color-border', value: '#E4E4E1' },
+  { name: 'Safety', token: '--color-danger', value: '#A8342A' },
+] as const;
+
+const spaces = [
+  { name: 'XS', token: '--space-xs', value: '0.25rem' },
+  { name: 'SM', token: '--space-sm', value: '0.5rem' },
+  { name: 'MD', token: '--space-md', value: '0.75rem' },
+  { name: 'LG', token: '--space-lg', value: '1rem' },
+  { name: 'XL', token: '--space-xl', value: '1.5rem' },
+  { name: '2XL', token: '--space-2xl', value: '2rem' },
+  { name: '3XL', token: '--space-3xl', value: '3rem' },
+  { name: 'Huge', token: '--space-huge', value: '4rem' },
+] as const;
+---
+
+<BaseLayout
+  locale="en"
+  page="home"
+  title="Web design system — Unumae"
+  description="Internal component gallery for the Unumae marketing website."
+  noIndex
+  omitCanonicalLinks
+>
+  <main id="main-content" class="page-main styleguide">
+    <section class="page-intro" aria-labelledby="page-title">
+      <p class="eyebrow">Internal surface · Phase 2</p>
+      <h1 id="page-title">Web design system</h1>
+      <p class="introduction">
+        Editorial, documentary, premium, calm. The interface is furniture; the
+        person remains the reason to look.
+      </p>
+    </section>
+
+    <Divider />
+
+    <section class="style-section" aria-labelledby="color-title">
+      <div class="style-section__heading">
+        <p class="eyebrow">01 · Foundations</p>
+        <h2 id="color-title">Warm monochrome</h2>
+      </div>
+      <ul class="swatch-grid" role="list">
+        {
+          colors.map((color) => (
+            <li>
+              <span
+                class="swatch-grid__sample"
+                style={`--swatch: ${color.value}`}
+                aria-hidden="true"
+              />
+              <strong>{color.name}</strong>
+              <code>{color.token}</code>
+              <span>{color.value}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <Divider />
+
+    <section class="style-section" aria-labelledby="type-title">
+      <div class="style-section__heading">
+        <p class="eyebrow">02 · Typography</p>
+        <h2 id="type-title">Newsreader meets Inter</h2>
+      </div>
+      <div class="type-specimens">
+        <div>
+          <span class="specimen-label">Display · Newsreader Variable</span>
+          <p class="type-display">Today’s Human</p>
+        </div>
+        <div>
+          <span class="specimen-label">Editorial italic</span>
+          <p class="type-editorial">“An ordinary moment I treasure.”</p>
+        </div>
+        <div>
+          <span class="specimen-label">Body · Inter Variable</span>
+          <p class="type-body">
+            One person, one global 24-hour window, and a story with an ending.
+            No feed asks for the next swipe.
+          </p>
+        </div>
+        <div>
+          <span class="specimen-label">Numbers · system mono</span>
+          <p class="type-mono">HUMAN #0128 · 18:43:12</p>
+        </div>
+      </div>
+    </section>
+
+    <Divider />
+
+    <section class="style-section" aria-labelledby="control-title">
+      <div class="style-section__heading">
+        <p class="eyebrow">03 · Controls</p>
+        <h2 id="control-title">Quiet, explicit actions</h2>
+      </div>
+      <div class="control-stack">
+        <div class="control-row">
+          <ActionLink href="#motion">Primary action</ActionLink>
+          <ActionLink href="#spacing" variant="secondary">
+            Secondary action
+          </ActionLink>
+          <ActionLink href="#type-title" variant="text">Text link</ActionLink>
+        </div>
+        <p>
+          Body links remain <a class="text-link" href="#color-title">
+            visibly underlined
+          </a> and every interactive target has a high-contrast keyboard focus ring.
+        </p>
+      </div>
+    </section>
+
+    <Divider />
+
+    <section id="spacing" class="style-section" aria-labelledby="spacing-title">
+      <div class="style-section__heading">
+        <p class="eyebrow">04 · Rhythm</p>
+        <h2 id="spacing-title">The 4-point scale</h2>
+      </div>
+      <ul class="spacing-list" role="list">
+        {
+          spaces.map((space) => (
+            <li>
+              <span>{space.name}</span>
+              <span
+                class="spacing-list__bar"
+                style={`--space-value: ${space.value}`}
+                aria-hidden="true"
+              />
+              <code>{space.token}</code>
+              <span>{space.value}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <Divider />
+
+    <section id="motion" class="style-section" aria-labelledby="motion-title">
+      <div class="style-section__heading">
+        <p class="eyebrow">05 · Image and time</p>
+        <h2 id="motion-title">Movement without spectacle</h2>
+        <p>
+          Hover the campaign study to test crop motion. The countdown uses
+          tabular digits. Both become still when reduced motion is enabled.
+        </p>
+      </div>
+      <div class="media-studies">
+        <CampaignStudy />
+        <div class="countdown-study">
+          <span class="specimen-label">Time remaining</span>
+          <CountdownPreview />
+          <p>One clock, shared everywhere.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

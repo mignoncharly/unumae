@@ -1,0 +1,73 @@
+---
+import {
+  content,
+  locales,
+  localizedPath,
+  type Locale,
+  type PageKey,
+  type RouteKey,
+} from '../content/site';
+
+interface Props {
+  locale: Locale;
+  page: RouteKey;
+}
+
+const { locale, page } = Astro.props;
+const copy = content[locale];
+const primaryPages = [
+  'today',
+  'about',
+  'how-selection-works',
+  'archive',
+] as const satisfies readonly PageKey[];
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a
+      class="wordmark"
+      href={localizedPath(locale, 'home')}
+      aria-label={copy.homeLabel}
+    >
+      Unumae
+    </a>
+
+    <nav aria-label={copy.navigationLabel}>
+      <ul class="primary-nav">
+        {
+          primaryPages.map((item) => (
+            <li>
+              <a
+                href={localizedPath(locale, item)}
+                aria-current={page === item ? 'page' : undefined}
+              >
+                {copy.navigation[item]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav class="locale-nav" aria-label={copy.languageLabel}>
+      <ul>
+        {
+          locales.map((item) => (
+            <li>
+              <a
+                href={localizedPath(item, page)}
+                hreflang={item}
+                lang={item}
+                aria-current={locale === item ? 'page' : undefined}
+                title={content[item].languageName}
+              >
+                {item.toUpperCase()}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

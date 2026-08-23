@@ -1,0 +1,16 @@
+---
+import RoutePage from '../components/RoutePage.astro';
+import { pageKeys, type PageKey } from '../content/site';
+
+export function getStaticPaths() {
+  return pageKeys.map((page) => ({ params: { page }, props: { page } }));
+}
+
+interface Props {
+  page: PageKey;
+}
+
+const { page } = Astro.props;
+---
+
+<RoutePage locale="en" page={page} />

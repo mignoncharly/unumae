@@ -1,0 +1,36 @@
+---
+import {
+  content,
+  localizedPath,
+  type Locale,
+  type PageKey,
+} from '../content/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = content[locale];
+const footerPages = [
+  'community-guidelines',
+  'privacy',
+  'terms',
+] as const satisfies readonly PageKey[];
+---
+
+<footer class="site-footer">
+  <p>{copy.footerStatement}</p>
+  <nav aria-label={copy.navigationLabel}>
+    <ul>
+      {
+        footerPages.map((page) => (
+          <li>
+            <a href={localizedPath(locale, page)}>{copy.navigation[page]}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <small>© {new Date().getUTCFullYear()} Unumae</small>
+</footer>

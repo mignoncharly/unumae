@@ -15,6 +15,7 @@ module.exports = defineConfig([
       'node_modules/*',
       'coverage/*',
       'supabase/functions/**',
+      'website/**',
     ],
   },
   {

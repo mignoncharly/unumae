@@ -1,0 +1,24 @@
+---
+import ActionLink from '../components/ui/ActionLink.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  locale="en"
+  page="home"
+  title="Page not found — Unumae"
+  description="This page does not exist. Return to Today’s Human on Unumae."
+  noIndex
+  omitCanonicalLinks
+>
+  <main id="main-content" class="page-main error-page">
+    <section class="page-intro" aria-labelledby="page-title">
+      <p class="eyebrow">404</p>
+      <h1 id="page-title">This page does not exist.</h1>
+      <p class="introduction">
+        There is only one Human to meet today. This is not where they are.
+      </p>
+      <ActionLink href="/">Back to Today</ActionLink>
+    </section>
+  </main>
+</BaseLayout>

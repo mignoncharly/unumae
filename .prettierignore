@@ -3,6 +3,7 @@ node_modules/
 dist/
 coverage/
 package-lock.json
+website/
 
 # Prose is not code. The constitution is a binding document: Prettier must not
 # rewrap its paragraphs, repad its tables or rewrite its list markers.

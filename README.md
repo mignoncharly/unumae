@@ -43,6 +43,9 @@ state rather than crashing.
 | Command | What it does |
 | --- | --- |
 | `npm start` | Expo dev server (development environment) |
+| `npm run web:dev` | Start the static marketing site in background mode |
+| `npm run web:build` | Build the marketing site to `website/dist/` |
+| `npm run web:check` | Typecheck, lint, format-check, and build the marketing site |
 | `npm run start:staging` | Same, against staging |
 | `npm test` | Jest suites |
 | `npm run verify` | typecheck → lint → format → migrations → tests |

@@ -1,0 +1,91 @@
+---
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { content, type Locale, type RouteKey } from '../content/site';
+import { createPageMetadata } from '../lib/metadata';
+import '../styles/global.css';
+
+interface Props {
+  locale: Locale;
+  page: RouteKey;
+  title?: string;
+  description?: string;
+  noIndex?: boolean;
+  omitCanonicalLinks?: boolean;
+}
+
+const {
+  locale,
+  page,
+  title,
+  description,
+  noIndex = false,
+  omitCanonicalLinks = false,
+} = Astro.props;
+const copy = content[locale];
+const site =
+  Astro.site ?? new URL(import.meta.env.SITE_ORIGIN ?? 'http://localhost:4321');
+const metadata = createPageMetadata(locale, page, site);
+const englishAlternate = metadata.alternates.find(
+  (alternate) => alternate.locale === 'en'
+);
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#f7f7f5" />
+    <link
+      rel="preload"
+      href="/fonts/inter-variable-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/newsreader-variable-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <meta name="description" content={description ?? metadata.description} />
+    {
+      (noIndex || metadata.noIndex) && (
+        <meta name="robots" content="noindex, follow" />
+      )
+    }
+    {!omitCanonicalLinks && <link rel="canonical" href={metadata.canonical} />}
+    {
+      !omitCanonicalLinks &&
+        metadata.alternates.map((alternate) => (
+          <link
+            rel="alternate"
+            hreflang={alternate.locale}
+            href={alternate.href}
+          />
+        ))
+    }
+    {
+      !omitCanonicalLinks && englishAlternate && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={englishAlternate.href}
+        />
+      )
+    }
+    <title>{title ?? metadata.title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{copy.skipToContent}</a>
+    <div class="site-frame">
+      <SiteHeader locale={locale} page={page} />
+      <slot />
+      <SiteFooter locale={locale} />
+    </div>
+  </body>
+</html>

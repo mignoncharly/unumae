@@ -24,7 +24,10 @@
     "db:types": "node scripts/db.mjs types",
     "verify:draw": "node scripts/verify-draw.mjs",
     "verify:privileges": "node scripts/verify-privileges.mjs",
-    "verify:live": "npm run verify:draw && npm run verify:privileges"
+    "verify:live": "npm run verify:draw && npm run verify:privileges",
+    "web:dev": "npm --prefix website run dev",
+    "web:build": "npm --prefix website run build",
+    "web:check": "npm --prefix website run verify"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

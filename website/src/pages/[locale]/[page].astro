@@ -1,0 +1,27 @@
+---
+import RoutePage from '../../components/RoutePage.astro';
+import {
+  pageKeys,
+  translatedLocales,
+  type Locale,
+  type PageKey,
+} from '../../content/site';
+
+export function getStaticPaths() {
+  return translatedLocales.flatMap((locale) =>
+    pageKeys.map((page) => ({
+      params: { locale, page },
+      props: { locale, page },
+    }))
+  );
+}
+
+interface Props {
+  locale: Locale;
+  page: PageKey;
+}
+
+const { locale, page } = Astro.props;
+---
+
+<RoutePage locale={locale} page={page} />

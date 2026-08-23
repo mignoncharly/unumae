@@ -1,0 +1,65 @@
+---
+import ActionLink from './ui/ActionLink.astro';
+import {
+  content,
+  localizedPath,
+  type Locale,
+  type RouteKey,
+} from '../content/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+  page: RouteKey;
+}
+
+const { locale, page } = Astro.props;
+const copy = content[locale];
+const pageCopy = copy.pages[page];
+const isHome = page === 'home';
+---
+
+<BaseLayout locale={locale} page={page}>
+  <main
+    id="main-content"
+    class:list={['page-main', { 'page-main--home': isHome }]}
+  >
+    <section class="page-intro" aria-labelledby="page-title">
+      <p class="eyebrow">{pageCopy.eyebrow}</p>
+      <h1 id="page-title">{pageCopy.title}</h1>
+      <p class="introduction">{pageCopy.introduction}</p>
+
+      {
+        isHome && (
+          <div class="actions">
+            <ActionLink href={localizedPath(locale, 'how-selection-works')}>
+              {copy.navigation['how-selection-works']}
+            </ActionLink>
+            <span class="launch-state">{copy.comingSoon}</span>
+          </div>
+        )
+      }
+    </section>
+
+    {
+      isHome && (
+        <dl class="facts">
+          {copy.facts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    {
+      pageCopy.notice && (
+        <aside class="notice" aria-label={pageCopy.eyebrow}>
+          <p>{pageCopy.notice}</p>
+        </aside>
+      )
+    }
+  </main>
+</BaseLayout>

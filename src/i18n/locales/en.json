@@ -489,5 +489,39 @@
       "email_only_pool": "Email-only in the pool",
       "country_year_collisions": "Country and year collisions"
     }
+  },
+  "standing": {
+    "guest_one": "{{waiting}} person is waiting. One of them is chosen tomorrow.",
+    "guest_other": "{{waiting}} people are waiting. One of them is chosen tomorrow.",
+    "inPool_one": "You are the only one waiting. Tomorrow could be you.",
+    "inPool_other": "You are one of {{waiting}} waiting. Tomorrow could be you.",
+    "tooNew_one": "You join the draw tomorrow.",
+    "tooNew_other": "You join the draw in {{days}} days.",
+    "awaiting": "You qualify. You will be in tomorrow’s draw.",
+    "optedOut": "You have chosen to stay out of the draw.",
+    "alreadyHad": "You have already had your day. One human, one day, forever.",
+    "notYet": "You are not in the draw yet.",
+    "more": "The daily draw"
+  },
+  "chosen": {
+    "title": "If you are chosen",
+    "heading": "What happens if you are chosen",
+    "intro": "Almost nobody expects it on the day it happens, so here is the whole of it in advance. Nothing here is a surprise, and nothing is required of you until you say yes.",
+    "acceptTitle": "1. You are asked",
+    "acceptBody": "A notification, and the invitation waits in the app. You have {{hours}} hours to accept or decline. Declining costs you nothing at all — you stay in the pool exactly as you were, and the next person is asked straight away.",
+    "writeTitle": "2. You tell us about yourself",
+    "writeBody": "Between {{min}} and {{max}} short questions, and a photograph. Not a biography — ordinary questions with ordinary answers, in your own words and your own language. There is no right answer and nothing to prepare.",
+    "reviewTitle": "3. A person reads it",
+    "reviewBody": "A moderator checks the portrait before it is published. That is a safety check, not an edit: nobody rewrites what you wrote.",
+    "liveTitle": "4. Your day",
+    "liveBody": "For 24 hours you are Today’s Human. People can read your portrait, ask you questions, and keep you in their own archive. Questions are reviewed before they reach you, and you answer only what you want to.",
+    "afterTitle": "5. Afterwards",
+    "afterBody": "Your day ends and your page stays in the Archive, readable forever. You are never selected again — one human, one day, forever — and you can ask for your entry to be removed at any time.",
+    "neverTitle": "What never happens",
+    "never1": "Nobody sees how many people read your portrait.",
+    "never2": "Nobody can follow you, and there is no way to message you.",
+    "never3": "Your answers are never edited, and never translated over.",
+    "never4": "No number is ever attached to you.",
+    "reassure": "You can leave the draw whenever you like, and rejoin whenever you like."
   }
 }

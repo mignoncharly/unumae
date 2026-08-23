@@ -489,5 +489,39 @@
       "email_only_pool": "Vérifiés par e-mail seul",
       "country_year_collisions": "Collisions pays et année"
     }
+  },
+  "standing": {
+    "guest_one": "{{waiting}} personne attend. L’une d’elles sera choisie demain.",
+    "guest_other": "{{waiting}} personnes attendent. L’une d’elles sera choisie demain.",
+    "inPool_one": "Vous êtes seul à attendre. Demain, ce sera peut-être vous.",
+    "inPool_other": "Vous êtes l’une des {{waiting}} personnes qui attendent. Demain, ce sera peut-être vous.",
+    "tooNew_one": "Vous entrez dans le tirage demain.",
+    "tooNew_other": "Vous entrez dans le tirage dans {{days}} jours.",
+    "awaiting": "Vous remplissez les conditions. Vous serez du tirage de demain.",
+    "optedOut": "Vous avez choisi de rester en dehors du tirage.",
+    "alreadyHad": "Vous avez déjà eu votre journée. Un humain, un jour, pour toujours.",
+    "notYet": "Vous n’êtes pas encore dans le tirage.",
+    "more": "Le tirage quotidien"
+  },
+  "chosen": {
+    "title": "Si vous êtes choisi",
+    "heading": "Ce qui se passe si vous êtes choisi",
+    "intro": "Presque personne ne s’y attend le jour où cela arrive, alors voici tout, à l’avance. Rien ici n’est une surprise, et rien ne vous est demandé tant que vous n’avez pas dit oui.",
+    "acceptTitle": "1. On vous le propose",
+    "acceptBody": "Une notification, et l’invitation vous attend dans l’application. Vous avez {{hours}} heures pour accepter ou refuser. Refuser ne vous coûte absolument rien : vous restez dans le vivier exactement comme avant, et la personne suivante est sollicitée aussitôt.",
+    "writeTitle": "2. Vous parlez de vous",
+    "writeBody": "Entre {{min}} et {{max}} questions courtes, et une photographie. Pas une biographie : des questions ordinaires, des réponses ordinaires, avec vos mots et dans votre langue. Il n’y a pas de bonne réponse et rien à préparer.",
+    "reviewTitle": "3. Une personne le lit",
+    "reviewBody": "Un modérateur vérifie le portrait avant publication. C’est un contrôle de sécurité, pas une réécriture : personne ne modifie ce que vous avez écrit.",
+    "liveTitle": "4. Votre journée",
+    "liveBody": "Pendant 24 heures, vous êtes l’Humain du jour. On peut lire votre portrait, vous poser des questions et vous garder en mémoire. Les questions sont examinées avant de vous parvenir, et vous ne répondez qu’à ce que vous voulez.",
+    "afterTitle": "5. Ensuite",
+    "afterBody": "Votre journée se termine et votre page reste dans les Archives, lisible pour toujours. Vous ne serez jamais sélectionné à nouveau — un humain, un jour, pour toujours — et vous pouvez demander le retrait de votre entrée à tout moment.",
+    "neverTitle": "Ce qui n’arrive jamais",
+    "never1": "Personne ne voit combien de gens ont lu votre portrait.",
+    "never2": "Personne ne peut vous suivre, et il n’existe aucun moyen de vous écrire.",
+    "never3": "Vos réponses ne sont jamais modifiées, ni remplacées par une traduction.",
+    "never4": "Aucun chiffre ne vous est jamais attaché.",
+    "reassure": "Vous pouvez quitter le tirage quand vous voulez, et y revenir quand vous voulez."
   }
 }

@@ -120,6 +120,10 @@ function AccountSection() {
         <Text color="accent">{t('settings.howSelectionWorks')} →</Text>
       </Link>
 
+      <Link href="/if-you-are-chosen">
+        <Text color="accent">{t('chosen.title')} →</Text>
+      </Link>
+
       <Link href="/settings/eligibility">
         <Text color="accent">{t('settings.eligibility')} →</Text>
       </Link>

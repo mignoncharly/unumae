@@ -489,5 +489,39 @@
       "email_only_pool": "Nur per E-Mail verifiziert",
       "country_year_collisions": "Land- und Jahrgangs-Kollisionen"
     }
+  },
+  "standing": {
+    "guest_one": "{{waiting}} Person wartet. Eine von ihnen wird morgen gewählt.",
+    "guest_other": "{{waiting}} Menschen warten. Einer von ihnen wird morgen gewählt.",
+    "inPool_one": "Du bist die einzige wartende Person. Morgen könntest du es sein.",
+    "inPool_other": "Du bist einer von {{waiting}} Wartenden. Morgen könntest du es sein.",
+    "tooNew_one": "Du kommst morgen in die Auswahl.",
+    "tooNew_other": "Du kommst in {{days}} Tagen in die Auswahl.",
+    "awaiting": "Du erfüllst die Bedingungen. Du bist bei der morgigen Auswahl dabei.",
+    "optedOut": "Du hast dich gegen die Teilnahme entschieden.",
+    "alreadyHad": "Du hattest deinen Tag bereits. Ein Mensch, ein Tag, für immer.",
+    "notYet": "Du bist noch nicht in der Auswahl.",
+    "more": "Die tägliche Auswahl"
+  },
+  "chosen": {
+    "title": "Wenn du gewählt wirst",
+    "heading": "Was passiert, wenn du gewählt wirst",
+    "intro": "Fast niemand rechnet an dem Tag damit, also hier alles im Voraus. Nichts davon ist eine Überraschung, und nichts wird von dir verlangt, bevor du zugestimmt hast.",
+    "acceptTitle": "1. Du wirst gefragt",
+    "acceptBody": "Eine Benachrichtigung, und die Einladung wartet in der App. Du hast {{hours}} Stunden, um anzunehmen oder abzulehnen. Ablehnen kostet dich überhaupt nichts — du bleibst genau so im Pool wie zuvor, und die nächste Person wird sofort gefragt.",
+    "writeTitle": "2. Du erzählst von dir",
+    "writeBody": "Zwischen {{min}} und {{max}} kurze Fragen und ein Foto. Keine Biografie — gewöhnliche Fragen mit gewöhnlichen Antworten, in deinen Worten und deiner Sprache. Es gibt keine richtige Antwort und nichts vorzubereiten.",
+    "reviewTitle": "3. Ein Mensch liest es",
+    "reviewBody": "Eine moderierende Person prüft das Porträt vor der Veröffentlichung. Das ist eine Sicherheitsprüfung, keine Bearbeitung: niemand schreibt um, was du geschrieben hast.",
+    "liveTitle": "4. Dein Tag",
+    "liveBody": "Für 24 Stunden bist du der Mensch des Tages. Menschen können dein Porträt lesen, dir Fragen stellen und dich in ihrem eigenen Archiv behalten. Fragen werden geprüft, bevor sie dich erreichen, und du beantwortest nur, was du möchtest.",
+    "afterTitle": "5. Danach",
+    "afterBody": "Dein Tag endet und deine Seite bleibt im Archiv, für immer lesbar. Du wirst nie wieder ausgewählt — ein Mensch, ein Tag, für immer — und du kannst jederzeit um die Entfernung deines Eintrags bitten.",
+    "neverTitle": "Was nie passiert",
+    "never1": "Niemand sieht, wie viele Menschen dein Porträt gelesen haben.",
+    "never2": "Niemand kann dir folgen, und es gibt keine Möglichkeit, dir zu schreiben.",
+    "never3": "Deine Antworten werden nie bearbeitet und nie durch eine Übersetzung ersetzt.",
+    "never4": "Dir wird nie eine Zahl angeheftet.",
+    "reassure": "Du kannst die Auswahl jederzeit verlassen und jederzeit zurückkommen."
   }
 }

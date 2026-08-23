@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { HumanPortrait } from '@/components/human/HumanPortrait';
+import { YourStanding } from '@/components/human/YourStanding';
 import { AskSheet } from '@/components/questions/AskSheet';
 import { QuestionCard } from '@/components/questions/QuestionCard';
 import { ReportAction } from '@/components/shared/ReportAction';
@@ -210,6 +211,8 @@ export default function TodayScreen() {
             }
           />
         </View>
+
+        <YourStanding />
 
         {/* You reach the end, and it is finished. */}
         <View style={{ marginTop: theme.spacing.huge, alignItems: 'center' }}>

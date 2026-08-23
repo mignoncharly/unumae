@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Link, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Switch, View } from 'react-native';
 
@@ -72,6 +72,14 @@ export default function EligibilityScreen() {
             ))}
           </View>
         ) : null}
+
+        {/* The question anybody in the pool actually has, answered before the
+            day it matters rather than in the twelve hours they have to decide. */}
+        <View style={{ marginTop: theme.spacing.xl }}>
+          <Link href="/if-you-are-chosen">
+            <Text color="accent">{t('chosen.title')} →</Text>
+          </Link>
+        </View>
 
         {/* Article 5.6 — leaving costs nothing and grants nothing. */}
         {canToggleParticipation(profile ?? null) && !permanent ? (

@@ -107,18 +107,18 @@ sign-in path. Configured for `com.unumae.app`.
 
 | Item | Why it cannot be done here |
 | --- | --- |
-| **App icon** | 1024×1024, no transparency, no rounded corners. A design decision, not a generated placeholder. |
-| **Launch screen** | Currently the default. Should be the wordmark on `#FFFFFF` / `#0B0B0C`. |
+| ~~App icon~~ **— done** | `assets/icon.png`, 1254×1254, opaque, square, no pre-rounded corners. Wired in `app.config.ts`. |
+| **Launch screen** | `assets/splash.png` — the wordmark, wired in. **White on both light and dark**: the wordmark's darkest ink is rgb(0, 6, 140), which measures 1.32:1 against `#0B0B0C` where 3:1 is the floor. A light version of the wordmark would let dark mode be dark. |
 | **Screenshots** | 6.7" and 6.5" required. They need a real published Human, so they come after the first live cycle. |
 | **Description and keywords** | Marketing copy; the site's homepage is the natural source. |
 | **Deploy the website** | The three URLs above must resolve before submission. |
 | **First build** | `eas build --profile production --platform ios` |
 
-Once the icon and launch screen exist as files, add them to `app.config.ts`:
+Both are in `app.config.ts`. If a light wordmark is ever drawn, the dark
+variant becomes:
 
 ```ts
-icon: './assets/icon.png',
-splash: { image: './assets/splash.png', backgroundColor: '#FFFFFF' },
+dark: { image: './assets/splash-dark.png', backgroundColor: '#0B0B0C' },
 ```
 
 ## Rejections worth anticipating

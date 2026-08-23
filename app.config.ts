@@ -21,6 +21,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: 'portrait',
   scheme: 'onehuman',
   userInterfaceStyle: 'automatic',
+  /*
+   * 1254×1254 and deliberately opaque — Apple rejects an icon with an alpha
+   * channel, and applies the rounded mask itself, so the source must be a full
+   * square with no transparency and no pre-rounded corners. Both hold here.
+   *
+   * Larger than the 1024×1024 Apple ultimately wants. That is fine: Expo
+   * generates every size from this source with a proper resampler, and giving
+   * it more pixels than it needs is the safe direction to be wrong in.
+   */
+  icon: './assets/icon.png',
   ios: {
     supportsTablet: false,
     bundleIdentifier: BUNDLE_ID,
@@ -139,8 +149,23 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
+        image: './assets/splash.png',
+        imageWidth: 240,
         backgroundColor: '#FFFFFF',
-        dark: { backgroundColor: '#0B0B0C' },
+        /*
+         * The dark variant deliberately keeps the light background.
+         *
+         * The wordmark is a blue-to-purple gradient on transparency, and its
+         * darkest ink is rgb(0, 6, 140). Against #0B0B0C that measures 1.32:1
+         * at worst and 1.94:1 on average, where 3:1 is the floor for large
+         * text — it would be very nearly invisible on a dark-mode device.
+         *
+         * So this is a white card on both, which is legible everywhere, rather
+         * than a dark card nobody can read. The proper fix is a light version
+         * of the wordmark; when one exists it goes here as
+         * `dark: { image: './assets/splash-dark.png', backgroundColor: '#0B0B0C' }`.
+         */
+        dark: { backgroundColor: '#FFFFFF' },
         resizeMode: 'contain',
       },
     ],

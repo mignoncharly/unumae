@@ -30,6 +30,20 @@ English routes are unprefixed. Matching French and German routes live below
 `/fr` and `/de`. Shared navigation, page metadata, product facts, and route copy
 are defined in `src/content/site.ts`.
 
+## Public Today and Archive data
+
+`/today` and `/archive` default to an honest, request-free pre-launch state.
+To connect them to an approved Supabase project, set
+`PUBLIC_DATA_MODE=live`, `PUBLIC_SUPABASE_URL`, and
+`PUBLIC_SUPABASE_ANON_KEY`. The key is the public anon key; a service-role key
+must never be exposed through a `PUBLIC_` variable.
+
+The browser reader is intentionally limited to the anonymous RPC allowlist used
+by these pages: today's Human, published portrait elements, approved questions,
+Archive entries, Random Human, countries, and years. It does not read tables,
+display Remember totals, or expose country/year counts. Portrait paths are
+resolved through short-lived signed URLs.
+
 ## Design review
 
 The internal `/dev/styleguide` route is excluded from indexing and the sitemap.

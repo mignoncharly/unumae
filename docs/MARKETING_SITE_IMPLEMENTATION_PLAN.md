@@ -1,6 +1,6 @@
 # Unumae marketing site — implementation plan
 
-**Status:** Phases 0–4 complete; Phase 5 next
+**Status:** Phases 0–5 complete; Phase 6 next
 **Target origin:** `https://www.unumae.app`
 **Working origin:** configurable until the domain is purchased
 **Product source of truth:** `PRODUCT_CONSTITUTION.md`
@@ -305,20 +305,51 @@ Validation:
 Archive, conduct, and enforcement claims are specific, traceable to approved
 repository policy, and free of invented legal promises.
 
-### Phase 5 — Public Today and Archive previews
+### Phase 5 — Public Today and Archive previews — complete
 
-- Build `/today` as the canonical destination for shared daily links.
-- Initially show the launch state or Quiet Day honestly; once approved public
-  data exists, read only through the current anonymous Supabase functions.
-- Build `/archive` as a marketing explanation first, then progressively enable
-  chronological, country, year, and Random Human discovery.
-- Preserve tombstones for removed Humans and never expose ranking controls or
-  Remember totals.
-- Ensure empty, loading, network-error, and removed-content states are designed
-  as first-class states.
+Delivered on 23 August 2026:
 
-**Exit:** visitors can understand a shared link without installing the app,
-and public reads reveal no data beyond the existing anonymous allowlist.
+- Rebuilt `/today` and its French and German equivalents as the canonical
+  guest destination for a shared daily story. The launch state explains why no
+  Human is shown; live mode supports a complete approved portrait, questions,
+  a UTC countdown, Quiet Day, loading, and connection failure without requiring
+  an account or app installation.
+- Rebuilt `/archive` as an explanation-first chronological record, followed
+  by country and year filters, explicit twelve-entry pagination, and Random
+  Human discovery. There is a visible end and no ranking or infinite feed.
+- Added first-class empty, no-match, loading, network-error, no-photo, and
+  removed-content states. A tombstone renders only its Human number and date;
+  identity, location, image path, and story fields are discarded.
+- Added a typed, browser-only REST reader restricted to seven existing anonymous
+  functions: today's Human, portrait elements, approved questions, Archive,
+  Random Human, Archive countries, and Archive years. It cannot name a table or
+  invoke another RPC.
+- Kept `PUBLIC_DATA_MODE=off` as the default, producing zero data requests.
+  Live mode requires an explicit public project URL and anon key; configuration
+  warns that a service-role key must never be exposed.
+- Resolve approved portrait objects with short-lived signed URLs. Question
+  votes and country/year counts returned by the existing functions are
+  deliberately ignored and never rendered.
+
+Validation:
+
+- `npm run web:check` passes Astro diagnostics, lint, formatting, and the
+  26-page static build.
+- Headless Chromium reviewed request-free launch pages at 320, 768, and 1440px,
+  plus representative French and German pages, with no horizontal overflow or
+  requests beyond the local origin.
+- Intercepted live-reader checks cover Quiet Day, a published Today portrait,
+  approved questions, Archive chronology, country filtering, no-match recovery,
+  Random Human, signed portraits, network failure, and all seven allowed RPCs.
+- Browser assertions confirm Remember/vote totals and country/year counts are
+  absent. A tombstone ignores supplied identity, city, and portrait fields and
+  displays only its number, date, and neutral removal explanation.
+- `npm run verify` remains green: migrations pass, 28 suites pass, and all 481
+  native tests pass.
+
+**Exit:** achieved. Shared Today links explain themselves without the app, the
+Archive remains finite and non-competitive, and live reads cannot exceed the
+reviewed anonymous function allowlist.
 
 ### Phase 6 — Localization, sharing, and discovery
 

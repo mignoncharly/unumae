@@ -1,0 +1,21 @@
+---
+interface Props {
+  state: string;
+  content: { eyebrow: string; title: string; body: string };
+  hidden?: boolean;
+}
+
+const { state, content, hidden = true } = Astro.props;
+---
+
+<section
+  class="public-state"
+  data-state={state}
+  hidden={hidden}
+  aria-live="polite"
+>
+  <p class="eyebrow">{content.eyebrow}</p>
+  <h2>{content.title}</h2>
+  <p>{content.body}</p>
+  <slot />
+</section>

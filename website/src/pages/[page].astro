@@ -1,6 +1,8 @@
 ---
+import PublicPage from '../components/PublicPage.astro';
 import RoutePage from '../components/RoutePage.astro';
 import TrustPage from '../components/TrustPage.astro';
+import { publicPageKeys, type PublicPageKey } from '../content/public';
 import { trustPageKeys, type TrustPageKey } from '../content/trust';
 import { pageKeys, type PageKey } from '../content/site';
 
@@ -13,11 +15,14 @@ interface Props {
 }
 
 const { page } = Astro.props as Props;
+const isPublicPage = publicPageKeys.includes(page as PublicPageKey);
 const isTrustPage = trustPageKeys.includes(page as TrustPageKey);
 ---
 
 {
-  isTrustPage ? (
+  isPublicPage ? (
+    <PublicPage locale="en" page={page as PublicPageKey} />
+  ) : isTrustPage ? (
     <TrustPage locale="en" page={page as TrustPageKey} />
   ) : (
     <RoutePage locale="en" page={page} />

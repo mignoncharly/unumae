@@ -26,7 +26,16 @@ import { useTheme } from '@/theme';
  * publishes and is asked for nothing — signing in is offered at the moment
  * somebody tries to act, never on arrival (Article 6.1).
  */
-export function YourStanding() {
+export function YourStanding({
+  /**
+   * A Quiet Day centres everything on the screen, and a left-aligned line with
+   * a rule above it below a centred block reads as a piece of a different
+   * layout. Under a portrait the page is left-aligned and so is this.
+   */
+  centered = false,
+}: {
+  centered?: boolean;
+} = {}) {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
   const isAuthenticated = useIsAuthenticated();
@@ -93,13 +102,24 @@ export function YourStanding() {
     <View
       style={{
         marginTop: theme.spacing.xxl,
-        paddingTop: theme.spacing.lg,
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: theme.colors.border,
         gap: theme.spacing.xs,
+        ...(centered
+          ? {
+              alignItems: 'center' as const,
+              paddingHorizontal: theme.spacing.xl,
+            }
+          : {
+              paddingTop: theme.spacing.lg,
+              borderTopWidth: StyleSheet.hairlineWidth,
+              borderTopColor: theme.colors.border,
+            }),
       }}
     >
-      <Text color="textSecondary" variant="footnote">
+      <Text
+        color="textSecondary"
+        style={centered ? { textAlign: 'center' } : undefined}
+        variant="footnote"
+      >
         {text}
       </Text>
 

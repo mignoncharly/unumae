@@ -96,6 +96,15 @@ export default function TodayScreen() {
           body={t('today.quietDayBody')}
           title={t('today.quietDay')}
         />
+
+        {/*
+          Here more than anywhere. A Quiet Day is the emptiest this screen ever
+          gets, and "you join the draw in six days" is the most useful thing the
+          person reading it could be told — which is exactly why it was a
+          mistake to put the standing line only on the branch where a Human
+          exists.
+        */}
+        <YourStanding centered />
       </Screen>
     );
   }

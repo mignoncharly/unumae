@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { OfflineNotice } from '@/components/shared/OfflineNotice';
+import { OnboardingGate } from '@/components/shared/OnboardingGate';
 import i18n, { initI18n } from '@/i18n';
 import { setAnalyticsProvider, track } from '@/lib/analytics';
 import { createSupabaseAnalytics } from '@/lib/analytics/provider';
@@ -60,6 +61,9 @@ export default function RootLayout() {
         <StatusBar style="auto" />
         {/* Above the navigator, so it is visible on every screen. */}
         <OfflineNotice />
+        {/* Renders nothing; sends a signed-in person with no profile to finish
+            it, which is the only way to be eligible for the draw. */}
+        <OnboardingGate />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="(auth)" options={{ presentation: 'modal' }} />

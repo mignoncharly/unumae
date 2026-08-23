@@ -191,6 +191,23 @@ The account was created and confirmed regardless — the link did work, in the
 sense that it verified the address. It just did it somewhere nothing was
 listening, leaving a confirmed user with no profile.
 
+### Templates cannot be edited without custom SMTP
+
+The dashboard shows the subject and body as read-only, above a banner:
+
+> Set up custom SMTP to edit templates. Emails will be sent using the default
+> templates.
+
+So the stock link-based emails cannot be replaced until an SMTP provider is
+configured. That is needed for launch regardless: the built-in sender is rate
+limited to a handful of messages an hour and is documented as development-only,
+which is not a service anybody can sign up through.
+
+Until then, `npm run dev:code -- you@example.com` mints the same one-time code the
+email would have carried and prints it, so the flow can be tested end to end.
+The app is unchanged: it verifies that code exactly as it would verify one that
+arrived by email.
+
 ### The fix, in the dashboard
 
 **Authentication → URL Configuration**
@@ -200,7 +217,8 @@ listening, leaving a confirmed user with no profile.
 | Site URL | `https://unumae.app` |
 | Additional Redirect URLs | `onehuman://`, `https://unumae.app/**` |
 
-**Authentication → Email Templates** — paste the contents of
+**Authentication → Email Templates**, once SMTP is configured — paste the
+contents of
 `supabase/templates/` into both **Confirm signup** and **Magic Link**. Both,
 not one: Supabase picks between them by whether the address is already known,
 so fixing only one makes sign-in work for new users and not returning ones, or

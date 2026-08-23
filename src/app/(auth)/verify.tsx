@@ -12,7 +12,20 @@ import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 
-const CODE_LENGTH = 6;
+/*
+ * The server decides how long the code is, not this screen.
+ *
+ * It was pinned at exactly 6: maxLength cut anything longer, and the button
+ * stayed disabled below it. This project issues 8 digits, so the code could
+ * not be typed in at all — the field silently kept the first six and the
+ * verification failed as though the person had mistyped it.
+ *
+ * A range instead. Six is the shortest Supabase will issue and ten is well
+ * past the longest, so both ends stay honest without guessing at a setting
+ * that lives in the dashboard.
+ */
+const CODE_MIN_LENGTH = 6;
+const CODE_MAX_LENGTH = 10;
 
 export default function VerifyScreen() {
   const theme = useTheme();
@@ -62,7 +75,7 @@ export default function VerifyScreen() {
           inputMode="numeric"
           keyboardType="number-pad"
           label={t('auth.codeLabel')}
-          maxLength={CODE_LENGTH}
+          maxLength={CODE_MAX_LENGTH}
           onChangeText={setCode}
           placeholder="000000"
           textContentType="oneTimeCode"
@@ -70,7 +83,7 @@ export default function VerifyScreen() {
         />
 
         <Button
-          disabled={busy || code.trim().length < CODE_LENGTH}
+          disabled={busy || code.trim().length < CODE_MIN_LENGTH}
           label={t('auth.verify')}
           onPress={handleVerify}
         />

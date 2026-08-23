@@ -31,7 +31,8 @@
     "web:quality": "npm --prefix website run quality",
     "verify:security": "node scripts/verify-security.mjs",
     "simulate": "node scripts/simulate-cycle.mjs",
-    "db:settings": "node scripts/db-settings.mjs"
+    "db:settings": "node scripts/db-settings.mjs",
+    "dev:code": "node scripts/dev-code.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

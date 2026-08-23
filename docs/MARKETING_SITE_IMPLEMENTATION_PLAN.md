@@ -299,7 +299,7 @@ Validation:
 - Both self-hosted fonts report loaded. Keyboard Tab focus lands on the visible
   skip link with a solid outline; reduced motion resolves to 0.01ms.
 - Browser inspection confirms Privacy and Terms emit `noindex, follow`.
-- `npm run verify` remains green: 22 suites and 364 native tests pass.
+- `npm run verify` remains green: 24 suites and 399 native tests pass.
 
 **Exit:** achieved. The principal mission, selection, consent, moderation,
 Archive, conduct, and enforcement claims are specific, traceable to approved

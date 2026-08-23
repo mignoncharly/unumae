@@ -182,6 +182,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // is still loaded lazily and falls back to a text share if it is missing —
     // see src/features/sharing/card.ts.
     'expo-sharing',
+    // Required directly by @expo/vector-icons, which the tab bar uses. Expo Go
+    // bundles it, so a missing entry here is invisible in development and a
+    // crash in a production build — expo-doctor is what caught it.
+    'expo-font',
   ],
   experiments: {
     typedRoutes: true,

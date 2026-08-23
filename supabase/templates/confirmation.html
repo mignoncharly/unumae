@@ -1,14 +1,161 @@
-<h2>Welcome to Unumae</h2>
-
-<p>Enter this code in the app to confirm your address:</p>
-
-<p
-  style="font-size: 32px; letter-spacing: 6px; font-weight: 600; margin: 24px 0"
+<table
+  role="presentation"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  width="100%"
+  style="
+    background-color: #f7f7f5;
+    margin: 0;
+    padding: 32px 16px;
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+      sans-serif;
+  "
 >
-  {{ .Token }}
-</p>
+  <tr>
+    <td align="center">
+      <table
+        role="presentation"
+        cellpadding="0"
+        cellspacing="0"
+        border="0"
+        width="480"
+        style="
+          width: 480px;
+          max-width: 100%;
+          background-color: #ffffff;
+          border: 1px solid #e4e4e1;
+          border-radius: 12px;
+        "
+      >
+        <tr>
+          <td style="padding: 40px 40px 0 40px">
+            <p
+              style="
+                margin: 0;
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+                color: #0b0b0c;
+              "
+            >
+              Unumae
+            </p>
+          </td>
+        </tr>
 
-<p style="color: #6a6a66">
-  It expires in an hour. If you did not ask for it, nothing has happened and you
-  can ignore this message.
-</p>
+        <tr>
+          <td style="padding: 32px 40px 0 40px">
+            <p
+              style="
+                margin: 0 0 12px 0;
+                font-size: 17px;
+                line-height: 1.5;
+                color: #0b0b0c;
+              "
+            >
+              Welcome.
+            </p>
+            <p
+              style="
+                margin: 0;
+                font-size: 15px;
+                line-height: 1.6;
+                color: #5a5a57;
+              "
+            >
+              Every day, one person somewhere in the world is chosen at random
+              and the rest of us get to meet them. Enter this code to confirm
+              your address.
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding: 24px 40px 0 40px">
+            <table
+              role="presentation"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              width="100%"
+              style="background-color: #f7f7f5; border-radius: 8px"
+            >
+              <tr>
+                <td align="center" style="padding: 24px 16px">
+                  <span
+                    style="
+                      font-family:
+                        ui-monospace, 'SFMono-Regular', Consolas, monospace;
+                      font-size: 30px;
+                      font-weight: 600;
+                      letter-spacing: 8px;
+                      color: #0b0b0c;
+                    "
+                    >{{ .Token }}</span
+                  >
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding: 24px 40px 0 40px">
+            <p
+              style="
+                margin: 0;
+                font-size: 15px;
+                line-height: 1.6;
+                color: #5a5a57;
+              "
+            >
+              It expires in an hour and works once.
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding: 24px 40px 32px 40px">
+            <p
+              style="
+                margin: 0;
+                padding-top: 24px;
+                border-top: 1px solid #e4e4e1;
+                font-size: 13px;
+                line-height: 1.6;
+                color: #8e8e8a;
+              "
+            >
+              If you did not sign up, nothing has happened and you can ignore
+              this message.
+            </p>
+          </td>
+        </tr>
+      </table>
+
+      <table
+        role="presentation"
+        cellpadding="0"
+        cellspacing="0"
+        border="0"
+        width="480"
+        style="width: 480px; max-width: 100%"
+      >
+        <tr>
+          <td align="center" style="padding: 24px 16px 0 16px">
+            <p style="margin: 0; font-size: 12px; color: #8e8e8a">
+              One human a day.
+              <a
+                href="https://unumae.app"
+                style="color: #8e8e8a; text-decoration: underline"
+                >unumae.app</a
+              >
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

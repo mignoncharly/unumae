@@ -40,3 +40,38 @@ not be typed into a six-character field, and it failed as though the person had
 mistyped it.
 
 The templates deliberately say neither number.
+
+## Why they look the way they do
+
+Email is not the web. These are written for clients that largely stopped
+improving around 2007, so:
+
+- **Tables, not divs.** Outlook renders through Word, which has no flexbox and
+  no grid.
+- **Inline styles only.** Gmail strips `<style>` blocks and ignores classes.
+- **No images.** Most clients block remote images by default, so a template
+  that leans on one arrives broken for most people. The wordmark is set type,
+  not a picture.
+- **No web fonts.** They do not load. A system stack is what everyone sees
+  anyway.
+- **480px wide.** Comfortable on a phone, which is where most of these are
+  opened.
+
+Colours are the app's own tokens — `#0B0B0C` text, `#5A5A57` secondary,
+`#8E8E8A` tertiary, `#F7F7F5` surface, `#E4E4E1` border — so the mail and the
+product look like the same thing.
+
+`tests/email-templates.test.ts` asserts all of it, including the rule that
+matters most: the code is present and no link is.
+
+## Seeing them without sending one
+
+Open the `.html` files in a browser. `{{ .Token }}` shows literally, which is
+enough to judge the layout. A browser is far more forgiving than a mail client,
+so anything that looks wrong there is definitely wrong.
+
+## They are English only
+
+Supabase renders one template per event and gives it no locale, so these cannot
+follow the app's language. English is canonical (Article 9.6), which makes that
+the right single choice rather than merely the available one.

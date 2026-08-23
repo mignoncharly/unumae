@@ -1,5 +1,6 @@
 import { Share } from 'react-native';
 
+import { humanUrl, WEBSITE_URL, websiteLinks } from '@/constants/links';
 import { track } from '@/lib/analytics';
 import { formatHumanNumber } from '@/utils/cycle';
 
@@ -15,8 +16,8 @@ import { formatHumanNumber } from '@/utils/cycle';
  * Remembers they have, or anything that would turn a person into a metric.
  */
 
-/** Where a shared link lands. The domain is not registered yet — see OPEN_ITEMS. */
-export const SHARE_BASE_URL = 'https://unumae.app';
+/** Where a shared link lands. The site lives in website/. */
+export const SHARE_BASE_URL = WEBSITE_URL;
 
 export interface ShareableHuman {
   humanNumber: number;
@@ -30,9 +31,7 @@ export interface ShareableHuman {
 }
 
 export function shareUrl(human: ShareableHuman): string {
-  return human.isToday
-    ? `${SHARE_BASE_URL}/today`
-    : `${SHARE_BASE_URL}/human/${human.drawId}`;
+  return human.isToday ? websiteLinks.today : humanUrl(human.drawId);
 }
 
 /**

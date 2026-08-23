@@ -11,7 +11,7 @@ Last updated: end of Phase 7.
 
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
-| 1 | **Register the `unumae.app` domain** | Shared links point at `https://unumae.app` — `SHARE_BASE_URL` in `src/features/sharing/share.ts`. Until that domain exists and serves the exported web build, a shared link goes nowhere. Change the constant if you would rather use a different domain. | Sharing being useful. |
+| 1 | **Deploy `website/` to `unumae.app`** | The app links out to it for About, Privacy and Terms, and every shared link points there. You are developing it on your own server; until it is live those links go nowhere. `npm run web:build` produces the static site. | Sharing, and the legal links, being useful. |
 | 2 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. You said you will run it later — nothing else is waiting on it. | Testing Sign in with Apple and push. |
 | 3 | ~~Appoint the first moderator~~ **— solved, nothing to do** | `charles.nguenkam@gmail.com` and `mignoncharly@yahoo.fr` are seeded in `public.founding_moderators`. Whichever you sign up with, a trigger promotes you to moderator the moment you finish onboarding, and the migration backfilled anyone who already had a profile. Full detail, including how to add and remove moderators later: `docs/MODERATION.md`. | Nothing. |
 | 4 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |

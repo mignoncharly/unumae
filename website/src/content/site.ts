@@ -32,6 +32,8 @@ interface SiteCopy {
   comingSoon: string;
   navigation: Record<PageKey, string>;
   pages: Record<RouteKey, PageCopy>;
+  /** Rendered under long-form legal text. The date is substituted in. */
+  lastUpdated: string;
   facts: readonly { value: string; label: string }[];
   footerStatement: string;
 }
@@ -39,6 +41,7 @@ interface SiteCopy {
 export const content: Record<Locale, SiteCopy> = {
   en: {
     languageName: 'English',
+    lastUpdated: 'Last updated {date}.',
     skipToContent: 'Skip to content',
     navigationLabel: 'Primary navigation',
     languageLabel: 'Language',
@@ -103,8 +106,6 @@ export const content: Record<Locale, SiteCopy> = {
         eyebrow: 'Community guidelines',
         introduction:
           'Ask what you would ask a stranger you respected. Questions are welcome; verdicts, promotion, harassment, and attempts at private contact are not.',
-        notice:
-          'The complete approved community rules will be published here in the trust-pages phase.',
       },
       privacy: {
         title: 'Privacy policy',
@@ -114,7 +115,6 @@ export const content: Record<Locale, SiteCopy> = {
         introduction:
           'The privacy policy is still being prepared. We will publish reviewed copy here before any public launch or data collection through this website.',
         notice: 'No website waitlist or analytics is active.',
-        noIndex: true,
       },
       terms: {
         title: 'Terms of service',
@@ -124,7 +124,6 @@ export const content: Record<Locale, SiteCopy> = {
         introduction:
           'The terms of service are still being prepared. We will publish reviewed copy here before the product becomes publicly available.',
         notice: 'This placeholder is not a legal agreement.',
-        noIndex: true,
       },
     },
     facts: [
@@ -136,6 +135,7 @@ export const content: Record<Locale, SiteCopy> = {
   },
   fr: {
     languageName: 'Français',
+    lastUpdated: 'Dernière mise à jour : {date}.',
     skipToContent: 'Aller au contenu',
     navigationLabel: 'Navigation principale',
     languageLabel: 'Langue',
@@ -201,8 +201,6 @@ export const content: Record<Locale, SiteCopy> = {
         eyebrow: 'Règles de la communauté',
         introduction:
           'Posez la question que vous poseriez à une personne inconnue que vous respectez. Les questions sont bienvenues ; les verdicts, la promotion, le harcèlement et le contact privé ne le sont pas.',
-        notice:
-          'Les règles approuvées complètes seront publiées ici pendant la phase consacrée à la confiance.',
       },
       privacy: {
         title: 'Politique de confidentialité',
@@ -213,7 +211,6 @@ export const content: Record<Locale, SiteCopy> = {
           'La politique de confidentialité est en préparation. Un texte validé sera publié ici avant tout lancement public ou collecte de données sur ce site.',
         notice:
           'Aucune liste d’attente ni mesure d’audience n’est active sur ce site.',
-        noIndex: true,
       },
       terms: {
         title: 'Conditions d’utilisation',
@@ -223,7 +220,6 @@ export const content: Record<Locale, SiteCopy> = {
         introduction:
           'Les conditions d’utilisation sont en préparation. Un texte validé sera publié ici avant la mise à disposition publique du produit.',
         notice: 'Cette page temporaire ne constitue pas un accord juridique.',
-        noIndex: true,
       },
     },
     facts: [
@@ -235,6 +231,7 @@ export const content: Record<Locale, SiteCopy> = {
   },
   de: {
     languageName: 'Deutsch',
+    lastUpdated: 'Zuletzt aktualisiert am {date}.',
     skipToContent: 'Zum Inhalt springen',
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
@@ -300,8 +297,6 @@ export const content: Record<Locale, SiteCopy> = {
         eyebrow: 'Community-Regeln',
         introduction:
           'Frage, was du eine fremde Person fragen würdest, die du respektierst. Fragen sind willkommen; Urteile, Werbung, Belästigung und private Kontaktversuche nicht.',
-        notice:
-          'Die vollständigen beschlossenen Regeln werden in der Phase für Vertrauensseiten hier veröffentlicht.',
       },
       privacy: {
         title: 'Datenschutzerklärung',
@@ -311,7 +306,6 @@ export const content: Record<Locale, SiteCopy> = {
         introduction:
           'Die Datenschutzerklärung wird noch vorbereitet. Geprüfter Text erscheint hier vor jedem öffentlichen Start oder jeder Datenerhebung über diese Website.',
         notice: 'Auf dieser Website sind weder Warteliste noch Analysen aktiv.',
-        noIndex: true,
       },
       terms: {
         title: 'Nutzungsbedingungen',
@@ -321,7 +315,6 @@ export const content: Record<Locale, SiteCopy> = {
         introduction:
           'Die Nutzungsbedingungen werden noch vorbereitet. Geprüfter Text erscheint hier, bevor das Produkt öffentlich verfügbar wird.',
         notice: 'Dieser Platzhalter ist keine rechtliche Vereinbarung.',
-        noIndex: true,
       },
     },
     facts: [

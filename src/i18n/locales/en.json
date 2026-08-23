@@ -400,107 +400,12 @@
     "showOriginal": "Read the original",
     "translated": "Translated. The original is one tap away."
   },
-  "about": {
-    "title": "About",
-    "promise": "Every day, one ordinary person is introduced to the world. You have 24 hours to meet them, ask them something, and remember them. Then it is someone else’s turn.",
-    "idea": {
-      "title": "The idea",
-      "body": "Most of what you see online comes from people trying to be seen. This is the opposite: somebody who was chosen at random, agreed to be looked at once, and will never be chosen again."
-    },
-    "notSocial": {
-      "title": "It is not a social network",
-      "body": "There are no followers, no likes you can count, no rankings and no feed. You cannot build an audience here, and nothing we add later will change that."
-    },
-    "fairness": {
-      "title": "Nobody can buy their turn",
-      "body": "The person is drawn at random from everyone eligible. There is no way to pay for a better chance, no boost, no sponsor. We publish the pool hash and the random seed so anyone can check the result themselves."
-    },
-    "archive": {
-      "title": "Everyone stays",
-      "body": "When their 24 hours end, they join the Archive and stay there. In a year the app will be able to say: one year ago today, the world met this person."
-    }
-  },
   "sharing": {
     "share": "Share",
     "tagline": "8 billion people. One today."
   },
   "legal": {
     "privacyTitle": "Privacy",
-    "termsTitle": "Terms",
-    "lastUpdated": "Last updated {{date}}.",
-    "privacyIntro": "What we collect, what we never collect, and what you can do about it. Written to be read, not to be survived.",
-    "privacy": {
-      "whatWeCollect": {
-        "title": "What we collect",
-        "body": "Your email address, and the profile you fill in: a username, a name, a year of birth, a country, and optionally a city and one line about you. If you are selected, the portrait you write and the photograph you choose. Questions you ask and the Humans you remember."
-      },
-      "installId": {
-        "title": "One number about your app, not about you",
-        "body": "We store a random identifier for your installation, so we can count how many people came back the next day. It is not linked to any advertising profile, it never leaves our database, and it is deleted after 90 days along with the events it belongs to."
-      },
-      "whatWeNever": {
-        "title": "What we never collect",
-        "body": "Your precise location — a country is the only place we ask for, and never automatically. Your contacts. Your activity in other apps or on other websites. Anything for advertising: there are no adverts here and no advertising partners."
-      },
-      "whoSeesIt": {
-        "title": "Who sees it",
-        "body": "Your profile is private to you. If you are published, your first name, country, optional city, photograph and portrait become public — that is the point, and you agree to it before it happens. Nobody else can read your library, your votes, or which draws you entered."
-      },
-      "howLong": {
-        "title": "How long we keep it",
-        "body": "Product analytics for 90 days. Everything else until you delete your account. Records of the daily draw are kept permanently, but they contain no published content — they are what makes the fairness of the draw checkable."
-      },
-      "yourRights": {
-        "title": "Your rights",
-        "body": "You can export everything we hold about you, hide your city, leave the draw, delete your account, and ask to be removed from the Archive if you were published. All of it from inside the app, without asking anyone."
-      },
-      "children": {
-        "title": "Age",
-        "body": "You must be at least 16 to hold an account. We ask for a year of birth to check that, and for nothing else."
-      },
-      "contact": {
-        "title": "Questions",
-        "body": "Write to us and a person will answer. We do not use an automated system for privacy requests."
-      }
-    },
-    "termsIntro": "The legal minimum, kept short. The community rules carry the part that actually matters day to day.",
-    "terms": {
-      "whatThisIs": {
-        "title": "What this is",
-        "body": "A service that publishes one randomly chosen person each day, for 24 hours, and keeps an archive of everyone published. It is provided as it is, and it is free."
-      },
-      "yourAccount": {
-        "title": "Your account",
-        "body": "One account per person, at least 16 years old, with a real email address you control. You are responsible for what is done with your account."
-      },
-      "yourContent": {
-        "title": "Your content stays yours",
-        "body": "Your portrait, your answers and your questions belong to you. We claim no ownership of them."
-      },
-      "ourLicence": {
-        "title": "What you allow us to do with it",
-        "body": "By submitting a portrait you allow us to publish it in the app and on our website, and to keep it in the Archive. That permission ends if you ask to be removed, except for the number and date, which remain so the Archive stays a complete sequence."
-      },
-      "beingPublished": {
-        "title": "Being published",
-        "body": "Nobody is published without saying yes. You choose what to share, you may decline with no consequence, and a person reviews every portrait before it appears."
-      },
-      "whatWeMayDo": {
-        "title": "What we may do",
-        "body": "Remove content that breaks the community rules, suspend or end an account, and refuse to publish a portrait. Where we act, we record who decided and why, and you may dispute it."
-      },
-      "noWarranty": {
-        "title": "No promises about availability",
-        "body": "The service may be interrupted or changed. Some days no Human is published, and that is by design rather than a failure."
-      },
-      "ending": {
-        "title": "Ending it",
-        "body": "You can delete your account at any time from inside the app. We may end an account that repeatedly breaks the rules, or that we are legally required to end."
-      },
-      "changes": {
-        "title": "Changes",
-        "body": "We will update these terms as the product grows. What cannot change is the promise underneath: no followers, no rankings, no way to buy a better chance, and one ordinary person a day."
-      }
-    }
+    "termsTitle": "Terms"
   }
 }

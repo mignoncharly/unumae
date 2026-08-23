@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { ExternalLink } from '@/components/shared/ExternalLink';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
 import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
+import { websiteLinks } from '@/constants/links';
 import { signOut } from '@/features/auth/api';
 import { useSession } from '@/features/auth/useSession';
 import { useAmIModerator } from '@/features/moderation/hooks';
@@ -83,9 +85,9 @@ function AccountSection() {
         </Link>
       ) : null}
 
-      <Link href="/about">
-        <Text color="accent">{t('settings.about')} →</Text>
-      </Link>
+      {/* The website carries the marketing and legal pages; the app links out
+          rather than keeping a second copy that would drift. */}
+      <ExternalLink href={websiteLinks.about} label={t('settings.about')} />
 
       <Link href="/settings/notifications">
         <Text color="accent">{t('settings.notifications')} →</Text>
@@ -106,6 +108,12 @@ function AccountSection() {
       <Link href="/settings/eligibility">
         <Text color="accent">{t('settings.eligibility')} →</Text>
       </Link>
+
+      <ExternalLink
+        href={websiteLinks.privacy}
+        label={t('legal.privacyTitle')}
+      />
+      <ExternalLink href={websiteLinks.terms} label={t('legal.termsTitle')} />
 
       <Link href="/settings/account">
         <Text color="danger" variant="footnote">

@@ -23,6 +23,7 @@ amended. Every feature request is measured against it.
 | [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) | 18 phases and their status |
 | [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) | What is waiting on you, and what is waiting on me |
 | [MODERATION.md](./docs/MODERATION.md) | Who can moderate, and how the first one comes to exist |
+| [SURFACES.md](./docs/SURFACES.md) | Which pages live in the app and which on the website |
 | [VERIFICATION_POLICY.md](./docs/VERIFICATION_POLICY.md) | Who may enter the draw, and who may be published |
 | [COMMUNITY_RULES.md](./docs/COMMUNITY_RULES.md) | The rules users accept |
 | [ENVIRONMENTS.md](./docs/ENVIRONMENTS.md) | Three environments, three Supabase projects |

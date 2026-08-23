@@ -117,6 +117,18 @@ if (root) {
         .join(' · ');
       setText('[data-human-location]', location);
 
+      /*
+       * Founding Human — 'Joined during Year Zero'.
+       *
+       * Derived in the database from the join date and the Archive's first day,
+       * so there is no field to award and nothing here can grant it. It carries
+       * no advantage in the draw. Hidden rather than emptied when false, so the
+       * nameplate does not keep a blank line for most people.
+       */
+      const founding = query<HTMLElement>('[data-human-founding]');
+      founding.textContent = copy.today.live.foundingLabel;
+      founding.hidden = human.founding !== true;
+
       const image = query<HTMLImageElement>('[data-today-photo]');
       const placeholder = query<HTMLElement>('[data-photo-placeholder]');
       if (photoUrl) {

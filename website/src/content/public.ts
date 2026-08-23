@@ -31,6 +31,7 @@ interface PublicCopy {
     live: {
       liveLabel: string;
       humanLabel: string;
+      foundingLabel: string;
       remainingLabel: string;
       portraitLabel: string;
       questionsTitle: string;
@@ -103,6 +104,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       live: {
         liveLabel: 'Live worldwide',
         humanLabel: 'Human',
+        foundingLabel: 'Joined during Year Zero',
         remainingLabel: 'Remaining in this UTC day',
         portraitLabel: 'Their portrait',
         questionsTitle: 'Questions from the world',
@@ -222,6 +224,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       live: {
         liveLabel: 'En direct dans le monde',
         humanLabel: 'Humain',
+        foundingLabel: 'Arrivé pendant l’Année Zéro',
         remainingLabel: 'Temps restant dans cette journée UTC',
         portraitLabel: 'Son portrait',
         questionsTitle: 'Questions du monde',
@@ -342,6 +345,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       live: {
         liveLabel: 'Weltweit live',
         humanLabel: 'Mensch',
+        foundingLabel: 'Im Jahr Null dazugekommen',
         remainingLabel: 'Verbleibend in diesem UTC-Tag',
         portraitLabel: 'Das Porträt',
         questionsTitle: 'Fragen aus der Welt',

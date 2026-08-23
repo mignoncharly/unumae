@@ -524,14 +524,19 @@ loaded lazily inside a `try`: if the capture is unavailable the button falls
 back to the text share without comment, because a share button that does
 nothing is worse than a share without a picture. Now on the Archive page too.
 
+**The Founding Humans badge is on the website too**, in all three languages —
+the same derived boolean, rendered as the quietest line on the nameplate.
+
 **The translation job.** The write path has existed since Phase 10; what was
 missing was the thing that decides what still needs translating.
 `pending_translations()` offers only approved, published portraits — sending
 somebody's answers to a vendor before a moderator has looked at them would be a
 leak with a queue in front of it. `record_same_language()` stops the job asking
-about the same French answer every night forever. The Edge Function is written
-and needs a DeepL key; without one it reports "not configured" and changes
-nothing, rather than failing loudly every night or pretending to have worked.
+about the same French answer every night forever. The Edge Function is deployed with a DeepL key; without one it
+reports "not configured" and changes nothing, rather than failing loudly every
+night or pretending to have worked. Verified end to end against a simulated
+cycle: 30 pending, 20 translated, 10 correctly skipped as already-in-language,
+0 failed — and a guest can read them back.
 
 **`docs/GROWTH.md`** carries the four hooks — the TikTok line, the Instagram
 portrait, the X quote, the Reddit claim — and, more usefully, the list of things

@@ -16,17 +16,15 @@ Last updated: end of Phase 15.
 | 3 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. Nothing else is waiting on it. | Testing Sign in with Apple and push. |
 | 4 | **Recruit 10–20 people for the internal alpha** | The simulation proves the machinery works. It cannot tell you whether Today's Human is interesting, whether anyone opens the Archive, or whether anyone shares a portrait unprompted. Only real people answer that. `docs/BETA.md` has the four questions to watch for. | The growth gate, and everything after it. |
 | 5 | **Decide the four gate thresholds are right** | D1 25%, D7 10%, participation 15%, share rate 3%. I chose defensible numbers; they are your call, and the point of them is that they are fixed *before* any result exists. Changing them later is legitimate, but it should be a deliberate commit, not a reaction to a disappointing week. | Nothing yet — they bind at step 5 of `docs/BETA.md`. |
-| 6 | ⚠️ **Deploy `translate-portraits`** | I cannot. The Supabase CLI is logged in as an account whose project list does not include `qpicjsjxdblrxdrdibge`, so `functions deploy` returns 403 while migrations keep working (they use the direct Postgres URL). `delete-account` and `send-notifications` are already live; `translate-portraits` is written but returns 404. Run: `npx supabase functions deploy translate-portraits --project-ref qpicjsjxdblrxdrdibge` from an account that owns the project. | Translations appearing at all. |
-| 7 | **A DeepL API key**, if you want translations | Set it as a function secret: `npx supabase secrets set DEEPL_API_KEY=... --project-ref qpicjsjxdblrxdrdibge`. Free tier keys end in `:fx` and the function detects that itself. Without a key the job reports "not configured" and changes nothing — the originals are always there, and they are the version that governs (Article 9.6). | Nothing. Translation is additive by design. |
-| 8 | **Check the share card on a real device** | It renders off-screen and is captured to a PNG. Both native modules are in Expo Go, so it should work there, but the only way to know a card looks right is to look at one. If capture fails it falls back to the text share silently, so a broken card would not announce itself. | Nothing — the fallback works. |
-| 9 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
+| 6 | **Check the share card on a real device** | It renders off-screen and is captured to a PNG. Both native modules are in Expo Go, so it should work there, but the only way to know a card looks right is to look at one. If capture fails it falls back to the text share silently, so a broken card would not announce itself. | Nothing — the fallback works. |
+| 7 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
 
 ## Mine — code, and already planned
 
 | # | Item | Phase |
 | --- | --- | --- |
 | 1 | Scale and AI features | 16 — next |
-| 2 | Schedule the notification sender and the translation job (both need pg_net or an external cron) | 16 |
+| 2 | Schedule the notification sender and the translation job (both deployed; both need pg_net or an external cron to run nightly) | 16 |
 | 3 | Liveness capture flow — the gate exists and is switched off | later, native |
 | 4 | Optional audio/video portrait element | later |
 
@@ -50,7 +48,7 @@ picking, storage, the Signals tab — runs in Expo Go.
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
 | Migrations | 28 applied |
-| Edge Functions | `delete-account` and `send-notifications` live (probed); `translate-portraits` written, **not deployed** — see Yours #6 |
+| Edge Functions | `delete-account`, `send-notifications`, `translate-portraits` — all deployed and probed |
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, notify 00:10, publish 00:01, expiry sweep every 15 min, analytics purge 03:30 |
 | EAS project | `@mignoncharly/unumae` |

@@ -10,6 +10,12 @@ export interface PublicHuman {
   city: string | null;
   photo_path: string | null;
   published_at: string | null;
+  /**
+   * Joined during Year Zero. Derived from the join date in the database,
+   * never stored and never an advantage in the draw — a Founding Human is
+   * selected on exactly the same terms as anybody else.
+   */
+  founding: boolean | null;
 }
 
 export interface PortraitElement {

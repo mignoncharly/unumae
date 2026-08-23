@@ -1213,6 +1213,21 @@ code {
   color: var(--color-text-secondary);
 }
 
+/*
+ * Founding Human. Deliberately the quietest line on the page: tertiary,
+ * smaller, no pill and no icon. It marks when somebody arrived, and a badge
+ * that competed with their name would turn arriving early into a rank.
+ */
+.today-human__founding {
+  margin-top: var(--space-xs);
+  color: var(--color-text-tertiary);
+  font-size: var(--step-footnote);
+}
+
+.today-human__founding[hidden] {
+  display: none;
+}
+
 .today-portrait,
 .today-questions {
   display: grid;

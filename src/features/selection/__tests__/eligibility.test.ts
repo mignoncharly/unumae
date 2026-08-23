@@ -2,6 +2,7 @@ import type { ProfileRow } from '@/lib/supabase/types';
 
 import {
   canToggleParticipation,
+  daysUntilEligible,
   evaluateEligibility,
   isPermanent,
 } from '../eligibility';
@@ -85,8 +86,17 @@ describe('each criterion excludes on its own', () => {
     expect(evaluate({ verification_level: 'none' }).reasons).toContain(
       'not-verified'
     );
+  });
+
+  it('excludes someone the nightly pass has not admitted yet', () => {
+    /*
+     * This assertion used to expect 'not-verified' here, which is how the bug
+     * survived: the test agreed with the code that not being in the pool and
+     * not being verified were the same thing. They are not. This profile is
+     * verified and months old — all that is missing is the refresh.
+     */
     expect(evaluate({ selection_eligible: false }).reasons).toContain(
-      'not-verified'
+      'awaiting-refresh'
     );
   });
 
@@ -158,5 +168,93 @@ describe('leaving the pool', () => {
 
   it('is not offered before there is a profile', () => {
     expect(canToggleParticipation(null)).toBe(false);
+  });
+});
+
+/**
+ * "We still need to confirm that you are a real person."
+ *
+ * That sentence was shown to anybody whose `selection_eligible` was false —
+ * which is true of *every* account for its first seven days, verified or not.
+ * So the first thing a new person read was that they had something left to
+ * prove, when in fact they had only to wait. It is the message almost every
+ * user meets in their first week, and it was wrong for almost all of them.
+ *
+ * Three situations, three answers.
+ */
+describe('waiting is not the same as unverified', () => {
+  const dayOne = '2027-06-14T00:00:00.000Z';
+  const longAgo = '2027-01-01T00:00:00.000Z';
+
+  it('says unverified only when the account really is', () => {
+    const result = evaluate({
+      verification_level: 'none',
+      created_at: longAgo,
+      selection_eligible: false,
+    });
+    expect(result.reasons).toContain('not-verified');
+    expect(result.reasons).not.toContain('account-too-new');
+  });
+
+  it('says too new when the account is verified but young', () => {
+    const result = evaluate({
+      verification_level: 'email',
+      created_at: dayOne,
+      selection_eligible: false,
+    });
+    expect(result.reasons).toContain('account-too-new');
+    expect(result.reasons).not.toContain('not-verified');
+  });
+
+  it('says awaiting the nightly pass when old enough and still not in', () => {
+    // Verified, past seven days, but the refresh has not judged them yet. A
+    // few hours at most, and nothing to act on.
+    const result = evaluate({
+      verification_level: 'email',
+      created_at: longAgo,
+      selection_eligible: false,
+    });
+    expect(result.reasons).toContain('awaiting-refresh');
+    expect(result.reasons).not.toContain('not-verified');
+    expect(result.reasons).not.toContain('account-too-new');
+  });
+
+  it('never gives two answers to the same question', () => {
+    // The three are mutually exclusive by construction. Somebody told both
+    // "prove you are real" and "just wait" would have no idea which to believe.
+    for (const overrides of [
+      { verification_level: 'none' as const, created_at: dayOne },
+      { verification_level: 'email' as const, created_at: dayOne },
+      { verification_level: 'email' as const, created_at: longAgo },
+    ]) {
+      const reasons = evaluate({
+        ...overrides,
+        selection_eligible: false,
+      }).reasons;
+      const overlapping = reasons.filter((reason) =>
+        ['not-verified', 'account-too-new', 'awaiting-refresh'].includes(reason)
+      );
+      expect(overlapping).toHaveLength(1);
+    }
+  });
+});
+
+describe('how much longer', () => {
+  it('counts down whole days', () => {
+    expect(
+      daysUntilEligible(
+        { ...eligibleProfile, created_at: '2027-06-14T00:00:00.000Z' },
+        NOW
+      )
+    ).toBe(6);
+  });
+
+  it('never goes negative once the wait is over', () => {
+    expect(
+      daysUntilEligible(
+        { ...eligibleProfile, created_at: '2020-01-01T00:00:00.000Z' },
+        NOW
+      )
+    ).toBe(0);
   });
 });

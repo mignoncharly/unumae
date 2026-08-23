@@ -18,6 +18,8 @@ const REASON_KEYS: Record<EligibilityReason, string> = {
   'account-not-active': 'eligibility.reasons.accountNotActive',
   'opted-out': 'eligibility.reasons.optedOut',
   'not-verified': 'eligibility.reasons.notVerified',
+  'account-too-new': 'eligibility.reasons.accountTooNew',
+  'awaiting-refresh': 'eligibility.reasons.awaitingRefresh',
   'rules-not-accepted': 'eligibility.reasons.rulesNotAccepted',
   'under-age': 'eligibility.reasons.underAge',
   'already-been-human': 'eligibility.reasons.alreadyBeenHuman',

@@ -190,7 +190,9 @@
       "notVerified": "We still need to confirm you are a real person.",
       "rulesNotAccepted": "You have not accepted the community rules yet.",
       "underAge": "You must be at least 16.",
-      "alreadyBeenHuman": "You have already had your day. One human, one day, forever."
+      "alreadyBeenHuman": "You have already had your day. One human, one day, forever.",
+      "accountTooNew": "Your account is still new. The pool opens to you seven days after you join — there is nothing to do until then.",
+      "awaitingRefresh": "You qualify. The list of everyone eligible is rebuilt each night, and you will be on the next one."
     }
   },
   "invitation": {

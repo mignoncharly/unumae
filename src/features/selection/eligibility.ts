@@ -1,4 +1,5 @@
 import { MIN_ACCOUNT_AGE } from '@/constants/constitution';
+import { MIN_ACCOUNT_AGE_DAYS } from '@/constants/verification';
 import type { ProfileRow } from '@/lib/supabase/types';
 
 /**
@@ -17,6 +18,8 @@ export type EligibilityReason =
   | 'account-not-active'
   | 'opted-out'
   | 'not-verified'
+  | 'account-too-new'
+  | 'awaiting-refresh'
   | 'rules-not-accepted'
   | 'under-age'
   | 'already-been-human';
@@ -33,6 +36,25 @@ export interface EligibilityContext {
   hasBeenSelected: boolean;
   /** Injected so the test does not depend on the day it runs. */
   now?: Date;
+}
+
+function accountAgeInDays(profile: ProfileRow, now: Date): number {
+  const created = new Date(profile.created_at).getTime();
+  return (now.getTime() - created) / 86_400_000;
+}
+
+/** Whole days left before the pool opens, never negative. */
+export function daysUntilEligible(
+  profile: ProfileRow | null,
+  now: Date = new Date()
+): number {
+  if (!profile) {
+    return MIN_ACCOUNT_AGE_DAYS;
+  }
+  return Math.max(
+    0,
+    Math.ceil(MIN_ACCOUNT_AGE_DAYS - accountAgeInDays(profile, now))
+  );
 }
 
 export function evaluateEligibility({
@@ -60,8 +82,24 @@ export function evaluateEligibility({
     reasons.push('rules-not-accepted');
   }
 
-  if (profile.verification_level === 'none' || !profile.selection_eligible) {
+  /*
+   * Three situations, and they were one message.
+   *
+   * "We still need to confirm that you are a real person" was shown whenever
+   * `selection_eligible` was false — which is true of every account for its
+   * first seven days, verified or not. So the first thing a new person read was
+   * that they had something left to prove, when they had only to wait. It is
+   * the message almost everybody meets in their first week, and it was wrong
+   * for almost all of them.
+   */
+  if (profile.verification_level === 'none') {
     reasons.push('not-verified');
+  } else if (accountAgeInDays(profile, now) < MIN_ACCOUNT_AGE_DAYS) {
+    reasons.push('account-too-new');
+  } else if (!profile.selection_eligible) {
+    // Verified and old enough, but the nightly refresh has not judged them yet.
+    // A few hours at most, and honest about being nothing to act on.
+    reasons.push('awaiting-refresh');
   }
 
   if (now.getUTCFullYear() - profile.birth_year < MIN_ACCOUNT_AGE) {

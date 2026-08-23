@@ -190,7 +190,9 @@
       "notVerified": "Nous devons encore confirmer que vous êtes une personne réelle.",
       "rulesNotAccepted": "Vous n'avez pas encore accepté les règles de la communauté.",
       "underAge": "Vous devez avoir au moins 16 ans.",
-      "alreadyBeenHuman": "Vous avez déjà eu votre journée. Un human, un jour, pour toujours."
+      "alreadyBeenHuman": "Vous avez déjà eu votre journée. Un human, un jour, pour toujours.",
+      "accountTooNew": "Votre compte est encore récent. Le vivier vous est ouvert sept jours après votre inscription — il n’y a rien à faire d’ici là.",
+      "awaitingRefresh": "Vous remplissez les conditions. La liste des personnes éligibles est reconstruite chaque nuit, et vous serez sur la prochaine."
     }
   },
   "invitation": {

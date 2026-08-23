@@ -190,7 +190,9 @@
       "notVerified": "Wir müssen noch bestätigen, dass du eine echte Person bist.",
       "rulesNotAccepted": "Du hast die Community-Richtlinien noch nicht akzeptiert.",
       "underAge": "Du musst mindestens 16 sein.",
-      "alreadyBeenHuman": "Du hattest deinen Tag bereits. Ein Human, ein Tag, für immer."
+      "alreadyBeenHuman": "Du hattest deinen Tag bereits. Ein Human, ein Tag, für immer.",
+      "accountTooNew": "Dein Konto ist noch neu. Der Pool öffnet sich sieben Tage nach deiner Anmeldung — bis dahin gibt es nichts zu tun.",
+      "awaitingRefresh": "Du erfüllst die Bedingungen. Die Liste aller Berechtigten wird jede Nacht neu erstellt, und du bist auf der nächsten."
     }
   },
   "invitation": {

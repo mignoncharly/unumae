@@ -1,0 +1,25 @@
+<!--
+  The sign-in code.
+
+  Deliberately a code and not a link. The app asks for six digits
+  (verifyOtp with type: 'email'), and a link cannot complete that flow — it
+  hands the session to a browser, which then has to get it back to the app.
+  The default Supabase template uses {{ .ConfirmationURL }}, which is why
+  signing in redirected to localhost:3000 and the app never saw the session.
+
+  Keep {{ .Token }}. Adding a link back would reintroduce the same bug.
+-->
+<h2>Your Unumae code</h2>
+
+<p>Enter this in the app:</p>
+
+<p
+  style="font-size: 32px; letter-spacing: 6px; font-weight: 600; margin: 24px 0"
+>
+  {{ .Token }}
+</p>
+
+<p style="color: #6a6a66">
+  It expires in an hour. If you did not ask for it, nothing has happened to your
+  account and you can ignore this message.
+</p>

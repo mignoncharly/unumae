@@ -1,0 +1,30 @@
+<!--
+  The code for a brand new account.
+
+  Supabase picks the template by whether the address is already known:
+  signInWithOtp sends "magic link" to an existing user and "confirm signup" to
+  a new one. Both have to carry a code, or signing in works for some people and
+  not others depending on whether they have been here before.
+
+  Deliberately a code and not a link. The app asks for six digits (verifyOtp
+  with type: 'email'), and a link cannot complete that flow — it hands the
+  session to a browser, which then has to get it back to the app. The default
+  template uses {{ .ConfirmationURL }}, which is why the first sign-in
+  redirected to localhost:3000 and the app never saw the session.
+
+  Keep {{ .Token }}. Adding a link back would reintroduce the same bug.
+-->
+<h2>Welcome to Unumae</h2>
+
+<p>Enter this code in the app to confirm your address:</p>
+
+<p
+  style="font-size: 32px; letter-spacing: 6px; font-weight: 600; margin: 24px 0"
+>
+  {{ .Token }}
+</p>
+
+<p style="color: #6a6a66">
+  It expires in an hour. If you did not ask for it, nothing has happened and you
+  can ignore this message.
+</p>

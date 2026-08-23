@@ -39,6 +39,32 @@ enable_signup = true
 enable_signup = true
 double_confirm_changes = true
 enable_confirmations = true
+# Six digits, not a link. The app calls verifyOtp with type 'email'.
+otp_length = 6
+otp_expiry = 3600
+
+# The templates are files so they are reviewable and version controlled.
+#
+# They must contain {{ .Token }} and not {{ .ConfirmationURL }}. A link cannot
+# complete a code flow: it hands the session to a browser, and the browser then
+# has to get it back to the app. With the stock templates the first real sign-in
+# landed on http://localhost:3000 with the session in the URL fragment, and the
+# app never saw it.
+#
+# Supabase chooses between the two by whether the address is already known —
+# "magic link" for an existing user, "confirmation" for a new one — so both
+# carry a code, or sign-in works only for people who have been here before.
+#
+# This file governs the LOCAL stack. The hosted project's templates are set in
+# its dashboard; docs/OPERATIONS.md records that, and why `supabase config push`
+# is not used to do it.
+[auth.email.template.magic_link]
+subject = "Your Unumae code"
+content_path = "./supabase/templates/magic-link.html"
+
+[auth.email.template.confirmation]
+subject = "Your Unumae code"
+content_path = "./supabase/templates/confirmation.html"
 
 # Sign in with Apple is configured in the hosted dashboard, for com.unumae.app.
 # This block governs the LOCAL stack only and stays disabled on purpose:

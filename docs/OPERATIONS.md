@@ -168,3 +168,54 @@ Run it after any migration touching the draw, moderation, publication or
 escalation. Three fatal bugs have been found this way, all of them invisible to
 the offline suite, because the schema guards read SQL as text and cannot tell
 you it runs.
+
+---
+
+## Email sign-in
+
+The app asks for a six-digit code: `signInWithOtp` to send, `verifyOtp` with
+`type: email` to check it. The code is correct and always was.
+
+What was wrong is the hosted project, in two places, and the first real sign-in
+found both:
+
+1. **The email templates were the stock ones**, which use `{{ .ConfirmationURL }}`.
+   So the email carried a link rather than a code. A link cannot complete a code
+   flow — it hands the session to a browser, which then has to get it back to
+   the app.
+2. **Site URL was still `http://localhost:3000`**, the Supabase default. So the
+   link landed there, with a valid session sitting in the URL fragment and no
+   application to receive it.
+
+The account was created and confirmed regardless — the link did work, in the
+sense that it verified the address. It just did it somewhere nothing was
+listening, leaving a confirmed user with no profile.
+
+### The fix, in the dashboard
+
+**Authentication → URL Configuration**
+
+| Field | Value |
+| --- | --- |
+| Site URL | `https://unumae.app` |
+| Additional Redirect URLs | `onehuman://`, `https://unumae.app/**` |
+
+**Authentication → Email Templates** — paste the contents of
+`supabase/templates/` into both **Confirm signup** and **Magic Link**. Both,
+not one: Supabase picks between them by whether the address is already known,
+so fixing only one makes sign-in work for new users and not returning ones, or
+the reverse.
+
+The templates live in the repository so they are reviewable and cannot drift
+unnoticed. They must keep `{{ .Token }}` and must not regain a link.
+
+### Why this is not done with `supabase config push`
+
+The CLI can push `config.toml` to the linked project, and it would set these
+correctly. It would also push `[auth.external.apple] enabled = false`, which is
+in that file on purpose — enabling Apple locally would require a client ID and
+secret in the repository — and **disable Sign in with Apple on the live
+project**. There is no dry run, so the first sign that had happened would be an
+iOS build whose sign-in button stopped working.
+
+Two settings by hand are cheaper than that.

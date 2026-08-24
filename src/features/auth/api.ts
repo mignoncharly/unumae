@@ -89,8 +89,20 @@ export async function verifyEmailCode(
 }
 
 export async function signOut(): Promise<void> {
-  const { error } = await getSupabase().auth.signOut();
+  const supabase = getSupabase();
+  const { error: unregisterError } = await supabase.rpc(
+    'unregister_my_push_tokens'
+  );
+  if (unregisterError) {
+    // Keep the session active so the person can retry; signing out while a
+    // server token remains would allow private notifications on a shared phone.
+    throw new AppError('auth', 'auth.signOutFailed', {
+      cause: unregisterError,
+    });
+  }
+
+  const { error } = await supabase.auth.signOut();
   if (error) {
-    throw new AppError('auth', 'common.error', { cause: error });
+    throw new AppError('auth', 'auth.signOutFailed', { cause: error });
   }
 }

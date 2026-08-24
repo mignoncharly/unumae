@@ -78,6 +78,19 @@ Deno.serve(async (request: Request): Promise<Response> => {
     .select('id', { count: 'exact', head: true })
     .eq('selected_user_id', userId);
 
+  const { data: portraitRows, error: portraitLookupError } = await admin
+    .from('portraits')
+    .select('photo_path, media_path')
+    .eq('user_id', userId);
+
+  if (portraitLookupError) {
+    console.error(
+      'delete-account: portrait lookup failed',
+      portraitLookupError
+    );
+    return jsonResponse({ error: 'deletion_failed' }, 500);
+  }
+
   // Storage first: an orphaned object is not reachable through any row, so
   // deleting the row first would strand it.
   const { data: files } = await admin.storage
@@ -91,6 +104,25 @@ Deno.serve(async (request: Request): Promise<Response> => {
 
     if (storageError) {
       console.error('delete-account: storage removal failed', storageError);
+      return jsonResponse({ error: 'deletion_failed' }, 500);
+    }
+  }
+
+  const portraitFiles = [
+    ...(portraitRows ?? []).map((row) => row.photo_path),
+    ...(portraitRows ?? []).map((row) => row.media_path),
+  ].filter((path): path is string => Boolean(path));
+
+  if (portraitFiles.length > 0) {
+    const { error: portraitStorageError } = await admin.storage
+      .from('portraits')
+      .remove([...new Set(portraitFiles)]);
+
+    if (portraitStorageError) {
+      console.error(
+        'delete-account: portrait media removal failed',
+        portraitStorageError
+      );
       return jsonResponse({ error: 'deletion_failed' }, 500);
     }
   }

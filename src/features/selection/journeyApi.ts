@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useSession } from '@/features/auth/useSession';
-import { todayKeys } from '@/features/daily-human/hooks';
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 
@@ -61,7 +60,7 @@ export function useAnswerQuestion(drawId: string | undefined) {
     }) => answerQuestion(questionId, answer),
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: todayKeys.questions(drawId ?? 'none'),
+        queryKey: ['questions', drawId ?? 'none'],
       });
     },
   });

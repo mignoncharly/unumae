@@ -129,7 +129,9 @@ describe('a removed Human keeps their place (Article 8.6)', () => {
   const archive = functionBody('get_archive');
 
   it('reports removal rather than leaving a screen to infer it', () => {
-    expect(archive).toContain('(d.selected_user_id is null) as is_removed');
+    expect(archive).toContain(
+      '(d.redacted_at is not null or d.selected_user_id is null) as is_removed'
+    );
   });
 
   it('still lists them, by joining loosely', () => {

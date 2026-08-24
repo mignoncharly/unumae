@@ -30,6 +30,7 @@ import {
   useVote,
 } from '@/features/daily-human/hooks';
 import { useReport } from '@/features/moderation/hooks';
+import { useBlockContentAuthor } from '@/features/privacy/hooks';
 import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
@@ -59,6 +60,7 @@ export default function TodayScreen() {
   const remember = useRemember(drawId);
   const vote = useVote(drawId);
   const report = useReport();
+  const block = useBlockContentAuthor();
 
   const [askOpen, setAskOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -126,6 +128,24 @@ export default function TodayScreen() {
     );
   }
 
+  if (today.human.is_removed) {
+    return (
+      <Screen>
+        <EmptyState
+          body={t('today.removedBody')}
+          icon="book-open"
+          title={t('today.removed')}
+        />
+        <YourStanding centered />
+      </Screen>
+    );
+  }
+
+  const portraitId = today.human.portrait_id;
+  if (!portraitId || !today.human.display_name || !today.human.country_code) {
+    return null;
+  }
+
   return (
     <>
       <Screen>
@@ -189,6 +209,22 @@ export default function TodayScreen() {
                     }
                   })
                 }
+                onReport={(reason) =>
+                  requireAccount(() => {
+                    report.mutate(['question', question.id, reason], {
+                      onError: () => setToast(t('report.failed')),
+                      onSuccess: () => setToast(t('report.submitted')),
+                    });
+                  })
+                }
+                onBlock={() =>
+                  requireAccount(() => {
+                    block.mutate(['question', question.id], {
+                      onError: () => setToast(t('report.blockFailed')),
+                      onSuccess: () => setToast(t('report.blocked')),
+                    });
+                  })
+                }
                 question={question.body}
                 votes={question.votes}
               />
@@ -246,8 +282,17 @@ export default function TodayScreen() {
           <ReportAction
             onReport={(reason) =>
               requireAccount(() => {
-                report.mutate(['portrait', today.human.portrait_id, reason], {
+                report.mutate(['portrait', portraitId, reason], {
+                  onError: () => setToast(t('report.failed')),
                   onSuccess: () => setToast(t('report.submitted')),
+                });
+              })
+            }
+            onBlock={() =>
+              requireAccount(() => {
+                block.mutate(['portrait', portraitId], {
+                  onError: () => setToast(t('report.blockFailed')),
+                  onSuccess: () => setToast(t('report.blocked')),
                 });
               })
             }

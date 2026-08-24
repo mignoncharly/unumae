@@ -23,7 +23,6 @@ const shouldPersist = (
 describe('what survives on disk', () => {
   it.each([
     ['todays-human'],
-    ['questions'],
     ['archive'],
     ['archive-human'],
     ['anniversaries'],
@@ -33,12 +32,11 @@ describe('what survives on disk', () => {
 
   it.each([
     ['profile'],
+    ['questions'],
     ['has-been-selected'],
     ['invitation'],
     ['remembered'],
-    ['moderation-portraits'],
-    ['moderation-reports'],
-    ['am-i-moderator'],
+    ['moderation'],
     ['notification-settings'],
   ])('never keeps %s', (key) => {
     // Private, or a permission. Neither belongs in a cache on disk.

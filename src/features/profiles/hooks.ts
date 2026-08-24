@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useIsAuthenticated, useSession } from '@/features/auth/useSession';
+import { useSession } from '@/features/auth/useSession';
 
 import {
   amIFounding,
@@ -71,12 +71,13 @@ export function useNeedsOnboarding(): boolean {
  * It changes at most once, when Year Zero closes, so it is cached for a day.
  */
 export function useAmIFounding() {
-  const isAuthenticated = useIsAuthenticated();
+  const session = useSession();
+  const userId = session.session?.user.id ?? 'anonymous';
 
   return useQuery({
-    queryKey: ['am-i-founding'] as const,
+    queryKey: ['am-i-founding', userId] as const,
     queryFn: amIFounding,
-    enabled: isAuthenticated,
+    enabled: session.status === 'authenticated',
     staleTime: 24 * 60 * 60 * 1000,
   });
 }

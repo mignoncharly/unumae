@@ -27,7 +27,6 @@ const MAX_AGE_MS = 24 * 60 * 60 * 1000;
  */
 const PERSISTED_PREFIXES = [
   'todays-human',
-  'questions',
   'archive',
   'archive-human',
   'anniversaries',
@@ -44,6 +43,9 @@ export const queryPersister = createAsyncStoragePersister({
 export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
   persister: queryPersister,
   maxAge: MAX_AGE_MS,
+  // Invalidates caches written before personalized question results were
+  // removed from the persistence allowlist.
+  buster: 'phase2-privacy-v1',
   dehydrateOptions: {
     shouldDehydrateQuery: (query) => {
       const first = query.queryKey[0];

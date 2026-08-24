@@ -1,24 +1,30 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { HumanPortrait } from '@/components/human/HumanPortrait';
 import { QuestionCard } from '@/components/questions/QuestionCard';
+import { ReportAction } from '@/components/shared/ReportAction';
 import { ShareButton } from '@/components/sharing/ShareButton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Screen } from '@/components/ui/Screen';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
+import { Toast } from '@/components/ui/Toast';
 import { signArchivePhoto } from '@/features/archive/api';
 import { useHuman } from '@/features/archive/hooks';
+import { useIsAuthenticated } from '@/features/auth/useSession';
 import { getPortraitElements } from '@/features/daily-human/api';
 import { useQuestions } from '@/features/daily-human/hooks';
+import { useReport } from '@/features/moderation/hooks';
 import type { PortraitElementKey } from '@/features/portraits/prompts';
+import { useBlockContentAuthor } from '@/features/privacy/hooks';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 import { countryName, flagEmoji } from '@/utils/country';
+import { formatHumanNumber } from '@/utils/cycle';
 
 /**
  * One archived Human.
@@ -30,15 +36,27 @@ import { countryName, flagEmoji } from '@/utils/country';
 export default function HumanScreen() {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
+  const isAuthenticated = useIsAuthenticated();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const { data: human, isLoading, isError, error, refetch } = useHuman(id);
   const { data: questions } = useQuestions(human?.is_removed ? undefined : id);
+  const report = useReport();
+  const block = useBlockContentAuthor();
 
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [elements, setElements] = useState<
     { key: PortraitElementKey; answer: string }[]
   >([]);
+  const [toast, setToast] = useState<string | null>(null);
+
+  function requireAccount(action: () => void) {
+    if (!isAuthenticated) {
+      router.push('/(auth)/sign-in');
+      return;
+    }
+    action();
+  }
 
   useEffect(() => {
     let active = true;
@@ -104,7 +122,7 @@ export default function HumanScreen() {
         <Stack.Screen options={{ headerShown: true, title: '' }} />
         <Screen>
           <Text color="textTertiary" variant="mono">
-            {`HUMAN #${String(human.human_number).padStart(4, '0')}`}
+            {formatHumanNumber(human.human_number)}
           </Text>
           <Text
             color="textSecondary"
@@ -152,6 +170,22 @@ export default function HumanScreen() {
                 hasVoted={question.has_voted ?? false}
                 key={question.id}
                 onVote={() => {}}
+                onReport={(reason) =>
+                  requireAccount(() => {
+                    report.mutate(['question', question.id, reason], {
+                      onError: () => setToast(t('report.failed')),
+                      onSuccess: () => setToast(t('report.submitted')),
+                    });
+                  })
+                }
+                onBlock={() =>
+                  requireAccount(() => {
+                    block.mutate(['question', question.id], {
+                      onError: () => setToast(t('report.blockFailed')),
+                      onSuccess: () => setToast(t('report.blocked')),
+                    });
+                  })
+                }
                 question={question.body}
                 votes={question.votes}
               />
@@ -176,12 +210,44 @@ export default function HumanScreen() {
           />
         </View>
 
+        {human.portrait_id ? (
+          <View style={{ marginTop: theme.spacing.lg }}>
+            <ReportAction
+              onReport={(reason) =>
+                requireAccount(() => {
+                  report.mutate(['portrait', human.portrait_id!, reason], {
+                    onError: () => setToast(t('report.failed')),
+                    onSuccess: () => setToast(t('report.submitted')),
+                  });
+                })
+              }
+              onBlock={() =>
+                requireAccount(() => {
+                  block.mutate(['portrait', human.portrait_id!], {
+                    onError: () => setToast(t('report.blockFailed')),
+                    onSuccess: () => {
+                      setToast(t('report.blocked'));
+                      router.replace('/archive');
+                    },
+                  });
+                })
+              }
+            />
+          </View>
+        ) : null}
+
         <View style={{ marginTop: theme.spacing.huge, alignItems: 'center' }}>
           <Text color="textTertiary" variant="footnote">
             {t('archive.dayIsOver', { date: human.selection_date })}
           </Text>
         </View>
       </Screen>
+      <Toast
+        message={toast ?? ''}
+        onDismiss={() => setToast(null)}
+        tone="neutral"
+        visible={toast !== null}
+      />
     </>
   );
 }

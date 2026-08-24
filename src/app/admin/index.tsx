@@ -1,5 +1,6 @@
+import { Image } from 'expo-image';
 import { Stack } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
@@ -14,16 +15,28 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { Toast } from '@/components/ui/Toast';
+import { signArchivePhoto } from '@/features/archive/api';
 import {
   useAmIModerator,
+  useAppealQueue,
+  useArchiveRemovalQueue,
   useModerationActions,
   usePortraitQueue,
   useQuestionQueue,
   useReportQueue,
 } from '@/features/moderation/hooks';
+import type { Json } from '@/lib/supabase/types';
 import { useTheme } from '@/theme';
+import { formatHumanNumber } from '@/utils/cycle';
 
-type Tab = 'portraits' | 'questions' | 'reports' | 'signals' | 'operations';
+type Tab =
+  | 'portraits'
+  | 'questions'
+  | 'reports'
+  | 'appeals'
+  | 'removals'
+  | 'signals'
+  | 'operations';
 
 /**
  * The moderation console.
@@ -46,6 +59,10 @@ export default function AdminScreen() {
   const { data: portraits } = usePortraitQueue(enabled && tab === 'portraits');
   const { data: questions } = useQuestionQueue(enabled && tab === 'questions');
   const { data: reports } = useReportQueue(enabled && tab === 'reports');
+  const { data: appeals } = useAppealQueue(enabled && tab === 'appeals');
+  const { data: removals } = useArchiveRemovalQueue(
+    enabled && tab === 'removals'
+  );
   const actions = useModerationActions();
 
   if (isLoading) {
@@ -84,6 +101,8 @@ export default function AdminScreen() {
                 'portraits',
                 'questions',
                 'reports',
+                'appeals',
+                'removals',
                 'signals',
                 'operations',
               ] as Tab[]
@@ -102,8 +121,11 @@ export default function AdminScreen() {
           {tab === 'portraits' ? (
             portraits && portraits.length > 0 ? (
               portraits.map((item) => (
-                <QueueItem
+                <PortraitQueueItem
+                  busy={actions.portrait.isPending}
                   key={item.portrait_id}
+                  photoPath={item.photo_path}
+                  responses={item.responses}
                   meta={`${item.selection_date} · ${item.country_code} · ${t(
                     'moderation.verification'
                   )}: ${item.verification_level}${
@@ -114,12 +136,16 @@ export default function AdminScreen() {
                       : ''
                   }`}
                   onApprove={() => {
-                    actions.portrait.mutate([item.portrait_id, 'approved']);
-                    setToast(t('moderation.approved'));
+                    actions.portrait.mutate([item.portrait_id, 'approved'], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.approved')),
+                    });
                   }}
                   onReject={() => {
-                    actions.portrait.mutate([item.portrait_id, 'rejected']);
-                    setToast(t('moderation.rejected'));
+                    actions.portrait.mutate([item.portrait_id, 'rejected'], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.rejected')),
+                    });
                   }}
                   title={item.display_name}
                 />
@@ -133,19 +159,24 @@ export default function AdminScreen() {
             questions && questions.length > 0 ? (
               questions.map((item) => (
                 <QueueItem
+                  busy={actions.question.isPending}
                   key={item.question_id}
                   meta={
                     item.auto_flags
-                      ? `${t('moderation.autoFlagged')}: ${item.auto_flags}`
-                      : t('moderation.noFlags')
+                      ? `${item.author_display_name} · ${t('moderation.autoFlagged')}: ${item.auto_flags}`
+                      : `${item.author_display_name} · ${t('moderation.noFlags')}`
                   }
                   onApprove={() => {
-                    actions.question.mutate([item.question_id, 'approved']);
-                    setToast(t('moderation.approved'));
+                    actions.question.mutate([item.question_id, 'approved'], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.approved')),
+                    });
                   }}
                   onReject={() => {
-                    actions.question.mutate([item.question_id, 'rejected']);
-                    setToast(t('moderation.rejected'));
+                    actions.question.mutate([item.question_id, 'rejected'], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.rejected')),
+                    });
                   }}
                   title={item.body}
                 />
@@ -160,20 +191,141 @@ export default function AdminScreen() {
               reports.map((item) => (
                 <QueueItem
                   approveLabel={t('moderation.dismiss')}
+                  busy={actions.report.isPending}
                   key={item.report_id}
                   meta={`${item.target_type} · ${item.created_at.slice(0, 10)}${
                     item.note ? ` · ${item.note}` : ''
                   }`}
                   onApprove={() => {
-                    actions.report.mutate([item.report_id, false]);
-                    setToast(t('moderation.dismissed'));
+                    actions.report.mutate([item.report_id, 'dismiss'], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.dismissed')),
+                    });
                   }}
                   onReject={() => {
-                    actions.report.mutate([item.report_id, true]);
-                    setToast(t('moderation.actioned'));
+                    actions.report.mutate(
+                      [
+                        item.report_id,
+                        item.target_type === 'profile'
+                          ? 'suspend_account'
+                          : 'remove_content',
+                      ],
+                      {
+                        onError: () => setToast(t('moderation.actionFailed')),
+                        onSuccess: () => setToast(t('moderation.actioned')),
+                      }
+                    );
                   }}
-                  rejectLabel={t('moderation.action')}
-                  title={t(`report.reasons.${item.reason}`)}
+                  rejectLabel={t(
+                    item.target_type === 'profile'
+                      ? 'moderation.suspendAccount'
+                      : 'moderation.removeContent'
+                  )}
+                  title={
+                    item.target_content ?? t(`report.reasons.${item.reason}`)
+                  }
+                >
+                  {item.target_photo_path ? (
+                    <ModerationPhoto
+                      accessibilityLabel={t('moderation.reportedPhoto')}
+                      path={item.target_photo_path}
+                    />
+                  ) : null}
+                  <Text color="textSecondary" variant="footnote">
+                    {t(`report.reasons.${item.reason}`)} ·{' '}
+                    {item.subject_display_name ??
+                      t('moderation.deletedSubject')}
+                  </Text>
+                  <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+                    {item.target_type !== 'profile' ? (
+                      <Button
+                        disabled={actions.report.isPending}
+                        label={t('moderation.suspendAccount')}
+                        onPress={() => {
+                          actions.report.mutate(
+                            [item.report_id, 'suspend_account'],
+                            {
+                              onError: () =>
+                                setToast(t('moderation.actionFailed')),
+                              onSuccess: () =>
+                                setToast(t('moderation.actioned')),
+                            }
+                          );
+                        }}
+                        style={{ flex: 1 }}
+                        variant="secondary"
+                      />
+                    ) : null}
+                    <Button
+                      disabled={actions.report.isPending}
+                      label={t('moderation.banAccount')}
+                      onPress={() => {
+                        actions.report.mutate([item.report_id, 'ban_account'], {
+                          onError: () => setToast(t('moderation.actionFailed')),
+                          onSuccess: () => setToast(t('moderation.actioned')),
+                        });
+                      }}
+                      style={{ flex: 1 }}
+                      variant="danger"
+                    />
+                  </View>
+                </QueueItem>
+              ))
+            ) : (
+              <EmptyState title={t('moderation.queueEmpty')} />
+            )
+          ) : null}
+
+          {tab === 'appeals' ? (
+            appeals && appeals.length > 0 ? (
+              appeals.map((item) => (
+                <QueueItem
+                  approveLabel={t('moderation.uphold')}
+                  busy={actions.appeal.isPending}
+                  key={item.appeal_id}
+                  meta={`${item.appellant_display_name ?? t('moderation.deletedSubject')} · ${item.original_reason ?? t('moderation.noReason')}`}
+                  onApprove={() => {
+                    actions.appeal.mutate([item.appeal_id, false], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.upheld')),
+                    });
+                  }}
+                  onReject={() => {
+                    actions.appeal.mutate([item.appeal_id, true], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.overturned')),
+                    });
+                  }}
+                  rejectLabel={t('moderation.overturn')}
+                  title={item.statement}
+                />
+              ))
+            ) : (
+              <EmptyState title={t('moderation.queueEmpty')} />
+            )
+          ) : null}
+
+          {tab === 'removals' ? (
+            removals && removals.length > 0 ? (
+              removals.map((item) => (
+                <QueueItem
+                  approveLabel={t('moderation.approveRemoval')}
+                  busy={actions.removal.isPending}
+                  key={item.request_id}
+                  meta={`${formatHumanNumber(item.human_number)} · ${item.selection_date}`}
+                  onApprove={() => {
+                    actions.removal.mutate([item.request_id, true], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.approved')),
+                    });
+                  }}
+                  onReject={() => {
+                    actions.removal.mutate([item.request_id, false], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () => setToast(t('moderation.rejected')),
+                    });
+                  }}
+                  title={item.reason ?? t('moderation.noReason')}
                 />
               ))
             ) : (
@@ -204,6 +356,8 @@ function QueueItem({
   onReject,
   approveLabel,
   rejectLabel,
+  busy = false,
+  children,
 }: {
   title: string;
   meta: string;
@@ -211,6 +365,8 @@ function QueueItem({
   onReject: () => void;
   approveLabel?: string;
   rejectLabel?: string;
+  busy?: boolean;
+  children?: ReactNode;
 }) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -221,13 +377,16 @@ function QueueItem({
       <Text color="textTertiary" variant="footnote">
         {meta}
       </Text>
+      {children}
       <View style={{ flexDirection: 'row', gap: theme.spacing.md }}>
         <Button
+          disabled={busy}
           label={approveLabel ?? t('moderation.approve')}
           onPress={onApprove}
           style={{ flex: 1 }}
         />
         <Button
+          disabled={busy}
           label={rejectLabel ?? t('moderation.reject')}
           onPress={onReject}
           style={{ flex: 1 }}
@@ -236,4 +395,98 @@ function QueueItem({
       </View>
     </Surface>
   );
+}
+
+function PortraitQueueItem({
+  photoPath,
+  responses,
+  ...props
+}: Parameters<typeof QueueItem>[0] & {
+  photoPath: string | null;
+  responses: Json;
+}) {
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  useEffect(() => {
+    let active = true;
+    void signArchivePhoto(photoPath).then((url) => {
+      if (active) setPhotoUrl(url);
+    });
+    return () => {
+      active = false;
+    };
+  }, [photoPath]);
+
+  const answers = Array.isArray(responses)
+    ? responses.filter(
+        (value): value is { element_key: string; answer: string } =>
+          typeof value === 'object' &&
+          value !== null &&
+          'element_key' in value &&
+          typeof value.element_key === 'string' &&
+          'answer' in value &&
+          typeof value.answer === 'string'
+      )
+    : [];
+
+  return (
+    <QueueItem {...props}>
+      {photoUrl ? (
+        <Image
+          accessibilityLabel={props.title}
+          cachePolicy="memory-disk"
+          contentFit="cover"
+          source={{ uri: photoUrl }}
+          style={{
+            aspectRatio: 4 / 5,
+            borderRadius: theme.radius.lg,
+            width: '100%',
+          }}
+        />
+      ) : null}
+      {answers.map((answer) => (
+        <View key={answer.element_key} style={{ gap: theme.spacing.xs }}>
+          <Text color="accent" variant="caption">
+            {t(`portrait.prompts.${answer.element_key}.label`)}
+          </Text>
+          <Text color="textSecondary">{answer.answer}</Text>
+        </View>
+      ))}
+    </QueueItem>
+  );
+}
+
+function ModerationPhoto({
+  path,
+  accessibilityLabel,
+}: {
+  path: string;
+  accessibilityLabel: string;
+}) {
+  const theme = useTheme();
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    let active = true;
+    void signArchivePhoto(path).then((signed) => {
+      if (active) setUrl(signed);
+    });
+    return () => {
+      active = false;
+    };
+  }, [path]);
+
+  return url ? (
+    <Image
+      accessibilityLabel={accessibilityLabel}
+      cachePolicy="memory-disk"
+      contentFit="cover"
+      source={{ uri: url }}
+      style={{
+        aspectRatio: 4 / 5,
+        borderRadius: theme.radius.lg,
+        width: '100%',
+      }}
+    />
+  ) : null;
 }

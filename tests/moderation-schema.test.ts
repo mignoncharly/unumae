@@ -163,10 +163,10 @@ describe('data export is the data, not a summary (Article 8.2)', () => {
   it('returns the rows themselves', () => {
     for (const section of [
       'profile',
-      'questions',
+      'questions_authored',
       'humans_i_remember',
       'invitations',
-      'blocked_accounts',
+      'blocked_people',
     ]) {
       expect(exportData).toContain(`'${section}'`);
     }

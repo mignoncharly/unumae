@@ -67,7 +67,9 @@ only where it matters.
 - **Deletion**: account deletion removes profile data and media. An archived
   Human may request removal, which leaves a tombstone — number and date remain,
   content does not (Article 8.6).
-- **Export**: users can export their data.
+- **Export**: users download a versioned JSON package through the native share
+  sheet. It includes their content, participation, notification, analytics,
+  report, block, moderation, appeal, and removal-request history.
 - **Retention**: `daily_draws` audit rows are retained permanently. They contain
   no published content and are what makes fairness verifiable.
 - **Location**: country only. Precise location is never collected, so it can
@@ -78,6 +80,10 @@ only where it matters.
 - Never render server error text directly. `AppError` carries an i18n key, not a
   message from a backend.
 - Never log tokens, emails or user identifiers.
+- Never expose another account's UUID for blocking; resolve the account from a
+  visible portrait or question and return only an opaque management id.
+- Clear in-memory and persisted private query caches whenever account identity
+  changes or cannot be reconciled safely.
 - Validate with the same Zod schemas on the client and in Edge Functions. Client
   validation is a convenience; the server check is the real one.
 

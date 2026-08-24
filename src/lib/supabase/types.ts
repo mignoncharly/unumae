@@ -167,11 +167,11 @@ export type PortraitElementInsert = {
  */
 export type TodaysHumanRow = {
   draw_id: string;
-  portrait_id: string;
+  portrait_id: string | null;
   selection_date: string;
   human_number: number | null;
-  display_name: string;
-  country_code: string;
+  display_name: string | null;
+  country_code: string | null;
   city: string | null;
   photo_path: string | null;
   published_at: string | null;
@@ -181,6 +181,7 @@ export type TodaysHumanRow = {
    * the same terms as anybody else.
    */
   founding: boolean | null;
+  is_removed: boolean;
 };
 
 export type PublicQuestionRow = {
@@ -236,6 +237,14 @@ export type ReportReason =
 
 export type ModerationDecision = 'approved' | 'rejected';
 
+export type ReportResolutionAction =
+  'dismiss' | 'remove_content' | 'suspend_account' | 'ban_account';
+
+export type AppealStatus = 'pending' | 'upheld' | 'overturned';
+
+export type ArchiveRemovalStatus =
+  'pending' | 'approved' | 'declined' | 'cancelled';
+
 export type PortraitQueueRow = {
   portrait_id: string;
   draw_id: string;
@@ -243,9 +252,11 @@ export type PortraitQueueRow = {
   display_name: string;
   country_code: string;
   photo_path: string | null;
+  media_path: string | null;
   submitted_at: string | null;
   verification_level: VerificationLevel;
   open_reports: number;
+  responses: Json;
 };
 
 export type QuestionQueueRow = {
@@ -255,6 +266,8 @@ export type QuestionQueueRow = {
   created_at: string;
   /** Layer 2 structural signals, comma separated. Null when nothing tripped. */
   auto_flags: string | null;
+  author_display_name: string;
+  human_number: number | null;
 };
 
 export type ReportQueueRow = {
@@ -263,6 +276,60 @@ export type ReportQueueRow = {
   target_id: string;
   reason: ReportReason;
   note: string | null;
+  created_at: string;
+  target_content: string | null;
+  target_photo_path: string | null;
+  subject_display_name: string | null;
+  subject_account_status: AccountStatus | null;
+};
+
+export type BlockedUserRow = {
+  block_id: string;
+  display_name: string;
+  country_code: string;
+  avatar_path: string | null;
+  blocked_at: string;
+};
+
+export type AppealableDecisionRow = {
+  event_id: string;
+  action: string;
+  target_type: ReportTarget | null;
+  reason: string | null;
+  decided_at: string;
+  appeal_status: AppealStatus | null;
+  appeal_statement: string | null;
+  resolution_note: string | null;
+};
+
+export type AppealQueueRow = {
+  appeal_id: string;
+  action: string;
+  target_type: ReportTarget | null;
+  target_id: string | null;
+  original_reason: string | null;
+  statement: string;
+  appellant_display_name: string | null;
+  created_at: string;
+};
+
+export type ArchiveRemovalOptionRow = {
+  draw_id: string;
+  selection_date: string;
+  human_number: number;
+  request_status: ArchiveRemovalStatus | null;
+  requested_at: string | null;
+  is_removed: boolean;
+};
+
+export type ArchiveRemovalQueueRow = {
+  request_id: string;
+  draw_id: string;
+  portrait_id: string | null;
+  human_number: number;
+  selection_date: string;
+  display_name: string | null;
+  reason: string | null;
   created_at: string;
 };
 
@@ -447,12 +514,16 @@ export type Database = {
         };
         Returns: string;
       };
-      block_user: {
-        Args: { target_user: string };
+      block_content_author: {
+        Args: { target_type: ReportTarget; target_id: string };
         Returns: boolean;
       };
-      unblock_user: {
-        Args: { target_user: string };
+      my_blocked_users: {
+        Args: Record<PropertyKey, never>;
+        Returns: BlockedUserRow[];
+      };
+      unblock_by_id: {
+        Args: { target_block: string };
         Returns: boolean;
       };
       /** Everything we hold about the caller, as one document (Article 8.2). */
@@ -479,7 +550,7 @@ export type Database = {
       resolve_report: {
         Args: {
           target_report: string;
-          actioned: boolean;
+          resolution: ReportResolutionAction;
           resolution_note?: string | null;
         };
         Returns: boolean;
@@ -504,6 +575,54 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: ReportQueueRow[];
       };
+      remove_question: {
+        Args: { target_question: string; removal_reason?: string | null };
+        Returns: boolean;
+      };
+      redact_portrait: {
+        Args: { target_portrait: string; removal_reason?: string | null };
+        Returns: boolean;
+      };
+      my_appealable_decisions: {
+        Args: Record<PropertyKey, never>;
+        Returns: AppealableDecisionRow[];
+      };
+      submit_moderation_appeal: {
+        Args: { target_event: string; appeal_statement: string };
+        Returns: string;
+      };
+      moderation_appeal_queue: {
+        Args: Record<PropertyKey, never>;
+        Returns: AppealQueueRow[];
+      };
+      review_moderation_appeal: {
+        Args: {
+          target_appeal: string;
+          overturned: boolean;
+          review_note?: string | null;
+        };
+        Returns: boolean;
+      };
+      my_archive_removal_options: {
+        Args: Record<PropertyKey, never>;
+        Returns: ArchiveRemovalOptionRow[];
+      };
+      request_archive_removal: {
+        Args: { target_draw: string; request_reason?: string | null };
+        Returns: string;
+      };
+      moderation_archive_removal_queue: {
+        Args: Record<PropertyKey, never>;
+        Returns: ArchiveRemovalQueueRow[];
+      };
+      review_archive_removal: {
+        Args: {
+          target_request: string;
+          approved: boolean;
+          review_note?: string | null;
+        };
+        Returns: boolean;
+      };
       register_push_token: {
         Args: { push_token: string; device_platform: 'ios' | 'android' };
         Returns: boolean;
@@ -511,6 +630,10 @@ export type Database = {
       unregister_push_token: {
         Args: { push_token: string };
         Returns: boolean;
+      };
+      unregister_my_push_tokens: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
       };
       set_notification_settings: {
         Args: {

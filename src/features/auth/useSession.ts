@@ -1,5 +1,12 @@
 import type { Session } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
+import {
+  createContext,
+  createElement,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import { isConfigured } from '@/lib/env';
 import { getSupabase } from '@/lib/supabase';
@@ -18,7 +25,13 @@ export type SessionState =
  * nags — deciding what requires an account is the caller's job, and the answer
  * is only ever: ask, vote, Remember, enter the draw.
  */
-export function useSession(): SessionState {
+const SessionContext = createContext<SessionState>({
+  status: 'loading',
+  session: null,
+});
+
+/** Exactly one Supabase restoration and auth listener for the whole app. */
+export function SessionProvider({ children }: { children: ReactNode }) {
   // `isConfigured` is a module constant, so an unconfigured build starts as a
   // guest rather than passing through a loading state it can never leave.
   const [state, setState] = useState<SessionState>(() =>
@@ -62,7 +75,11 @@ export function useSession(): SessionState {
     };
   }, []);
 
-  return state;
+  return createElement(SessionContext.Provider, { value: state }, children);
+}
+
+export function useSession(): SessionState {
+  return useContext(SessionContext);
 }
 
 /** Convenience for the common question: may this person act, or only read? */

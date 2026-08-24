@@ -66,6 +66,10 @@ export async function getTodaysHuman(): Promise<TodaysHuman | null> {
     return null;
   }
 
+  if (human.is_removed) {
+    return { human, elements: [], photoUrl: null };
+  }
+
   return {
     human,
     elements: await getPortraitElements(human.draw_id),

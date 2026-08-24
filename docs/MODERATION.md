@@ -48,7 +48,8 @@ up before or after today.
 1. Open the app, sign in with one of those addresses.
 2. Complete onboarding (username, name, year of birth, country).
 3. Settings now shows a **Moderation** row that was not there before.
-4. Open it: three tabs — Portraits, Questions, Reports.
+4. Open it: five tabs — Portraits, Questions, Reports, Appeals, and Archive
+   removal requests.
 
 If the row does not appear, §6 tells you how to check why.
 
@@ -60,9 +61,13 @@ If the row does not appear, §6 tells you how to check why.
 | Reject a portrait | `review_portrait(id, 'rejected')` | Portrait → `rejected`, cycle → `replacement_required`, so escalation can find somebody else. |
 | Approve a question | `review_question(id, 'approved')` | It becomes visible and votable. |
 | Reject a question | `review_question(id, 'rejected')` | It never appears. The asker is not told. |
-| Act on a report | `resolve_report(id, true)` | Marks it actioned. |
-| Dismiss a report | `resolve_report(id, false)` | Marks it dismissed. |
+| Dismiss a report | `resolve_report(id, 'dismiss', note)` | Closes it without changing content or account state. |
+| Remove reported content | `resolve_report(id, 'remove_content', note)` | Rejects a question or redacts a portrait, including published Archive content. |
+| Suspend from a report | `resolve_report(id, 'suspend_account', note)` | Suspends the content author and removes selection eligibility. |
+| Ban from a report | `resolve_report(id, 'ban_account', note)` | Bans the content author and removes selection eligibility. |
 | Suspend or ban | `set_account_status(id, 'suspended'\|'banned')` | Also removes them from the candidate pool immediately. |
+| Decide an appeal | `review_moderation_appeal(id, overturned, note)` | Requires a moderator other than the original decision-maker. |
+| Decide Archive removal | `review_archive_removal(id, approved, note)` | An approval redacts the published portrait and leaves its numbered tombstone. |
 
 **Every one of these writes a `moderation_events` row** recording who acted, on
 what, and why. That table is append-only: nothing updates or deletes it, and no

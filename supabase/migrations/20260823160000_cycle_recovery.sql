@@ -214,7 +214,8 @@ begin
 
   queue := array[current_draw.backup_1, current_draw.backup_2, current_draw.backup_3];
 
-  for candidate_index in 1..3 loop
+  candidate_index := 1;
+  while candidate_index <= 3 loop
     if queue[candidate_index] is not null and exists (
       select 1 from public.profiles p
       where p.id = queue[candidate_index]
@@ -224,6 +225,7 @@ begin
       next_candidate := queue[candidate_index];
       exit;
     end if;
+    candidate_index := candidate_index + 1;
   end loop;
 
   if next_candidate is null then

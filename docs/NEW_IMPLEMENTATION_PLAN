@@ -310,19 +310,21 @@
 
   ### Phase 2 — Complete safety and privacy
 
-  1. Show moderators the full portrait, signed photograph, every response, and report target.
-  2. Make “action report” perform an explicit content/account action.
-  3. Support removal of already-approved questions and live/archived portraits.
-  4. Add report actions to questions and Archive pages.
-  5. Implement blocking through question/portrait targets without exposing private user IDs.
-  6. Add Blocked Users and unblock management.
-  7. Implement appeals with a different moderator.
-  8. Add independent Archive-removal requests.
-  9. Delete portrait media during account deletion.
-  10. Produce a complete downloadable export instead of placing sensitive JSON on the clipboard.
-  11. Centralize session state, clear private caches on account changes, scope private query keys by user, and unregister push tokens on sign-out.
+  1. [x] Show moderators the full portrait, signed photograph, every response, and report target.
+  2. [x] Make “action report” perform an explicit content/account action.
+  3. [x] Support removal of already-approved questions and live/archived portraits.
+  4. [x] Add report actions to questions and Archive pages.
+  5. [x] Implement blocking through question/portrait targets without exposing private user IDs.
+  6. [x] Add Blocked Users and unblock management.
+  7. [x] Implement appeals with a different moderator.
+  8. [x] Add independent Archive-removal requests.
+  9. [x] Delete portrait media during account deletion.
+  10. [x] Produce a complete downloadable export instead of placing sensitive JSON on the clipboard.
+  11. [x] Centralize session state, clear private caches on account changes, scope private query keys by user, and unregister push tokens on sign-out.
 
   Exit criterion: every safety/privacy promise in the constitution and App Store documentation has a reachable user workflow and a verified backend effect.
+
+  Implementation note (2026-08-24): completed across the user and moderator surfaces, two database migrations, account-deletion function, session/cache boundary, and a local production-path safety/privacy simulator. Production migration/function deployment and real-device share-sheet verification remain release-environment checks.
 
   ### Phase 3 — Complete the product’s memory and international layers
 

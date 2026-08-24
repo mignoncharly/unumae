@@ -10,6 +10,8 @@ import { JourneyGate } from '@/components/shared/JourneyGate';
 import { NotificationCoordinator } from '@/components/shared/NotificationCoordinator';
 import { OfflineNotice } from '@/components/shared/OfflineNotice';
 import { OnboardingGate } from '@/components/shared/OnboardingGate';
+import { SessionCacheBoundary } from '@/components/shared/SessionCacheBoundary';
+import { SessionProvider } from '@/features/auth/useSession';
 import i18n, { initI18n } from '@/i18n';
 import { setAnalyticsProvider, track } from '@/lib/analytics';
 import { createSupabaseAnalytics } from '@/lib/analytics/provider';
@@ -62,36 +64,43 @@ export default function RootLayout() {
       client={queryClient}
       persistOptions={persistOptions}
     >
-      <SafeAreaProvider>
-        <StatusBar style={theme.scheme === 'dark' ? 'light' : 'dark'} />
-        {/* Above the navigator, so it is visible on every screen. */}
-        <OfflineNotice />
-        <AppLifecycle />
-        <NotificationCoordinator />
-        {/* Renders nothing; sends a signed-in person with no profile to finish
-            it, which is the only way to be eligible for the draw. */}
-        <OnboardingGate />
-        <JourneyGate />
-        <Stack
-          screenOptions={{
-            contentStyle: { backgroundColor: theme.colors.background },
-            headerBackButtonDisplayMode: 'minimal',
-            headerShadowVisible: false,
-            headerStyle: { backgroundColor: theme.colors.background },
-            headerTintColor: theme.colors.text,
-            headerTitleStyle: { color: theme.colors.text, fontWeight: '600' },
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="(auth)" options={{ presentation: 'modal' }} />
-          <Stack.Screen
-            name="(onboarding)"
-            options={{ presentation: 'modal', gestureEnabled: false }}
-          />
-          <Stack.Screen name="(selection)" />
-        </Stack>
-      </SafeAreaProvider>
+      <SessionProvider>
+        <SessionCacheBoundary>
+          <SafeAreaProvider>
+            <StatusBar style={theme.scheme === 'dark' ? 'light' : 'dark'} />
+            {/* Above the navigator, so it is visible on every screen. */}
+            <OfflineNotice />
+            <AppLifecycle />
+            <NotificationCoordinator />
+            {/* Renders nothing; sends a signed-in person with no profile to finish
+                it, which is the only way to be eligible for the draw. */}
+            <OnboardingGate />
+            <JourneyGate />
+            <Stack
+              screenOptions={{
+                contentStyle: { backgroundColor: theme.colors.background },
+                headerBackButtonDisplayMode: 'minimal',
+                headerShadowVisible: false,
+                headerStyle: { backgroundColor: theme.colors.background },
+                headerTintColor: theme.colors.text,
+                headerTitleStyle: {
+                  color: theme.colors.text,
+                  fontWeight: '600',
+                },
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="(auth)" options={{ presentation: 'modal' }} />
+              <Stack.Screen
+                name="(onboarding)"
+                options={{ presentation: 'modal', gestureEnabled: false }}
+              />
+              <Stack.Screen name="(selection)" />
+            </Stack>
+          </SafeAreaProvider>
+        </SessionCacheBoundary>
+      </SessionProvider>
     </PersistQueryClientProvider>
   );
 }

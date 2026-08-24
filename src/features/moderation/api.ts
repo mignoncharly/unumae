@@ -4,12 +4,14 @@ import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 import type {
   AccountStatus,
-  Json,
+  AppealQueueRow,
+  ArchiveRemovalQueueRow,
   ModerationDecision,
   PortraitQueueRow,
   QuestionQueueRow,
   ReportQueueRow,
   ReportReason,
+  ReportResolutionAction,
   ReportTarget,
 } from '@/lib/supabase/types';
 
@@ -42,30 +44,7 @@ export async function reportContent(
   }
 }
 
-export async function setBlocked(
-  userId: string,
-  blocked: boolean
-): Promise<void> {
-  const { error } = await getSupabase().rpc(
-    blocked ? 'block_user' : 'unblock_user',
-    { target_user: userId }
-  );
-
-  if (error) {
-    throw new AppError('unknown', 'report.blockFailed', { cause: error });
-  }
-}
-
 /** Article 8.2 — the data itself, not a report about it. */
-export async function exportMyData(): Promise<Json> {
-  const { data, error } = await getSupabase().rpc('export_my_data');
-
-  if (error) {
-    throw new AppError('unknown', 'privacy.exportFailed', { cause: error });
-  }
-  return data;
-}
-
 // --- moderators --------------------------------------------------------------
 
 export async function amIModerator(): Promise<boolean> {
@@ -137,15 +116,99 @@ export async function reviewQuestion(
 
 export async function resolveReport(
   reportId: string,
-  actioned: boolean,
+  resolution: ReportResolutionAction,
   note?: string
 ): Promise<void> {
   const { error } = await getSupabase().rpc('resolve_report', {
     target_report: reportId,
-    actioned,
+    resolution,
     resolution_note: note ?? null,
   });
 
+  if (error) {
+    throw new AppError('permission', 'moderation.actionFailed', {
+      cause: error,
+    });
+  }
+}
+
+export async function removeQuestion(
+  questionId: string,
+  reason?: string
+): Promise<void> {
+  const { error } = await getSupabase().rpc('remove_question', {
+    target_question: questionId,
+    removal_reason: reason ?? null,
+  });
+  if (error) {
+    throw new AppError('permission', 'moderation.actionFailed', {
+      cause: error,
+    });
+  }
+}
+
+export async function redactPortrait(
+  portraitId: string,
+  reason?: string
+): Promise<void> {
+  const { error } = await getSupabase().rpc('redact_portrait', {
+    target_portrait: portraitId,
+    removal_reason: reason ?? null,
+  });
+  if (error) {
+    throw new AppError('permission', 'moderation.actionFailed', {
+      cause: error,
+    });
+  }
+}
+
+export async function getAppealQueue(): Promise<AppealQueueRow[]> {
+  const { data, error } = await getSupabase().rpc('moderation_appeal_queue');
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+  return data ?? [];
+}
+
+export async function reviewAppeal(
+  appealId: string,
+  overturned: boolean,
+  note?: string
+): Promise<void> {
+  const { error } = await getSupabase().rpc('review_moderation_appeal', {
+    target_appeal: appealId,
+    overturned,
+    review_note: note ?? null,
+  });
+  if (error) {
+    throw new AppError('permission', 'moderation.actionFailed', {
+      cause: error,
+    });
+  }
+}
+
+export async function getArchiveRemovalQueue(): Promise<
+  ArchiveRemovalQueueRow[]
+> {
+  const { data, error } = await getSupabase().rpc(
+    'moderation_archive_removal_queue'
+  );
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+  return data ?? [];
+}
+
+export async function reviewArchiveRemoval(
+  requestId: string,
+  approved: boolean,
+  note?: string
+): Promise<void> {
+  const { error } = await getSupabase().rpc('review_archive_removal', {
+    target_request: requestId,
+    approved,
+    review_note: note ?? null,
+  });
   if (error) {
     throw new AppError('permission', 'moderation.actionFailed', {
       cause: error,

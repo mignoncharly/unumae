@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useIsAuthenticated } from '@/features/auth/useSession';
+import { useSession } from '@/features/auth/useSession';
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 
@@ -24,7 +24,7 @@ export const DEFAULT_SETTINGS: NotificationSettings = {
 };
 
 export const notificationKeys = {
-  settings: ['notification-settings'] as const,
+  settings: (userId: string) => ['notification-settings', userId] as const,
 };
 
 async function fetchSettings(): Promise<NotificationSettings> {
@@ -37,17 +37,20 @@ async function fetchSettings(): Promise<NotificationSettings> {
 }
 
 export function useNotificationSettings() {
-  const isAuthenticated = useIsAuthenticated();
+  const session = useSession();
+  const userId = session.session?.user.id ?? 'anonymous';
 
   return useQuery({
-    queryKey: notificationKeys.settings,
+    queryKey: notificationKeys.settings(userId),
     queryFn: fetchSettings,
-    enabled: isAuthenticated,
+    enabled: session.status === 'authenticated',
   });
 }
 
 export function useUpdateNotificationSettings() {
   const queryClient = useQueryClient();
+  const session = useSession();
+  const userId = session.session?.user.id ?? 'anonymous';
 
   return useMutation({
     mutationFn: async (settings: NotificationSettings) => {
@@ -66,7 +69,7 @@ export function useUpdateNotificationSettings() {
       return settings;
     },
     onSuccess: (settings) => {
-      queryClient.setQueryData(notificationKeys.settings, settings);
+      queryClient.setQueryData(notificationKeys.settings(userId), settings);
     },
   });
 }

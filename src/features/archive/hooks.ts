@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
+import { useSession } from '@/features/auth/useSession';
+
 import {
   getAnniversaries,
   getArchive,
@@ -11,12 +13,22 @@ import {
 } from './api';
 
 export const archiveKeys = {
-  list: (filters: ArchiveFilters) => ['archive', filters] as const,
-  human: (drawId: string) => ['archive-human', drawId] as const,
-  anniversaries: ['anniversaries'] as const,
-  countries: ['archive-countries'] as const,
-  years: ['archive-years'] as const,
+  list: (filters: ArchiveFilters, viewer: string) =>
+    ['archive', filters, viewer] as const,
+  human: (drawId: string, viewer: string) =>
+    ['archive-human', drawId, viewer] as const,
+  anniversaries: (viewer: string) => ['anniversaries', viewer] as const,
+  countries: (viewer: string) => ['archive-countries', viewer] as const,
+  years: (viewer: string) => ['archive-years', viewer] as const,
 };
+
+function useViewer() {
+  const session = useSession();
+  return {
+    key: session.session?.user.id ?? 'guest',
+    ready: session.status !== 'loading',
+  };
+}
 
 /**
  * The Archive is permanent and append-only: a page fetched today is the same
@@ -26,43 +38,52 @@ export const archiveKeys = {
 const ARCHIVE_STALE_TIME = 10 * 60 * 1000;
 
 export function useArchive(filters: ArchiveFilters = {}) {
+  const viewer = useViewer();
   return useQuery({
-    queryKey: archiveKeys.list(filters),
+    queryKey: archiveKeys.list(filters, viewer.key),
     queryFn: () => getArchive(filters),
     staleTime: ARCHIVE_STALE_TIME,
+    enabled: viewer.ready,
   });
 }
 
 export function useHuman(drawId: string | undefined) {
+  const viewer = useViewer();
   return useQuery({
-    queryKey: archiveKeys.human(drawId ?? 'none'),
+    queryKey: archiveKeys.human(drawId ?? 'none', viewer.key),
     queryFn: () => getHuman(drawId!),
-    enabled: Boolean(drawId),
+    enabled: Boolean(drawId) && viewer.ready,
     staleTime: ARCHIVE_STALE_TIME,
   });
 }
 
 export function useAnniversaries() {
+  const viewer = useViewer();
   return useQuery({
-    queryKey: archiveKeys.anniversaries,
+    queryKey: archiveKeys.anniversaries(viewer.key),
     queryFn: getAnniversaries,
     staleTime: ARCHIVE_STALE_TIME,
+    enabled: viewer.ready,
   });
 }
 
 export function useArchiveCountries() {
+  const viewer = useViewer();
   return useQuery({
-    queryKey: archiveKeys.countries,
+    queryKey: archiveKeys.countries(viewer.key),
     queryFn: getArchiveCountries,
     staleTime: ARCHIVE_STALE_TIME,
+    enabled: viewer.ready,
   });
 }
 
 export function useArchiveYears() {
+  const viewer = useViewer();
   return useQuery({
-    queryKey: archiveKeys.years,
+    queryKey: archiveKeys.years(viewer.key),
     queryFn: getArchiveYears,
     staleTime: ARCHIVE_STALE_TIME,
+    enabled: viewer.ready,
   });
 }
 

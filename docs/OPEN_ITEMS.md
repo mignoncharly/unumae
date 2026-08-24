@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: end of Phase 16 and marketing Phase 8 production launch.
+Last updated: Phase 2 core-loop hardening, 24 August 2026.
 
 ---
 
@@ -19,6 +19,7 @@ Last updated: end of Phase 16 and marketing Phase 8 production launch.
 | 6 | **Decide the four gate thresholds are right** | D1 25%, D7 10%, participation 15%, share rate 3%. I chose defensible numbers; they are your call, and the point of them is that they are fixed *before* any result exists. Changing them later is legitimate, but it should be a deliberate commit, not a reaction to a disappointing week. | Nothing yet — they bind at step 5 of `docs/BETA.md`. |
 | 7 | **Check the share card on a real device** | Settings → Developer → Share card. It names which of the two native modules loaded, renders the card scaled to fit, and captures it to a real PNG that it then displays — the preview proves the layout, only the capture proves the capture. | Nothing — the fallback works. |
 | 8 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
+| 9 | ⚠️ **Deploy and stage-verify Phase 2** | Apply migrations `20260823180000` and `20260823190000`, deploy the updated `delete-account` function, and run the safety/privacy simulation in an isolated staging project before beta. | Phase 2 safety/privacy guarantees on production. |
 
 ## Mine — code
 
@@ -44,6 +45,7 @@ exercised there, and are flagged rather than reworked:
 | Sign in with Apple | Expo Go signs its own bundle, so it cannot carry this app's entitlement | Implemented; hides itself and explains why. Email code works everywhere. |
 | Push notifications | Expo Go has no push credentials for this bundle | Built; needs a dev build to test |
 | Liveness check | Camera-based SDK, likely a native module | Not built yet |
+| Downloadable data export | Uses the native share sheet to save/send the JSON file | Implemented; verify the sheet in a development build |
 
 Everything else — the draw, portraits, questions, voting, Remember, image
 picking, storage, the Signals tab — runs in Expo Go.

@@ -2,6 +2,10 @@ import Feather from '@expo/vector-icons/Feather';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
+import {
+  ReportAction,
+  type ReportReason,
+} from '@/components/shared/ReportAction';
 import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
 import { useTheme } from '@/theme';
@@ -16,6 +20,8 @@ export interface QuestionCardProps {
   onVote: () => void;
   /** Today's Human answers what they choose to answer (Article 6.3). */
   answer?: string | null;
+  onReport?: (reason: ReportReason) => void;
+  onBlock?: () => void;
 }
 
 export function QuestionCard({
@@ -25,6 +31,8 @@ export function QuestionCard({
   canVote,
   onVote,
   answer,
+  onReport,
+  onBlock,
 }: QuestionCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -126,6 +134,10 @@ export function QuestionCard({
           {votes}
         </Text>
       </View>
+
+      {onReport ? (
+        <ReportAction onReport={onReport} {...(onBlock ? { onBlock } : {})} />
+      ) : null}
     </Surface>
   );
 }

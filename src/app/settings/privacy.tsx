@@ -1,5 +1,4 @@
-import * as Clipboard from 'expo-clipboard';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -12,7 +11,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { Toast } from '@/components/ui/Toast';
-import { exportMyData } from '@/features/moderation/api';
+import { shareMyDataExport } from '@/features/privacy/export';
 import { useMyProfile, useUpdateProfile } from '@/features/profiles/hooks';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
@@ -39,9 +38,8 @@ export default function PrivacyScreen() {
     setBusy(true);
     setError(undefined);
     try {
-      const data = await exportMyData();
-      await Clipboard.setStringAsync(JSON.stringify(data, null, 2));
-      setToast(t('privacy.exportCopied'));
+      await shareMyDataExport();
+      setToast(t('privacy.exportReady'));
     } catch (caught) {
       setError(t(toAppError(caught).messageKey));
     } finally {
@@ -79,6 +77,30 @@ export default function PrivacyScreen() {
             />
           </ListGroup>
         ) : null}
+
+        <View style={{ marginTop: theme.spacing.xxl }}>
+          <ListGroup label={t('privacy.safetyControls')}>
+            <ListRow
+              first
+              icon="slash"
+              onPress={() => router.push('/settings/blocked-users')}
+              subtitle={t('privacy.blockedUsersHint')}
+              title={t('privacy.blockedUsers')}
+            />
+            <ListRow
+              icon="message-square"
+              onPress={() => router.push('/settings/appeals')}
+              subtitle={t('privacy.appealsHint')}
+              title={t('privacy.appeals')}
+            />
+            <ListRow
+              icon="book-open"
+              onPress={() => router.push('/settings/archive-removal')}
+              subtitle={t('privacy.archiveRemovalHint')}
+              title={t('privacy.archiveRemoval')}
+            />
+          </ListGroup>
+        </View>
 
         <View style={{ marginTop: theme.spacing.xxl, gap: theme.spacing.md }}>
           <Text color="textTertiary" variant="footnote">

@@ -1,5 +1,6 @@
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -13,12 +14,14 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
 import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
+import { Toast } from '@/components/ui/Toast';
 import { websiteLinks } from '@/constants/links';
 import { signOut } from '@/features/auth/api';
 import { useSession } from '@/features/auth/useSession';
 import { useAmIModerator } from '@/features/moderation/hooks';
 import { useAmIFounding, useMyProfile } from '@/features/profiles/hooks';
 import { projectRef } from '@/lib/env';
+import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 
 function openWebsite(href: string) {
@@ -33,6 +36,19 @@ export default function SettingsScreen() {
   const { data: isModerator } = useAmIModerator();
   const { data: isFounding } = useAmIFounding();
   const authenticated = session.status === 'authenticated';
+  const [signingOut, setSigningOut] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    try {
+      await signOut();
+    } catch (error) {
+      setToast(t(toAppError(error).messageKey));
+    } finally {
+      setSigningOut(false);
+    }
+  }
 
   return (
     <Screen>
@@ -177,6 +193,13 @@ export default function SettingsScreen() {
             subtitle={t('settings.privacyHint')}
             title={t('settings.privacy')}
           />
+          {authenticated ? (
+            <ListRow
+              icon="slash"
+              onPress={() => router.push('/settings/blocked-users')}
+              title={t('privacy.blockedUsers')}
+            />
+          ) : null}
           <ListRow
             icon="users"
             onPress={() => router.push('/settings/community-rules')}
@@ -220,8 +243,8 @@ export default function SettingsScreen() {
             <ListRow
               first
               icon="log-out"
-              onPress={() => void signOut()}
-              title={t('auth.signOut')}
+              onPress={() => void handleSignOut()}
+              title={signingOut ? t('auth.signingOut') : t('auth.signOut')}
             />
             <ListRow
               destructive
@@ -257,6 +280,12 @@ export default function SettingsScreen() {
           </ListGroup>
         ) : null}
       </View>
+      <Toast
+        message={toast ?? ''}
+        onDismiss={() => setToast(null)}
+        tone="danger"
+        visible={toast !== null}
+      />
     </Screen>
   );
 }

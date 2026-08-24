@@ -141,7 +141,7 @@ as $$
       p.id,
       p.locale,
       p.account_status,
-      case when u.email_confirmed_at is not null then u.email::text end,
+      case when u.email_confirmed_at is not null then u.email::text end as email,
       coalesce(s.daily, false) as wants_daily,
       coalesce(s.selected, true) as wants_selected,
       coalesce(s.answered, true) as wants_answered,

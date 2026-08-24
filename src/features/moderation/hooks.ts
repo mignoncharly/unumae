@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useIsAuthenticated } from '@/features/auth/useSession';
+import { useSession } from '@/features/auth/useSession';
 
 import {
   amIModerator,
+  getAppealQueue,
+  getArchiveRemovalQueue,
   getCountryBalance,
   getGrowthGate,
   getIntegritySignals,
@@ -16,36 +18,48 @@ import {
   getReportQueue,
   getRetentionCohorts,
   reportContent,
-  resolveReport,
   resolveOperationalAlert,
+  resolveReport,
+  reviewAppeal,
+  reviewArchiveRemoval,
   reviewPortrait,
   reviewQuestion,
   setAccountStatus,
-  setBlocked,
 } from './api';
 
 export const moderationKeys = {
-  amIModerator: ['am-i-moderator'] as const,
-  portraits: ['moderation-portraits'] as const,
-  questions: ['moderation-questions'] as const,
-  reports: ['moderation-reports'] as const,
-  cohorts: ['moderation-cohorts'] as const,
-  participation: ['moderation-participation'] as const,
-  gate: ['moderation-gate'] as const,
-  countryBalance: ['moderation-country-balance'] as const,
-  integrity: ['moderation-integrity'] as const,
-  health: ['moderation-health'] as const,
-  jobs: ['moderation-jobs'] as const,
-  alerts: ['moderation-operational-alerts'] as const,
+  root: (userId: string) => ['moderation', userId] as const,
+  amIModerator: (userId: string) =>
+    ['moderation', userId, 'is-moderator'] as const,
+  portraits: (userId: string) => ['moderation', userId, 'portraits'] as const,
+  questions: (userId: string) => ['moderation', userId, 'questions'] as const,
+  reports: (userId: string) => ['moderation', userId, 'reports'] as const,
+  appeals: (userId: string) => ['moderation', userId, 'appeals'] as const,
+  removals: (userId: string) => ['moderation', userId, 'removals'] as const,
+  cohorts: (userId: string) => ['moderation', userId, 'cohorts'] as const,
+  participation: (userId: string) =>
+    ['moderation', userId, 'participation'] as const,
+  gate: (userId: string) => ['moderation', userId, 'gate'] as const,
+  countryBalance: (userId: string) =>
+    ['moderation', userId, 'country-balance'] as const,
+  integrity: (userId: string) => ['moderation', userId, 'integrity'] as const,
+  health: (userId: string) => ['moderation', userId, 'health'] as const,
+  jobs: (userId: string) => ['moderation', userId, 'jobs'] as const,
+  alerts: (userId: string) => ['moderation', userId, 'alerts'] as const,
 };
 
+function useModeratorUserId(): string {
+  return useSession().session?.user.id ?? 'anonymous';
+}
+
 export function useAmIModerator() {
-  const isAuthenticated = useIsAuthenticated();
+  const session = useSession();
+  const userId = session.session?.user.id ?? 'anonymous';
 
   return useQuery({
-    queryKey: moderationKeys.amIModerator,
+    queryKey: moderationKeys.amIModerator(userId),
     queryFn: amIModerator,
-    enabled: isAuthenticated,
+    enabled: session.status === 'authenticated',
     staleTime: 60 * 60 * 1000,
   });
 }
@@ -58,8 +72,9 @@ export function useAmIModerator() {
 const QUEUE_STALE_TIME = 30 * 1000;
 
 export function usePortraitQueue(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.portraits,
+    queryKey: moderationKeys.portraits(userId),
     queryFn: getPortraitQueue,
     enabled,
     staleTime: QUEUE_STALE_TIME,
@@ -67,8 +82,9 @@ export function usePortraitQueue(enabled: boolean) {
 }
 
 export function useQuestionQueue(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.questions,
+    queryKey: moderationKeys.questions(userId),
     queryFn: getQuestionQueue,
     enabled,
     staleTime: QUEUE_STALE_TIME,
@@ -76,8 +92,9 @@ export function useQuestionQueue(enabled: boolean) {
 }
 
 export function useReportQueue(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.reports,
+    queryKey: moderationKeys.reports(userId),
     queryFn: getReportQueue,
     enabled,
     staleTime: QUEUE_STALE_TIME,
@@ -86,11 +103,12 @@ export function useReportQueue(enabled: boolean) {
 
 export function useModerationActions() {
   const queryClient = useQueryClient();
+  const userId = useModeratorUserId();
 
   const refresh = () => {
-    void queryClient.invalidateQueries({ queryKey: moderationKeys.portraits });
-    void queryClient.invalidateQueries({ queryKey: moderationKeys.questions });
-    void queryClient.invalidateQueries({ queryKey: moderationKeys.reports });
+    void queryClient.invalidateQueries({
+      queryKey: moderationKeys.root(userId),
+    });
   };
 
   return {
@@ -114,6 +132,16 @@ export function useModerationActions() {
         setAccountStatus(...input),
       onSuccess: refresh,
     }),
+    appeal: useMutation({
+      mutationFn: (input: Parameters<typeof reviewAppeal>) =>
+        reviewAppeal(...input),
+      onSuccess: refresh,
+    }),
+    removal: useMutation({
+      mutationFn: (input: Parameters<typeof reviewArchiveRemoval>) =>
+        reviewArchiveRemoval(...input),
+      onSuccess: refresh,
+    }),
   };
 }
 
@@ -124,10 +152,23 @@ export function useReport() {
   });
 }
 
-export function useBlock() {
-  return useMutation({
-    mutationFn: ({ userId, blocked }: { userId: string; blocked: boolean }) =>
-      setBlocked(userId, blocked),
+export function useAppealQueue(enabled: boolean) {
+  const userId = useModeratorUserId();
+  return useQuery({
+    queryKey: moderationKeys.appeals(userId),
+    queryFn: getAppealQueue,
+    enabled,
+    staleTime: QUEUE_STALE_TIME,
+  });
+}
+
+export function useArchiveRemovalQueue(enabled: boolean) {
+  const userId = useModeratorUserId();
+  return useQuery({
+    queryKey: moderationKeys.removals(userId),
+    queryFn: getArchiveRemovalQueue,
+    enabled,
+    staleTime: QUEUE_STALE_TIME,
   });
 }
 
@@ -142,8 +183,9 @@ export function useBlock() {
 const SIGNALS_STALE_TIME = 60 * 60 * 1000;
 
 export function useRetentionCohorts(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.cohorts,
+    queryKey: moderationKeys.cohorts(userId),
     queryFn: () => getRetentionCohorts(),
     enabled,
     staleTime: SIGNALS_STALE_TIME,
@@ -151,8 +193,9 @@ export function useRetentionCohorts(enabled: boolean) {
 }
 
 export function useParticipationMix(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.participation,
+    queryKey: moderationKeys.participation(userId),
     queryFn: () => getParticipationMix(),
     enabled,
     staleTime: SIGNALS_STALE_TIME,
@@ -160,8 +203,9 @@ export function useParticipationMix(enabled: boolean) {
 }
 
 export function useGrowthGate(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.gate,
+    queryKey: moderationKeys.gate(userId),
     queryFn: () => getGrowthGate(),
     enabled,
     staleTime: SIGNALS_STALE_TIME,
@@ -176,8 +220,9 @@ export function useGrowthGate(enabled: boolean) {
  * this product exists to avoid.
  */
 export function useCountryBalance(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.countryBalance,
+    queryKey: moderationKeys.countryBalance(userId),
     queryFn: getCountryBalance,
     enabled,
     staleTime: SIGNALS_STALE_TIME,
@@ -185,8 +230,9 @@ export function useCountryBalance(enabled: boolean) {
 }
 
 export function useIntegritySignals(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.integrity,
+    queryKey: moderationKeys.integrity(userId),
     queryFn: getIntegritySignals,
     enabled,
     staleTime: SIGNALS_STALE_TIME,
@@ -195,8 +241,9 @@ export function useIntegritySignals(enabled: boolean) {
 
 /** Refetched more eagerly: a portrait waiting is a cycle waiting. */
 export function useModerationHealth(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.health,
+    queryKey: moderationKeys.health(userId),
     queryFn: getModerationHealth,
     enabled,
     staleTime: 60 * 1000,
@@ -204,8 +251,9 @@ export function useModerationHealth(enabled: boolean) {
 }
 
 export function useJobHistory(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.jobs,
+    queryKey: moderationKeys.jobs(userId),
     queryFn: getJobHistory,
     enabled,
     staleTime: SIGNALS_STALE_TIME,
@@ -214,8 +262,9 @@ export function useJobHistory(enabled: boolean) {
 
 /** Active failures are operational, so poll rather than caching for an hour. */
 export function useOperationalAlerts(enabled: boolean) {
+  const userId = useModeratorUserId();
   return useQuery({
-    queryKey: moderationKeys.alerts,
+    queryKey: moderationKeys.alerts(userId),
     queryFn: getOperationalAlerts,
     enabled,
     staleTime: 30 * 1000,
@@ -225,9 +274,12 @@ export function useOperationalAlerts(enabled: boolean) {
 
 export function useResolveOperationalAlert() {
   const queryClient = useQueryClient();
+  const userId = useModeratorUserId();
   return useMutation({
     mutationFn: resolveOperationalAlert,
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: moderationKeys.alerts }),
+      queryClient.invalidateQueries({
+        queryKey: moderationKeys.alerts(userId),
+      }),
   });
 }

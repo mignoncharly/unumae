@@ -102,3 +102,24 @@ describe('Phase 5 beta assurance policy', () => {
     expect(trust).not.toContain('completes liveness verification');
   });
 });
+
+describe('full-cycle release fixture', () => {
+  it('explicitly opts synthetic candidates into selection', () => {
+    const simulation = read('scripts/simulate-cycle.mjs');
+    expect(simulation).toContain('wants_selection: true');
+  });
+
+  it('tracks the current export schema in the safety verifier', () => {
+    const safety = read('scripts/verify-safety-privacy.mjs');
+    expect(safety).toContain('exported.schema_version === 3');
+  });
+
+  it('verifies complete account and media deletion on live', () => {
+    const deletion = read('scripts/verify-delete-account.mjs');
+    expect(deletion).toContain("functions.invoke('delete-account'");
+    expect(deletion).toContain('portrait photo and media storage are deleted');
+    expect(deletion).toContain(
+      'draw audit row remains as an anonymous tombstone'
+    );
+  });
+});

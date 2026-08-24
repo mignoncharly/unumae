@@ -122,6 +122,10 @@ All five are moderator-only, enforced inside each function.
 | `participation` | 15% | Do they take part, or only watch? |
 | `share_rate` | 3% | Is a portrait worth opening the share sheet for? |
 
+**Accepted unchanged by the product owner on 24 August 2026.** These four
+numbers are now the pre-committed beta gate. They may be amended later only by
+an explicit product decision recorded before looking at the cohort being judged.
+
 The thresholds live in `src/constants/retention.ts` **and** in
 `20260823070000_founding_and_retention.sql`, and a test asserts they are equal.
 Moving one means moving both, deliberately, in a commit that says why.

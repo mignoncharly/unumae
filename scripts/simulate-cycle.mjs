@@ -187,6 +187,10 @@ async function makeCandidate(index) {
       ],
       birth_year: 1985 + (index % 20),
       country_code: ['JP', 'CM', 'BR', 'DE', 'FR', 'IN'][index % 6],
+      // Phase 3 made participation explicitly opt-in and changed the database
+      // default to false. Synthetic candidates must make the same choice a
+      // real person makes in onboarding or they correctly stay out of pools.
+      wants_selection: true,
     }),
   });
   if (!profile.ok) {

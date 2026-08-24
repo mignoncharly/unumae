@@ -1,34 +1,16 @@
 #!/usr/bin/env node
 /**
- * Executes the Phase 2 safety/privacy effects against the local Supabase stack.
- * It prints assertions, never credentials, and removes every synthetic row.
+ * Executes the Phase 2 safety/privacy effects against the local Supabase stack,
+ * or the live project with `--live`. It never prints credentials and removes
+ * every synthetic row.
  */
-import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 
 import { createClient } from '@supabase/supabase-js';
 
-const envText = execFileSync('supabase', ['status', '-o', 'env'], {
-  encoding: 'utf8',
-});
-const env = Object.fromEntries(
-  envText
-    .split(/\r?\n/)
-    .map((line) => line.match(/^([A-Z_]+)="?([^"\r\n]+)"?$/))
-    .filter(Boolean)
-    .map((match) => [match[1], match[2]])
-);
+import { loadVerificationTarget } from './lib/verification-target.mjs';
 
-const url = env.API_URL ?? env.SUPABASE_URL;
-const publicKey = env.ANON_KEY ?? env.PUBLISHABLE_KEY;
-const secretKey = env.SERVICE_ROLE_KEY ?? env.SECRET_KEY;
-
-if (!url || !publicKey || !secretKey) {
-  console.error(
-    'Local Supabase credentials are unavailable. Run `supabase start`.'
-  );
-  process.exit(1);
-}
+const { url, publicKey, secretKey, label } = loadVerificationTarget();
 
 const service = createClient(url, secretKey, {
   auth: { autoRefreshToken: false, persistSession: false },
@@ -150,7 +132,7 @@ async function cleanup() {
   }
 }
 
-console.log('Phase 2 safety/privacy verification');
+console.log(`Phase 2 safety/privacy verification against ${label}`);
 try {
   const subject = await makeUser('Subject');
   const human = await makeUser('Human');
@@ -332,7 +314,7 @@ try {
 
   const exported = await rpc(subject.client, 'export_my_data');
   check(
-    exported.schema_version === 2 &&
+    exported.schema_version === 3 &&
       Array.isArray(exported.questions_authored) &&
       Array.isArray(exported.moderation_decisions_about_me),
     'download export contains content and safety history'

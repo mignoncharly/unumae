@@ -1,26 +1,12 @@
 #!/usr/bin/env node
-/** Phase 3 effect verification against the local Supabase stack. */
-import { execFileSync } from 'node:child_process';
+/** Phase 3 effects against local Supabase, or live with `--live`; self-cleaning. */
 import { randomUUID } from 'node:crypto';
 
 import { createClient } from '@supabase/supabase-js';
 
-const envText = execFileSync('supabase', ['status', '-o', 'env'], {
-  encoding: 'utf8',
-});
-const env = Object.fromEntries(
-  envText
-    .split(/\r?\n/)
-    .map((line) => line.match(/^([A-Z_]+)="?([^"\r\n]+)"?$/))
-    .filter(Boolean)
-    .map((match) => [match[1], match[2]])
-);
-const url = env.API_URL ?? env.SUPABASE_URL;
-const publicKey = env.ANON_KEY ?? env.PUBLISHABLE_KEY;
-const secretKey = env.SERVICE_ROLE_KEY ?? env.SECRET_KEY;
-if (!url || !publicKey || !secretKey) {
-  throw new Error('Run `supabase start` before Phase 3 verification.');
-}
+import { loadVerificationTarget } from './lib/verification-target.mjs';
+
+const { url, publicKey, secretKey, label } = loadVerificationTarget();
 
 const service = createClient(url, secretKey, {
   auth: { autoRefreshToken: false, persistSession: false },
@@ -84,7 +70,7 @@ async function cleanup() {
   for (const id of userIds) await service.auth.admin.deleteUser(id);
 }
 
-console.log('Phase 3 memory/international verification');
+console.log(`Phase 3 memory/international verification against ${label}`);
 try {
   const owner = await makeUser('Archive Human');
   const reader = await makeUser('Reader', false);

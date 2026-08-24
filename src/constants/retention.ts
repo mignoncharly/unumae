@@ -6,6 +6,8 @@
  * before we see the result, so it lives here and in the migration
  * 20260823070000_founding_and_retention.sql, and tests/retention-schema.test.ts
  * asserts the two agree. Moving one means moving both, on purpose.
+ * Accepted unchanged by the product owner on 24 August 2026, before the beta
+ * cohort exists.
  *
  * These are not conservative-by-accident. A daily ritual that people do not
  * return to the next day is not a daily ritual, whatever the install count

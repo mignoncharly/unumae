@@ -178,6 +178,9 @@ Declining costs nothing, and that is structural: `is_eligible` never reads
 npm run simulate            # two cycles, escalation, instruments, then cleans up
 npm run simulate -- --keep  # leave the data in place to look at in the app
 npm run simulate -- --clean # remove what a previous run left behind
+npm run verify:safety:live  # safety/privacy effects; synthetic rows self-clean
+npm run verify:memory:live  # Archive/i18n effects; synthetic rows self-clean
+npm run verify:delete-account:live # auth, tombstone, avatar and portrait media
 ```
 
 ⚠️ It runs against the live project and uses the service role to delete rows

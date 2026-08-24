@@ -16,10 +16,9 @@ Last updated: Phase 5 native and release verification, 24 August 2026.
 | 3 | ⚠️ **Hosted Supabase Auth release configuration** | Requires Supabase dashboard/PAT access and SMTP credentials: set Site URL to `https://unumae.app`; allow `onehuman://` and `https://unumae.app/**`; install both six-digit templates from `supabase/templates/`; configure production custom SMTP; preserve the enabled Apple provider. Run `npm run verify:release-config` afterward. A broad `supabase config push` is unsafe because local Apple auth is intentionally disabled. | Email sign-in for beta participants. |
 | 4 | ⚠️ **Native iOS release gate** | Create/install a development build, then execute every real-device and accessibility check in `docs/IOS_RELEASE_VERIFICATION.md`. Simulator automation cannot prove Apple credentials, push delivery/actions, account switching cleanup, media deletion, VoiceOver, or native share sheets. | Public beta. |
 | 5 | **Recruit 10–20 people for the internal alpha** | The simulation proves the machinery works. It cannot tell you whether Today's Human is interesting, whether anyone opens the Archive, or whether anyone shares a portrait unprompted. Only real people answer that. `docs/BETA.md` has the four questions to watch for. | The growth gate, and everything after it. |
-| 6 | **Decide the four gate thresholds are right** | D1 25%, D7 10%, participation 15%, share rate 3%. I chose defensible numbers; they are your call, and the point of them is that they are fixed *before* any result exists. Changing them later is legitimate, but it should be a deliberate commit, not a reaction to a disappointing week. | Nothing yet — they bind at step 5 of `docs/BETA.md`. |
 | 7 | **Check the share card on a real device** | Settings → Developer → Share card. It names which of the two native modules loaded, renders the card scaled to fit, and captures it to a real PNG that it then displays — the preview proves the layout, only the capture proves the capture. | Nothing — the fallback works. |
-| 8 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
-| 9 | ⚠️ **Deploy and live-verify pending migrations** | The last recorded live state has 32 migrations. Apply `20260823140000` through `20260823230000`, deploy the updated `delete-account` function, then run safety, memory/international, draw, privilege, security, and full-cycle verification. This environment received a Supabase 403 and has no `SUPABASE_DB_PASSWORD`, so it could not deploy or verify them. | Phase 0–5 guarantees on production. |
+| 8 | **Credentials remain local** | `docs/supa_keys.md` was used through redacting wrappers for the database deployment and live suites. It remains gitignored and unmodified; no credential entered logs or version control. It does not contain the management PAT required by items 3 and 9. | Nothing beyond those two explicit management tasks. |
+| 9 | ⚠️ **Deploy the updated `delete-account` Edge Function** | All 42 migrations and every database live suite now pass. Function deployment still returns Supabase management API 403. The credential file contains database/project keys but no management PAT (`sbp_…`). A live probe proves the old function deletes auth/profile/avatar data but leaves portrait photo/audio objects; the probe cleaned its fixtures. Grant this CLI account a sufficient project role or provide a scoped management PAT, then deploy and rerun `npm run verify:delete-account:live`. | Complete media deletion and public beta. |
 | 10 | **EAS Maestro plan or a macOS runner** | Expo accepts built-in Maestro jobs only on a paid plan for this account. Run `npm run e2e:ios` on a Mac with Xcode/Maestro, or enable the plan and use `npm run e2e:ios:eas`. | Automated iPhone-size evidence; real-device checks remain separate. |
 
 ## Mine — code
@@ -52,15 +51,15 @@ picking, storage, the Signals tab — runs in Expo Go.
 
 ## Deployed and verified against the live project
 
-This table is the last successful live baseline, not current release evidence.
-The ten pending migrations in item 9 must be deployed and every live suite
-re-run before these guarantees can be promoted to beta.
+This table reflects the live database verification completed on 24 August 2026.
+The stale `delete-account` Edge Function is called out separately in item 9 and
+must not be mistaken for a passing media-deletion guarantee.
 
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | 32 applied at the last successful live check; 10 local migrations (`20260823140000`–`20260823230000`) await deployment and verification |
-| Edge Functions | `delete-account`, `send-notifications`, `translate-portraits` — deployed, and now **scheduled** via pg_net |
+| Migrations | All 42 applied; local and remote histories match through `20260823230000` |
+| Edge Functions | `send-notifications` and `translate-portraits` remain scheduled; `delete-account` is deployed at an older revision and blocked on management access |
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send 00:15, translate 01:00, purge 03:30, expiry sweep every 15 min. Full table in `docs/OPERATIONS.md` |
 | EAS project | `@mignoncharly/unumae` |
@@ -72,7 +71,7 @@ re-run before these guarantees can be promoted to beta.
 | **Full loop, end to end** | **passes — draw, invitation, acceptance, portrait, moderation, publication, audience, Archive** |
 | **Escalation** | **passes — decline and silence both promote a backup who can actually accept** |
 | Nightly jobs | pg_net → Edge Function proven end to end: one queued call produced 30 translations |
-| Tests | 614 offline passing locally; live suites must be re-run after the 10 pending migrations |
+| Tests | 617 offline passing; draw, anonymous privileges, signed-in security, safety/privacy, memory/international, and full-cycle live suites passing |
 | Marketing website | Live at `https://unumae.app`; isolated Nginx site, TLS, monitoring and renewal verified |
 
 ## Commands worth remembering

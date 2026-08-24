@@ -73,6 +73,9 @@ Then run, after every production migration affecting the loop:
 
 ```bash
 npm run verify:live
+npm run verify:safety:live
+npm run verify:memory:live
+npm run verify:delete-account:live
 npm run verify:security
 npm run simulate
 ```
@@ -84,6 +87,8 @@ the confirmation prompt and verify the linked project before approving it.
 
 | Build / migration | Device + iOS | Check | Result | Evidence / issue |
 | --- | --- | --- | --- | --- |
+| `20260823230000` | Hosted Supabase | 42 migrations + database live suites | Pass | Draw, privileges, signed-in security, safety/privacy, memory/international, and full-cycle simulation pass |
+| Current `delete-account` deployment | Hosted Supabase | Complete account/media deletion | Fail | Supabase management API 403 blocked deployment; old function leaves portrait photo/audio objects |
 | _fill during release_ | | | | |
 
 Failures block beta. Record them in `docs/OPEN_ITEMS.md`; do not convert an

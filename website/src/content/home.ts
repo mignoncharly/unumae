@@ -123,7 +123,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
         {
           number: '04',
           title: 'Reviewed by a person',
-          body: 'Liveness and human moderation come before publication.',
+          body: 'A person reviews the portrait and answers before publication.',
         },
         {
           number: '05',

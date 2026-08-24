@@ -115,7 +115,7 @@ export default function TodayScreen() {
 
   if (isLoading) {
     return (
-      <Screen>
+      <Screen testID="today-screen">
         <Surface tone="accent" style={{ gap: theme.spacing.lg }}>
           <Skeleton height={16} width="34%" />
           <Skeleton height={420} radius={theme.radius.xl} />
@@ -132,7 +132,10 @@ export default function TodayScreen() {
 
   if (isError) {
     return (
-      <Screen contentContainerStyle={{ justifyContent: 'center' }}>
+      <Screen
+        contentContainerStyle={{ justifyContent: 'center' }}
+        testID="today-screen"
+      >
         <ErrorState error={toAppError(error)} onRetry={() => void refetch()} />
       </Screen>
     );
@@ -142,7 +145,7 @@ export default function TodayScreen() {
   // about it rather than showing yesterday's human again.
   if (!today) {
     return (
-      <Screen>
+      <Screen testID="today-screen">
         <EmptyState
           action={{
             label: t('today.meetRandom'),
@@ -166,7 +169,7 @@ export default function TodayScreen() {
 
   if (today.human.is_removed) {
     return (
-      <Screen>
+      <Screen testID="today-screen">
         <EmptyState
           body={t('today.removedBody')}
           icon="book-open"
@@ -184,7 +187,7 @@ export default function TodayScreen() {
 
   return (
     <>
-      <Screen>
+      <Screen testID="today-screen">
         <View style={{ marginBottom: theme.spacing.lg }}>
           <Text
             color="accent"

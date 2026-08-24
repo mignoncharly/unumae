@@ -432,10 +432,16 @@ Friction is applied where the risk is, and nowhere else:
 | Viewing | None. No account. |
 | Signup | Apple or email. |
 | Interacting (ask, vote, Remember) | Account + rate limiting. |
-| **Selection eligibility** | Account age minimum, activity, device signals, optionally phone. |
-| **On being selected** | Liveness / selfie verification before publication. |
+| **Selection eligibility** | Confirmed account, seven-day minimum age, rules accepted, age 16+, and explicit opt-in. |
+| **On being selected** | Explicit acceptance, completed guided portrait, and human moderation before publication. |
 
 > Low friction to discover. High assurance only where it matters.
+
+**Beta amendment, 24 August 2026.** The earlier draft required a liveness
+selfie after selection. That requirement was removed before beta because no
+complete consent, processor, accessibility fallback, retention, or deletion
+flow existed. Unumae does not collect biometric data or advertise automated
+liveness. Reintroducing it requires another amendment covering all five.
 
 ### 8.6 The Archive and the right to be forgotten
 

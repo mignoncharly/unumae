@@ -262,7 +262,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
       publication: {
         eyebrow: '05 · Before publication',
         title: 'Being drawn is not enough to go live.',
-        body: 'At launch, an accepted candidate completes liveness verification and a guided portrait. Automated checks and a person review the portrait before publication.',
+        body: 'At launch, an accepted candidate completes a guided portrait. A person reviews the portrait and answers before publication.',
         quietDay:
           'If nobody has accepted and passed review by the deadline, Unumae shows a Quiet Day. It never invents a Human, skips consent, or publishes unreviewed work.',
       },

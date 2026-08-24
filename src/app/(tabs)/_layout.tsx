@@ -43,6 +43,7 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: t('tabs.today'),
+          tabBarButtonTestID: 'tab-today',
           // Sunrise signals the daily reveal; You keeps the person icon.
           // Distinct silhouettes make both destinations recognisable at a
           // glance, including when labels are truncated or obscured.
@@ -55,6 +56,7 @@ export default function TabsLayout() {
         name="archive"
         options={{
           title: t('tabs.archive'),
+          tabBarButtonTestID: 'tab-archive',
           // Not a folder or a database — a book, which is what the Archive is.
           tabBarIcon: ({ color, size }) => (
             <Feather color={color} name="book-open" size={size} />
@@ -65,6 +67,7 @@ export default function TabsLayout() {
         name="settings"
         options={{
           title: t('tabs.you'),
+          tabBarButtonTestID: 'tab-you',
           tabBarIcon: ({ color, size }) => (
             <Feather color={color} name="user" size={size} />
           ),

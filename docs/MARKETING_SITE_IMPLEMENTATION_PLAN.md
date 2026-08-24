@@ -118,6 +118,11 @@ Sources reviewed:
 
 Discovery decisions carried into every later phase:
 
+> **Policy revision (24 August 2026):** references below to launch-time
+> liveness describe the earlier design. Phase 5 replaced that requirement with
+> explicit acceptance, a completed guided portrait, and human moderation. See
+> `docs/VERIFICATION_POLICY.md` and Article 8.5.
+
 - Use the canonical terms Today’s Human, Human, Human number, the Archive,
   Remember, Ask this, the draw, candidate, and Quiet Day. Do not substitute
   social-network vocabulary.

@@ -71,7 +71,7 @@ export default function ArchiveScreen() {
   }
 
   return (
-    <Screen>
+    <Screen testID="archive-screen">
       <PageHeader
         eyebrow={t('common.tagline')}
         subtitle={t('archive.subtitle')}

@@ -13,6 +13,7 @@ interface ButtonProps {
   icon?: ComponentProps<typeof Feather>['name'];
   disabled?: boolean;
   style?: ViewStyle;
+  testID?: string;
 }
 
 export function Button({
@@ -22,6 +23,7 @@ export function Button({
   disabled = false,
   style,
   icon,
+  testID,
 }: ButtonProps) {
   const theme = useTheme();
   const isPrimary = variant === 'primary';
@@ -40,6 +42,7 @@ export function Button({
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
+      testID={testID}
       style={({ pressed }) => [
         styles.base,
         {

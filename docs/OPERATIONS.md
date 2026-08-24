@@ -139,11 +139,12 @@ So the signals are weak and honest:
 | `email_only_pool` | How much of the pool is verified by an email address alone. |
 | `country_year_collisions` | Same country and birth year. Arithmetic at ten thousand people — only meaningful alongside a burst. |
 
-They catch the careless and not the determined. **The real defence against a
-determined multi-accounter is raising `verification_level`**, which has a real
-cost to real users and should be a deliberate decision rather than something
-drifted into. `require_liveness_before_publication` in `app_settings` is the
-switch, and it is off.
+They catch the careless and not the determined. **Any stronger identity check
+is a product, privacy, and accessibility decision**, not an operations toggle.
+The beta publication bar is explicit acceptance, a completed guided portrait,
+and human moderation. The dormant liveness switch was removed in Phase 5 so an
+operator cannot enable a biometric requirement without a complete user flow and
+policy amendment.
 
 ---
 

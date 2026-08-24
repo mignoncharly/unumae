@@ -32,6 +32,9 @@
     "verify:security": "node scripts/verify-security.mjs",
     "verify:safety": "node scripts/verify-safety-privacy.mjs",
     "verify:memory": "node scripts/verify-memory-international.mjs",
+    "verify:release-config": "node scripts/verify-release-config.mjs",
+    "e2e:ios": "node scripts/run-ios-e2e.mjs",
+    "e2e:ios:eas": "eas workflow:run .eas/workflows/e2e-ios.yml",
     "simulate": "node scripts/simulate-cycle.mjs",
     "db:settings": "node scripts/db-settings.mjs",
     "dev:code": "node scripts/dev-code.mjs"

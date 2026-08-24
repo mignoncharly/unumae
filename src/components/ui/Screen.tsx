@@ -19,6 +19,7 @@ interface ScreenProps {
   scroll?: boolean;
   padded?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
+  testID?: string;
 }
 
 /**
@@ -38,6 +39,7 @@ export function Screen({
   scroll = true,
   padded = true,
   contentContainerStyle,
+  testID,
 }: ScreenProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
@@ -50,6 +52,7 @@ export function Screen({
   if (!scroll) {
     return (
       <View
+        testID={testID}
         style={[
           frame,
           padded && styles.content,
@@ -63,7 +66,7 @@ export function Screen({
   }
 
   return (
-    <View style={frame}>
+    <View style={frame} testID={testID}>
       <ScrollView
         contentInsetAdjustmentBehavior="never"
         keyboardDismissMode="interactive"

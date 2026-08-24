@@ -1,0 +1,42 @@
+name: iOS release smoke tests
+
+jobs:
+  build_ios_for_e2e:
+    name: Build iOS simulator app
+    type: build
+    params:
+      platform: ios
+      profile: e2e-test
+
+  test_small_iphone:
+    name: Small iPhone
+    needs: [build_ios_for_e2e]
+    type: maestro
+    params:
+      build_id: ${{ needs.build_ios_for_e2e.outputs.build_id }}
+      flow_path: .maestro/release-smoke.yml
+      device_identifier: { ios: 'iPhone SE (3rd generation)' }
+      record_screen: true
+      retries: 1
+
+  test_regular_iphone:
+    name: Regular iPhone
+    needs: [build_ios_for_e2e]
+    type: maestro
+    params:
+      build_id: ${{ needs.build_ios_for_e2e.outputs.build_id }}
+      flow_path: .maestro/release-smoke.yml
+      device_identifier: { ios: 'iPhone 16' }
+      record_screen: true
+      retries: 1
+
+  test_pro_max_iphone:
+    name: Pro Max iPhone
+    needs: [build_ios_for_e2e]
+    type: maestro
+    params:
+      build_id: ${{ needs.build_ios_for_e2e.outputs.build_id }}
+      flow_path: .maestro/release-smoke.yml
+      device_identifier: { ios: 'iPhone 16 Pro Max' }
+      record_screen: true
+      retries: 1

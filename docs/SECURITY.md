@@ -57,7 +57,7 @@ that the value is public.
 | Signup | Apple or email |
 | Ask, vote, Remember | account + rate limiting |
 | Selection eligibility | account age, activity, device signals, optional phone |
-| On being selected | liveness / selfie verification before publication |
+| On being selected | explicit acceptance, guided portrait, and human review before publication |
 
 Friction is applied where the risk is. Low friction to discover, high assurance
 only where it matters.

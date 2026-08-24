@@ -72,6 +72,7 @@ export default function OnboardingProfileScreen() {
     return (
       <Screen
         scroll={false}
+        testID={`onboarding-step-${step}`}
         contentContainerStyle={{ justifyContent: 'center' }}
       >
         <BrandHero
@@ -86,6 +87,7 @@ export default function OnboardingProfileScreen() {
             icon={first ? 'globe' : 'heart'}
             label={t('onboarding.continue')}
             onPress={() => setStep((current) => current + 1)}
+            testID="onboarding-continue"
           />
           {step === 2 ? (
             <Button
@@ -100,7 +102,7 @@ export default function OnboardingProfileScreen() {
   }
 
   return (
-    <Screen>
+    <Screen testID="onboarding-step-3">
       <BrandHero
         body={t('onboarding.profileBody')}
         step={t('onboarding.step', { current: 3, total: 3 })}
@@ -256,6 +258,7 @@ export default function OnboardingProfileScreen() {
           disabled={isSubmitting || typeof participation !== 'boolean'}
           label={t('profile.save')}
           onPress={handleSubmit(onSubmit)}
+          testID="onboarding-save"
         />
 
         <Text color="textTertiary" variant="footnote">

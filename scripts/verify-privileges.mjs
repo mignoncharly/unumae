@@ -104,7 +104,6 @@ const PROBES = [
   ['moderation_portrait_queue', {}],
   ['moderation_question_queue', {}],
   ['moderation_report_queue', {}],
-  ['record_liveness_check', { target_user: NIL_UUID }],
 
   // Phase 10 — reading a translation is public; everything else is not.
   ['get_portrait_translations', { target_draw: NIL_UUID, target_locale: 'fr' }],

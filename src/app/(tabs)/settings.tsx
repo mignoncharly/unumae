@@ -51,7 +51,7 @@ export default function SettingsScreen() {
   }
 
   return (
-    <Screen>
+    <Screen testID="settings-screen">
       <PageHeader
         eyebrow={t('tabs.you')}
         subtitle={t('settings.subtitle')}

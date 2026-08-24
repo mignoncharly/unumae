@@ -180,23 +180,20 @@ describe('data export is the data, not a summary (Article 8.2)', () => {
   });
 });
 
-describe('liveness before publication (Article 8.5)', () => {
-  it('has the gate written, and a switch to turn it on', () => {
-    expect(functionBody('publish_due_cycles')).toContain(
-      "pr.verification_level = 'liveness'"
-    );
-    expect(ALL_SQL).toContain('require_liveness_before_publication');
-  });
-
-  it('is off, because no capture flow exists yet', () => {
-    // Turning it on now would make every cycle a Quiet Day. The switch is
-    // recorded rather than remembered.
-    expect(FLAT).toContain("'require_liveness_before_publication', false");
-  });
-
-  it('is recorded by the service, never by a client', () => {
+describe('beta publication assurance (Article 8.5)', () => {
+  it('does not claim or enforce an unimplemented biometric flow', () => {
+    expect(functionBody('publish_due_cycles')).not.toContain('liveness');
     expect(FLAT).toContain(
-      'revoke execute on function public.record_liveness_check(uuid) from public, anon, authenticated'
+      "delete from public.app_settings where key = 'require_liveness_before_publication'"
     );
+    expect(FLAT).toContain(
+      'drop function if exists public.record_liveness_check(uuid)'
+    );
+  });
+
+  it('keeps acceptance, completion, and human review as publication gates', () => {
+    const publish = functionBody('publish_due_cycles');
+    expect(publish).toContain("d.selection_status = 'ready'");
+    expect(publish).toContain("p.status = 'approved'");
   });
 });

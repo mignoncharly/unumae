@@ -3,7 +3,7 @@
 What makes someone eligible for the draw, and what makes them safe to publish.
 Implements Product Constitution Article 8.5.
 
-**Status:** decided · **Adopted:** 2026-08-22 · **Phase:** 6
+**Status:** revised for beta · **Adopted:** 2026-08-24 · **Phase:** 5
 
 ---
 
@@ -72,21 +72,22 @@ without amending this document — the columns exist.
 When someone is drawn and accepts, before their portrait goes live:
 
 ```text
-verification_level = 'liveness'
+confirmed email or Apple account
+explicit invitation acceptance
+completed guided portrait
+human moderation approval
 ```
 
-A one-time selfie liveness check, held only long enough to complete the check
-and then deleted. Its purpose is narrow and worth stating plainly: to confirm
-that the person about to be introduced to the world as a real human being is
-one.
+Beta does **not** collect biometric data or claim automated liveness. A
+moderator reviews the submitted portrait and guided answers before publication.
+If identity abuse appears in beta, publication pauses while the case is
+reviewed; an SDK must not be added merely to preserve an earlier promise.
 
-This is the only place biometric data is touched, it applies to roughly one
-person per day, and it happens after they have already agreed to be published.
-That proportion is what makes it defensible.
-
-**Not yet implemented.** Phase 9 builds it. Until then the moderation queue is
-the only thing standing between a fabricated portrait and publication, and that
-gap is recorded in `docs/OPEN_ITEMS.md` rather than glossed over.
+Liveness can be reconsidered only as a separately designed feature with an
+explicit processor, consent, retention/deletion guarantees, accessibility
+fallbacks, and a new policy amendment. The dormant database switch and write
+RPC were removed in migration `20260823230000_release_assurance.sql` so code and
+public promises cannot silently drift apart.
 
 ## One person, one account
 
@@ -115,7 +116,7 @@ than saying it is not.
 | `email` | Email confirmed, or signed in with Apple | The above, plus the pool after 7 days |
 | `device` | Device signals checked | Reserved; abuse response |
 | `phone` | Phone confirmed | Reserved; abuse response |
-| `liveness` | Selfie liveness passed | Required before publication |
+| `liveness` | Legacy/reserved value; not assigned by the beta product | None |
 
 Levels are set by the system only. No client role can write
 `verification_level` — see `docs/DATABASE.md`.

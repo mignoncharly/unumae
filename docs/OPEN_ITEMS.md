@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Phase 2 core-loop hardening, 24 August 2026.
+Last updated: Phase 5 native and release verification, 24 August 2026.
 
 ---
 
@@ -13,13 +13,14 @@ Last updated: Phase 2 core-loop hardening, 24 August 2026.
 | --- | --- | --- | --- |
 | 1 | **App Store listing URL** | App Store Connect must provide the real listing URL and numeric app ID before the website can advertise it. | App Store badge and smart app banner. |
 | 2 | **A light version of the wordmark**, if you want a dark splash | The icon and splash are wired up. The supplied gradient measures 1.32:1 against `#0B0B0C`, so the splash stays white in both appearance modes. | Nothing. White reads everywhere. |
-| 3 | ⚠️ **Two Supabase dashboard settings** | Email sign-in is broken on the live project until both are changed: **URL Configuration** → Site URL to `https://unumae.app` (it is still the `localhost:3000` default), and **Email Templates** → paste `supabase/templates/` into *both* Confirm signup and Magic Link. I did not push these with the CLI because `supabase config push` has no dry run and would disable Sign in with Apple. Full detail in `docs/OPERATIONS.md`. | Signing in at all. |
-| 4 | **First iOS development build** | `eas build --profile development --platform ios`. Apple credentials are created interactively on the first run. Nothing else is waiting on it. | Testing Sign in with Apple and push. |
+| 3 | ⚠️ **Hosted Supabase Auth release configuration** | Requires Supabase dashboard/PAT access and SMTP credentials: set Site URL to `https://unumae.app`; allow `onehuman://` and `https://unumae.app/**`; install both six-digit templates from `supabase/templates/`; configure production custom SMTP; preserve the enabled Apple provider. Run `npm run verify:release-config` afterward. A broad `supabase config push` is unsafe because local Apple auth is intentionally disabled. | Email sign-in for beta participants. |
+| 4 | ⚠️ **Native iOS release gate** | Create/install a development build, then execute every real-device and accessibility check in `docs/IOS_RELEASE_VERIFICATION.md`. Simulator automation cannot prove Apple credentials, push delivery/actions, account switching cleanup, media deletion, VoiceOver, or native share sheets. | Public beta. |
 | 5 | **Recruit 10–20 people for the internal alpha** | The simulation proves the machinery works. It cannot tell you whether Today's Human is interesting, whether anyone opens the Archive, or whether anyone shares a portrait unprompted. Only real people answer that. `docs/BETA.md` has the four questions to watch for. | The growth gate, and everything after it. |
 | 6 | **Decide the four gate thresholds are right** | D1 25%, D7 10%, participation 15%, share rate 3%. I chose defensible numbers; they are your call, and the point of them is that they are fixed *before* any result exists. Changing them later is legitimate, but it should be a deliberate commit, not a reaction to a disappointing week. | Nothing yet — they bind at step 5 of `docs/BETA.md`. |
 | 7 | **Check the share card on a real device** | Settings → Developer → Share card. It names which of the two native modules loaded, renders the card scaled to fit, and captures it to a real PNG that it then displays — the preview proves the layout, only the capture proves the capture. | Nothing — the fallback works. |
 | 8 | **Secrets in `docs/supa_keys.md`** | Deferred to the end of the project, as you asked. Gitignored, never committed, and no new credentials have been added to the repository. | Nothing. |
-| 9 | ⚠️ **Deploy and stage-verify Phase 2** | Apply migrations `20260823180000` and `20260823190000`, deploy the updated `delete-account` function, and run the safety/privacy simulation in an isolated staging project before beta. | Phase 2 safety/privacy guarantees on production. |
+| 9 | ⚠️ **Deploy and live-verify pending migrations** | The last recorded live state has 32 migrations. Apply `20260823140000` through `20260823230000`, deploy the updated `delete-account` function, then run safety, memory/international, draw, privilege, security, and full-cycle verification. This environment received a Supabase 403 and has no `SUPABASE_DB_PASSWORD`, so it could not deploy or verify them. | Phase 0–5 guarantees on production. |
+| 10 | **EAS Maestro plan or a macOS runner** | Expo accepts built-in Maestro jobs only on a paid plan for this account. Run `npm run e2e:ios` on a Mac with Xcode/Maestro, or enable the plan and use `npm run e2e:ios:eas`. | Automated iPhone-size evidence; real-device checks remain separate. |
 
 ## Mine — code
 
@@ -32,7 +33,7 @@ reasoning in `docs/DEFERRED.md`.
 | 2 | Human Story Engine | Needs a corpus that does not exist yet, and a definition of "interesting" that is not engagement — which this product has deliberately made unmeasurable per person. |
 | 3 | Where Are They Now? | Needs five years. Nothing to build; nothing must be broken in the meantime. |
 | 4 | Monetization, Android, full PWA | Phase 17, macro-phase H, post-launch. |
-| 5 | Liveness capture flow | The gate exists in `app_settings` and is switched off. Native, and a real decision about user cost. |
+| 5 | Stronger identity assurance, only if beta abuse justifies it | Liveness was explicitly removed from the beta policy and database in Phase 5. Any future version needs consent, a processor, accessibility fallback, retention/deletion guarantees, and a policy amendment. |
 | 6 | Optional audio/video portrait element | Later. |
 
 ## Needs a native build, not Expo Go
@@ -44,7 +45,6 @@ exercised there, and are flagged rather than reworked:
 | --- | --- | --- |
 | Sign in with Apple | Expo Go signs its own bundle, so it cannot carry this app's entitlement | Implemented; hides itself and explains why. Email code works everywhere. |
 | Push notifications | Expo Go has no push credentials for this bundle | Built; needs a dev build to test |
-| Liveness check | Camera-based SDK, likely a native module | Not built yet |
 | Downloadable data export | Uses the native share sheet to save/send the JSON file | Implemented; verify the sheet in a development build |
 
 Everything else — the draw, portraits, questions, voting, Remember, image
@@ -52,10 +52,14 @@ picking, storage, the Signals tab — runs in Expo Go.
 
 ## Deployed and verified against the live project
 
+This table is the last successful live baseline, not current release evidence.
+The ten pending migrations in item 9 must be deployed and every live suite
+re-run before these guarantees can be promoted to beta.
+
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | 32 applied |
+| Migrations | 32 applied at the last successful live check; 10 local migrations (`20260823140000`–`20260823230000`) await deployment and verification |
 | Edge Functions | `delete-account`, `send-notifications`, `translate-portraits` — deployed, and now **scheduled** via pg_net |
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send 00:15, translate 01:00, purge 03:30, expiry sweep every 15 min. Full table in `docs/OPERATIONS.md` |
@@ -68,7 +72,7 @@ picking, storage, the Signals tab — runs in Expo Go.
 | **Full loop, end to end** | **passes — draw, invitation, acceptance, portrait, moderation, publication, audience, Archive** |
 | **Escalation** | **passes — decline and silence both promote a backup who can actually accept** |
 | Nightly jobs | pg_net → Edge Function proven end to end: one queued call produced 30 translations |
-| Tests | 508 offline, plus four live suites |
+| Tests | 614 offline passing locally; live suites must be re-run after the 10 pending migrations |
 | Marketing website | Live at `https://unumae.app`; isolated Nginx site, TLS, monitoring and renewal verified |
 
 ## Commands worth remembering

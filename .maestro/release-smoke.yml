@@ -1,0 +1,21 @@
+appId: com.unumae.app
+name: Guest core navigation
+tags:
+  - release
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: today-screen
+- tapOn:
+    id: tab-archive
+- assertVisible:
+    id: archive-screen
+- tapOn:
+    id: tab-you
+- assertVisible:
+    id: settings-screen
+- tapOn:
+    id: tab-today
+- assertVisible:
+    id: today-screen

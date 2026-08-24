@@ -4,6 +4,12 @@ The 42 phases of the original plan, regrouped into 18 without losing any content
 (`prompt-18.md` at the repository root carries the full text; `prompt.md` is the
 original). This file tracks status only.
 
+> **Policy revision (24 August 2026):** historical sections below that describe
+> liveness before publication predate the Phase 5 beta decision. The current
+> requirement is explicit acceptance, a completed guided portrait, and human
+> moderation; no biometric data is collected. `docs/VERIFICATION_POLICY.md` is
+> authoritative.
+
 | # | Phase | Status | Launch blocker |
 | --- | --- | --- | --- |
 | 0 | Product Constitution | ✅ done | ✅ |

@@ -11,7 +11,7 @@ Last updated: Phase 5 native and release verification, 24 August 2026.
 
 | # | Item | Why it needs you | Blocks |
 | --- | --- | --- | --- |
-| 1 | **App Store listing URL** | App Store Connect must provide the real listing URL and numeric app ID before the website can advertise it. | App Store badge and smart app banner. |
+| 1 | **App Store listing URL** | The numeric App Store Connect ID is now known (`6804251671`), but Apple provides the public listing URL only when the app is released. | App Store badge and smart app banner. |
 | 2 | **A light version of the wordmark**, if you want a dark splash | The icon and splash are wired up. The supplied gradient measures 1.32:1 against `#0B0B0C`, so the splash stays white in both appearance modes. | Nothing. White reads everywhere. |
 | 4 | ⚠️ **Native iOS release gate** | No physical iPhone is currently available to the owner. Create/install a development or TestFlight build on a borrowed or trusted tester's iPhone, then execute every real-device and accessibility check in `docs/IOS_RELEASE_VERIFICATION.md`. Simulator automation cannot prove Apple credentials, push delivery/actions, account switching cleanup, media deletion, VoiceOver, or native share sheets. | Public beta. |
 | 5 | **Recruit 10–20 people for the internal alpha** | The simulation proves the machinery works. It cannot tell you whether Today's Human is interesting, whether anyone opens the Archive, or whether anyone shares a portrait unprompted. Only real people answer that. `docs/BETA.md` has the four questions to watch for. | The growth gate, and everything after it. |
@@ -61,7 +61,7 @@ This table reflects the live deployment and verification completed on 24 August
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send 00:15, translate 01:00, purge 03:30, expiry sweep every 15 min. Full table in `docs/OPERATIONS.md` |
 | EAS project | `@mignoncharly/unumae` |
 | EAS build environment | Required Supabase client variables configured for `development` and `production`; profiles select their environment explicitly |
-| App Store Connect | Unumae app record for `com.unumae.app` confirmed by the owner; no iOS build uploaded yet |
+| App Store Connect | Unumae app record `6804251671` for `com.unumae.app`; production build `0.1.0 (3)` successfully uploaded to TestFlight on 24 August 2026 and is processing with Apple |
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Hosted Auth/email | Production Site URL, native/web redirects, six-digit confirmation and magic-link templates, Apple provider, and custom SMTP all pass the read-only release check |
 | Moderator bootstrap | seeded by email; promotes automatically on profile creation |
@@ -71,7 +71,7 @@ This table reflects the live deployment and verification completed on 24 August
 | **Full loop, end to end** | **passes — draw, invitation, acceptance, portrait, moderation, publication, audience, Archive** |
 | **Escalation** | **passes — decline and silence both promote a backup who can actually accept** |
 | Nightly jobs | pg_net → Edge Function proven end to end: one queued call produced 30 translations |
-| Tests | 617 offline passing; release config, draw, anonymous privileges, signed-in security, safety/privacy, memory/international, complete account deletion, and full-cycle live suites passing |
+| Tests | 621 offline passing; Expo Doctor 21/21; release config, draw, anonymous privileges, signed-in security, safety/privacy, memory/international, complete account deletion, and full-cycle live suites passing |
 | Marketing website | Live at `https://unumae.app`; isolated Nginx site, TLS, monitoring and renewal verified |
 
 ## Commands worth remembering

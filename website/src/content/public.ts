@@ -38,6 +38,9 @@ interface PublicCopy {
       noQuestions: string;
       unanswered: string;
       guestNote: string;
+      showTranslated: string;
+      showOriginal: string;
+      translated: string;
       prompts: Record<PortraitKey, string>;
     };
   };
@@ -113,6 +116,9 @@ export const publicContent: Record<Locale, PublicCopy> = {
         unanswered: 'Not answered yet',
         guestNote:
           'This public story is open to guests. No popularity or Remember total is shown.',
+        showTranslated: 'Read a translation',
+        showOriginal: 'Read the original',
+        translated: 'Translated. The original remains one tap away.',
         prompts: {
           introduction: 'Introduction',
           where_im_from: 'Where I’m from',
@@ -234,6 +240,9 @@ export const publicContent: Record<Locale, PublicCopy> = {
         unanswered: 'Pas encore de réponse',
         guestNote:
           'Cette histoire publique est ouverte aux visiteurs. Aucun total de popularité ou de Remember n’est affiché.',
+        showTranslated: 'Lire une traduction',
+        showOriginal: 'Lire l’original',
+        translated: 'Traduit. L’original reste accessible en un geste.',
         prompts: {
           introduction: 'Présentation',
           where_im_from: 'D’où je viens',
@@ -356,6 +365,9 @@ export const publicContent: Record<Locale, PublicCopy> = {
         unanswered: 'Noch nicht beantwortet',
         guestNote:
           'Diese öffentliche Geschichte ist für Gäste offen. Beliebtheits- oder Remember-Zahlen werden nicht gezeigt.',
+        showTranslated: 'Übersetzung lesen',
+        showOriginal: 'Original lesen',
+        translated: 'Übersetzt. Das Original ist nur eine Berührung entfernt.',
         prompts: {
           introduction: 'Vorstellung',
           where_im_from: 'Woher ich komme',

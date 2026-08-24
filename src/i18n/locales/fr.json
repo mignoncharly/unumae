@@ -111,7 +111,12 @@
     "action": "Se souvenir de ce Human",
     "remembered": "Mémorisé",
     "library": "Les Humans dont je me souviens",
+    "libraryBody": "Une collection privée des personnes et des histoires que vous avez choisi de garder.",
+    "private": "Vous seul pouvez voir ceci",
+    "openLibrary": "Ouvrir mes Humans mémorisés",
     "empty": "Vous ne vous souvenez encore de personne.",
+    "emptyBody": "Lorsqu’une histoire vous accompagne, mémorisez-la pour la retrouver ici.",
+    "exploreArchive": "Explorer l’Archive",
     "added": "Ajouté à votre bibliothèque",
     "removed": "Retiré de votre bibliothèque",
     "failed": "Impossible d'enregistrer. Veuillez réessayer.",
@@ -140,6 +145,7 @@
     "subtitle": "Toutes les personnes que le monde a rencontrées.",
     "today": "Aujourd'hui",
     "yesterday": "Hier",
+    "noYesterday": "Aucun Human n’a été publié hier.",
     "oneYearAgo": "Il y a un an",
     "randomHuman": "Human au hasard",
     "byCountry": "Par pays",
@@ -157,7 +163,9 @@
     "dayIsOver": "Sa journée était le {{date}}.",
     "explore": "Explorer les Archives humaines",
     "exploreHint": "Une mémoire grandissante de personnes, de lieux et de vies ordinaires.",
-    "recent": "Récemment présentés"
+    "recent": "Récemment présentés",
+    "loadOlder": "Charger les Humans précédents",
+    "end": "Vous avez atteint le début de l’Archive."
   },
   "settings": {
     "title": "Réglages",
@@ -252,7 +260,9 @@
     "birthYear": "Année de naissance",
     "birthYearHint": "Sert uniquement à vérifier que vous avez 16 ans ou plus.",
     "country": "Pays",
-    "countryHint": "Code pays à deux lettres, par exemple JP.",
+    "countryHint": "Utilisé pour préserver l’équilibre géographique de la sélection quotidienne.",
+    "countryPlaceholder": "Choisir un pays",
+    "countrySearch": "Rechercher un pays",
     "city": "Ville (facultatif)",
     "cityHint": "Vous pouvez laisser vide, et la masquer plus tard.",
     "bio": "Une ligne sur vous (facultatif)",
@@ -264,7 +274,11 @@
     "edit": "Modifier le profil",
     "editSubtitle": "Restez personnel et simple. Rien ici ne devient un signal de popularité.",
     "languages": "Langues",
-    "languagesHint": "Codes de langue séparés par des virgules, par exemple fr, en."
+    "languagesHint": "Choisissez toutes les langues que vous souhaitez utiliser.",
+    "languagesPlaceholder": "Choisir des langues",
+    "languagesSearch": "Rechercher des langues",
+    "languagesSelected_one": "{{count}} langue sélectionnée",
+    "languagesSelected_other": "{{count}} langues sélectionnées"
   },
   "onboarding": {
     "step": "Étape {{current}} sur {{total}}",
@@ -274,7 +288,12 @@
     "philosophyBody": "L’attention est donnée par le hasard, pas gagnée par des chiffres. Chacun a la même possibilité d’être vu.",
     "profileTitle": "Un jour, ce pourrait être vous.",
     "profileBody": "Dites-nous seulement ce qui est nécessaire au tirage quotidien équitable. Vous gardez le contrôle de ce qui devient public.",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "selectionTitle": "Souhaitez-vous participer à la sélection quotidienne ?",
+    "selectionBody": "Si vous dites oui, vous pourrez être choisi pour partager votre portrait pendant une journée. Vous pourrez changer d’avis à tout moment.",
+    "selectionYes": "Oui, incluez-moi",
+    "selectionNotNow": "Pas maintenant",
+    "selectionRequired": "Choisissez une option pour continuer."
   },
   "appearance": {
     "title": "Apparence",

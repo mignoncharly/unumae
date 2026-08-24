@@ -1432,6 +1432,17 @@ code {
   min-width: 0;
 }
 
+.archive-entry__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.archive-entry__link:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
 .archive-entry__media {
   position: relative;
   overflow: hidden;

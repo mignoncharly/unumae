@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { HumanPortrait } from '@/components/human/HumanPortrait';
+import { RememberAction } from '@/components/human/RememberAction';
 import { QuestionCard } from '@/components/questions/QuestionCard';
 import { ReportAction } from '@/components/shared/ReportAction';
 import { ShareButton } from '@/components/sharing/ShareButton';
@@ -17,10 +18,17 @@ import { signArchivePhoto } from '@/features/archive/api';
 import { useHuman } from '@/features/archive/hooks';
 import { useIsAuthenticated } from '@/features/auth/useSession';
 import { getPortraitElements } from '@/features/daily-human/api';
-import { useQuestions } from '@/features/daily-human/hooks';
+import {
+  usePortraitTranslations,
+  useQuestions,
+  useQuestionTranslations,
+  useRemember,
+  useRemembered,
+} from '@/features/daily-human/hooks';
 import { useReport } from '@/features/moderation/hooks';
 import type { PortraitElementKey } from '@/features/portraits/prompts';
 import { useBlockContentAuthor } from '@/features/privacy/hooks';
+import { isSupportedLocale } from '@/i18n';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 import { countryName, flagEmoji } from '@/utils/country';
@@ -38,9 +46,20 @@ export default function HumanScreen() {
   const { t, i18n } = useTranslation();
   const isAuthenticated = useIsAuthenticated();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const locale = isSupportedLocale(i18n.language) ? i18n.language : 'en';
 
   const { data: human, isLoading, isError, error, refetch } = useHuman(id);
   const { data: questions } = useQuestions(human?.is_removed ? undefined : id);
+  const { data: portraitTranslations = {} } = usePortraitTranslations(
+    human?.is_removed ? undefined : id,
+    locale
+  );
+  const { data: questionTranslations = {} } = useQuestionTranslations(
+    human?.is_removed ? undefined : id,
+    locale
+  );
+  const { data: remembered } = useRemembered(id);
+  const remember = useRemember(id);
   const report = useReport();
   const block = useBlockContentAuthor();
 
@@ -49,6 +68,7 @@ export default function HumanScreen() {
     { key: PortraitElementKey; answer: string }[]
   >([]);
   const [toast, setToast] = useState<string | null>(null);
+  const [showTranslation, setShowTranslation] = useState(false);
 
   function requireAccount(action: () => void) {
     if (!isAuthenticated) {
@@ -152,6 +172,13 @@ export default function HumanScreen() {
           humanNumber={human.human_number}
           name={human.display_name ?? ''}
           photoUri={photoUrl}
+          onToggleTranslation={() => setShowTranslation((value) => !value)}
+          showTranslation={showTranslation}
+          translationAvailable={
+            Object.keys(portraitTranslations).length > 0 ||
+            Object.keys(questionTranslations).length > 0
+          }
+          translations={portraitTranslations}
         />
 
         {questions && questions.length > 0 ? (
@@ -161,48 +188,83 @@ export default function HumanScreen() {
             <Text color="textTertiary" variant="footnote">
               {t('questions.title').toUpperCase()}
             </Text>
-            {questions.map((question) => (
-              <QuestionCard
-                answer={question.answer}
-                // Their day is over: the queue is closed, and voting on it now
-                // would mean nothing.
-                canVote={false}
-                hasVoted={question.has_voted ?? false}
-                key={question.id}
-                onVote={() => {}}
-                onReport={(reason) =>
-                  requireAccount(() => {
-                    report.mutate(['question', question.id, reason], {
-                      onError: () => setToast(t('report.failed')),
-                      onSuccess: () => setToast(t('report.submitted')),
-                    });
-                  })
-                }
-                onBlock={() =>
-                  requireAccount(() => {
-                    block.mutate(['question', question.id], {
-                      onError: () => setToast(t('report.blockFailed')),
-                      onSuccess: () => setToast(t('report.blocked')),
-                    });
-                  })
-                }
-                question={question.body}
-                votes={question.votes}
-              />
-            ))}
+            {questions.map((question) => {
+              const translated = questionTranslations[question.id];
+              const translatedBody = translated?.translated_body;
+              const translatedAnswer = translated?.translated_answer;
+              const isTranslated =
+                showTranslation && Boolean(translatedBody || translatedAnswer);
+              return (
+                <QuestionCard
+                  answer={
+                    showTranslation && translatedAnswer
+                      ? translatedAnswer
+                      : question.answer
+                  }
+                  // Their day is over: the queue is closed, and voting on it now
+                  // would mean nothing.
+                  canVote={false}
+                  hasVoted={question.has_voted ?? false}
+                  key={question.id}
+                  onVote={() => {}}
+                  onReport={(reason) =>
+                    requireAccount(() => {
+                      report.mutate(['question', question.id, reason], {
+                        onError: () => setToast(t('report.failed')),
+                        onSuccess: () => setToast(t('report.submitted')),
+                      });
+                    })
+                  }
+                  onBlock={() =>
+                    requireAccount(() => {
+                      block.mutate(['question', question.id], {
+                        onError: () => setToast(t('report.blockFailed')),
+                        onSuccess: () => setToast(t('report.blocked')),
+                      });
+                    })
+                  }
+                  question={
+                    showTranslation && translatedBody
+                      ? translatedBody
+                      : question.body
+                  }
+                  translated={isTranslated}
+                  votes={question.votes}
+                />
+              );
+            })}
           </View>
         ) : null}
 
         {/* An archived Human is as worth passing on as today's. Article 1.9 —
             the Archive is the product, not a backlog. */}
         <View style={{ marginTop: theme.spacing.xxl }}>
+          <RememberAction
+            label={remembered ? t('remember.remembered') : t('remember.action')}
+            supportingText={t('remember.meaning')}
+            remembered={Boolean(remembered)}
+            onPress={() =>
+              requireAccount(() => {
+                remember.mutate(!remembered);
+                setToast(
+                  remembered ? t('remember.removed') : t('remember.added')
+                );
+              })
+            }
+          />
+          <View style={{ height: theme.spacing.lg }} />
           <ShareButton
             human={{
               humanNumber: human.human_number,
               name: human.display_name ?? '',
               countryName: countryName(human.country_code ?? '', i18n.language),
               flag: flagEmoji(human.country_code ?? ''),
-              quote: elements[0]?.answer ?? null,
+              quote:
+                (showTranslation
+                  ? portraitTranslations[elements[0]?.key ?? '']
+                  : null) ??
+                elements[0]?.answer ??
+                null,
               drawId: human.draw_id,
               isToday: false,
             }}

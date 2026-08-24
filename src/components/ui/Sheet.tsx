@@ -50,6 +50,7 @@ export function Sheet({ visible, onClose, title, children }: SheetProps) {
           padding: theme.spacing.xl,
           paddingBottom: insets.bottom + theme.spacing.xl,
           gap: theme.spacing.lg,
+          maxHeight: '82%',
         }}
       >
         <View

@@ -4,6 +4,7 @@ import type {
   AnniversaryRow,
   ArchiveEntryRow,
   ArchiveHumanRow,
+  RememberedHumanRow,
 } from '@/lib/supabase/types';
 
 /**
@@ -20,22 +21,43 @@ export interface ArchiveFilters {
   year?: number | null;
 }
 
-export async function getArchive(
+export interface ArchiveCursor {
+  selectionDate: string;
+  drawId: string;
+}
+
+export interface RememberedCursor {
+  rememberedAt: string;
+  drawId: string;
+}
+
+export type ArchiveDisplayEntry = ArchiveEntryRow & {
+  photo_url: string | null;
+};
+
+export type RememberedDisplayEntry = RememberedHumanRow & {
+  photo_url: string | null;
+};
+
+export const ARCHIVE_PAGE_SIZE = 18;
+
+export async function getArchivePage(
   filters: ArchiveFilters = {},
-  limit = 30,
-  offset = 0
-): Promise<ArchiveEntryRow[]> {
-  const { data, error } = await getSupabase().rpc('get_archive', {
+  cursor?: ArchiveCursor,
+  limit = ARCHIVE_PAGE_SIZE
+): Promise<ArchiveDisplayEntry[]> {
+  const { data, error } = await getSupabase().rpc('get_archive_page', {
     filter_country: filters.country ?? null,
     filter_year: filters.year ?? null,
     page_limit: limit,
-    page_offset: offset,
+    before_date: cursor?.selectionDate ?? null,
+    before_draw: cursor?.drawId ?? null,
   });
 
   if (error) {
     throw new AppError('network', 'common.error', { cause: error });
   }
-  return data ?? [];
+  return attachPhotoUrls(data ?? []);
 }
 
 export async function getHuman(
@@ -53,7 +75,7 @@ export async function getHuman(
 
 export async function getRandomHuman(
   country?: string | null
-): Promise<ArchiveEntryRow | null> {
+): Promise<ArchiveDisplayEntry | null> {
   const { data, error } = await getSupabase().rpc('get_random_human', {
     filter_country: country ?? null,
   });
@@ -61,17 +83,42 @@ export async function getRandomHuman(
   if (error) {
     throw new AppError('network', 'common.error', { cause: error });
   }
-  return data?.[0] ?? null;
+  return (await attachPhotoUrls(data ?? []))[0] ?? null;
 }
 
 /** One year ago today, and five, ten, twenty-five. Empty until it is true. */
-export async function getAnniversaries(): Promise<AnniversaryRow[]> {
+export async function getAnniversaries(): Promise<
+  (AnniversaryRow & { photo_url: string | null })[]
+> {
   const { data, error } = await getSupabase().rpc('get_anniversaries');
 
   if (error) {
     throw new AppError('network', 'common.error', { cause: error });
   }
-  return data ?? [];
+  return attachPhotoUrls(data ?? []);
+}
+
+export async function getYesterday(): Promise<ArchiveDisplayEntry | null> {
+  const { data, error } = await getSupabase().rpc('get_yesterdays_human');
+  if (error) {
+    throw new AppError('network', 'common.error', { cause: error });
+  }
+  return (await attachPhotoUrls(data ?? []))[0] ?? null;
+}
+
+export async function getRememberedHumans(
+  cursor?: RememberedCursor,
+  limit = ARCHIVE_PAGE_SIZE
+): Promise<RememberedDisplayEntry[]> {
+  const { data, error } = await getSupabase().rpc('get_remembered_humans', {
+    page_limit: limit,
+    before_remembered_at: cursor?.rememberedAt ?? null,
+    before_draw: cursor?.drawId ?? null,
+  });
+  if (error) {
+    throw new AppError('network', 'common.error', { cause: error });
+  }
+  return attachPhotoUrls(data ?? []);
 }
 
 export async function getArchiveCountries() {
@@ -108,4 +155,41 @@ export async function signArchivePhoto(
     .createSignedUrl(path, 3600);
 
   return error ? null : (data?.signedUrl ?? null);
+}
+
+/** One storage round-trip per page, not one per portrait card. */
+export async function signArchivePhotos(
+  paths: (string | null)[]
+): Promise<Map<string, string>> {
+  const unique = [
+    ...new Set(paths.filter((path): path is string => Boolean(path))),
+  ];
+  if (unique.length === 0) {
+    return new Map();
+  }
+
+  const { data, error } = await getSupabase()
+    .storage.from('portraits')
+    .createSignedUrls(unique, 3600);
+  if (error || !data) {
+    return new Map();
+  }
+
+  const urls = new Map<string, string>();
+  data.forEach((item) => {
+    if (item.path && item.signedUrl) urls.set(item.path, item.signedUrl);
+  });
+  return urls;
+}
+
+async function attachPhotoUrls<T extends { photo_path: string | null }>(
+  entries: T[]
+): Promise<(T & { photo_url: string | null })[]> {
+  const urls = await signArchivePhotos(
+    entries.map((entry) => entry.photo_path)
+  );
+  return entries.map((entry) => ({
+    ...entry,
+    photo_url: entry.photo_path ? (urls.get(entry.photo_path) ?? null) : null,
+  }));
 }

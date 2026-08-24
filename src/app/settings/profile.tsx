@@ -5,6 +5,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import {
+  CountryPicker,
+  LanguagesPicker,
+} from '@/components/profiles/ProfilePickers';
 import { Button } from '@/components/ui/Button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Screen } from '@/components/ui/Screen';
@@ -103,13 +107,11 @@ export default function ProfileScreen() {
               control={control}
               name="country_code"
               render={({ field }) => (
-                <TextField
-                  autoCapitalize="characters"
+                <CountryPicker
                   error={errors.country_code?.message}
                   hint={t('profile.countryHint')}
                   label={t('profile.country')}
-                  maxLength={2}
-                  onChangeText={field.onChange}
+                  onChange={field.onChange}
                   value={field.value ?? ''}
                 />
               )}
@@ -146,19 +148,12 @@ export default function ProfileScreen() {
               control={control}
               name="languages"
               render={({ field }) => (
-                <TextField
+                <LanguagesPicker
                   error={errors.languages?.message}
                   hint={t('profile.languagesHint')}
                   label={t('profile.languages')}
-                  onChangeText={(value) =>
-                    field.onChange(
-                      value
-                        .split(',')
-                        .map((item) => item.trim())
-                        .filter(Boolean)
-                    )
-                  }
-                  value={field.value?.join(', ') ?? ''}
+                  onChange={field.onChange}
+                  value={field.value ?? []}
                 />
               )}
             />

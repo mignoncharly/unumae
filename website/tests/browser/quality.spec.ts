@@ -15,10 +15,13 @@ const pages = [
 const publicRoutes = locales.flatMap((locale) =>
   pages.map((page) => locale + page || '/')
 );
+const sharedHuman = '/human/00000000-0000-4000-8000-000000000001';
+publicRoutes.push(...locales.map((locale) => `${locale}${sharedHuman}`));
 const representativeRoutes = [
   '/',
   '/today',
   '/archive',
+  sharedHuman,
   '/how-selection-works',
   '/privacy',
 ];

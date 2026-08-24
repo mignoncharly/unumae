@@ -6,6 +6,8 @@ import { getCycleDate } from '@/utils/cycle';
 import {
   askQuestion,
   doIRemember,
+  getPortraitTranslations,
+  getQuestionTranslations,
   getQuestions,
   getTodaysHuman,
   setRemembered,
@@ -18,6 +20,10 @@ export const todayKeys = {
     ['questions', drawId, viewer] as const,
   remembered: (drawId: string, userId: string) =>
     ['remembered', drawId, userId] as const,
+  portraitTranslations: (drawId: string, locale: string, viewer: string) =>
+    ['portrait-translations', drawId, locale, viewer] as const,
+  questionTranslations: (drawId: string, locale: string, viewer: string) =>
+    ['question-translations', drawId, locale, viewer] as const,
 };
 
 function useViewer() {
@@ -50,6 +56,40 @@ export function useQuestions(drawId: string | undefined) {
     queryFn: () => getQuestions(drawId!),
     enabled: Boolean(drawId) && viewer.ready,
     staleTime: 30 * 1000,
+  });
+}
+
+export function usePortraitTranslations(
+  drawId: string | undefined,
+  locale: string
+) {
+  const viewer = useViewer();
+  return useQuery({
+    queryKey: todayKeys.portraitTranslations(
+      drawId ?? 'none',
+      locale,
+      viewer.key
+    ),
+    queryFn: () => getPortraitTranslations(drawId!, locale),
+    enabled: Boolean(drawId) && viewer.ready,
+    staleTime: 60 * 60 * 1000,
+  });
+}
+
+export function useQuestionTranslations(
+  drawId: string | undefined,
+  locale: string
+) {
+  const viewer = useViewer();
+  return useQuery({
+    queryKey: todayKeys.questionTranslations(
+      drawId ?? 'none',
+      locale,
+      viewer.key
+    ),
+    queryFn: () => getQuestionTranslations(drawId!, locale),
+    enabled: Boolean(drawId) && viewer.ready,
+    staleTime: 60 * 60 * 1000,
   });
 }
 
@@ -110,6 +150,9 @@ export function useRemember(drawId: string | undefined) {
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: todayKeys.remembered(drawId ?? 'none', userId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ['remembered-humans', userId],
       });
     },
   });

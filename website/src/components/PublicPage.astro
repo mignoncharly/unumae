@@ -127,6 +127,15 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
               </div>
             </div>
 
+            <button
+              class="public-button public-translation-toggle"
+              type="button"
+              data-translation-toggle
+              hidden
+            >
+              {copy.today.live.showTranslated}
+            </button>
+
             <section class="today-portrait" aria-labelledby="portrait-title">
               <p class="eyebrow">01</p>
               <h2 id="portrait-title">{copy.today.live.portraitLabel}</h2>

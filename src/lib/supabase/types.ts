@@ -56,6 +56,8 @@ export type ProfileInsert = {
   languages?: string[] | undefined;
   avatar_path?: string | null | undefined;
   bio_short?: string | null | undefined;
+  wants_selection: boolean;
+  locale: string;
 };
 
 /** Columns the `authenticated` role may UPDATE. `birth_year` is not one. */
@@ -222,6 +224,16 @@ export type ArchiveHumanRow = ArchiveEntryRow & {
 
 export type AnniversaryRow = Omit<ArchiveEntryRow, 'city'> & {
   years_ago: number;
+};
+
+export type RememberedHumanRow = ArchiveEntryRow & {
+  remembered_at: string;
+};
+
+export type QuestionTranslationRow = {
+  question_id: string;
+  translated_body: string | null;
+  translated_answer: string | null;
 };
 
 export type ReportTarget = 'portrait' | 'question' | 'profile';
@@ -481,6 +493,28 @@ export type Database = {
         };
         Returns: ArchiveEntryRow[];
       };
+      get_archive_page: {
+        Args: {
+          filter_country?: string | null;
+          filter_year?: number | null;
+          page_limit?: number;
+          before_date?: string | null;
+          before_draw?: string | null;
+        };
+        Returns: ArchiveEntryRow[];
+      };
+      get_yesterdays_human: {
+        Args: Record<PropertyKey, never>;
+        Returns: ArchiveEntryRow[];
+      };
+      get_remembered_humans: {
+        Args: {
+          page_limit?: number;
+          before_remembered_at?: string | null;
+          before_draw?: string | null;
+        };
+        Returns: RememberedHumanRow[];
+      };
       get_human: {
         Args: { target_draw: string };
         Returns: ArchiveHumanRow[];
@@ -660,6 +694,10 @@ export type Database = {
           element_key: PortraitElementKeyEnum;
           translated_text: string;
         }[];
+      };
+      get_question_translations: {
+        Args: { target_draw: string; target_locale: string };
+        Returns: QuestionTranslationRow[];
       };
       /**
        * Write-only for clients. No policy lets anybody read

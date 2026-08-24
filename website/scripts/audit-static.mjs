@@ -1,7 +1,9 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const dist = new URL('../dist/', import.meta.url);
+const distPath = fileURLToPath(dist);
 const sourceRoot = new URL('../src/', import.meta.url);
 const origin = 'https://quality.unumae.invalid';
 const locales = ['en', 'fr', 'de'];
@@ -109,9 +111,7 @@ for (const route of publicRoutes) {
   JSON.parse(jsonLd[1]);
 }
 
-const htmlFiles = walk(dist.pathname).filter(
-  (path) => extname(path) === '.html'
-);
+const htmlFiles = walk(distPath).filter((path) => extname(path) === '.html');
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
   for (const match of html.matchAll(/\b(?:href|src)="([^"]+)"/g)) {
@@ -128,7 +128,7 @@ for (const file of htmlFiles) {
 
     const resolved = new URL(
       value,
-      `https://audit.invalid/${relative(dist.pathname, file)}`
+      `https://audit.invalid/${relative(distPath, file)}`
     );
     const pathname = decodeURIComponent(resolved.pathname);
     if (pathname.startsWith('/api/')) {
@@ -143,7 +143,7 @@ for (const file of htmlFiles) {
           ...(cleanPath ? [new URL(`${cleanPath}.html`, dist)] : []),
         ];
     if (!candidates.some((candidate) => existsSync(candidate))) {
-      fail(`${relative(dist.pathname, file)}: broken local reference ${value}`);
+      fail(`${relative(distPath, file)}: broken local reference ${value}`);
     }
   }
 }
@@ -235,7 +235,7 @@ for (const route of publicRoutes) {
   }
 }
 
-const transferFiles = walk(dist.pathname).filter((path) =>
+const transferFiles = walk(distPath).filter((path) =>
   /\.(?:html|css|js|woff2)$/.test(path)
 );
 const transferBytes = transferFiles.reduce(

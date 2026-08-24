@@ -1,15 +1,20 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 import { useSession } from '@/features/auth/useSession';
 
 import {
   getAnniversaries,
-  getArchive,
+  ARCHIVE_PAGE_SIZE,
+  getArchivePage,
   getArchiveCountries,
   getArchiveYears,
   getHuman,
+  getRememberedHumans,
   getRandomHuman,
+  getYesterday,
+  type ArchiveCursor,
   type ArchiveFilters,
+  type RememberedCursor,
 } from './api';
 
 export const archiveKeys = {
@@ -20,6 +25,8 @@ export const archiveKeys = {
   anniversaries: (viewer: string) => ['anniversaries', viewer] as const,
   countries: (viewer: string) => ['archive-countries', viewer] as const,
   years: (viewer: string) => ['archive-years', viewer] as const,
+  yesterday: (viewer: string) => ['archive-yesterday', viewer] as const,
+  remembered: (userId: string) => ['remembered-humans', userId] as const,
 };
 
 function useViewer() {
@@ -39,11 +46,48 @@ const ARCHIVE_STALE_TIME = 10 * 60 * 1000;
 
 export function useArchive(filters: ArchiveFilters = {}) {
   const viewer = useViewer();
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: archiveKeys.list(filters, viewer.key),
-    queryFn: () => getArchive(filters),
+    queryFn: ({ pageParam }) => getArchivePage(filters, pageParam),
+    initialPageParam: undefined as ArchiveCursor | undefined,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.length < ARCHIVE_PAGE_SIZE) return undefined;
+      const last = lastPage.at(-1);
+      return last
+        ? { selectionDate: last.selection_date, drawId: last.draw_id }
+        : undefined;
+    },
     staleTime: ARCHIVE_STALE_TIME,
     enabled: viewer.ready,
+  });
+}
+
+export function useYesterday() {
+  const viewer = useViewer();
+  return useQuery({
+    queryKey: archiveKeys.yesterday(viewer.key),
+    queryFn: getYesterday,
+    staleTime: ARCHIVE_STALE_TIME,
+    enabled: viewer.ready,
+  });
+}
+
+export function useRememberedHumans(enabled = true) {
+  const session = useSession();
+  const userId = session.session?.user.id ?? 'anonymous';
+  return useInfiniteQuery({
+    queryKey: archiveKeys.remembered(userId),
+    queryFn: ({ pageParam }) => getRememberedHumans(pageParam),
+    initialPageParam: undefined as RememberedCursor | undefined,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.length < ARCHIVE_PAGE_SIZE) return undefined;
+      const last = lastPage.at(-1);
+      return last
+        ? { rememberedAt: last.remembered_at, drawId: last.draw_id }
+        : undefined;
+    },
+    staleTime: ARCHIVE_STALE_TIME,
+    enabled: enabled && session.status === 'authenticated',
   });
 }
 

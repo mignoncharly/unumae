@@ -32,6 +32,13 @@ interface PendingRow {
   target_locale: Locale;
 }
 
+interface PendingQuestionRow {
+  question_id: string;
+  field: 'body' | 'answer';
+  original_text: string;
+  target_locale: Locale;
+}
+
 const ENGINE = 'deepl';
 
 /** DeepL's target codes differ from ours for English. */
@@ -144,6 +151,17 @@ Deno.serve(async (request: Request): Promise<Response> => {
   }
 
   const pending = (data ?? []) as PendingRow[];
+  const { data: questionData, error: questionError } = await supabase.rpc(
+    'pending_question_translations',
+    { batch_size: 50 }
+  );
+
+  if (questionError) {
+    await finish(false, 'Question translation queue could not be read');
+    return jsonResponse({ error: questionError.message }, 500);
+  }
+
+  const pendingQuestions = (questionData ?? []) as PendingQuestionRow[];
   let translated = 0;
   let skipped = 0;
   let failed = 0;
@@ -191,12 +209,63 @@ Deno.serve(async (request: Request): Promise<Response> => {
     translated += 1;
   }
 
+  for (const row of pendingQuestions) {
+    const result = await translate(
+      deeplKey,
+      row.original_text,
+      row.target_locale
+    );
+
+    if (!result) {
+      failed += 1;
+      continue;
+    }
+
+    if (
+      result.detected_source_language.slice(0, 2).toLowerCase() ===
+      row.target_locale
+    ) {
+      const { error: sameLanguageError } = await supabase.rpc(
+        'record_same_question_language',
+        {
+          target_question: row.question_id,
+          target_field: row.field,
+          target_locale: row.target_locale,
+        }
+      );
+      if (sameLanguageError) {
+        failed += 1;
+      } else {
+        skipped += 1;
+      }
+      continue;
+    }
+
+    const { error: writeError } = await supabase.rpc(
+      'record_question_translation',
+      {
+        target_question: row.question_id,
+        target_field: row.field,
+        target_locale: row.target_locale,
+        text_value: result.text,
+        translation_engine: ENGINE,
+      }
+    );
+
+    if (writeError) {
+      failed += 1;
+    } else {
+      translated += 1;
+    }
+  }
+
   const succeeded = failed === 0;
-  const detail = `${translated} translated, ${skipped} already in target language, ${failed} failed, ${pending.length} queued`;
+  const queued = pending.length + pendingQuestions.length;
+  const detail = `${translated} translated, ${skipped} already in target language, ${failed} failed, ${queued} queued`;
   await finish(succeeded, detail);
 
   return jsonResponse(
-    { configured: true, pending: pending.length, translated, skipped, failed },
+    { configured: true, pending: queued, translated, skipped, failed },
     succeeded ? 200 : 502
   );
 });

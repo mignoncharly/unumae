@@ -24,6 +24,8 @@ import { useIsAuthenticated } from '@/features/auth/useSession';
 import {
   useAskQuestion,
   useQuestions,
+  usePortraitTranslations,
+  useQuestionTranslations,
   useRemember,
   useRemembered,
   useTodaysHuman,
@@ -31,6 +33,7 @@ import {
 } from '@/features/daily-human/hooks';
 import { useReport } from '@/features/moderation/hooks';
 import { useBlockContentAuthor } from '@/features/privacy/hooks';
+import { isSupportedLocale } from '@/i18n';
 import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
@@ -53,8 +56,17 @@ export default function TodayScreen() {
 
   const { data: today, isLoading, isError, error, refetch } = useTodaysHuman();
   const drawId = today?.human.draw_id;
+  const locale = isSupportedLocale(i18n.language) ? i18n.language : 'en';
 
   const { data: questions } = useQuestions(drawId);
+  const { data: portraitTranslations = {} } = usePortraitTranslations(
+    drawId,
+    locale
+  );
+  const { data: questionTranslations = {} } = useQuestionTranslations(
+    drawId,
+    locale
+  );
   const { data: remembered } = useRemembered(drawId);
   const ask = useAskQuestion(drawId);
   const remember = useRemember(drawId);
@@ -63,6 +75,7 @@ export default function TodayScreen() {
   const block = useBlockContentAuthor();
 
   const [askOpen, setAskOpen] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -172,6 +185,13 @@ export default function TodayScreen() {
           humanNumber={today.human.human_number ?? 0}
           name={today.human.display_name}
           photoUri={today.photoUrl}
+          onToggleTranslation={() => setShowTranslation((value) => !value)}
+          showTranslation={showTranslation}
+          translationAvailable={
+            Object.keys(portraitTranslations).length > 0 ||
+            Object.keys(questionTranslations).length > 0
+          }
+          translations={portraitTranslations}
           cycleDate={today.human.selection_date}
           showTimer
         />
@@ -191,44 +211,60 @@ export default function TodayScreen() {
           />
 
           {questions && questions.length > 0 ? (
-            questions.map((question) => (
-              <QuestionCard
-                answer={question.answer}
-                canVote
-                hasVoted={question.has_voted ?? false}
-                key={question.id}
-                onVote={() =>
-                  requireAccount(() => {
-                    // Pressing again removes your own vote. That is the only
-                    // other thing a person can do — there is no opposite.
-                    const voted = !(question.has_voted ?? false);
-                    vote.mutate({ questionId: question.id, voted });
-                    track('question_voted');
-                    if (voted) {
-                      setToast(t('questions.voted'));
-                    }
-                  })
-                }
-                onReport={(reason) =>
-                  requireAccount(() => {
-                    report.mutate(['question', question.id, reason], {
-                      onError: () => setToast(t('report.failed')),
-                      onSuccess: () => setToast(t('report.submitted')),
-                    });
-                  })
-                }
-                onBlock={() =>
-                  requireAccount(() => {
-                    block.mutate(['question', question.id], {
-                      onError: () => setToast(t('report.blockFailed')),
-                      onSuccess: () => setToast(t('report.blocked')),
-                    });
-                  })
-                }
-                question={question.body}
-                votes={question.votes}
-              />
-            ))
+            questions.map((question) => {
+              const translated = questionTranslations[question.id];
+              const translatedBody = translated?.translated_body;
+              const translatedAnswer = translated?.translated_answer;
+              const isTranslated =
+                showTranslation && Boolean(translatedBody || translatedAnswer);
+              return (
+                <QuestionCard
+                  answer={
+                    showTranslation && translatedAnswer
+                      ? translatedAnswer
+                      : question.answer
+                  }
+                  canVote
+                  hasVoted={question.has_voted ?? false}
+                  key={question.id}
+                  onVote={() =>
+                    requireAccount(() => {
+                      // Pressing again removes your own vote. That is the only
+                      // other thing a person can do — there is no opposite.
+                      const voted = !(question.has_voted ?? false);
+                      vote.mutate({ questionId: question.id, voted });
+                      track('question_voted');
+                      if (voted) {
+                        setToast(t('questions.voted'));
+                      }
+                    })
+                  }
+                  onReport={(reason) =>
+                    requireAccount(() => {
+                      report.mutate(['question', question.id, reason], {
+                        onError: () => setToast(t('report.failed')),
+                        onSuccess: () => setToast(t('report.submitted')),
+                      });
+                    })
+                  }
+                  onBlock={() =>
+                    requireAccount(() => {
+                      block.mutate(['question', question.id], {
+                        onError: () => setToast(t('report.blockFailed')),
+                        onSuccess: () => setToast(t('report.blocked')),
+                      });
+                    })
+                  }
+                  question={
+                    showTranslation && translatedBody
+                      ? translatedBody
+                      : question.body
+                  }
+                  translated={isTranslated}
+                  votes={question.votes}
+                />
+              );
+            })
           ) : (
             <EmptyState
               action={{
@@ -272,7 +308,12 @@ export default function TodayScreen() {
               name: today.human.display_name,
               countryName: countryName(today.human.country_code, i18n.language),
               flag: flagEmoji(today.human.country_code),
-              quote: today.elements[0]?.answer ?? null,
+              quote:
+                (showTranslation
+                  ? portraitTranslations[today.elements[0]?.key ?? '']
+                  : null) ??
+                today.elements[0]?.answer ??
+                null,
               drawId: today.human.draw_id,
               isToday: true,
             }}

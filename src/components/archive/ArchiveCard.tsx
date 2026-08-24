@@ -1,12 +1,10 @@
 import Feather from '@expo/vector-icons/Feather';
 import { Image } from 'expo-image';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { CountryBadge } from '@/components/human/CountryBadge';
 import { Text } from '@/components/ui/Text';
-import { signArchivePhoto } from '@/features/archive/api';
 import { useTheme } from '@/theme';
 import { formatHumanNumber } from '@/utils/cycle';
 
@@ -15,7 +13,7 @@ interface ArchiveCardProps {
   selectionDate: string;
   displayName: string | null;
   countryCode: string | null;
-  photoPath: string | null;
+  photoUrl: string | null;
   isRemoved: boolean;
   onPress: () => void;
 }
@@ -32,26 +30,12 @@ export function ArchiveCard({
   selectionDate,
   displayName,
   countryCode,
-  photoPath,
+  photoUrl,
   isRemoved,
   onPress,
 }: ArchiveCardProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    void signArchivePhoto(photoPath).then((url) => {
-      if (active) {
-        setPhotoUrl(url);
-      }
-    });
-    return () => {
-      active = false;
-    };
-  }, [photoPath]);
-
   /*
    * A removed Human is still an entry. The number and the date remain so the
    * sequence is unbroken, and the person is gone (Article 8.6). It is stated

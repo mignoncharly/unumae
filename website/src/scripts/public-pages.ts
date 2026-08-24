@@ -102,15 +102,23 @@ if (root) {
     try {
       const client = createClient();
       const human = await client.getToday();
-      if (!human) {
+      if (!human || human.is_removed || !human.display_name) {
         showState('quiet');
         return;
       }
 
-      const [portrait, questions, photoUrl] = await Promise.all([
+      const [
+        portrait,
+        questions,
+        photoUrl,
+        portraitTranslations,
+        questionTranslations,
+      ] = await Promise.all([
         client.getPortrait(human.draw_id),
         client.getQuestions(human.draw_id),
         client.signPhoto(human.photo_path),
+        client.getPortraitTranslations(human.draw_id, locale),
+        client.getQuestionTranslations(human.draw_id, locale),
       ]);
 
       setText('[data-human-number]', formatHumanNumber(human.human_number));
@@ -153,36 +161,65 @@ if (root) {
       }
 
       const portraitList = query<HTMLDListElement>('[data-portrait-list]');
-      portraitList.replaceChildren();
-      portrait.forEach((element) => {
-        const group = document.createElement('div');
-        const term = document.createElement('dt');
-        const answer = document.createElement('dd');
-        term.textContent =
-          copy.today.live.prompts[element.element_key as PortraitKey];
-        answer.textContent = element.answer;
-        group.append(term, answer);
-        portraitList.append(group);
-      });
-
       const questionList = query<HTMLOListElement>('[data-question-list]');
       const noQuestions = query<HTMLElement>('[data-no-questions]');
-      questionList.replaceChildren();
       noQuestions.hidden = questions.length > 0;
-      questions.forEach((question) => {
-        const item = document.createElement('li');
-        const body = document.createElement('p');
-        const answer = document.createElement('p');
-        body.className = 'public-question__body';
-        answer.className = 'public-question__answer';
-        body.textContent = question.body;
-        answer.textContent = question.answer ?? copy.today.live.unanswered;
-        if (!question.answer) {
-          answer.classList.add('public-question__answer--pending');
-        }
-        item.append(body, answer);
-        questionList.append(item);
+      const translationToggle = query<HTMLButtonElement>(
+        '[data-translation-toggle]'
+      );
+      let translatedMode = false;
+      translationToggle.hidden = !(
+        Object.keys(portraitTranslations).length > 0 ||
+        Object.keys(questionTranslations).length > 0
+      );
+
+      const renderStories = () => {
+        portraitList.replaceChildren();
+        portrait.forEach((element) => {
+          const group = document.createElement('div');
+          const term = document.createElement('dt');
+          const answer = document.createElement('dd');
+          term.textContent =
+            copy.today.live.prompts[element.element_key as PortraitKey];
+          answer.textContent =
+            (translatedMode
+              ? portraitTranslations[element.element_key]
+              : null) ?? element.answer;
+          group.append(term, answer);
+          portraitList.append(group);
+        });
+
+        questionList.replaceChildren();
+        questions.forEach((question) => {
+          const translated = questionTranslations[question.id];
+          const item = document.createElement('li');
+          const body = document.createElement('p');
+          const answer = document.createElement('p');
+          body.className = 'public-question__body';
+          answer.className = 'public-question__answer';
+          body.textContent =
+            (translatedMode ? translated?.translated_body : null) ??
+            question.body;
+          answer.textContent =
+            (translatedMode ? translated?.translated_answer : null) ??
+            question.answer ??
+            copy.today.live.unanswered;
+          if (!question.answer) {
+            answer.classList.add('public-question__answer--pending');
+          }
+          item.append(body, answer);
+          questionList.append(item);
+        });
+        translationToggle.textContent = translatedMode
+          ? copy.today.live.showOriginal
+          : copy.today.live.showTranslated;
+        translationToggle.setAttribute('aria-pressed', String(translatedMode));
+      };
+      translationToggle.addEventListener('click', () => {
+        translatedMode = !translatedMode;
+        renderStories();
       });
+      renderStories();
 
       showState('live');
       startCountdown();
@@ -193,7 +230,8 @@ if (root) {
 
   const createArchiveEntry = (
     entry: ArchiveEntry,
-    client: PublicDataClient
+    client: PublicDataClient,
+    photoUrl?: string | null
   ): HTMLElement => {
     const item = document.createElement('li');
     item.className = 'archive-entry';
@@ -232,7 +270,18 @@ if (root) {
     fallbackLabel.textContent = copy.archive.entry.editorialFallback;
     media.append(fallbackImage, fallbackLabel);
 
-    if (entry.photo_path) {
+    if (photoUrl) {
+      const image = document.createElement('img');
+      image.src = photoUrl;
+      image.alt = '';
+      image.width = 320;
+      image.height = 400;
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      image.onload = () => {
+        if (media.isConnected) media.replaceChildren(image);
+      };
+    } else if (entry.photo_path) {
       void client.signPhoto(entry.photo_path).then((photoUrl) => {
         if (!photoUrl || !media.isConnected) {
           return;
@@ -262,7 +311,12 @@ if (root) {
       .filter(Boolean)
       .join(' · ');
     details.append(meta, title, location);
-    item.append(media, details);
+    const link = document.createElement('a');
+    const prefix = locale === 'en' ? '' : `/${locale}`;
+    link.className = 'archive-entry__link';
+    link.href = `${prefix}/human/${entry.draw_id}`;
+    link.append(media, details);
+    item.append(link);
     return item;
   };
 
@@ -272,7 +326,7 @@ if (root) {
     try {
       const client = createClient();
       const limit = 12;
-      let offset = 0;
+      let cursor: { selectionDate: string; drawId: string } | null = null;
       let country: string | null = null;
       let year: number | null = null;
       let generation = 0;
@@ -285,13 +339,22 @@ if (root) {
       const end = query<HTMLElement>('[data-archive-end]');
       const randomResult = query<HTMLElement>('[data-random-result]');
 
-      const renderEntries = (entries: ArchiveEntry[], append: boolean) => {
+      const renderEntries = async (
+        entries: ArchiveEntry[],
+        append: boolean
+      ) => {
         if (!append) {
           list.replaceChildren();
         }
-        entries.forEach((entry) =>
-          list.append(createArchiveEntry(entry, client))
+        const photos = await client.signPhotos(
+          entries.map((entry) => entry.photo_path)
         );
+        entries.forEach((entry) => {
+          const photoUrl = entry.photo_path
+            ? (photos.get(entry.photo_path) ?? null)
+            : null;
+          list.append(createArchiveEntry(entry, client, photoUrl));
+        });
         loadMore.hidden = entries.length < limit;
         end.hidden = entries.length === limit || list.children.length === 0;
       };
@@ -299,17 +362,12 @@ if (root) {
       const fetchPage = async (append = false) => {
         const requestGeneration = ++generation;
         if (!append) {
-          offset = 0;
+          cursor = null;
           showState('loading');
         }
 
         try {
-          const entries = await client.getArchive(
-            country,
-            year,
-            limit,
-            append ? offset : 0
-          );
+          const entries = await client.getArchive(country, year, limit, cursor);
           if (requestGeneration !== generation) {
             return;
           }
@@ -319,8 +377,11 @@ if (root) {
             return;
           }
 
-          renderEntries(entries, append);
-          offset = (append ? offset : 0) + entries.length;
+          await renderEntries(entries, append);
+          const last = entries.at(-1);
+          cursor = last
+            ? { selectionDate: last.selection_date, drawId: last.draw_id }
+            : cursor;
           showState('ready');
         } catch {
           showState('error');

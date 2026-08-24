@@ -1,0 +1,143 @@
+---
+import PublicState from './ui/PublicState.astro';
+import { publicContent } from '../content/public';
+import type { Locale } from '../content/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = publicContent[locale];
+const dataMode = import.meta.env.PUBLIC_DATA_MODE === 'live' ? 'live' : 'off';
+const supabaseUrl =
+  dataMode === 'live' ? (import.meta.env.PUBLIC_SUPABASE_URL ?? '') : '';
+const supabaseAnonKey =
+  dataMode === 'live' ? (import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '') : '';
+
+if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
+  throw new Error(
+    'PUBLIC_DATA_MODE=live requires PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY.'
+  );
+}
+---
+
+<BaseLayout
+  locale={locale}
+  page="archive"
+  title={`${copy.archive.hero.title} · Unumae`}
+  description={copy.archive.hero.introduction}
+  omitCanonicalLinks
+>
+  <main
+    id="main-content"
+    tabindex="-1"
+    class="public-main human-public-page"
+    data-public-human
+    data-data-mode={dataMode}
+    data-supabase-url={supabaseUrl}
+    data-supabase-anon-key={supabaseAnonKey}
+  >
+    <header class="public-hero">
+      <p class="eyebrow">{copy.archive.hero.eyebrow}</p>
+      <h1>{copy.archive.hero.title}</h1>
+      <p class="introduction">{copy.archive.hero.introduction}</p>
+    </header>
+
+    <div class="public-stage">
+      <PublicState
+        state="launch"
+        content={copy.archive.launch}
+        hidden={dataMode === 'live'}
+      />
+      <PublicState
+        state="loading"
+        content={copy.archive.loading}
+        hidden={dataMode !== 'live'}
+      />
+      <PublicState state="not-found" content={copy.archive.noMatch} />
+      <PublicState state="error" content={copy.archive.error}>
+        <button class="public-button" type="button" data-retry>
+          {copy.archive.error.retry}
+        </button>
+      </PublicState>
+
+      <article class="today-human" data-state="live" hidden aria-live="polite">
+        <header class="today-human__header">
+          <div>
+            <p class="eyebrow">{copy.archive.hero.eyebrow}</p>
+            <p class="today-human__number">
+              <span>{copy.today.live.humanLabel}</span>
+              <strong data-human-number>—</strong>
+            </p>
+          </div>
+          <p data-human-date></p>
+        </header>
+
+        <div class="today-human__identity">
+          <div class="today-human__media">
+            <img
+              data-human-photo
+              hidden
+              src="/icons/icon-32.png"
+              width="640"
+              height="800"
+              decoding="async"
+              alt=""
+            />
+            <div class="public-photo-placeholder" data-photo-placeholder>
+              <img
+                src="/editorial/today-empty-chair.webp"
+                width="960"
+                height="1200"
+                loading="lazy"
+                decoding="async"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="editorial-fallback-label">
+                {copy.archive.entry.editorialFallback}
+              </span>
+            </div>
+          </div>
+          <div class="today-human__nameplate">
+            <h2 data-human-name>{copy.archive.hero.title}</h2>
+            <p data-human-location></p>
+            <p class="today-human__founding" data-human-founding hidden></p>
+          </div>
+        </div>
+
+        <button
+          class="public-button public-translation-toggle"
+          type="button"
+          data-translation-toggle
+          hidden
+        >
+          {copy.today.live.showTranslated}
+        </button>
+
+        <section class="today-portrait" aria-labelledby="human-portrait-title">
+          <p class="eyebrow">01</p>
+          <h2 id="human-portrait-title">{copy.today.live.portraitLabel}</h2>
+          <dl data-portrait-list></dl>
+        </section>
+
+        <section
+          class="today-questions"
+          aria-labelledby="human-questions-title"
+        >
+          <p class="eyebrow">02</p>
+          <h2 id="human-questions-title">{copy.today.live.questionsTitle}</h2>
+          <ol data-question-list></ol>
+          <p data-no-questions hidden>{copy.today.live.noQuestions}</p>
+        </section>
+
+        <p class="today-human__guest-note">{copy.today.live.guestNote}</p>
+      </article>
+    </div>
+  </main>
+  <script>
+    import '../scripts/human-page.ts';
+  </script>
+</BaseLayout>

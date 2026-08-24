@@ -20,6 +20,7 @@ export interface QuestionCardProps {
   onVote: () => void;
   /** Today's Human answers what they choose to answer (Article 6.3). */
   answer?: string | null;
+  translated?: boolean;
   onReport?: (reason: ReportReason) => void;
   onBlock?: () => void;
 }
@@ -31,6 +32,7 @@ export function QuestionCard({
   canVote,
   onVote,
   answer,
+  translated = false,
   onReport,
   onBlock,
 }: QuestionCardProps) {
@@ -85,6 +87,12 @@ export function QuestionCard({
           </Text>
           <Text>{answer}</Text>
         </View>
+      ) : null}
+
+      {translated ? (
+        <Text color="textTertiary" variant="caption">
+          {t('translation.translated')}
+        </Text>
       ) : null}
 
       <View

@@ -34,6 +34,16 @@ const resolveRequest = (requestUrl) => {
   if (existsSync(index)) {
     return index;
   }
+  const humanRoute = pathname.match(
+    /^\/(?:([a-z]{2})\/)?human\/[0-9a-f-]{36}\/?$/i
+  );
+  if (humanRoute) {
+    const shell = resolve(
+      root,
+      humanRoute[1] ? `${humanRoute[1]}/human/index.html` : 'human/index.html'
+    );
+    if (existsSync(shell)) return shell;
+  }
   return null;
 };
 

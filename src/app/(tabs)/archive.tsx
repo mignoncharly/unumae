@@ -18,8 +18,11 @@ import {
   useArchive,
   useArchiveCountries,
   useArchiveYears,
+  useRememberedHumans,
   useRandomHuman,
+  useYesterday,
 } from '@/features/archive/hooks';
+import { useIsAuthenticated } from '@/features/auth/useSession';
 import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
@@ -35,17 +38,25 @@ import { countryName, flagEmoji } from '@/utils/country';
 export default function ArchiveScreen() {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
+  const isAuthenticated = useIsAuthenticated();
 
   const [country, setCountry] = useState<string | null>(null);
   const [year, setYear] = useState<number | null>(null);
 
   const {
-    data: entries,
+    data: archive,
     isLoading,
     isError,
     error,
     refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useArchive({ country, year });
+  const entries = archive?.pages.flat() ?? [];
+  const { data: yesterday } = useYesterday();
+  const remembered = useRememberedHumans(isAuthenticated);
+  const rememberedEntries = remembered.data?.pages.flat() ?? [];
   const { data: anniversaries } = useAnniversaries();
   const { data: countries } = useArchiveCountries();
   const { data: years } = useArchiveYears();
@@ -67,9 +78,60 @@ export default function ArchiveScreen() {
         title={t('archive.title')}
       />
 
+      <View style={{ gap: theme.spacing.md }}>
+        <SectionHeader title={t('archive.yesterday')} />
+        {yesterday ? (
+          <ArchiveCard
+            countryCode={yesterday.country_code}
+            displayName={yesterday.display_name}
+            humanNumber={yesterday.human_number}
+            isRemoved={yesterday.is_removed}
+            onPress={() => openHuman(yesterday.draw_id)}
+            photoUrl={yesterday.photo_url}
+            selectionDate={yesterday.selection_date}
+          />
+        ) : (
+          <Text color="textTertiary">{t('archive.noYesterday')}</Text>
+        )}
+      </View>
+
+      {isAuthenticated ? (
+        <View style={{ gap: theme.spacing.md, marginTop: theme.spacing.xxl }}>
+          <SectionHeader
+            caption={t('remember.private')}
+            title={t('remember.library')}
+          />
+          {rememberedEntries.length > 0 ? (
+            <>
+              {rememberedEntries.slice(0, 3).map((entry) => (
+                <ArchiveCard
+                  countryCode={entry.country_code}
+                  displayName={entry.display_name}
+                  humanNumber={entry.human_number}
+                  isRemoved={entry.is_removed}
+                  key={entry.draw_id}
+                  onPress={() => openHuman(entry.draw_id)}
+                  photoUrl={entry.photo_url}
+                  selectionDate={entry.selection_date}
+                />
+              ))}
+              <Button
+                label={t('remember.openLibrary')}
+                onPress={() => router.push('/archive/remembered')}
+                variant="secondary"
+              />
+            </>
+          ) : remembered.isLoading ? (
+            <Skeleton height={134} radius={theme.radius.xl} />
+          ) : (
+            <Text color="textTertiary">{t('remember.empty')}</Text>
+          )}
+        </View>
+      ) : null}
+
       {/* One year ago today. Empty until the Archive is old enough to have one. */}
       {anniversaries && anniversaries.length > 0 ? (
-        <View style={{ gap: theme.spacing.md }}>
+        <View style={{ gap: theme.spacing.md, marginTop: theme.spacing.xxl }}>
           <SectionHeader title={t('archive.oneYearAgo')} />
           {anniversaries.map((entry) => (
             <View key={entry.years_ago} style={{ gap: theme.spacing.xs }}>
@@ -84,7 +146,7 @@ export default function ArchiveScreen() {
                 humanNumber={entry.human_number}
                 isRemoved={entry.is_removed}
                 onPress={() => openHuman(entry.draw_id)}
-                photoPath={entry.photo_path}
+                photoUrl={entry.photo_url}
                 selectionDate={entry.selection_date}
               />
             </View>
@@ -190,7 +252,7 @@ export default function ArchiveScreen() {
               error={toAppError(error)}
               onRetry={() => void refetch()}
             />
-          ) : entries && entries.length > 0 ? (
+          ) : entries.length > 0 ? (
             entries.map((entry) => (
               <ArchiveCard
                 countryCode={entry.country_code}
@@ -199,7 +261,7 @@ export default function ArchiveScreen() {
                 isRemoved={entry.is_removed}
                 key={entry.draw_id}
                 onPress={() => openHuman(entry.draw_id)}
-                photoPath={entry.photo_path}
+                photoUrl={entry.photo_url}
                 selectionDate={entry.selection_date}
               />
             ))
@@ -211,6 +273,28 @@ export default function ArchiveScreen() {
               }
             />
           )}
+          {hasNextPage ? (
+            <View style={{ marginTop: theme.spacing.lg }}>
+              <Button
+                disabled={isFetchingNextPage}
+                label={
+                  isFetchingNextPage
+                    ? t('common.loading')
+                    : t('archive.loadOlder')
+                }
+                onPress={() => void fetchNextPage()}
+                variant="secondary"
+              />
+            </View>
+          ) : entries.length > 0 ? (
+            <Text
+              color="textTertiary"
+              style={{ marginTop: theme.spacing.xl, textAlign: 'center' }}
+              variant="footnote"
+            >
+              {t('archive.end')}
+            </Text>
+          ) : null}
         </View>
       </View>
     </Screen>

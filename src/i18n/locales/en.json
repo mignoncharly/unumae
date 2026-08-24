@@ -111,7 +111,12 @@
     "action": "Remember this Human",
     "remembered": "Remembered",
     "library": "Humans I remember",
+    "libraryBody": "A private collection of people and stories you chose to keep.",
+    "private": "Only you can see this",
+    "openLibrary": "Open my remembered Humans",
     "empty": "You have not remembered anyone yet.",
+    "emptyBody": "When a story stays with you, Remember it and it will appear here.",
+    "exploreArchive": "Explore the Archive",
     "added": "Added to your library",
     "removed": "Removed from your library",
     "failed": "Could not save that. Please try again.",
@@ -140,6 +145,7 @@
     "subtitle": "Everyone the world has met.",
     "today": "Today",
     "yesterday": "Yesterday",
+    "noYesterday": "No Human was published yesterday.",
     "oneYearAgo": "One year ago",
     "randomHuman": "Random Human",
     "byCountry": "By country",
@@ -157,7 +163,9 @@
     "dayIsOver": "Their day was {{date}}.",
     "explore": "Explore the Human Archive",
     "exploreHint": "A growing record of people, places and ordinary lives.",
-    "recent": "Recently featured"
+    "recent": "Recently featured",
+    "loadOlder": "Load earlier Humans",
+    "end": "You have reached the beginning of the Archive."
   },
   "settings": {
     "title": "Settings",
@@ -252,7 +260,9 @@
     "birthYear": "Year of birth",
     "birthYearHint": "Used only to check you are 16 or older.",
     "country": "Country",
-    "countryHint": "Two-letter country code, for example JP.",
+    "countryHint": "Used to bring geographic balance to the daily selection.",
+    "countryPlaceholder": "Choose a country",
+    "countrySearch": "Search countries",
     "city": "City (optional)",
     "cityHint": "You can leave this empty, and you can hide it later.",
     "bio": "One line about you (optional)",
@@ -264,7 +274,11 @@
     "edit": "Edit profile",
     "editSubtitle": "Keep it personal and simple. Nothing here becomes a popularity signal.",
     "languages": "Languages",
-    "languagesHint": "Comma-separated language codes, for example en, de."
+    "languagesHint": "Choose every language you are comfortable using.",
+    "languagesPlaceholder": "Choose languages",
+    "languagesSearch": "Search languages",
+    "languagesSelected_one": "{{count}} language selected",
+    "languagesSelected_other": "{{count}} languages selected"
   },
   "onboarding": {
     "step": "Step {{current}} of {{total}}",
@@ -274,7 +288,12 @@
     "philosophyBody": "Attention is shared by chance, not earned through numbers. Everyone gets the same possibility of being seen.",
     "profileTitle": "One day, it could be you.",
     "profileBody": "Tell us only what is needed for the fair daily selection. You stay in control of what becomes public.",
-    "continue": "Continue"
+    "continue": "Continue",
+    "selectionTitle": "Would you like to join the daily selection?",
+    "selectionBody": "If you say yes, you may be chosen to share your portrait for one day. You can change this anytime.",
+    "selectionYes": "Yes, include me",
+    "selectionNotNow": "Not now",
+    "selectionRequired": "Choose one option to continue."
   },
   "appearance": {
     "title": "Appearance",

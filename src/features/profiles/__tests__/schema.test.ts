@@ -57,6 +57,10 @@ describe('country code', () => {
   it('rejects a three-letter code', () => {
     expect(countryCodeSchema.safeParse('JPN').success).toBe(false);
   });
+
+  it('rejects a made-up two-letter code', () => {
+    expect(countryCodeSchema.safeParse('XX').success).toBe(false);
+  });
 });
 
 describe('createProfileSchema', () => {
@@ -65,10 +69,14 @@ describe('createProfileSchema', () => {
     display_name: 'Aya',
     birth_year: THIS_YEAR - 30,
     country_code: 'JP',
+    locale: 'en' as const,
+    wants_selection: false,
   };
 
-  it('requires only four fields', () => {
+  it('requires four identity fields plus explicit locale and participation', () => {
     expect(createProfileSchema.safeParse(valid).success).toBe(true);
+    const { wants_selection: _choice, ...withoutChoice } = valid;
+    expect(createProfileSchema.safeParse(withoutChoice).success).toBe(false);
   });
 
   it('treats the city as optional and keeps it that way (Article 8.2)', () => {

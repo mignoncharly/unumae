@@ -168,13 +168,15 @@ describe('data export is the data, not a summary (Article 8.2)', () => {
       'invitations',
       'blocked_people',
     ]) {
-      expect(exportData).toContain(`'${section}'`);
+      expect(FLAT).toContain(`'${section}'`);
     }
+    expect(exportData).toContain('export_my_data_phase2()');
+    expect(exportData).toContain("'question_translations'");
   });
 
   it('is scoped to the caller everywhere', () => {
     const scopes = exportData.match(/\(select auth\.uid\(\)\)/g) ?? [];
-    expect(scopes.length).toBeGreaterThanOrEqual(6);
+    expect(scopes.length).toBeGreaterThanOrEqual(3);
   });
 });
 

@@ -1,7 +1,11 @@
 import type { PortraitElementKey } from '@/features/portraits/prompts';
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
-import type { PublicQuestionRow, TodaysHumanRow } from '@/lib/supabase/types';
+import type {
+  PublicQuestionRow,
+  QuestionTranslationRow,
+  TodaysHumanRow,
+} from '@/lib/supabase/types';
 
 /**
  * Today's Human, as a guest sees it.
@@ -170,4 +174,16 @@ export async function getPortraitTranslations(
   return Object.fromEntries(
     (data ?? []).map((row) => [row.element_key, row.translated_text])
   );
+}
+
+export async function getQuestionTranslations(
+  drawId: string,
+  locale: string
+): Promise<Record<string, QuestionTranslationRow>> {
+  const { data, error } = await getSupabase().rpc('get_question_translations', {
+    target_draw: drawId,
+    target_locale: locale,
+  });
+  if (error) return {};
+  return Object.fromEntries((data ?? []).map((row) => [row.question_id, row]));
 }

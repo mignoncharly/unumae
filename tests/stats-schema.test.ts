@@ -120,9 +120,11 @@ describe('the translation queue', () => {
     expect(FLAT).toContain(
       'revoke execute on function public.pending_translations(integer) from public, anon, authenticated'
     );
-    // And no grant puts it back.
+    expect(FLAT).toContain(
+      'grant execute on function public.pending_translations(integer) to service_role'
+    );
     expect(FLAT).not.toMatch(
-      /grant execute on function public\.pending_translations\(integer\) to/
+      /grant execute on function public\.pending_translations\(integer\) to (anon|authenticated)/
     );
   });
 

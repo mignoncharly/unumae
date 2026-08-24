@@ -39,6 +39,10 @@ export interface HumanPortraitProps {
    * original is always present and the reader chooses (Article 9.6).
    */
   translations?: Record<string, string>;
+  /** Lets the parent keep portrait and question translations in one mode. */
+  showTranslation?: boolean;
+  onToggleTranslation?: () => void;
+  translationAvailable?: boolean;
   /** Live humans show a countdown; archived ones show nothing. */
   showTimer?: boolean;
   /** The server's UTC cycle, so a stale view can never count into tomorrow. */
@@ -65,15 +69,20 @@ export function HumanPortrait({
   age,
   elements,
   translations,
+  showTranslation: controlledShowTranslation,
+  onToggleTranslation,
+  translationAvailable,
   showTimer = false,
   cycleDate,
   founding = false,
 }: HumanPortraitProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [showTranslation, setShowTranslation] = useState(false);
+  const [localShowTranslation, setLocalShowTranslation] = useState(false);
+  const showTranslation = controlledShowTranslation ?? localShowTranslation;
   const hasTranslations =
-    translations !== undefined && Object.keys(translations).length > 0;
+    translationAvailable ??
+    (translations !== undefined && Object.keys(translations).length > 0);
 
   return (
     <View style={{ gap: theme.spacing.xl }}>
@@ -193,7 +202,10 @@ export function HumanPortrait({
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ selected: showTranslation }}
-          onPress={() => setShowTranslation((previous) => !previous)}
+          onPress={() => {
+            if (onToggleTranslation) onToggleTranslation();
+            else setLocalShowTranslation((previous) => !previous);
+          }}
           style={{ minHeight: 44, justifyContent: 'center' }}
         >
           <Text color="accent" variant="footnote">

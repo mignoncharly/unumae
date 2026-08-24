@@ -328,19 +328,21 @@
 
   ### Phase 3 — Complete the product’s memory and international layers
 
-  1. Build “Humans I remember.”
-  2. Convert Archive to infinite/cursor pagination.
-  3. Add explicit Yesterday and remembered sections.
-  4. Batch photo URL signing and improve Archive performance.
-  5. Implement the public /human/{id} website page.
-  6. Consume portrait translations in Today, Archive detail, and the public website.
-  7. Synchronize app language with profiles.locale.
-  8. Add original/translated controls and later extend additive translation to questions and answers.
-  9. Replace raw country/language codes with accessible localized pickers.
-  10. Make joining the selection pool an explicit decision during onboarding.
+  1. [x] Build “Humans I remember.”
+  2. [x] Convert Archive to infinite/cursor pagination.
+  3. [x] Add explicit Yesterday and remembered sections.
+  4. [x] Batch photo URL signing and improve Archive performance.
+  5. [x] Implement the public /human/{id} website page.
+  6. [x] Consume portrait translations in Today, Archive detail, and the public website.
+  7. [x] Synchronize app language with profiles.locale.
+  8. [x] Add original/translated controls and extend additive translation to questions and answers.
+  9. [x] Replace raw country/language codes with accessible localized pickers.
+  10. [x] Make joining the selection pool an explicit decision during onboarding.
 
   Exit criterion: the Archive remains usable after hundreds of Humans, shared stories work without the app, and EN/FR/DE users receive a coherent experience including server-generated
   communication.
+
+  Implementation note (2026-08-24): completed across the native Archive, Today and archived-Human readers, onboarding/profile forms, the multilingual public website, one database migration, and the scheduled translation worker. The local effect verifier proves private memory, cursor termination, Yesterday, selection opt-in defaults, additive portrait/question translations, redaction, and export completeness. Production migration/function/site deployment and real-device deep-link/share verification remain release-environment steps.
 
   ### Phase 4 — Fix measurement, then validate retention
 

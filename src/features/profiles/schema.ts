@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { MIN_ACCOUNT_AGE, SUPPORTED_LOCALES } from '@/constants/constitution';
+import { COUNTRY_CODES, LANGUAGE_CODES } from '@/constants/geography';
 
 /**
  * The same rules the database enforces, expressed once for the form.
@@ -24,7 +25,8 @@ export const countryCodeSchema = z
   .string()
   .trim()
   .toUpperCase()
-  .regex(/^[A-Z]{2}$/, 'Country must be an ISO 3166-1 alpha-2 code');
+  .regex(/^[A-Z]{2}$/, 'Country must be an ISO 3166-1 alpha-2 code')
+  .refine((code) => COUNTRY_CODES.includes(code), 'Choose a valid country');
 
 export const citySchema = z.string().trim().min(1).max(80).nullable();
 
@@ -48,7 +50,10 @@ export const birthYearSchema = z
  * which react-hook-form's resolver cannot reconcile. The form supplies the
  * empty array instead.
  */
-export const languagesSchema = z.array(z.string().min(2).max(8)).max(10);
+export const languagesSchema = z
+  .array(z.string().refine((code) => LANGUAGE_CODES.includes(code)))
+  .max(10);
+export const localeSchema = z.enum(SUPPORTED_LOCALES);
 
 /**
  * What onboarding collects: four required fields, three optional.
@@ -64,6 +69,8 @@ export const createProfileSchema = z.object({
   city: citySchema.optional(),
   languages: languagesSchema.optional(),
   bio_short: bioShortSchema.optional(),
+  locale: localeSchema,
+  wants_selection: z.boolean(),
 });
 
 /** birth_year is absent: the database refuses to update it (age gate). */
@@ -76,6 +83,7 @@ export const updateProfileSchema = createProfileSchema
     wants_selection: z.boolean().optional(),
     // Article 8.2 — hiding is not deleting. The value stays; publication stops.
     city_hidden: z.boolean().optional(),
+    locale: localeSchema.optional(),
   });
 
 export type CreateProfileInput = z.infer<typeof createProfileSchema>;

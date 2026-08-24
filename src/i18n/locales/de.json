@@ -111,7 +111,12 @@
     "action": "An diesen Human erinnern",
     "remembered": "Gemerkt",
     "library": "Humans, an die ich mich erinnere",
+    "libraryBody": "Deine private Sammlung von Menschen und Geschichten, die du bewahren möchtest.",
+    "private": "Nur du kannst das sehen",
+    "openLibrary": "Meine gemerkten Humans öffnen",
     "empty": "Du hast dir noch niemanden gemerkt.",
+    "emptyBody": "Wenn eine Geschichte bei dir bleibt, merke sie dir und finde sie hier wieder.",
+    "exploreArchive": "Archiv entdecken",
     "added": "Zu deiner Bibliothek hinzugefügt",
     "removed": "Aus deiner Bibliothek entfernt",
     "failed": "Konnte nicht gespeichert werden. Bitte versuche es erneut.",
@@ -140,6 +145,7 @@
     "subtitle": "Alle, die die Welt kennengelernt hat.",
     "today": "Heute",
     "yesterday": "Gestern",
+    "noYesterday": "Gestern wurde kein Human veröffentlicht.",
     "oneYearAgo": "Vor einem Jahr",
     "randomHuman": "Zufälliger Human",
     "byCountry": "Nach Land",
@@ -157,7 +163,9 @@
     "dayIsOver": "Ihr Tag war der {{date}}.",
     "explore": "Das Human Archive entdecken",
     "exploreHint": "Eine wachsende Sammlung von Menschen, Orten und gewöhnlichen Leben.",
-    "recent": "Kürzlich vorgestellt"
+    "recent": "Kürzlich vorgestellt",
+    "loadOlder": "Frühere Humans laden",
+    "end": "Du hast den Anfang des Archivs erreicht."
   },
   "settings": {
     "title": "Einstellungen",
@@ -252,7 +260,9 @@
     "birthYear": "Geburtsjahr",
     "birthYearHint": "Nur zur Prüfung, ob du 16 oder älter bist.",
     "country": "Land",
-    "countryHint": "Zweibuchstabiger Ländercode, zum Beispiel JP.",
+    "countryHint": "Wird für die geografische Ausgewogenheit der täglichen Auswahl verwendet.",
+    "countryPlaceholder": "Land auswählen",
+    "countrySearch": "Länder durchsuchen",
     "city": "Stadt (optional)",
     "cityHint": "Kann leer bleiben und später verborgen werden.",
     "bio": "Eine Zeile über dich (optional)",
@@ -264,7 +274,11 @@
     "edit": "Profil bearbeiten",
     "editSubtitle": "Persönlich und einfach. Nichts hier wird zu einem Beliebtheitssignal.",
     "languages": "Sprachen",
-    "languagesHint": "Sprachcodes durch Kommas getrennt, zum Beispiel de, en."
+    "languagesHint": "Wähle alle Sprachen, die du gerne verwendest.",
+    "languagesPlaceholder": "Sprachen auswählen",
+    "languagesSearch": "Sprachen durchsuchen",
+    "languagesSelected_one": "{{count}} Sprache ausgewählt",
+    "languagesSelected_other": "{{count}} Sprachen ausgewählt"
   },
   "onboarding": {
     "step": "Schritt {{current}} von {{total}}",
@@ -274,7 +288,12 @@
     "philosophyBody": "Aufmerksamkeit wird durch Zufall geteilt, nicht durch Zahlen verdient. Alle haben dieselbe Möglichkeit, gesehen zu werden.",
     "profileTitle": "Eines Tages könntest du es sein.",
     "profileBody": "Sag uns nur, was für die faire tägliche Auswahl nötig ist. Du bestimmst, was öffentlich wird.",
-    "continue": "Weiter"
+    "continue": "Weiter",
+    "selectionTitle": "Möchtest du an der täglichen Auswahl teilnehmen?",
+    "selectionBody": "Wenn du Ja sagst, kannst du ausgewählt werden, dein Porträt einen Tag lang zu teilen. Du kannst dies jederzeit ändern.",
+    "selectionYes": "Ja, ich möchte teilnehmen",
+    "selectionNotNow": "Jetzt nicht",
+    "selectionRequired": "Wähle eine Option, um fortzufahren."
   },
   "appearance": {
     "title": "Darstellung",

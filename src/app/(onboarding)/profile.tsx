@@ -1,10 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import {
+  CountryPicker,
+  LanguagesPicker,
+} from '@/components/profiles/ProfilePickers';
 import { BrandHero } from '@/components/ui/BrandHero';
 import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
@@ -16,6 +20,7 @@ import {
   createProfileSchema,
   type CreateProfileInput,
 } from '@/features/profiles/schema';
+import { isSupportedLocale } from '@/i18n';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 
@@ -28,7 +33,7 @@ import { useTheme } from '@/theme';
  */
 export default function OnboardingProfileScreen() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const createProfile = useCreateProfile();
   const [step, setStep] = useState(1);
 
@@ -44,8 +49,10 @@ export default function OnboardingProfileScreen() {
       display_name: '',
       country_code: '',
       languages: [],
+      locale: isSupportedLocale(i18n.language) ? i18n.language : 'en',
     },
   });
+  const participation = useWatch({ control, name: 'wants_selection' });
 
   async function onSubmit(values: CreateProfileInput) {
     try {
@@ -154,15 +161,26 @@ export default function OnboardingProfileScreen() {
           control={control}
           name="country_code"
           render={({ field }) => (
-            <TextField
-              autoCapitalize="characters"
-              autoCorrect={false}
+            <CountryPicker
               error={errors.country_code?.message}
               hint={t('profile.countryHint')}
               label={t('profile.country')}
-              maxLength={2}
-              onChangeText={field.onChange}
+              onChange={field.onChange}
               value={field.value}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="languages"
+          render={({ field }) => (
+            <LanguagesPicker
+              error={errors.languages?.message}
+              hint={t('profile.languagesHint')}
+              label={t('profile.languages')}
+              onChange={field.onChange}
+              value={field.value ?? []}
             />
           )}
         />
@@ -180,6 +198,37 @@ export default function OnboardingProfileScreen() {
             />
           )}
         />
+
+        <View style={{ gap: theme.spacing.md }}>
+          <Text variant="title3" style={{ fontWeight: '600' }}>
+            {t('onboarding.selectionTitle')}
+          </Text>
+          <Text color="textSecondary">{t('onboarding.selectionBody')}</Text>
+          <Controller
+            control={control}
+            name="wants_selection"
+            render={({ field }) => (
+              <View style={{ gap: theme.spacing.sm }}>
+                <Button
+                  icon="globe"
+                  label={t('onboarding.selectionYes')}
+                  onPress={() => field.onChange(true)}
+                  variant={field.value === true ? 'primary' : 'secondary'}
+                />
+                <Button
+                  label={t('onboarding.selectionNotNow')}
+                  onPress={() => field.onChange(false)}
+                  variant={field.value === false ? 'primary' : 'secondary'}
+                />
+              </View>
+            )}
+          />
+          {typeof participation !== 'boolean' ? (
+            <Text color="textTertiary" variant="footnote">
+              {t('onboarding.selectionRequired')}
+            </Text>
+          ) : null}
+        </View>
 
         <Controller
           control={control}
@@ -204,7 +253,7 @@ export default function OnboardingProfileScreen() {
         ) : null}
 
         <Button
-          disabled={isSubmitting}
+          disabled={isSubmitting || typeof participation !== 'boolean'}
           label={t('profile.save')}
           onPress={handleSubmit(onSubmit)}
         />

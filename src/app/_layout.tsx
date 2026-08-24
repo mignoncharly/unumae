@@ -10,6 +10,7 @@ import { JourneyGate } from '@/components/shared/JourneyGate';
 import { NotificationCoordinator } from '@/components/shared/NotificationCoordinator';
 import { OfflineNotice } from '@/components/shared/OfflineNotice';
 import { OnboardingGate } from '@/components/shared/OnboardingGate';
+import { ProfileLocaleSync } from '@/components/shared/ProfileLocaleSync';
 import { SessionCacheBoundary } from '@/components/shared/SessionCacheBoundary';
 import { SessionProvider } from '@/features/auth/useSession';
 import i18n, { initI18n } from '@/i18n';
@@ -72,6 +73,7 @@ export default function RootLayout() {
             <OfflineNotice />
             <AppLifecycle />
             <NotificationCoordinator />
+            <ProfileLocaleSync />
             {/* Renders nothing; sends a signed-in person with no profile to finish
                 it, which is the only way to be eligible for the draw. */}
             <OnboardingGate />

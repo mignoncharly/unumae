@@ -29,6 +29,7 @@ import { useReport } from '@/features/moderation/hooks';
 import type { PortraitElementKey } from '@/features/portraits/prompts';
 import { useBlockContentAuthor } from '@/features/privacy/hooks';
 import { isSupportedLocale } from '@/i18n';
+import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 import { countryName, flagEmoji } from '@/utils/country';
@@ -245,10 +246,15 @@ export default function HumanScreen() {
             remembered={Boolean(remembered)}
             onPress={() =>
               requireAccount(() => {
-                remember.mutate(!remembered);
-                setToast(
-                  remembered ? t('remember.removed') : t('remember.added')
-                );
+                const next = !remembered;
+                remember.mutate(next, {
+                  onSuccess: () => {
+                    track(next ? 'human_remembered' : 'human_forgotten');
+                    setToast(
+                      next ? t('remember.added') : t('remember.removed')
+                    );
+                  },
+                });
               })
             }
           />

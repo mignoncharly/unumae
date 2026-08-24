@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -77,10 +77,33 @@ export default function TodayScreen() {
   const [askOpen, setAskOpen] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const viewedDraw = useRef<string | null>(null);
 
   useEffect(() => {
+    const human = today?.human;
+    if (
+      !human ||
+      human.is_removed ||
+      !human.portrait_id ||
+      !human.display_name ||
+      !human.country_code ||
+      viewedDraw.current === human.draw_id
+    ) {
+      return;
+    }
+
+    // Effects run after the committed render. Loading, errors, Quiet Days and
+    // incomplete records therefore never masquerade as Human views.
+    viewedDraw.current = human.draw_id;
     track('today_viewed');
-  }, []);
+  }, [today]);
+
+  function openAsk() {
+    requireAccount(() => {
+      track('question_started');
+      setAskOpen(true);
+    });
+  }
 
   function requireAccount(action: () => void) {
     if (!isAuthenticated) {
@@ -204,7 +227,7 @@ export default function TodayScreen() {
               <Button
                 icon="edit-3"
                 label={t('questions.ask')}
-                onPress={() => requireAccount(() => setAskOpen(true))}
+                onPress={openAsk}
                 variant="ghost"
               />
             }
@@ -232,11 +255,17 @@ export default function TodayScreen() {
                       // Pressing again removes your own vote. That is the only
                       // other thing a person can do — there is no opposite.
                       const voted = !(question.has_voted ?? false);
-                      vote.mutate({ questionId: question.id, voted });
-                      track('question_voted');
-                      if (voted) {
-                        setToast(t('questions.voted'));
-                      }
+                      vote.mutate(
+                        { questionId: question.id, voted },
+                        {
+                          onSuccess: () => {
+                            track(
+                              voted ? 'question_voted' : 'question_unvoted'
+                            );
+                            if (voted) setToast(t('questions.voted'));
+                          },
+                        }
+                      );
                     })
                   }
                   onReport={(reason) =>
@@ -269,7 +298,7 @@ export default function TodayScreen() {
             <EmptyState
               action={{
                 label: t('questions.ask'),
-                onPress: () => requireAccount(() => setAskOpen(true)),
+                onPress: openAsk,
               }}
               icon="message-circle"
               title={t('questions.empty')}
@@ -288,11 +317,15 @@ export default function TodayScreen() {
             remembered={Boolean(remembered)}
             onPress={() =>
               requireAccount(() => {
-                remember.mutate(!remembered);
-                track('human_remembered');
-                setToast(
-                  remembered ? t('remember.removed') : t('remember.added')
-                );
+                const next = !remembered;
+                remember.mutate(next, {
+                  onSuccess: () => {
+                    track(next ? 'human_remembered' : 'human_forgotten');
+                    setToast(
+                      next ? t('remember.added') : t('remember.removed')
+                    );
+                  },
+                });
               })
             }
           />

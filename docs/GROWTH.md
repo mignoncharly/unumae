@@ -130,14 +130,11 @@ Founding Humans is the one badge, and it is deliberately worth nothing — see
 
 ## Measuring whether it worked
 
-`share_started` and `share_completed`, and the gap between them. That gap is the
-only honest measure of whether a portrait was worth passing on: everything up to
-`share_started` measures our button, and only the completion measures the
-person.
+`share_started` records the tap and `share_sheet_opened` records the last fact
+the native APIs can establish: the system share sheet appeared. Neither iOS nor
+Android can prove that a recipient received the portrait, so Unumae does not
+claim a “completed share” for either the card or text path.
 
-One caveat to read the share rate correctly: the image path uses `expo-sharing`,
-which cannot report whether the person went through with it, so it counts
-opening the sheet. The text path uses the system share sheet, which can. The
-figure is therefore slightly generous when cards are in use. It is written down
-here rather than corrected, because a number you understand the bias of is more
-useful than one you have quietly adjusted.
+The share-rate gate therefore answers “was this Human worth trying to pass
+on?”, not “did a portrait leave the app?”. That boundary is less flattering and
+more useful than silently treating an opened system sheet as delivery.

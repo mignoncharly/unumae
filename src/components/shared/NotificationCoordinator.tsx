@@ -8,6 +8,10 @@ import { track } from '@/lib/analytics';
 import {
   ACCEPT_SELECTION_ACTION,
   DECLINE_SELECTION_ACTION,
+  notificationAction,
+  notificationCategory,
+  notificationDestination,
+  notificationInvitationId,
   notificationRoute,
   SELECTION_NOTIFICATION_CATEGORY,
 } from '@/lib/notifications';
@@ -69,7 +73,8 @@ export function NotificationCoordinator() {
     const handle = async (
       response: Awaited<
         ReturnType<typeof notifications.getLastNotificationResponseAsync>
-      >
+      >,
+      source: 'cold_start' | 'warm_start'
     ) => {
       if (!response) {
         return;
@@ -82,7 +87,25 @@ export function NotificationCoordinator() {
       handledResponses.add(responseKey);
 
       const data = response.notification.request.content.data;
-      track('notification_opened', { action: response.actionIdentifier });
+      const category = notificationCategory(data);
+      track('notification_opened', {
+        action: notificationAction(response.actionIdentifier),
+        category,
+        destination: notificationDestination(data),
+        source,
+      });
+
+      const invitationId = notificationInvitationId(data);
+      if (category === 'selected' && invitationId) {
+        const supabase = getSupabase();
+        await supabase.auth.getSession();
+        await supabase
+          .rpc('mark_invitation_opened', {
+            target_invitation: invitationId,
+            open_source: 'notification',
+          })
+          .then(() => undefined);
+      }
 
       if (response.actionIdentifier === ACCEPT_SELECTION_ACTION) {
         const supabase = getSupabase();
@@ -117,7 +140,7 @@ export function NotificationCoordinator() {
     };
 
     const subscription = notifications.addNotificationResponseReceivedListener(
-      (response) => void handle(response)
+      (response) => void handle(response, 'warm_start')
     );
 
     void notifications
@@ -126,7 +149,7 @@ export function NotificationCoordinator() {
         if (!response) {
           return;
         }
-        await handle(response);
+        await handle(response, 'cold_start');
         await notifications.clearLastNotificationResponseAsync();
       })
       .catch(() => undefined);

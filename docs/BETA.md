@@ -107,9 +107,11 @@ Measured in the moderator console, **Signals** tab, or directly:
 select * from public.growth_gate();        -- the four checks
 select * from public.retention_cohorts();  -- D1/D7 by join-day cohort
 select * from public.participation_mix();  -- take part vs watch only
+select * from public.analytics_journey_funnels(); -- four core journeys
+select * from public.analytics_notification_attribution(); -- open source/action
 ```
 
-All three are moderator-only, enforced inside the function.
+All five are moderator-only, enforced inside each function.
 
 ### The four checks
 
@@ -118,7 +120,7 @@ All three are moderator-only, enforced inside the function.
 | `d1_retention` | 25% | Did they come back to see the next Human? |
 | `d7_retention` | 10% | Are they still here a week later? |
 | `participation` | 15% | Do they take part, or only watch? |
-| `share_rate` | 3% | Does a portrait ever leave the app? |
+| `share_rate` | 3% | Is a portrait worth opening the share sheet for? |
 
 The thresholds live in `src/constants/retention.ts` **and** in
 `20260823070000_founding_and_retention.sql`, and a test asserts they are equal.

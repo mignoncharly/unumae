@@ -18,6 +18,7 @@ import {
 import {
   usePendingInvitation,
   useAnswerInvitation,
+  markInvitationOpened,
 } from '@/features/selection/invitationApi';
 import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
@@ -48,6 +49,12 @@ export default function InvitationScreen() {
     if (!invitation) {
       return;
     }
+
+    // Idempotent in the database: revisiting the screen cannot inflate the
+    // received → opened funnel or replace the original attribution source.
+    void markInvitationOpened(invitation.invitationId, 'screen').catch(
+      () => undefined
+    );
 
     // Half-minute ticks: the window is twelve hours, so a second-by-second
     // countdown would only add pressure.

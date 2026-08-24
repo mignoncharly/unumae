@@ -61,26 +61,23 @@ export function buildShareMessage(
 /**
  * Opens the system share sheet.
  *
- * Records that sharing started, and separately that it completed — the gap
- * between those two is the only honest measure of whether a portrait was worth
- * passing on.
+ * The caller records intent; this function records only what the native API
+ * can establish: that the share sheet opened.
  */
 export async function shareHuman(
   human: ShareableHuman,
   tagline: string
 ): Promise<boolean> {
-  track('share_started', { today: human.isToday });
-
   try {
     const result = await Share.share({
       message: buildShareMessage(human, tagline),
       url: shareUrl(human),
     });
 
+    // React Native can establish that the native sheet opened, but not that a
+    // recipient received the message. Keep the metric at that honest boundary.
+    track('share_sheet_opened', { today: human.isToday, card: false });
     const shared = result.action === Share.sharedAction;
-    if (shared) {
-      track('share_completed', { today: human.isToday });
-    }
     return shared;
   } catch {
     // Dismissing a share sheet is not an error worth surfacing.

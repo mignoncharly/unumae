@@ -8,13 +8,19 @@
  */
 export type AnalyticsEvent =
   | 'app_opened'
+  | 'active_day'
   | 'today_viewed'
   | 'portrait_completed'
+  | 'portrait_started'
+  | 'portrait_submitted'
   | 'archive_opened'
   | 'question_started'
   | 'question_submitted'
   | 'question_voted'
+  | 'question_unvoted'
   | 'human_remembered'
+  | 'human_forgotten'
+  | 'remembered_library_opened'
   | 'signup_started'
   | 'signup_completed'
   | 'selection_accepted'
@@ -22,6 +28,7 @@ export type AnalyticsEvent =
   | 'notification_opened'
   | 'share_started'
   | 'share_completed'
+  | 'share_sheet_opened'
   | 'language_changed';
 
 /**

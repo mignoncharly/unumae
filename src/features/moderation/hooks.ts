@@ -10,7 +10,9 @@ import {
   getGrowthGate,
   getIntegritySignals,
   getJobHistory,
+  getJourneyFunnels,
   getModerationHealth,
+  getNotificationAttribution,
   getOperationalAlerts,
   getParticipationMix,
   getPortraitQueue,
@@ -40,6 +42,9 @@ export const moderationKeys = {
   participation: (userId: string) =>
     ['moderation', userId, 'participation'] as const,
   gate: (userId: string) => ['moderation', userId, 'gate'] as const,
+  funnels: (userId: string) => ['moderation', userId, 'funnels'] as const,
+  notificationAttribution: (userId: string) =>
+    ['moderation', userId, 'notification-attribution'] as const,
   countryBalance: (userId: string) =>
     ['moderation', userId, 'country-balance'] as const,
   integrity: (userId: string) => ['moderation', userId, 'integrity'] as const,
@@ -207,6 +212,26 @@ export function useGrowthGate(enabled: boolean) {
   return useQuery({
     queryKey: moderationKeys.gate(userId),
     queryFn: () => getGrowthGate(),
+    enabled,
+    staleTime: SIGNALS_STALE_TIME,
+  });
+}
+
+export function useJourneyFunnels(enabled: boolean) {
+  const userId = useModeratorUserId();
+  return useQuery({
+    queryKey: moderationKeys.funnels(userId),
+    queryFn: () => getJourneyFunnels(),
+    enabled,
+    staleTime: SIGNALS_STALE_TIME,
+  });
+}
+
+export function useNotificationAttribution(enabled: boolean) {
+  const userId = useModeratorUserId();
+  return useQuery({
+    queryKey: moderationKeys.notificationAttribution(userId),
+    queryFn: () => getNotificationAttribution(),
     enabled,
     staleTime: SIGNALS_STALE_TIME,
   });

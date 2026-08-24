@@ -129,6 +129,11 @@ describe('cohort retention', () => {
     expect(cohorts).not.toContain('email');
   });
 
+  it('uses one explicit active event per UTC day', () => {
+    expect(cohorts).toContain("a.event = 'active_day'");
+    expect(cohorts).not.toContain("a.event = 'app_opened'");
+  });
+
   it('is moderator-only', () => {
     expect(cohorts).toContain('is_moderator()');
   });

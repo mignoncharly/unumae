@@ -14,7 +14,7 @@ import { ProfileLocaleSync } from '@/components/shared/ProfileLocaleSync';
 import { SessionCacheBoundary } from '@/components/shared/SessionCacheBoundary';
 import { SessionProvider } from '@/features/auth/useSession';
 import i18n, { initI18n } from '@/i18n';
-import { setAnalyticsProvider, track } from '@/lib/analytics';
+import { setAnalyticsProvider } from '@/lib/analytics';
 import { createSupabaseAnalytics } from '@/lib/analytics/provider';
 import { persistOptions } from '@/lib/offline/persist';
 import { usePreferences } from '@/stores/preferences';
@@ -48,10 +48,6 @@ const queryClient = new QueryClient({
 export default function RootLayout() {
   const theme = useTheme();
   const locale = usePreferences((state) => state.locale);
-
-  useEffect(() => {
-    track('app_opened');
-  }, []);
 
   useEffect(() => {
     // null means "follow the system language", which initI18n already resolved.

@@ -346,13 +346,13 @@
 
   ### Phase 4 — Fix measurement, then validate retention
 
-  1. Record today_viewed only after a real Human renders.
-  2. Track Remember additions separately from removals.
-  3. Distinguish votes from unvotes.
-  4. Record one active return per UTC day on AppState activation.
-  5. Implement notification-open attribution.
-  6. Rename share-card completion to “share sheet opened” unless true completion can be established.
-  7. Add funnel reporting for:
+  1. [x] Record today_viewed only after a real Human renders.
+  2. [x] Track Remember additions separately from removals.
+  3. [x] Distinguish votes from unvotes.
+  4. [x] Record one active return per UTC day on AppState activation.
+  5. [x] Implement notification-open attribution.
+  6. [x] Rename share-card completion to “share sheet opened” unless true completion can be established.
+  7. [x] Add funnel reporting for:
       - invitation received → opened → accepted;
       - accepted → portrait started → submitted;
       - question started → submitted → approved → answered;
@@ -360,6 +360,8 @@
 
   8. Run the 10–20 person alpha described in docs/BETA.md:52.
   9. Only after journey fixes, run the four-week private beta and evaluate D1, D7, participation, and sharing.
+
+  Implementation note (2026-08-24): measurement correctness is complete in the native call sites, first-party analytics contract, durable invitation state, moderator Signals surface, and two database migrations. Retention now uses one `active_day` per install/UTC day; positive and undo actions are separate; share reporting stops at the native sheet; and the four journeys plus notification attribution are moderator-only aggregates. The 10–20-person alpha and four-week private beta remain real-cohort release activities and cannot be completed by code.
 
   ### Phase 5 — Native and release verification
 

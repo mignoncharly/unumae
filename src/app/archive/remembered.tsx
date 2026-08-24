@@ -1,4 +1,5 @@
 import { router, Stack } from 'expo-router';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -11,6 +12,7 @@ import { Screen } from '@/components/ui/Screen';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
 import { useRememberedHumans } from '@/features/archive/hooks';
+import { track } from '@/lib/analytics';
 import { toAppError } from '@/lib/errors';
 import { useTheme } from '@/theme';
 
@@ -19,6 +21,10 @@ export default function RememberedHumansScreen() {
   const { t } = useTranslation();
   const query = useRememberedHumans();
   const entries = query.data?.pages.flat() ?? [];
+
+  useEffect(() => {
+    track('remembered_library_opened');
+  }, []);
 
   return (
     <>

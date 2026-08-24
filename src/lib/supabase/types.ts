@@ -409,6 +409,10 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
       };
+      mark_invitation_opened: {
+        Args: { target_invitation: string; open_source: string };
+        Returns: boolean;
+      };
       my_pending_invitation: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -711,6 +715,27 @@ export type Database = {
       analytics_kpis_guarded: {
         Args: { window_days?: number };
         Returns: { metric: string; value: number; detail: string }[];
+      };
+      analytics_journey_funnels: {
+        Args: { window_days?: number };
+        Returns: {
+          journey: string;
+          stage: string;
+          stage_order: number;
+          actors: number;
+          events: number;
+          conversion_percent: number;
+        }[];
+      };
+      analytics_notification_attribution: {
+        Args: { window_days?: number };
+        Returns: {
+          category: string;
+          source: string;
+          action: string;
+          destination: string;
+          opens: number;
+        }[];
       };
       /**
        * Article 12 — the pool, its countries and its languages. Public,

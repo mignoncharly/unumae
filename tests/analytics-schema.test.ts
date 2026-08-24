@@ -60,8 +60,25 @@ describe('analytics cannot become tracking', () => {
       /create type public\.analytics_event as enum \(([\s\S]*?)\);/.exec(
         ALL_SQL
       )?.[1] ?? '';
-    const values = enumBody.match(/'[a-z_]+'/g) ?? [];
-    expect(values.length).toBe(16);
+    const created = enumBody.match(/'[a-z_]+'/g) ?? [];
+    const added = [
+      ...ALL_SQL.matchAll(
+        /alter type public\.analytics_event add value if not exists ('[a-z_]+')/g
+      ),
+    ].map((match) => match[1]);
+    const values = [...new Set([...created, ...added])];
+    expect(values).toHaveLength(23);
+    expect(values).toEqual(
+      expect.arrayContaining([
+        "'active_day'",
+        "'portrait_started'",
+        "'portrait_submitted'",
+        "'question_unvoted'",
+        "'human_forgotten'",
+        "'remembered_library_opened'",
+        "'share_sheet_opened'",
+      ])
+    );
   });
 
   it('drops an event name it does not recognise rather than raising', () => {
@@ -69,6 +86,13 @@ describe('analytics cannot become tracking', () => {
     expect(functionBodyOf('track_events')).toContain(
       "where item ->> 'event' = any ("
     );
+  });
+
+  it('deduplicates an active installation within each UTC day', () => {
+    expect(FLAT).toContain(
+      "create unique index idx_analytics_active_day_once on public.analytics_events (install_id, occurred_on) where event = 'active_day'"
+    );
+    expect(functionBodyOf('track_events')).toContain('on conflict do nothing');
   });
 
   it('caps the size of properties', () => {
@@ -139,5 +163,38 @@ describe('the KPIs are the ones the plan asked for', () => {
     // The plan is explicit that those are not the point.
     expect(kpis).not.toContain('dau');
     expect(kpis).not.toContain('mau');
+  });
+
+  it('uses the corrected positive-action and share-sheet semantics', () => {
+    expect(kpis).toContain("event = 'share_sheet_opened'");
+    expect(kpis).toContain("event = 'human_remembered'");
+    expect(kpis).not.toContain("event = 'share_completed'");
+  });
+});
+
+describe('journey measurement is operational', () => {
+  it('stores the invitation open once on the invitation itself', () => {
+    expect(FLAT).toContain('add column opened_at timestamptz');
+    expect(functionBodyOf('mark_invitation_opened')).toContain(
+      'opened_at = coalesce(i.opened_at, now())'
+    );
+  });
+
+  it.each(['invitation', 'portrait', 'question', 'memory'])(
+    'reports the %s funnel',
+    (journey) => {
+      expect(functionBodyOf('analytics_journey_funnels')).toContain(
+        `'${journey}'`
+      );
+    }
+  );
+
+  it('keeps funnel and notification attribution moderator-only', () => {
+    expect(functionBodyOf('analytics_journey_funnels')).toContain(
+      'if not public.is_moderator() then'
+    );
+    expect(functionBodyOf('analytics_notification_attribution')).toContain(
+      'if not public.is_moderator() then'
+    );
   });
 });

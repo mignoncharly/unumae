@@ -35,6 +35,21 @@ async function fetchPendingInvitation(): Promise<PendingInvitation | null> {
   };
 }
 
+export async function markInvitationOpened(
+  invitationId: string,
+  source: 'screen' | 'notification'
+): Promise<boolean> {
+  const { data, error } = await getSupabase().rpc('mark_invitation_opened', {
+    target_invitation: invitationId,
+    open_source: source,
+  });
+
+  if (error) {
+    throw new AppError('network', 'common.error', { cause: error });
+  }
+  return data;
+}
+
 export const invitationKeys = {
   pending: (userId: string) => ['invitation', userId] as const,
 };

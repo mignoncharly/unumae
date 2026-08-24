@@ -39,19 +39,16 @@ export function ShareButton({
 
   async function handleShare() {
     setBusy(true);
+    track('share_started', { today: human.isToday });
     try {
       const uri = await captureCard(cardRef);
 
       if (uri) {
-        track('share_started', { today: human.isToday, card: true });
         const shared = await shareCardImage(uri, t('sharing.share'));
         if (shared) {
-          // expo-sharing cannot tell us whether the person went through with
-          // it, so this counts opening the sheet with a card. The text path
-          // still reports the stricter number; docs/BETA.md notes the
-          // difference so the share rate is not read as more precise than it
-          // is.
-          track('share_completed', { today: human.isToday, card: true });
+          // Native share APIs cannot tell us whether a recipient received it.
+          // Both image and text paths therefore stop at “sheet opened”.
+          track('share_sheet_opened', { today: human.isToday, card: true });
           return;
         }
       }

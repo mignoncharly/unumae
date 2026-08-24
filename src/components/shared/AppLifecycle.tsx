@@ -2,6 +2,8 @@ import { focusManager, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 import { AppState } from 'react-native';
 
+import { recordActiveDay } from '@/lib/analytics/activeDay';
+
 /** Keeps daily data aligned with the global UTC cycle and foreground state. */
 export function AppLifecycle() {
   const queryClient = useQueryClient();
@@ -18,10 +20,15 @@ export function AppLifecycle() {
   }, [queryClient]);
 
   useEffect(() => {
+    if (AppState.currentState === 'active') {
+      void recordActiveDay();
+    }
+
     const subscription = AppState.addEventListener('change', (state) => {
       const active = state === 'active';
       focusManager.setFocused(active);
       if (active) {
+        void recordActiveDay();
         refreshCycle();
       }
     });
@@ -43,6 +50,7 @@ export function AppLifecycle() {
 
       boundaryTimer = setTimeout(
         () => {
+          void recordActiveDay();
           refreshCycle();
           // Publication runs just after midnight; check once more when it has
           // had time to complete instead of polling through the night.

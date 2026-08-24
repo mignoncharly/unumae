@@ -500,11 +500,62 @@
     "gateFail": "Not yet",
     "gateBlocked": "Do not buy users. Fix the product.",
     "gateOpen": "The gate is open.",
+    "funnels": "Journey funnels",
+    "funnelsIntro": "People and completed product states, measured over the last 28 days. Each percentage is from the previous stage.",
+    "funnelValue": "{{actors}} people · {{events}} events · {{conversion}}%",
+    "funnelJourneys": {
+      "invitation": "Invitation received to accepted",
+      "portrait": "Acceptance to portrait submission",
+      "question": "Question started to answered",
+      "memory": "Remembered to library reopened"
+    },
+    "funnelStages": {
+      "received": "Received",
+      "opened": "Opened",
+      "accepted": "Accepted",
+      "started": "Started",
+      "submitted": "Submitted",
+      "approved": "Approved",
+      "answered": "Answered",
+      "remembered": "Remembered",
+      "library_reopened": "Library reopened"
+    },
+    "notificationAttribution": "Notification opens",
+    "notificationAttributionIntro": "What brought the app forward and where it led. Delivery is measured separately.",
+    "notificationAttributionLabel": "{{category}} · {{source}} · {{action}} → {{destination}}",
+    "notificationOpenCount_one": "{{count}} open",
+    "notificationOpenCount_other": "{{count}} opens",
+    "notificationCategories": {
+      "daily": "Daily Human",
+      "selected": "Selection",
+      "answered": "Answer",
+      "anniversary": "Anniversary",
+      "unknown": "Legacy"
+    },
+    "notificationSources": {
+      "cold_start": "cold start",
+      "warm_start": "warm start",
+      "unknown": "legacy"
+    },
+    "notificationActions": {
+      "default": "opened",
+      "accept": "accepted",
+      "decline": "declined",
+      "other": "other action",
+      "unknown": "legacy"
+    },
+    "notificationDestinations": {
+      "today": "Today",
+      "invitation": "invitation",
+      "human": "Human",
+      "archive": "Archive",
+      "unknown": "unknown"
+    },
     "checks": {
       "d1_retention": "Came back the next day",
       "d7_retention": "Still here on day seven",
       "participation": "Asked, voted, Remembered or shared",
-      "share_rate": "Sent a portrait out of the app"
+      "share_rate": "Opened the share sheet for a portrait"
     },
     "operations": "Operations",
     "appeals": "Appeals",

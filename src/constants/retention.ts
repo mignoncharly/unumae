@@ -21,7 +21,7 @@ export const D7_RETENTION_THRESHOLD = 10;
 /** Percent of viewers who ask, vote, Remember or share rather than only watch. */
 export const PARTICIPATION_THRESHOLD = 15;
 
-/** Percent of viewers who send a portrait out of the app. */
+/** Percent of viewers who open the native share sheet for a portrait. */
 export const SHARE_RATE_THRESHOLD = 3;
 
 /** Days of history the gate reads. Four weeks, so a bad week cannot pass it. */

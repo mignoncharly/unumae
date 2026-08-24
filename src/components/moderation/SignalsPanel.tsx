@@ -4,6 +4,8 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from '@/components/ui/Text';
 import {
   useGrowthGate,
+  useJourneyFunnels,
+  useNotificationAttribution,
   useParticipationMix,
   useRetentionCohorts,
 } from '@/features/moderation/hooks';
@@ -28,6 +30,8 @@ export function SignalsPanel() {
   const { data: gate } = useGrowthGate(true);
   const { data: mix } = useParticipationMix(true);
   const { data: cohorts } = useRetentionCohorts(true);
+  const { data: funnels } = useJourneyFunnels(true);
+  const { data: notificationAttribution } = useNotificationAttribution(true);
 
   const decided = gate !== undefined && gate.length > 0;
   const allPassed = decided && gate.every((check) => check.passed);
@@ -94,6 +98,56 @@ export function SignalsPanel() {
                 ? t('moderation.tooEarly')
                 : `${cohort.d7Percent}%`
             }`}
+          />
+        ))}
+      </Section>
+
+      <Section title={t('moderation.funnels')}>
+        <Text color="textTertiary" variant="footnote">
+          {t('moderation.funnelsIntro')}
+        </Text>
+        {(['invitation', 'portrait', 'question', 'memory'] as const).map(
+          (journey) => (
+            <View key={journey} style={{ marginTop: theme.spacing.md }}>
+              <Text color="textSecondary" variant="callout">
+                {t(`moderation.funnelJourneys.${journey}`)}
+              </Text>
+              {(funnels ?? [])
+                .filter((row) => row.journey === journey)
+                .map((row) => (
+                  <Row
+                    key={`${journey}-${row.stage}`}
+                    label={t(`moderation.funnelStages.${row.stage}`)}
+                    value={t('moderation.funnelValue', {
+                      actors: row.actors,
+                      events: row.events,
+                      conversion: row.conversionPercent,
+                    })}
+                  />
+                ))}
+            </View>
+          )
+        )}
+      </Section>
+
+      <Section title={t('moderation.notificationAttribution')}>
+        <Text color="textTertiary" variant="footnote">
+          {t('moderation.notificationAttributionIntro')}
+        </Text>
+        {(notificationAttribution ?? []).map((row, index) => (
+          <Row
+            key={`${row.category}-${row.source}-${row.action}-${row.destination}-${index}`}
+            label={t('moderation.notificationAttributionLabel', {
+              category: t(`moderation.notificationCategories.${row.category}`),
+              source: t(`moderation.notificationSources.${row.source}`),
+              action: t(`moderation.notificationActions.${row.action}`),
+              destination: t(
+                `moderation.notificationDestinations.${row.destination}`
+              ),
+            })}
+            value={t('moderation.notificationOpenCount', {
+              count: row.opens,
+            })}
           />
         ))}
       </Section>

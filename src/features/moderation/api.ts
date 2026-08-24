@@ -329,6 +329,67 @@ export async function getGrowthGate(
   }));
 }
 
+export type JourneyName = 'invitation' | 'portrait' | 'question' | 'memory';
+
+export interface JourneyFunnelStage {
+  journey: JourneyName;
+  stage: string;
+  order: number;
+  actors: number;
+  events: number;
+  conversionPercent: number;
+}
+
+export async function getJourneyFunnels(
+  windowDays = GATE_WINDOW_DAYS
+): Promise<JourneyFunnelStage[]> {
+  const { data, error } = await getSupabase().rpc('analytics_journey_funnels', {
+    window_days: windowDays,
+  });
+
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((row) => ({
+    journey: row.journey as JourneyName,
+    stage: row.stage,
+    order: row.stage_order,
+    actors: row.actors,
+    events: row.events,
+    conversionPercent: row.conversion_percent,
+  }));
+}
+
+export interface NotificationAttributionRow {
+  category: string;
+  source: string;
+  action: string;
+  destination: string;
+  opens: number;
+}
+
+export async function getNotificationAttribution(
+  windowDays = GATE_WINDOW_DAYS
+): Promise<NotificationAttributionRow[]> {
+  const { data, error } = await getSupabase().rpc(
+    'analytics_notification_attribution',
+    { window_days: windowDays }
+  );
+
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+
+  return (data ?? []).map((row) => ({
+    category: row.category,
+    source: row.source,
+    action: row.action,
+    destination: row.destination,
+    opens: row.opens,
+  }));
+}
+
 // --- Phase 16 instruments ----------------------------------------------------
 //
 // Monitors, all three. None of them is an input to anything: the draw takes

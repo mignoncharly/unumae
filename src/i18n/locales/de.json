@@ -500,11 +500,62 @@
     "gateFail": "Noch nicht",
     "gateBlocked": "Keine Nutzer kaufen. Das Produkt verbessern.",
     "gateOpen": "Die Schwelle ist erreicht.",
+    "funnels": "Journey-Funnels",
+    "funnelsIntro": "Menschen und tatsächlich erreichte Produktzustände der letzten 28 Tage. Jeder Prozentsatz bezieht sich auf die vorherige Stufe.",
+    "funnelValue": "{{actors}} Personen · {{events}} Ereignisse · {{conversion}} %",
+    "funnelJourneys": {
+      "invitation": "Einladung erhalten bis angenommen",
+      "portrait": "Annahme bis Porträt eingereicht",
+      "question": "Frage begonnen bis beantwortet",
+      "memory": "Erinnert bis Bibliothek erneut geöffnet"
+    },
+    "funnelStages": {
+      "received": "Erhalten",
+      "opened": "Geöffnet",
+      "accepted": "Angenommen",
+      "started": "Begonnen",
+      "submitted": "Eingereicht",
+      "approved": "Freigegeben",
+      "answered": "Beantwortet",
+      "remembered": "Erinnert",
+      "library_reopened": "Bibliothek erneut geöffnet"
+    },
+    "notificationAttribution": "Geöffnete Mitteilungen",
+    "notificationAttributionIntro": "Was die App in den Vordergrund brachte und wohin es führte. Die Zustellung wird separat gemessen.",
+    "notificationAttributionLabel": "{{category}} · {{source}} · {{action}} → {{destination}}",
+    "notificationOpenCount_one": "{{count}} Öffnung",
+    "notificationOpenCount_other": "{{count}} Öffnungen",
+    "notificationCategories": {
+      "daily": "Human des Tages",
+      "selected": "Auswahl",
+      "answered": "Antwort",
+      "anniversary": "Jahrestag",
+      "unknown": "Ältere Version"
+    },
+    "notificationSources": {
+      "cold_start": "Kaltstart",
+      "warm_start": "Warmstart",
+      "unknown": "ältere Version"
+    },
+    "notificationActions": {
+      "default": "geöffnet",
+      "accept": "angenommen",
+      "decline": "abgelehnt",
+      "other": "andere Aktion",
+      "unknown": "ältere Version"
+    },
+    "notificationDestinations": {
+      "today": "Heute",
+      "invitation": "Einladung",
+      "human": "Human",
+      "archive": "Archiv",
+      "unknown": "unbekannt"
+    },
     "checks": {
       "d1_retention": "Am nächsten Tag wiedergekommen",
       "d7_retention": "Am siebten Tag noch da",
       "participation": "Gefragt, abgestimmt, erinnert oder geteilt",
-      "share_rate": "Ein Porträt aus der App geschickt"
+      "share_rate": "Das Teilen-Menü für ein Porträt geöffnet"
     },
     "operations": "Betrieb",
     "appeals": "Einsprüche",

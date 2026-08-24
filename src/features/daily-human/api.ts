@@ -114,12 +114,12 @@ export async function setVote(
   questionId: string,
   voted: boolean
 ): Promise<void> {
-  const { error } = await getSupabase().rpc(
+  const { data, error } = await getSupabase().rpc(
     voted ? 'vote_question' : 'unvote_question',
     { target_question: questionId }
   );
 
-  if (error) {
+  if (error || !data) {
     throw new AppError('unknown', 'questions.voteFailed', { cause: error });
   }
 }
@@ -128,12 +128,12 @@ export async function setRemembered(
   drawId: string,
   remembered: boolean
 ): Promise<void> {
-  const { error } = await getSupabase().rpc(
+  const { data, error } = await getSupabase().rpc(
     remembered ? 'remember_human' : 'forget_human',
     { target_draw: drawId }
   );
 
-  if (error) {
+  if (error || !data) {
     throw new AppError('unknown', 'remember.failed', { cause: error });
   }
 }

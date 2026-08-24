@@ -75,6 +75,7 @@ export default function PortraitScreen() {
           const created = await startMyPortrait();
           if (!active) return;
           setPortraitId(created);
+          if (created) track('portrait_started');
         }
       } catch (caught) {
         if (active) setError(t(toAppError(caught).messageKey));
@@ -144,7 +145,7 @@ export default function PortraitScreen() {
     setError(undefined);
     try {
       await submitMyPortrait();
-      track('portrait_completed');
+      track('portrait_submitted');
       await queryClient.invalidateQueries({ queryKey: journeyKeys.all });
       router.replace('/(selection)/status');
     } catch (caught) {

@@ -13,7 +13,7 @@ Last updated: Phase 5 native and release verification, 24 August 2026.
 | --- | --- | --- | --- |
 | 1 | **App Store listing URL** | App Store Connect must provide the real listing URL and numeric app ID before the website can advertise it. | App Store badge and smart app banner. |
 | 2 | **A light version of the wordmark**, if you want a dark splash | The icon and splash are wired up. The supplied gradient measures 1.32:1 against `#0B0B0C`, so the splash stays white in both appearance modes. | Nothing. White reads everywhere. |
-| 4 | ⚠️ **Native iOS release gate** | Create/install a development build, then execute every real-device and accessibility check in `docs/IOS_RELEASE_VERIFICATION.md`. Simulator automation cannot prove Apple credentials, push delivery/actions, account switching cleanup, media deletion, VoiceOver, or native share sheets. | Public beta. |
+| 4 | ⚠️ **Native iOS release gate** | No physical iPhone is currently available to the owner. Create/install a development or TestFlight build on a borrowed or trusted tester's iPhone, then execute every real-device and accessibility check in `docs/IOS_RELEASE_VERIFICATION.md`. Simulator automation cannot prove Apple credentials, push delivery/actions, account switching cleanup, media deletion, VoiceOver, or native share sheets. | Public beta. |
 | 5 | **Recruit 10–20 people for the internal alpha** | The simulation proves the machinery works. It cannot tell you whether Today's Human is interesting, whether anyone opens the Archive, or whether anyone shares a portrait unprompted. Only real people answer that. `docs/BETA.md` has the four questions to watch for. | The growth gate, and everything after it. |
 | 7 | **Check the share card on a real device** | Settings → Developer → Share card. It names which of the two native modules loaded, renders the card scaled to fit, and captures it to a real PNG that it then displays — the preview proves the layout, only the capture proves the capture. | Nothing — the fallback works. |
 | 8 | **Credentials remain local** | `docs/supa_keys.md` was used through redacting wrappers for the database deployment and live suites. It remains gitignored and unmodified. The authenticated CLI credential was passed to the read-only hosted Auth verifier in memory; no credential entered logs or version control. | Nothing. |
@@ -60,6 +60,8 @@ This table reflects the live deployment and verification completed on 24 August
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send 00:15, translate 01:00, purge 03:30, expiry sweep every 15 min. Full table in `docs/OPERATIONS.md` |
 | EAS project | `@mignoncharly/unumae` |
+| EAS build environment | Required Supabase client variables configured for `development` and `production`; profiles select their environment explicitly |
+| App Store Connect | Unumae app record for `com.unumae.app` confirmed by the owner; no iOS build uploaded yet |
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Hosted Auth/email | Production Site URL, native/web redirects, six-digit confirmation and magic-link templates, Apple provider, and custom SMTP all pass the read-only release check |
 | Moderator bootstrap | seeded by email; promotes automatically on profile creation |

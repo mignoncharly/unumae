@@ -32,6 +32,9 @@ real-device checks below.
 
 Build with `eas build --profile development --platform ios`, install it on a
 registered iPhone, and record the build ID, device model, and iOS version.
+The owner does not currently have an iPhone; a borrowed device or a trusted
+TestFlight tester's physical iPhone is valid evidence. Owning the device is not
+the requirement—running every check on real iOS hardware is.
 
 - [ ] Sign in with Apple creates or resumes the correct account and returns to Unumae.
 - [ ] Email signup and returning sign-in both receive a six-digit code and verify in-app.
@@ -90,6 +93,8 @@ the confirmation prompt and verify the linked project before approving it.
 | `20260823230000` | Hosted Supabase | 42 migrations + database live suites | Pass | Draw, privileges, signed-in security, safety/privacy, memory/international, and full-cycle simulation pass |
 | Current Auth configuration | Hosted Supabase | Production URL/redirects, Apple, code templates, SMTP | Pass | All six checks in `npm run verify:release-config` pass |
 | Current `delete-account` deployment | Hosted Supabase | Complete account/media deletion | Pass | Live probe confirms auth account, profile, avatar, portrait photo, and portrait audio are deleted while the draw tombstone is retained |
+| Current EAS configuration | EAS Build | Development/production backend environment | Pass | Both required Supabase client variables exist in both environments; build profiles select them explicitly |
+| Current App Store record | App Store Connect | App record for `com.unumae.app` | Pass | Existence confirmed by the owner on 24 August 2026 |
 | _fill during release_ | | | | |
 
 Failures block beta. Record them in `docs/OPEN_ITEMS.md`; do not convert an

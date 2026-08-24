@@ -8,7 +8,19 @@ describe('Phase 5 iOS release automation', () => {
   const workflow = read('.eas/workflows/e2e-ios.yml');
   const maestro = read('.maestro/release-smoke.yml');
   const localRunner = read('scripts/run-ios-e2e.mjs');
+  const appConfig = read('app.config.ts');
   const eas = JSON.parse(read('eas.json'));
+
+  it('selects the EAS environment that contains the client configuration', () => {
+    expect(eas.build.development.environment).toBe('development');
+    expect(eas.build['development-simulator'].environment).toBe('development');
+    expect(eas.build['e2e-test'].environment).toBe('development');
+    expect(eas.build.production.environment).toBe('production');
+  });
+
+  it('records the exempt iOS encryption declaration in every build', () => {
+    expect(appConfig).toContain('usesNonExemptEncryption: false');
+  });
 
   it('builds an unsigned iOS simulator artifact', () => {
     expect(eas.build['e2e-test']).toMatchObject({

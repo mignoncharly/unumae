@@ -46,12 +46,16 @@ EXPO_PUBLIC_SUPABASE_URL=https://qpicjsjxdblrxdrdibge.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=<publishable key>
 ```
 
-For EAS builds the same two values are set as EAS environment variables rather
-than committed:
+For EAS builds the same two values are set as plaintext EAS environment
+variables rather than committed. They are configured for both `development`
+and `production`; `eas.json` explicitly selects the matching environment for
+each build profile:
 
 ```bash
-eas env:create --name EXPO_PUBLIC_SUPABASE_URL --value https://qpicjsjxdblrxdrdibge.supabase.co
-eas env:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <publishable key>
+eas env:create development --name EXPO_PUBLIC_SUPABASE_URL --value https://qpicjsjxdblrxdrdibge.supabase.co --visibility plaintext
+eas env:create development --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <publishable key> --visibility plaintext
+eas env:create production --name EXPO_PUBLIC_SUPABASE_URL --value https://qpicjsjxdblrxdrdibge.supabase.co --visibility plaintext
+eas env:create production --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <publishable key> --visibility plaintext
 ```
 
 The anon key is public by design — it is safe in the client only because Row

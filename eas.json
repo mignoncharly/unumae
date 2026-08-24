@@ -5,20 +5,24 @@
   },
   "build": {
     "development": {
+      "environment": "development",
       "developmentClient": true,
       "distribution": "internal",
       "ios": { "simulator": false }
     },
     "development-simulator": {
+      "environment": "development",
       "developmentClient": true,
       "distribution": "internal",
       "ios": { "simulator": true }
     },
     "e2e-test": {
+      "environment": "development",
       "withoutCredentials": true,
       "ios": { "simulator": true }
     },
     "production": {
+      "environment": "production",
       "autoIncrement": true
     }
   },

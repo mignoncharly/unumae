@@ -93,6 +93,7 @@ sign-in path. Configured for `com.unumae.app`.
 | Requirement | State |
 | --- | --- |
 | Bundle identifier | `com.unumae.app` |
+| App Store Connect record | Unumae record for `com.unumae.app`, confirmed by the owner on 24 August 2026 |
 | Sign in with Apple | Implemented, provider enabled, Client ID confirmed |
 | Account deletion in-app | Implemented and deployed |
 | Report content | On portraits and questions |
@@ -106,6 +107,7 @@ sign-in path. Configured for `com.unumae.app`.
 | Launch screen | Approved wordmark on white in both appearance modes for contrast |
 | Required website URLs | Live at `https://unumae.app` |
 | Universal links | Association published for the reviewed Team ID and bundle |
+| Export compliance | Uses only exempt OS/HTTPS encryption; `usesNonExemptEncryption: false` encoded in the iOS build configuration |
 
 ## What still needs a person
 

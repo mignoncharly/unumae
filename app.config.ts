@@ -34,6 +34,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: BUNDLE_ID,
+    config: {
+      // Unumae uses only exempt encryption supplied by the operating system
+      // and standard HTTPS. Encoding this keeps TestFlight/App Store Connect
+      // from asking the same export-compliance question for every build.
+      usesNonExemptEncryption: false,
+    },
     associatedDomains: ['applinks:unumae.app', 'applinks:www.unumae.app'],
     // Required for the Sign in with Apple entitlement. Without it the native
     // button appears and the request fails at the system level.

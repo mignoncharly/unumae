@@ -10,6 +10,8 @@ describe('Phase 5 iOS release automation', () => {
   const localRunner = read('scripts/run-ios-e2e.mjs');
   const appConfig = read('app.config.ts');
   const eas = JSON.parse(read('eas.json'));
+  const packageJson = JSON.parse(read('package.json'));
+  const packageLock = JSON.parse(read('package-lock.json'));
 
   it('selects the EAS environment that contains the client configuration', () => {
     expect(eas.build.development.environment).toBe('development');
@@ -20,6 +22,30 @@ describe('Phase 5 iOS release automation', () => {
 
   it('records the exempt iOS encryption declaration in every build', () => {
     expect(appConfig).toContain('usesNonExemptEncryption: false');
+  });
+
+  it('targets the existing App Store Connect record for unattended submission', () => {
+    expect(eas.submit.production.ios.ascAppId).toBe('6804251671');
+  });
+
+  it('pins one Expo SDK 57-compatible Worklets native graph', () => {
+    expect(packageJson.dependencies).toMatchObject({
+      'react-native-reanimated': '4.5.1',
+      'react-native-worklets': '0.10.1',
+    });
+
+    const nativePackages = Object.entries(packageLock.packages)
+      .filter(([path]) =>
+        /node_modules\/(react-native-reanimated|react-native-worklets)$/.test(
+          path
+        )
+      )
+      .map(([path, value]) => [path, (value as { version?: string }).version]);
+
+    expect(nativePackages).toEqual([
+      ['node_modules/react-native-reanimated', '4.5.1'],
+      ['node_modules/react-native-worklets', '0.10.1'],
+    ]);
   });
 
   it('builds an unsigned iOS simulator artifact', () => {

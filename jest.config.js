@@ -14,6 +14,13 @@ module.exports = {
    */
   maxWorkers: 2,
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  // npm may keep Expo's internal core package beneath `expo` when optional
+  // native peers are present. Include that standard location so jest-expo's
+  // setup resolves the same module graph used by Expo autolinking.
+  moduleDirectories: [
+    'node_modules',
+    '<rootDir>/node_modules/expo/node_modules',
+  ],
   transformIgnorePatterns: [
     'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)',
   ],

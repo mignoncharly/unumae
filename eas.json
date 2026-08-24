@@ -29,6 +29,7 @@
   "submit": {
     "production": {
       "ios": {
+        "ascAppId": "6804251671",
         "appleId": "charles.nguenkam@gmail.com",
         "appleTeamId": "UB67843RJK",
         "language": "en-US"

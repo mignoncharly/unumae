@@ -20,8 +20,9 @@ traffic is additionally blocked by the paid-plan gate.
 
 ## 2. Local ephemeral-database verification
 
-This layer becomes automated in roadmap Phase 3. Until then, it is an explicit
-release blocker for changes whose correctness depends on PostgreSQL execution.
+The `Fresh database and Edge Functions` CI job automates this layer on every
+pull request and protected-branch push. Local execution is still useful for
+diagnosis, but the required remote result is the release evidence.
 
 - [ ] Docker is available and `supabase start` created a fresh stack.
 - [ ] All migrations applied from an empty database.
@@ -33,6 +34,10 @@ release blocker for changes whose correctness depends on PostgreSQL execution.
 - [ ] The local stack was destroyed after evidence was captured.
 
 Do not replace this layer with source-string assertions.
+
+Required GitHub checks are `Application`, `Website`, and `Fresh database and
+Edge Functions`. Protect the release branch against direct pushes and require
+all three checks; a local hook is not a security boundary.
 
 ## 3. Staging verification
 
@@ -50,11 +55,14 @@ truthfully checked and public beta remains blocked.
 
 ## 4. EAS and native-device verification
 
+- [ ] The release-candidate workflow checked out a full commit SHA and proved a
+      successful `CI` run exists for that exact SHA.
 - [ ] The build commit passed static, database, and staging verification.
 - [ ] `eas config --platform ios --profile production` is correct.
 - [ ] Only expected public Supabase client variables are loaded.
 - [ ] A new immutable iOS build number and EAS build ID are recorded.
 - [ ] Maestro simulator checks passed on small, regular, and large iPhones.
+- [ ] The recorded EAS/Maestro workflow used the same checked-out commit SHA.
 - [ ] Every applicable real-device and accessibility item in
       `docs/IOS_RELEASE_VERIFICATION.md` passed.
 - [ ] Native auth, push, export, deletion, sharing, offline recovery, and

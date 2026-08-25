@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Roadmap v2 Phase 2 local implementation, 25 August 2026.
+Last updated: Roadmap v2 Phase 3 local implementation, 25 August 2026.
 
 ---
 
@@ -24,6 +24,10 @@ Last updated: Roadmap v2 Phase 2 local implementation, 25 August 2026.
 | 14 | ⚠️ **Promote Phase 1 through staging** | Account enforcement is implemented and passes a fresh local database, lint, 56 role-based pgTAP checks, and Edge smoke tests. Follow `docs/PHASE1_ACCOUNT_ENFORCEMENT.md`; do not make production the first hosted execution. | Phase 1 production completion and public beta. |
 
 | 15 | ⚠️ **Promote and failure-test Phase 2 in staging** | Retryable deletion passes 71 local database assertions and Edge bundle/auth-negative smoke tests. Inject list, pagination, removal, database, Auth, timeout, and partial-completion failures against hosted Storage/Auth before production. Follow `docs/PHASE2_ACCOUNT_DELETION.md`. | Phase 2 production completion and public beta. |
+| 16 | ⚠️ **Enable required GitHub checks and branch protection** | Repository settings must require `Application`, `Website`, and `Fresh database and Edge Functions`, block direct release-branch pushes, and prevent administrator bypass. Workflow files cannot enforce their own required-check status. | CI as an enforceable release boundary. |
+| 17 | **Configure `EXPO_TOKEN` for release candidates** | The manual release-candidate workflow verifies an exact CI-passed SHA and then invokes the EAS Maestro workflow. It cannot authenticate until this scoped GitHub Actions secret exists. | Automated same-SHA native smoke evidence. |
+| 18 | ⚠️ **Complete attestation in Phase 4** | Phase 3 tests every implemented Edge authorization/provider boundary. Replay, malformed, and expired attestation-token cases cannot be truthfully tested until Phase 4 selects and implements App Attest/Play Integrity verification and registration. Add those cases to the existing Edge harness with the feature. | Phase 3's attestation sub-requirement, anti-farming controls, and public beta. |
+| 19 | **Monitor the Expo toolchain's `uuid` advisory** | `npm audit --audit-level=high` passes, but the root tree currently reports 12 moderate transitive findings through Expo config tooling → `xcode` → `uuid`. npm's complete forced remediation downgrades to Expo 46, so take the next compatible Expo/upstream fix instead of breaking the app framework. | No current high-severity release block; review on every dependency update. |
 
 ## Mine — code
 

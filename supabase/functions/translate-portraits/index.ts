@@ -1,6 +1,8 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
+import { isServiceRoleRequest } from '../_shared/serviceRole.ts';
+import { fetchProvider } from '../_shared/providerFetch.ts';
 
 /**
  * Fills in the translations of published portraits.
@@ -71,24 +73,19 @@ async function translate(
     ? 'https://api-free.deepl.com'
     : 'https://api.deepl.com';
 
-  let response: Response;
-  try {
-    response = await fetch(`${host}/v2/translate`, {
-      method: 'POST',
-      headers: {
-        Authorization: `DeepL-Auth-Key ${key}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text: [text],
-        target_lang: DEEPL_TARGET[target],
-      }),
-    });
-  } catch {
-    return null;
-  }
+  const response = await fetchProvider(`${host}/v2/translate`, {
+    method: 'POST',
+    headers: {
+      Authorization: `DeepL-Auth-Key ${key}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      text: [text],
+      target_lang: DEEPL_TARGET[target],
+    }),
+  });
 
-  if (!response.ok) {
+  if (!response?.ok) {
     return null;
   }
 
@@ -113,7 +110,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
     return jsonResponse({ error: 'Not configured' }, 500);
   }
 
-  if (request.headers.get('Authorization') !== `Bearer ${serviceKey}`) {
+  if (!(await isServiceRoleRequest(request, url, serviceKey))) {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 

@@ -202,7 +202,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
     await admin.rpc('complete_job_run', {
       target_run: payload.jobRunId,
       succeeded: failed === 0,
-      run_detail: `claimed=${jobs.length};completed=${completed};failed=${failed}`,
+      result_detail: `claimed=${jobs.length};completed=${completed};failed=${failed}`,
     });
   }
 

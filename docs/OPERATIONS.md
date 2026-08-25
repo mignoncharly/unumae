@@ -194,7 +194,8 @@ Declining costs nothing, and that is structural: `is_eligible` never reads
 ## Running the simulation
 
 ```bash
-npm run simulate            # two cycles, escalation, instruments, then cleans up
+npm run simulate            # local full cycle, races, empty pool; self-cleans
+npm run simulate:live       # explicit hosted equivalent; self-cleans
 npm run simulate -- --keep  # leave the data in place to look at in the app
 npm run simulate -- --clean # remove what a previous run left behind
 npm run verify:safety:live  # safety/privacy effects; synthetic rows self-clean
@@ -202,15 +203,43 @@ npm run verify:memory:live  # Archive/i18n effects; synthetic rows self-clean
 npm run verify:delete-account:live # auth, tombstone, avatar and portrait media
 ```
 
-⚠️ It runs against the live project and uses the service role to delete rows
-from `daily_draws`. That is deliberate — a simulation against a different
-database only proves the simulation works — but it means the script must never
-point anywhere else, and its cleanup is worth re-reading before changing.
+`npm run simulate` defaults to the disposable local stack. `simulate:live` is
+the intentionally explicit hosted variant; it uses the hosted service role and
+deletes its marked synthetic draw rows during cleanup. Never substitute the
+hosted command into CI.
 
 Run it after any migration touching the draw, moderation, publication or
 escalation. Three fatal bugs have been found this way, all of them invisible to
 the offline suite, because the schema guards read SQL as text and cannot tell
 you it runs.
+
+## Phase 3 CI operations
+
+GitHub CI has three required jobs: application, website, and a fresh Supabase
+backend. The backend starts Docker services, reapplies every migration from an
+empty database, lints the live schema, checks generated types, runs pgTAP and
+Edge provider tests, probes real HTTP/RLS boundaries, simulates the full cycle,
+and tears the stack down even after failure.
+
+Useful local equivalents:
+
+```bash
+supabase start
+supabase db reset --yes
+supabase db lint --local --level warning
+npm run verify:db-types
+supabase test db
+npm run test:edge
+npm run verify:integration
+npm run simulate
+supabase functions serve --no-verify-jwt # separate terminal
+npm run verify:edge
+supabase stop --no-backup
+```
+
+`--no-verify-jwt` disables only the local gateway check. Every function's own
+authorization boundary remains enabled and is what the black-box suite tests.
+Production deployment does not use this flag.
 
 ---
 

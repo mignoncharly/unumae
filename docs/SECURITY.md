@@ -13,8 +13,8 @@ the person on screen.
 | Harassment of Today's Human | Real harm to a real person | No DM at any tier (Article 8.3); moderated questions; block and report |
 | Unmoderated content going live | Harm at global scale | Layer 3 human review before publication (Article 8.1) |
 | Doxxing via profile data | Real-world danger | Country only; city and exact age optional and hideable (Article 8.2) |
-| Privilege escalation via RLS gap | Any of the above | Default deny; every table has policies; tested in Phase 13 |
-| Credential leakage | Account takeover | Secrets never in the repo; anon key is public by design |
+| Privilege escalation via RLS gap | Any of the above | Default deny; catalog-wide and role-based tests run on a fresh database in CI |
+| Credential leakage | Account takeover | Secrets never in the repo; tracked files are scanned in CI without printing secret values |
 
 ## RLS is the security model
 
@@ -28,6 +28,10 @@ policies. Consequently:
   Functions and scheduled jobs.
 - Supabase's own guidance is to review RLS policies before production; Phase 13
   makes that a test suite, not a checklist.
+- `PUBLIC` receives no implicit function execution. Every client-callable RPC
+  is in an explicit allowlist and all new functions inherit a revoked default.
+- CI executes the policies as anonymous, signed-in, cross-user, restricted,
+  moderator, and service contexts instead of trusting migration text alone.
 
 ## Secrets
 
@@ -41,6 +45,11 @@ policies. Consequently:
 `.gitignore` excludes `.env*` except `.env.example`. Any `EXPO_PUBLIC_` prefixed
 variable is embedded in the client bundle — treat that prefix as a declaration
 that the value is public.
+
+GitHub workflows use read-only repository permissions and immutable action
+commit SHAs. Database CI uses only the throwaway keys produced by its local
+Supabase stack. The release-candidate workflow refuses to run EAS/Maestro unless
+GitHub records a successful `CI` workflow for the exact requested commit SHA.
 
 ## Authentication (Phase 3)
 

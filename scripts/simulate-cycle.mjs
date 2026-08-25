@@ -20,13 +20,8 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
-const CREDENTIALS_FILE =
-  process.env.CREDENTIALS_FILE ?? join(ROOT, 'docs', 'supa_keys.md');
+import { loadVerificationTarget } from './lib/verification-target.mjs';
 
 const KEEP = process.argv.includes('--keep');
 const CLEAN_ONLY = process.argv.includes('--clean');
@@ -35,32 +30,12 @@ const SIM_DOMAIN = 'unumae.sim';
 const SIM_PREFIX = 'sim';
 const CANDIDATES = 12;
 
-if (!existsSync(CREDENTIALS_FILE)) {
-  console.error(`No credential file at ${CREDENTIALS_FILE}.`);
-  process.exit(1);
-}
-
-const creds = Object.fromEntries(
-  readFileSync(CREDENTIALS_FILE, 'utf8')
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line.includes('='))
-    .map((line) => {
-      const index = line.indexOf('=');
-      return [line.slice(0, index).trim(), line.slice(index + 1).trim()];
-    })
-);
-
-const URL_BASE = creds.project_url;
-const ANON = creds.publishable_key;
-const SERVICE = creds.service_role_secret;
-
-if (!URL_BASE || !ANON || !SERVICE) {
-  console.error(
-    'Credential file needs project_url, publishable_key and service_role_secret.'
-  );
-  process.exit(1);
-}
+const {
+  url: URL_BASE,
+  publicKey: ANON,
+  secretKey: SERVICE,
+  label: TARGET_LABEL,
+} = loadVerificationTarget();
 
 let failures = 0;
 
@@ -333,18 +308,14 @@ async function runCycle(
     });
   }
 
-  await asUser(
-    selected.token,
-    `/storage/v1/object/portraits/${selected.id}/photo.jpg`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'image/jpeg' },
-      body: 'simulated-photograph',
-    }
-  );
-  await asUser(selected.token, `/rest/v1/portraits?id=eq.${portraitId}`, {
+  // Storage and decoded-image registration have their own Edge integration
+  // suite. This database-cycle fixture uses the service role to attach an
+  // otherwise valid versioned path, keeping this test independent of image
+  // codecs while still exercising the real submission constraints.
+  const simulatedPhotoPath = `${selected.id}/${portraitId}/photo/${randomUUID()}.jpg`;
+  await svc(`/rest/v1/portraits?id=eq.${portraitId}`, {
     method: 'PATCH',
-    body: JSON.stringify({ photo_path: `${selected.id}/photo.jpg` }),
+    body: JSON.stringify({ photo_path: simulatedPhotoPath }),
   });
 
   const submitted = await asUser(
@@ -690,6 +661,66 @@ async function exerciseQuietDay(date) {
   step(
     invitation === null && row?.selection_status === 'cancelled',
     'the cutoff produced a Quiet Day instead of a late invitation',
+    `status ${row?.selection_status}`
+  );
+}
+
+/** Two scheduler deliveries may race; only one active audit row may survive. */
+async function exerciseConcurrentDraw(date) {
+  console.log(`\nconcurrent draw ${date}`);
+
+  const responses = await Promise.all([
+    rpc('run_daily_draw', { target_date: date }),
+    rpc('run_daily_draw', { target_date: date }),
+  ]);
+  const accepted = responses.filter((response) => response.ok).length;
+  step(
+    accepted >= 1,
+    'at least one concurrent scheduler delivery completed',
+    responses.map((response) => `HTTP ${response.status}`).join(', ')
+  );
+
+  const state = await svc(
+    `/rest/v1/daily_draws?selection_date=eq.${date}&selection_status=neq.cancelled&select=id`
+  );
+  const activeRows = state.ok ? await state.json() : [];
+  step(
+    state.ok && activeRows.length === 1,
+    'concurrent deliveries produced exactly one active draw',
+    `${activeRows.length} active row(s)`
+  );
+}
+
+/** An empty eligible pool is a recorded Quiet Day, never a missing cycle. */
+async function exerciseEmptyPool(date, people) {
+  console.log(`\nempty pool ${date}`);
+
+  const optOuts = await Promise.all(
+    people.map((person) =>
+      svc(`/rest/v1/profiles?id=eq.${person.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ wants_selection: false }),
+      })
+    )
+  );
+  step(
+    optOuts.every((response) => response.ok),
+    'all remaining candidates opted out'
+  );
+  await rpc('refresh_selection_eligibility');
+
+  const draw = await rpc('run_daily_draw', { target_date: date });
+  step(draw.ok, 'the scheduler recorded the empty pool', `HTTP ${draw.status}`);
+
+  const state = await svc(
+    `/rest/v1/daily_draws?selection_date=eq.${date}&select=candidate_count,selected_user_id,selection_status`
+  );
+  const [row] = state.ok ? await state.json() : [];
+  step(
+    row?.candidate_count === 0 &&
+      row?.selected_user_id === null &&
+      row?.selection_status === 'cancelled',
+    'the empty pool became an honest Quiet Day',
     `status ${row?.selection_status}`
   );
 }
@@ -1040,7 +1071,7 @@ async function exerciseAudience(drawId, people, moderator, selected) {
 // Run
 // ---------------------------------------------------------------------------
 
-console.log(`Simulating the loop against ${URL_BASE}\n`);
+console.log(`Simulating the loop against ${TARGET_LABEL}\n`);
 console.log('people');
 
 const people = [];
@@ -1115,6 +1146,9 @@ try {
     entries.every((entry) => entry.human_number !== null),
     'every entry has a number'
   );
+
+  await exerciseConcurrentDraw(utcDate(1));
+  await exerciseEmptyPool(utcDate(7), people);
 } catch (error) {
   console.error(`\nRun failed: ${error.message}`);
   failures += 1;

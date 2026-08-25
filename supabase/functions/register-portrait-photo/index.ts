@@ -31,6 +31,17 @@ Deno.serve(async (request: Request): Promise<Response> => {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 
+  const admin = createClient(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+  const token = authorization.slice('Bearer '.length);
+  const { data: userData, error: userError } = await admin.auth.getUser(token);
+  if (userError || !userData.user) {
+    return jsonResponse({ error: 'unauthorized' }, 401);
+  }
+
+  // Authenticate before parsing or validating caller-controlled input so an
+  // invalid credential cannot use response differences as an API oracle.
   const body = (await request.json().catch(() => ({}))) as RegistrationBody;
   if (
     typeof body.portraitId !== 'string' ||
@@ -39,15 +50,6 @@ Deno.serve(async (request: Request): Promise<Response> => {
     body.objectPath.length > 160
   ) {
     return jsonResponse({ error: 'invalid_request' }, 400);
-  }
-
-  const admin = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-  const token = authorization.slice('Bearer '.length);
-  const { data: userData, error: userError } = await admin.auth.getUser(token);
-  if (userError || !userData.user) {
-    return jsonResponse({ error: 'unauthorized' }, 401);
   }
 
   const expected = new RegExp(

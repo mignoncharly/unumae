@@ -482,24 +482,18 @@ select ok(
   ),
   'valid versioned JPEG path passes storage policy helper'
 );
+reset role;
 select is(
-  public.can_insert_owned_storage_object(
-    'portraits',
-    '10000000-0000-0000-0000-000000000003/10000000-0000-4000-8000-000000000020/photo/10000000-0000-4000-8000-000000000021.jpg',
-    '{"mimetype":"image/png","size":1024}'::jsonb
-  ),
-  false,
-  'MIME mismatch is rejected'
+  (select allowed_mime_types from storage.buckets where id = 'portraits'),
+  array['image/jpeg']::text[],
+  'portrait bucket rejects non-JPEG MIME before object insertion'
 );
 select is(
-  public.can_insert_owned_storage_object(
-    'portraits',
-    '10000000-0000-0000-0000-000000000003/10000000-0000-4000-8000-000000000020/photo/10000000-0000-4000-8000-000000000021.jpg',
-    '{"mimetype":"image/jpeg","size":9000000}'::jsonb
-  ),
-  false,
-  'oversized image is rejected'
+  (select file_size_limit from storage.buckets where id = 'portraits'),
+  8388608::bigint,
+  'portrait bucket rejects objects above 8 MiB before insertion'
 );
+set local role authenticated;
 select is(
   public.can_insert_owned_storage_object(
     'portraits',

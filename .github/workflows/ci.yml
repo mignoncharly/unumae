@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  application:
+    name: Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.20.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm run verify
+      - run: npx expo-doctor
+      - run: npm run scan:secrets
+      - run: npm audit --audit-level=high
+
+  website:
+    name: Website
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.20.0
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+        working-directory: website
+      - run: npm run verify
+        working-directory: website
+      - run: npm audit --audit-level=high
+        working-directory: website
+
+  backend:
+    name: Fresh database and Edge Functions
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.20.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520 # v3.0.0
+        with:
+          version: 2.84.2
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: v2.1.4
+      - name: Start isolated Supabase stack
+        run: supabase start
+      - name: Reapply every migration from empty
+        run: supabase db reset --yes
+      - name: Lint live schema
+        run: supabase db lint --local --level warning
+      - name: Check generated database types
+        run: npm run verify:db-types
+      - name: Run every pgTAP integration suite
+        run: supabase test db
+      - name: Run Edge provider unit tests
+        run: npm run test:edge
+      - name: Cross-check draw implementation
+        run: npm run verify:draw
+      - name: Probe anonymous and cross-user access
+        run: npm run verify:privileges && npm run verify:security
+      - name: Simulate complete daily cycles
+        run: npm run simulate
+      - name: Start Edge Functions for black-box tests
+        run: |
+          supabase functions serve --no-verify-jwt > edge-functions.log 2>&1 &
+          echo $! > edge-functions.pid
+      - name: Verify Edge HTTP and worker contracts
+        run: npm run verify:edge
+      - name: Show Edge log after failure
+        if: failure()
+        run: test ! -f edge-functions.log || tail -n 500 edge-functions.log
+      - name: Stop isolated stack
+        if: always()
+        run: |
+          test ! -f edge-functions.pid || kill "$(cat edge-functions.pid)" || true
+          supabase stop --no-backup

@@ -13,11 +13,7 @@
  * Reviewing migrations did not catch that. Asking the live database did.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
+import { loadVerificationTarget } from './lib/verification-target.mjs';
 
 /**
  * The only functions an anonymous caller may execute. Everything else must
@@ -212,30 +208,7 @@ const CLOSED_TABLES = [
   'job_secrets',
 ];
 
-function loadEnv() {
-  const path = join(ROOT, '.env');
-  if (!existsSync(path)) {
-    console.error('No .env — copy .env.example and fill it in.');
-    process.exit(1);
-  }
-  const env = {};
-  for (const line of readFileSync(path, 'utf8').split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
-    const index = trimmed.indexOf('=');
-    env[trimmed.slice(0, index)] = trimmed.slice(index + 1);
-  }
-  return env;
-}
-
-const env = loadEnv();
-const url = env.EXPO_PUBLIC_SUPABASE_URL;
-const key = env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!url || !key) {
-  console.error('.env is missing EXPO_PUBLIC_SUPABASE_URL or ANON_KEY.');
-  process.exit(1);
-}
+const { url, publicKey: key, label: targetLabel } = loadVerificationTarget();
 
 const headers = {
   apikey: key,
@@ -252,7 +225,7 @@ function report(ok, label, detail = '') {
   if (!ok) failures += 1;
 }
 
-console.log(`Probing anonymous access to ${url}\n`);
+console.log(`Probing anonymous access to ${targetLabel}\n`);
 console.log('functions');
 
 for (const [name, body] of PROBES) {

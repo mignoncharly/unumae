@@ -32,15 +32,6 @@ Deno.serve(async (request: Request): Promise<Response> => {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 
-  const body = (await request.json().catch(() => ({}))) as DeletionRequestBody;
-  if (
-    typeof body.idempotencyKey !== 'string' ||
-    body.idempotencyKey.length < 16 ||
-    body.idempotencyKey.length > 128
-  ) {
-    return jsonResponse({ error: 'invalid_request' }, 400);
-  }
-
   const token = authorization.slice('Bearer '.length);
   const admin = createClient(supabaseUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
@@ -48,6 +39,17 @@ Deno.serve(async (request: Request): Promise<Response> => {
   const { data: userData, error: userError } = await admin.auth.getUser(token);
   if (userError || !userData.user) {
     return jsonResponse({ error: 'unauthorized' }, 401);
+  }
+
+  // Authenticate before parsing or validating caller-controlled input so an
+  // invalid credential cannot use response differences as an API oracle.
+  const body = (await request.json().catch(() => ({}))) as DeletionRequestBody;
+  if (
+    typeof body.idempotencyKey !== 'string' ||
+    body.idempotencyKey.length < 16 ||
+    body.idempotencyKey.length > 128
+  ) {
+    return jsonResponse({ error: 'invalid_request' }, 400);
   }
 
   const existing = await admin

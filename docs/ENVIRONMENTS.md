@@ -1,16 +1,15 @@
 # Environment
 
-> Phase 0 note, 25 August 2026: this file describes the current topology, not
-> the roadmap target. `docs/implementation-roadmap-v2.md` supersedes the
-> one-hosted-project design for release planning: development and CI move to
-> isolated local stacks, while the two available hosted slots are reserved for
-> staging and production. Until Phase 10 is complete, there is still only one
-> Unumae hosted project and therefore no safe staging promotion step.
+> Phase 3 update, 25 August 2026: development and CI now use isolated local
+> Supabase stacks. The only hosted Unumae project is production; the second
+> hosted slot remains reserved for staging in Phase 10. There is therefore a
+> fresh-database CI gate, but still no safe hosted staging promotion step.
 
-**One Supabase project. One EAS project. One bundle identifier.**
+**One hosted Supabase project today. Ephemeral local development and CI. One
+EAS project and bundle identifier.**
 
-Decided 2026-08-22, superseding the three-environment design in earlier
-revisions of this file.
+The target topology is local development, disposable local CI, hosted staging,
+and hosted production. Staging is the only missing environment.
 
 ## The setup
 
@@ -22,23 +21,22 @@ revisions of this file.
 | Deep link scheme | `onehuman://` |
 | Apple Team ID | `UB67843RJK` |
 
-There is no `APP_ENV`, no staging project, and no `.dev` or `.staging` bundle
-suffix. Configuration that pretends to separate environments while pointing at
-one database is worse than no separation at all: it reads as a safeguard and
-is not one.
+There is no hosted staging project yet and no `.dev` or `.staging` bundle
+suffix. Local Supabase credentials are discovered from `supabase status`; CI
+never receives hosted database credentials.
 
 ## What this costs, stated plainly
 
-Since development and production are the same database:
+For any command explicitly aimed at the hosted project:
 
 - **A destructive migration is immediately live.** Migrations are append-only
   and additive, and `npm run verify` checks them before they are applied, but
   there is no rehearsal step. Read a migration twice before `npm run db:push`.
-- **Test data becomes real data.** Anything created while trying something out
-  is in the same tables as everything else. `supabase/seed.sql` therefore stays
-  empty of anything that could be mistaken for a person.
-- **There is no safe place to break things.** Schema experiments happen against
-  the live project, so prefer a scratch table you drop over altering a real one.
+- **Test data becomes real data.** Hosted verification must be deliberate and
+  self-cleaning. Ordinary development and all CI integration tests stay local.
+- **There is still no hosted rehearsal.** The local stack proves migrations and
+  contracts from empty, but cannot prove provider configuration or hosted-plan
+  behavior. Phase 10 staging remains a release blocker.
 
 These are accepted, not overlooked. If the project later needs a rehearsal
 environment, the migration pipeline already supports it — `scripts/db.mjs`
@@ -80,7 +78,9 @@ work is done, and none should be started before the iOS product is real.
 ```bash
 npm run db:push          # apply pending migrations to the project
 npm run db:list          # what is applied
-npm run verify:live      # draw cross-check + anonymous access probe
+npm run verify:integration # local draw, role and RLS probes
+npm run simulate           # complete local daily-cycle integration
+npm run verify:live        # explicit hosted draw, role and RLS probes
 
 npx supabase functions deploy delete-account --project-ref qpicjsjxdblrxdrdibge
 eas build --profile development --platform ios

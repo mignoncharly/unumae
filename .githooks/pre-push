@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Unumae runs no GitHub Actions. This hook is the gate instead: nothing
-# reaches the remote without passing the same checks CI would have run.
+# Fast local feedback before GitHub's required CI jobs run. This hook is a
+# convenience, not the release security boundary: it can be bypassed locally.
 #
 # Installed by `npm install` (the prepare script sets core.hooksPath).
 # Emergency bypass, to be used almost never: git push --no-verify

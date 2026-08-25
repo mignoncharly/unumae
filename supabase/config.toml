@@ -23,6 +23,19 @@ port = 54324
 enabled = true
 file_size_limit = "20MiB"
 
+# The CLI recreates configured buckets after `db reset`, so keep these limits
+# in local infrastructure config as well as the hosted migration. Otherwise a
+# fresh stack replaces the migrated values with unrestricted bucket defaults.
+[storage.buckets.avatars]
+public = false
+file_size_limit = "8MiB"
+allowed_mime_types = ["image/jpeg"]
+
+[storage.buckets.portraits]
+public = false
+file_size_limit = "8MiB"
+allowed_mime_types = ["image/jpeg"]
+
 [auth]
 enabled = true
 site_url = "onehuman://"

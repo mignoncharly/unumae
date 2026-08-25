@@ -18,43 +18,15 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
-const CREDENTIALS_FILE =
-  process.env.CREDENTIALS_FILE ?? join(ROOT, 'docs', 'supa_keys.md');
+import { loadVerificationTarget } from './lib/verification-target.mjs';
 
-function credentials() {
-  if (!existsSync(CREDENTIALS_FILE)) {
-    console.error(`No credential file at ${CREDENTIALS_FILE}.`);
-    process.exit(1);
-  }
-
-  return Object.fromEntries(
-    readFileSync(CREDENTIALS_FILE, 'utf8')
-      .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.includes('='))
-      .map((line) => {
-        const index = line.indexOf('=');
-        return [line.slice(0, index).trim(), line.slice(index + 1).trim()];
-      })
-  );
-}
-
-const creds = credentials();
-const URL_BASE = creds.project_url;
-const ANON = creds.publishable_key;
-const SERVICE = creds.service_role_secret;
-
-if (!URL_BASE || !ANON || !SERVICE) {
-  console.error(
-    'Credential file needs project_url, publishable_key and service_role_secret.'
-  );
-  process.exit(1);
-}
+const {
+  url: URL_BASE,
+  publicKey: ANON,
+  secretKey: SERVICE,
+  label: TARGET_LABEL,
+} = loadVerificationTarget();
 
 let failures = 0;
 const created = [];
@@ -152,7 +124,7 @@ async function cleanup() {
   }
 }
 
-console.log(`Attacking ${URL_BASE} as a signed-in user\n`);
+console.log(`Attacking ${TARGET_LABEL} as a signed-in user\n`);
 
 let attacker;
 let victim;
@@ -350,9 +322,10 @@ try {
    * Without it, a refusal proves nothing — a malformed upload is rejected
    * whoever sends it, and the test would pass while the policy did nothing.
    */
+  const ownObjectPath = `${attacker.id}/${randomUUID()}/photo/${randomUUID()}.jpg`;
   const ownUpload = await asUser(
     attacker.token,
-    `/storage/v1/object/portraits/${attacker.id}/probe.jpg`,
+    `/storage/v1/object/portraits/${ownObjectPath}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'image/jpeg' },
@@ -367,7 +340,7 @@ try {
 
   const foreignUpload = await asUser(
     attacker.token,
-    `/storage/v1/object/portraits/${victim.id}/photo.jpg`,
+    `/storage/v1/object/portraits/${victim.id}/${randomUUID()}/photo/${randomUUID()}.jpg`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'image/jpeg' },
@@ -384,7 +357,7 @@ try {
   // is for public buckets and answers 400 whoever asks.
   const ownRead = await asUser(
     attacker.token,
-    `/storage/v1/object/authenticated/portraits/${attacker.id}/probe.jpg`
+    `/storage/v1/object/authenticated/portraits/${ownObjectPath}`
   );
   check(
     ownRead.ok,
@@ -395,7 +368,7 @@ try {
   // The one that matters: somebody else's private object, before publication.
   const foreignRead = await asUser(
     victim.token,
-    `/storage/v1/object/authenticated/portraits/${attacker.id}/probe.jpg`
+    `/storage/v1/object/authenticated/portraits/${ownObjectPath}`
   );
   check(
     !foreignRead.ok,
@@ -403,7 +376,7 @@ try {
     `HTTP ${foreignRead.status}`
   );
 
-  await admin(`/storage/v1/object/portraits/${attacker.id}/probe.jpg`, {
+  await admin(`/storage/v1/object/portraits/${ownObjectPath}`, {
     method: 'DELETE',
   });
 

@@ -1,6 +1,12 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
+import { isServiceRoleRequest } from '../_shared/serviceRole.ts';
+import {
+  classifyExpoTickets,
+  type ExpoTicket,
+} from '../_shared/notificationDelivery.ts';
+import { fetchProvider } from '../_shared/providerFetch.ts';
 
 type Category = 'daily' | 'selected' | 'answered' | 'anniversary';
 type Locale = 'en' | 'fr' | 'de';
@@ -14,12 +20,6 @@ interface DueRow {
   dedupe_key: string;
   subject_name: string | null;
   route_data: Record<string, unknown>;
-}
-
-interface ExpoTicket {
-  status: 'ok' | 'error';
-  id?: string;
-  details?: { error?: string };
 }
 
 const COPY: Record<
@@ -129,7 +129,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
   if (!supabaseUrl || !serviceRoleKey) {
     return jsonResponse({ error: 'server_misconfigured' }, 500);
   }
-  if (request.headers.get('Authorization') !== `Bearer ${serviceRoleKey}`) {
+  if (!(await isServiceRoleRequest(request, supabaseUrl, serviceRoleKey))) {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 
@@ -202,9 +202,9 @@ Deno.serve(async (request: Request): Promise<Response> => {
 
   for (let start = 0; start < pushTargets.length; start += 100) {
     const batch = pushTargets.slice(start, start + 100);
-    let response: Response;
-    try {
-      response = await fetch('https://exp.host/--/api/v2/push/send', {
+    const response = await fetchProvider(
+      'https://exp.host/--/api/v2/push/send',
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -221,8 +221,9 @@ Deno.serve(async (request: Request): Promise<Response> => {
             data: row.route_data,
           }))
         ),
-      });
-    } catch {
+      }
+    );
+    if (!response) {
       for (const { row, token } of batch) {
         await record(row, 'push', token, false, undefined, 'expo_unreachable');
       }
@@ -244,21 +245,22 @@ Deno.serve(async (request: Request): Promise<Response> => {
     }
 
     const result = (await response.json()) as { data?: ExpoTicket[] };
-    const tickets = result.data ?? [];
+    const deliveries = classifyExpoTickets(batch.length, result.data ?? []);
     for (const [index, target] of batch.entries()) {
-      const ticket = tickets[index];
-      const succeeded = ticket?.status === 'ok';
-      const failureCode = ticket?.details?.error ?? 'expo_ticket_missing';
+      const delivery = deliveries[index];
       await record(
         target.row,
         'push',
         target.token,
-        succeeded,
-        ticket?.id,
-        succeeded ? undefined : failureCode
+        delivery.succeeded,
+        delivery.providerReference,
+        delivery.failureCode
       );
 
-      if (!succeeded && failureCode === 'DeviceNotRegistered') {
+      if (
+        !delivery.succeeded &&
+        delivery.failureCode === 'DeviceNotRegistered'
+      ) {
         await admin.rpc('disable_push_token', { failed_token: target.token });
       }
     }
@@ -291,23 +293,21 @@ Deno.serve(async (request: Request): Promise<Response> => {
     }
 
     const copy = EMAIL_COPY[localeFor(row.locale)];
-    let emailResponse: Response;
-    try {
-      emailResponse = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: fromEmail,
-          to: [row.email],
-          subject: copy.subject,
-          text: `${copy.heading}\n\n${copy.body}\n\n${copy.action}: onehuman://invitation\n\n${copy.note}`,
-          html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:auto;padding:32px;color:#11121A"><p style="color:#315CF5;font-weight:700">UNUMAE</p><h1>${copy.heading}</h1><p>${copy.body}</p><p><a href="onehuman://invitation" style="display:inline-block;background:#315CF5;color:white;text-decoration:none;padding:14px 22px;border-radius:999px;font-weight:600">${copy.action}</a></p><p style="color:#777E91">${copy.note}</p></div>`,
-        }),
-      });
-    } catch {
+    const emailResponse = await fetchProvider('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: [row.email],
+        subject: copy.subject,
+        text: `${copy.heading}\n\n${copy.body}\n\n${copy.action}: onehuman://invitation\n\n${copy.note}`,
+        html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:auto;padding:32px;color:#11121A"><p style="color:#315CF5;font-weight:700">UNUMAE</p><h1>${copy.heading}</h1><p>${copy.body}</p><p><a href="onehuman://invitation" style="display:inline-block;background:#315CF5;color:white;text-decoration:none;padding:14px 22px;border-radius:999px;font-weight:600">${copy.action}</a></p><p style="color:#777E91">${copy.note}</p></div>`,
+      }),
+    });
+    if (!emailResponse) {
       await record(
         row,
         'email',

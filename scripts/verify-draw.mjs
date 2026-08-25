@@ -14,36 +14,10 @@
  */
 
 import { createHash, createHmac } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
+import { loadVerificationTarget } from './lib/verification-target.mjs';
 
-function loadEnv() {
-  const path = join(ROOT, '.env');
-  if (!existsSync(path)) {
-    console.error('No .env — copy .env.example and fill it in.');
-    process.exit(1);
-  }
-  const env = {};
-  for (const line of readFileSync(path, 'utf8').split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
-    const index = trimmed.indexOf('=');
-    env[trimmed.slice(0, index)] = trimmed.slice(index + 1);
-  }
-  return env;
-}
-
-const env = loadEnv();
-const url = env.EXPO_PUBLIC_SUPABASE_URL;
-const key = env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!url || !key) {
-  console.error('.env is missing EXPO_PUBLIC_SUPABASE_URL or ANON_KEY.');
-  process.exit(1);
-}
+const { url, publicKey: key, label: targetLabel } = loadVerificationTarget();
 
 async function rpc(name, body) {
   const response = await fetch(`${url}/rest/v1/rpc/${name}`, {
@@ -108,7 +82,7 @@ function check(label, actual, expected) {
   }
 }
 
-console.log(`Cross-checking draw against ${url}\n`);
+console.log(`Cross-checking draw against ${targetLabel}\n`);
 
 console.log('draw_order');
 for (const seed of seeds) {

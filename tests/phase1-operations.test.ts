@@ -81,10 +81,12 @@ describe('a pre-publication Human can be replaced safely', () => {
 
 describe('operations report completed work, not queued intent', () => {
   it('queues Edge work and waits for its completion callback', () => {
-    expect(lastFunction('invoke_function')).toContain("'queued'");
+    expect(lastFunction('invoke_function')).toContain(
+      'public.claim_worker_run'
+    );
     expect(lastFunction('invoke_function')).toContain("'jobrunid'");
-    expect(sender).toContain("admin.rpc('complete_job_run'");
-    expect(translator).toContain("supabase.rpc('complete_job_run'");
+    expect(sender).toContain('finishWorkerRun');
+    expect(translator).toContain('finishWorkerRun');
   });
 
   it('records synchronous draw and publish failures', () => {
@@ -103,8 +105,10 @@ describe('operations report completed work, not queued intent', () => {
       'portrait_queue_age',
       'cycle_at_risk',
     ]) {
-      expect(lastFunction('refresh_operational_alerts')).toContain(`'${code}'`);
+      expect(migrations).toContain(`'${code}'`);
     }
+    expect(migrations).toContain("'worker_dead_letter'");
+    expect(migrations).toContain("'worker_stale_lease'");
   });
 });
 

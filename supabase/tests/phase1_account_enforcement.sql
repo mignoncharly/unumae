@@ -210,7 +210,9 @@ select throws_ok(
   'suspended account cannot edit archived content'
 );
 select throws_ok(
-  $$select public.register_push_token('ExponentPushToken[test]', 'ios')$$,
+  $$select public.register_push_token(
+    'ExponentPushToken[test]', 'ios', repeat('x', 43)
+  )$$,
   '42501', 'Active account required',
   'suspended account cannot register a push token'
 );
@@ -226,12 +228,9 @@ select throws_ok(
   '42501', 'Active account required',
   'suspended account cannot mark invitation participation'
 );
-select throws_ok(
-  $$select public.track_events(
-    '00000000-0000-0000-0000-000000000099', '[]'::jsonb
-  )$$,
-  '42501', 'Active account required',
-  'authenticated analytics are blocked for suspended accounts'
+select ok(
+  not has_function_privilege('authenticated', 'public.track_events(uuid,jsonb)', 'EXECUTE'),
+  'authenticated clients cannot bypass the analytics Edge boundary'
 );
 
 select ok(public.export_my_data() is not null, 'suspended account may export');

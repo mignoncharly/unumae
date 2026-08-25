@@ -18,6 +18,7 @@ const userAuth = createClient(url, publicKey, {
 const serviceFunctions = [
   'enforce-account-status',
   'process-account-deletions',
+  'process-push-receipts',
   'reconcile-storage',
   'send-notifications',
   'translate-portraits',
@@ -26,8 +27,14 @@ const userFunctions = [
   'delete-account',
   'device-attestation',
   'register-portrait-photo',
+  'report-content',
 ];
-const allFunctions = [...serviceFunctions, ...userFunctions];
+const publicFunctions = ['analytics-ingest'];
+const allFunctions = [
+  ...serviceFunctions,
+  ...userFunctions,
+  ...publicFunctions,
+];
 let failures = 0;
 let userId;
 let correlationId;
@@ -41,13 +48,14 @@ function check(value, description, detail = '') {
   if (!passed) failures += 1;
 }
 
-async function call(name, { method = 'POST', token, body } = {}) {
+async function call(name, { method = 'POST', token, body, headers = {} } = {}) {
   return fetch(`${functionsUrl}/${name}`, {
     method,
     headers: {
       apikey: publicKey,
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+      ...headers,
     },
     ...(body === undefined
       ? {}
@@ -98,18 +106,38 @@ try {
     const wrongMethod = await call(name, { method: 'GET' });
     check(wrongMethod.status === 405, `${name} rejects unsupported methods`);
 
-    const missingJwt = await call(name, { body: {} });
-    check(missingJwt.status === 401, `${name} rejects a missing JWT`);
+    if (!publicFunctions.includes(name)) {
+      const missingJwt = await call(name, { body: {} });
+      check(missingJwt.status === 401, `${name} rejects a missing JWT`);
 
-    const malformedJwt = await call(name, { token: 'malformed', body: {} });
-    check(malformedJwt.status === 401, `${name} rejects a malformed JWT`);
+      const malformedJwt = await call(name, { token: 'malformed', body: {} });
+      check(malformedJwt.status === 401, `${name} rejects a malformed JWT`);
+    }
   }
+
+  const malformedAnalytics = await call('analytics-ingest', {
+    body: { event: 'not-approved', locale: 'en', source: 'home' },
+    headers: { 'x-forwarded-for': '198.51.100.2' },
+  });
+  check(
+    malformedAnalytics.status === 400,
+    'analytics-ingest rejects events outside its allowlist'
+  );
+
+  const marketingAnalytics = await call('analytics-ingest', {
+    body: { event: 'archive_opened', locale: 'en', source: 'home' },
+    headers: { 'x-forwarded-for': '198.51.100.2' },
+  });
+  check(
+    marketingAnalytics.ok,
+    'analytics-ingest accepts identifier-free website events'
+  );
 
   console.log('\nservice-role boundary and job completion');
   for (const name of serviceFunctions) {
     const queued = await admin
       .from('job_runs')
-      .insert({ job: `phase3-${name}`, ok: false, status: 'queued' })
+      .insert({ job: name, ok: false, status: 'queued' })
       .select('id')
       .single();
     if (queued.error || !queued.data) throw queued.error;
@@ -287,9 +315,21 @@ try {
     'delete-account reuses the durable request idempotently'
   );
 
+  const deletionRun = await admin
+    .from('job_runs')
+    .insert({
+      job: 'process-account-deletions',
+      ok: false,
+      status: 'queued',
+    })
+    .select('id')
+    .single();
+  if (deletionRun.error || !deletionRun.data) throw deletionRun.error;
+  jobRunIds.push(deletionRun.data.id);
+
   const processed = await call('process-account-deletions', {
     token: secretKey,
-    body: {},
+    body: { jobRunId: deletionRun.data.id },
   });
   const processedBody = await processed.json();
   check(

@@ -2,6 +2,11 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
 import { isServiceRoleRequest } from '../_shared/serviceRole.ts';
+import {
+  finishWorkerRun,
+  startWorkerRun,
+  type WorkerInvocation,
+} from '../_shared/workerRun.ts';
 
 type DeletionStage = 'storage_deleting' | 'database_deleting' | 'auth_deleting';
 
@@ -10,10 +15,6 @@ interface DeletionJob {
   user_id: string;
   stage: DeletionStage;
   correlation_id: string;
-}
-
-interface InvocationPayload {
-  jobRunId?: number;
 }
 
 interface ListedObject {
@@ -26,7 +27,7 @@ const DELETE_BATCH_SIZE = 100;
 const MAX_LEGACY_OBJECTS = 10_000;
 
 async function listPrefix(
-  admin: ReturnType<typeof createClient>,
+  admin: ReturnType<typeof createClient<any>>,
   bucket: string,
   rootPrefix: string
 ): Promise<string[]> {
@@ -62,7 +63,7 @@ async function listPrefix(
 }
 
 async function deleteAndVerifyPrefix(
-  admin: ReturnType<typeof createClient>,
+  admin: ReturnType<typeof createClient<any>>,
   bucket: string,
   userId: string
 ): Promise<number> {
@@ -101,15 +102,27 @@ Deno.serve(async (request: Request): Promise<Response> => {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 
-  const payload = (await request.json().catch(() => ({}))) as InvocationPayload;
+  const payload = (await request.json().catch(() => ({}))) as WorkerInvocation;
   const admin = createClient(supabaseUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
+  const workerRun = await startWorkerRun(
+    admin,
+    payload,
+    'process-account-deletions'
+  );
+  if (!workerRun) return jsonResponse({ error: 'job_run_unavailable' }, 409);
   const { data, error: claimError } = await admin.rpc(
     'claim_account_deletion_requests',
     { limit_rows: 5 }
   );
   if (claimError) {
+    await finishWorkerRun(admin, workerRun, {
+      succeeded: false,
+      retryable: true,
+      detail: 'account_deletion_claim_failed',
+      providerCategory: 'internal',
+    });
     return jsonResponse({ error: 'claim_failed' }, 500);
   }
 
@@ -198,13 +211,12 @@ Deno.serve(async (request: Request): Promise<Response> => {
     }
   }
 
-  if (typeof payload.jobRunId === 'number') {
-    await admin.rpc('complete_job_run', {
-      target_run: payload.jobRunId,
-      succeeded: failed === 0,
-      result_detail: `claimed=${jobs.length};completed=${completed};failed=${failed}`,
-    });
-  }
+  await finishWorkerRun(admin, workerRun, {
+    succeeded: failed === 0,
+    retryable: failed > 0,
+    detail: `claimed=${jobs.length};completed=${completed};failed=${failed}`,
+    providerCategory: failed > 0 ? 'provider_error' : 'accepted',
+  });
 
   return jsonResponse({ claimed: jobs.length, completed, failed });
 });

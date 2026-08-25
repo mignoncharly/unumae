@@ -4,7 +4,7 @@
  * or the live project with `--live`. It never prints credentials and removes
  * every synthetic row.
  */
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -17,6 +17,7 @@ const service = createClient(url, secretKey, {
 });
 const users = [];
 const drawIds = [];
+const deviceFlagIds = [];
 let failures = 0;
 
 function check(value, label) {
@@ -57,6 +58,39 @@ async function makeUser(label) {
   const signedIn = await client.auth.signInWithPassword({ email, password });
   if (signedIn.error) throw signedIn.error;
   return { id, client };
+}
+
+async function createInstallationSession(userId) {
+  const raw = `phase6-${randomUUID()}`;
+  const digest = (value) =>
+    `\\x${createHash('sha256').update(value).digest('hex')}`;
+  const flag = await service
+    .from('device_binding_flags')
+    .insert({ platform: 'ios', opaque_binding_hash: digest(`device-${raw}`) })
+    .select('id')
+    .single();
+  if (flag.error || !flag.data) throw flag.error;
+  deviceFlagIds.push(flag.data.id);
+  const attestation = await service
+    .from('account_device_attestations')
+    .insert({
+      user_id: userId,
+      device_flag_id: flag.data.id,
+      platform: 'ios',
+      key_id_hash: digest(`key-${raw}`),
+    })
+    .select('id')
+    .single();
+  if (attestation.error || !attestation.data) throw attestation.error;
+  const expires = new Date(Date.now() + 30 * 86_400_000).toISOString();
+  const session = await service.rpc('create_attested_installation_session', {
+    target_user: userId,
+    target_attestation: attestation.data.id,
+    target_token_hash: digest(raw),
+    target_expires_at: expires,
+  });
+  if (session.error) throw session.error;
+  return raw;
 }
 
 async function makeDraw(
@@ -130,6 +164,9 @@ async function cleanup() {
   for (const id of users) {
     await service.auth.admin.deleteUser(id);
   }
+  if (deviceFlagIds.length > 0) {
+    await service.from('device_binding_flags').delete().in('id', deviceFlagIds);
+  }
 }
 
 console.log(`Phase 2 safety/privacy verification against ${label}`);
@@ -185,9 +222,9 @@ try {
     questionReport?.target_content === question.data.body,
     'report queue contains the exact reported question'
   );
-  await rpc(moderator.client, 'resolve_report', {
+  await rpc(moderator.client, 'resolve_report_v2', {
     target_report: questionReport.report_id,
-    resolution: 'remove_content',
+    actions: ['remove_content'],
     resolution_note: 'Integration verification',
   });
   const removedQuestion = await service
@@ -216,9 +253,9 @@ try {
     portraitReport?.target_photo_path?.endsWith('.jpg'),
     'report queue contains the reported photograph path'
   );
-  await rpc(moderator.client, 'resolve_report', {
+  await rpc(moderator.client, 'resolve_report_v2', {
     target_report: portraitReport.report_id,
-    resolution: 'remove_content',
+    actions: ['remove_content'],
     resolution_note: 'Integration verification',
   });
   const redacted = await service
@@ -305,9 +342,11 @@ try {
     'a second moderator can overturn and restore the account'
   );
 
+  const installationToken = await createInstallationSession(subject.id);
   await rpc(subject.client, 'register_push_token', {
     push_token: `ExponentPushToken[phase2-${randomUUID()}]`,
     device_platform: 'ios',
+    installation_token: installationToken,
   });
   const removedTokens = await rpc(subject.client, 'unregister_my_push_tokens');
   check(removedTokens === 1, 'sign-out cleanup removes every push token');

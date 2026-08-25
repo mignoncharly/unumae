@@ -1,4 +1,8 @@
-import { fetchProvider, type ProviderFetch } from './providerFetch.ts';
+import {
+  fetchProvider,
+  fetchWithTimeout,
+  type ProviderFetch,
+} from './providerFetch.ts';
 
 Deno.test('provider calls return successful responses', async () => {
   const fetcher: ProviderFetch = async () =>
@@ -28,3 +32,23 @@ Deno.test('provider timeouts become retryable null responses', async () => {
   if (response !== null)
     throw new Error('timeout must not escape as a response');
 });
+
+Deno.test(
+  'fetchWithTimeout records only a bounded failure category',
+  async () => {
+    const fetcher: ProviderFetch = (_input, init) =>
+      new Promise((_resolve, reject) => {
+        init?.signal?.addEventListener('abort', () =>
+          reject(new Error('secret'))
+        );
+      });
+    const result = await fetchWithTimeout(
+      'https://provider.invalid/private-content',
+      {},
+      5,
+      fetcher
+    );
+    if (result.response !== null || result.category !== 'timeout')
+      throw new Error('timeout was not safely categorized');
+  }
+);

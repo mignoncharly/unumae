@@ -145,7 +145,13 @@ describe('blocking is personal, not editorial', () => {
 
 describe('reporting stays available but not floodable', () => {
   it('rate limits reports per hour', () => {
-    expect(functionBody('report_content')).toContain('if recent >= 20 then');
+    expect(functionBody('report_content')).toContain('recent_hour >= 10');
+    expect(functionBody('report_content')).toContain('recent_day >= 30');
+  });
+
+  it('validates targets and prevents duplicate open reports', () => {
+    expect(functionBody('report_content')).toContain('target_owner is null');
+    expect(FLAT).toContain('idx_content_reports_one_open_per_reporter_target');
   });
 
   it('keeps the report when the reporter deletes their account', () => {
@@ -170,14 +176,17 @@ describe('data export is the data, not a summary (Article 8.2)', () => {
     ]) {
       expect(FLAT).toContain(`'${section}'`);
     }
-    expect(exportData).toContain('export_my_data_phase2()');
-    expect(exportData).toContain("'question_translations'");
+    expect(exportData).toContain('export_my_data_phase5()');
+    expect(FLAT).toContain('export_my_data_phase2()');
+    expect(FLAT).toContain("'question_translations'");
   });
 
   it('is scoped to the caller everywhere', () => {
     expect(exportData).toContain('subject uuid := (select auth.uid())');
-    const scopedQueries = exportData.match(/= subject|subject::text/g) ?? [];
-    expect(scopedQueries.length).toBeGreaterThanOrEqual(10);
+    expect(exportData).toContain('where s.user_id = subject');
+    expect(
+      FLAT.match(/= subject|subject::text/g)?.length ?? 0
+    ).toBeGreaterThanOrEqual(10);
   });
 });
 

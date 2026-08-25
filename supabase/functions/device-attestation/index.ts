@@ -136,6 +136,17 @@ Deno.serve(async (request: Request): Promise<Response> => {
     if (registered.error) {
       throw new Error('attestation_registration_failed');
     }
+    const installationSessionToken = randomChallenge();
+    const installationSessionExpiresAt = new Date(
+      Date.now() + 30 * 86_400_000
+    ).toISOString();
+    const session = await admin.rpc('create_attested_installation_session', {
+      target_user: userData.user.id,
+      target_attestation: registered.data,
+      target_token_hash: await sha256Postgres(installationSessionToken),
+      target_expires_at: installationSessionExpiresAt,
+    });
+    if (session.error) throw new Error('installation_session_failed');
 
     const address = clientIp(request);
     if (address) {
@@ -200,6 +211,8 @@ Deno.serve(async (request: Request): Promise<Response> => {
       reviewPending: profile.data.review_pending,
       poolBound,
       selectionEligible: profile.data.selection_eligible,
+      analyticsSessionToken: installationSessionToken,
+      analyticsSessionExpiresAt: installationSessionExpiresAt,
     });
   } catch (error) {
     const providerError =

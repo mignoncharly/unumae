@@ -1,8 +1,14 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
+import { mapWithConcurrency } from '../_shared/boundedConcurrency.ts';
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
+import { fetchWithTimeout } from '../_shared/providerFetch.ts';
 import { isServiceRoleRequest } from '../_shared/serviceRole.ts';
-import { fetchProvider } from '../_shared/providerFetch.ts';
+import {
+  finishWorkerRun,
+  startWorkerRun,
+  type WorkerInvocation,
+} from '../_shared/workerRun.ts';
 
 /**
  * Fills in the translations of published portraits.
@@ -55,6 +61,22 @@ interface DeeplTranslation {
   text: string;
 }
 
+type ProviderCategory =
+  | 'accepted'
+  | 'timeout'
+  | 'network'
+  | 'rate_limited'
+  | 'auth'
+  | 'invalid_request'
+  | 'provider_error'
+  | 'malformed_response'
+  | 'internal';
+
+interface TranslationResult {
+  translation: DeeplTranslation | null;
+  category: ProviderCategory;
+}
+
 /**
  * One call per string.
  *
@@ -67,13 +89,13 @@ async function translate(
   key: string,
   text: string,
   target: Locale
-): Promise<DeeplTranslation | null> {
+): Promise<TranslationResult> {
   // The free tier lives on a different host, distinguished by the key suffix.
   const host = key.endsWith(':fx')
     ? 'https://api-free.deepl.com'
     : 'https://api.deepl.com';
 
-  const response = await fetchProvider(`${host}/v2/translate`, {
+  const transport = await fetchWithTimeout(`${host}/v2/translate`, {
     method: 'POST',
     headers: {
       Authorization: `DeepL-Auth-Key ${key}`,
@@ -85,12 +107,36 @@ async function translate(
     }),
   });
 
-  if (!response?.ok) {
-    return null;
+  if (!transport.response)
+    return {
+      translation: null,
+      category: transport.category === 'ok' ? 'network' : transport.category,
+    };
+  if (!transport.response.ok) {
+    const status = transport.response.status;
+    return {
+      translation: null,
+      category:
+        status === 401 || status === 403
+          ? 'auth'
+          : status === 429
+            ? 'rate_limited'
+            : status >= 400 && status < 500
+              ? 'invalid_request'
+              : 'provider_error',
+    };
   }
-
-  const body = (await response.json()) as { translations?: DeeplTranslation[] };
-  return body.translations?.[0] ?? null;
+  try {
+    const body = (await transport.response.json()) as {
+      translations?: DeeplTranslation[];
+    };
+    const translation = body.translations?.[0];
+    return translation
+      ? { translation, category: 'accepted' }
+      : { translation: null, category: 'malformed_response' };
+  } catch {
+    return { translation: null, category: 'malformed_response' };
+  }
 }
 
 Deno.serve(async (request: Request): Promise<Response> => {
@@ -114,27 +160,25 @@ Deno.serve(async (request: Request): Promise<Response> => {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 
-  const payload = (await request.json().catch(() => ({}))) as {
-    jobRunId?: number;
-  };
+  const payload = (await request.json().catch(() => ({}))) as WorkerInvocation;
   const supabase = createClient(url, serviceKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
-
-  const finish = async (succeeded: boolean, detail: string) => {
-    if (typeof payload.jobRunId === 'number') {
-      await supabase.rpc('complete_job_run', {
-        target_run: payload.jobRunId,
-        succeeded,
-        result_detail: detail,
-      });
-    }
-  };
+  const workerRun = await startWorkerRun(
+    supabase,
+    payload,
+    'translate-portraits'
+  );
+  if (!workerRun) return jsonResponse({ error: 'job_run_unavailable' }, 409);
 
   if (!deeplKey) {
     // Not an error. The product works without translations — the original is
     // always there, and it is the version that governs.
-    await finish(true, 'Translation is disabled; originals remain available');
+    await finishWorkerRun(supabase, workerRun, {
+      succeeded: true,
+      detail: 'Translation is disabled; originals remain available',
+      providerCategory: 'not_configured',
+    });
     return jsonResponse({ configured: false, translated: 0 }, 200);
   }
 
@@ -143,7 +187,12 @@ Deno.serve(async (request: Request): Promise<Response> => {
   });
 
   if (error) {
-    await finish(false, 'Translation queue could not be read');
+    await finishWorkerRun(supabase, workerRun, {
+      succeeded: false,
+      retryable: true,
+      detail: 'Translation queue could not be read',
+      providerCategory: 'internal',
+    });
     return jsonResponse({ error: error.message }, 500);
   }
 
@@ -154,112 +203,127 @@ Deno.serve(async (request: Request): Promise<Response> => {
   );
 
   if (questionError) {
-    await finish(false, 'Question translation queue could not be read');
+    await finishWorkerRun(supabase, workerRun, {
+      succeeded: false,
+      retryable: true,
+      detail: 'Question translation queue could not be read',
+      providerCategory: 'internal',
+    });
     return jsonResponse({ error: questionError.message }, 500);
   }
 
   const pendingQuestions = (questionData ?? []) as PendingQuestionRow[];
-  let translated = 0;
-  let skipped = 0;
-  let failed = 0;
+  type WorkItem =
+    | ({ kind: 'portrait' } & PendingRow)
+    | ({ kind: 'question' } & PendingQuestionRow);
+  type ItemOutcome = {
+    state: 'translated' | 'skipped' | 'failed';
+    category: ProviderCategory;
+  };
+  const work: WorkItem[] = [
+    ...pending.map((row) => ({ kind: 'portrait' as const, ...row })),
+    ...pendingQuestions.map((row) => ({ kind: 'question' as const, ...row })),
+  ];
 
-  for (const row of pending) {
-    const result = await translate(
-      deeplKey,
-      row.original_text,
-      row.target_locale
-    );
-
-    if (!result) {
-      failed += 1;
-      continue;
-    }
-
-    // Already in this language. Recorded as its own translation so the queue
-    // does not offer it again every night for the rest of the product's life.
-    if (
-      result.detected_source_language.slice(0, 2).toLowerCase() ===
-      row.target_locale
-    ) {
-      await supabase.rpc('record_same_language', {
-        target_portrait: row.portrait_id,
-        target_element: row.element_key,
-        target_locale: row.target_locale,
-      });
-      skipped += 1;
-      continue;
-    }
-
-    const { error: writeError } = await supabase.rpc('record_translation', {
-      target_portrait: row.portrait_id,
-      target_element: row.element_key,
-      target_locale: row.target_locale,
-      text_value: result.text,
-      translation_engine: ENGINE,
-    });
-
-    if (writeError) {
-      failed += 1;
-      continue;
-    }
-
-    translated += 1;
-  }
-
-  for (const row of pendingQuestions) {
-    const result = await translate(
-      deeplKey,
-      row.original_text,
-      row.target_locale
-    );
-
-    if (!result) {
-      failed += 1;
-      continue;
-    }
-
-    if (
-      result.detected_source_language.slice(0, 2).toLowerCase() ===
-      row.target_locale
-    ) {
-      const { error: sameLanguageError } = await supabase.rpc(
-        'record_same_question_language',
-        {
-          target_question: row.question_id,
-          target_field: row.field,
+  const outcomes = await mapWithConcurrency<WorkItem, ItemOutcome>(
+    work,
+    5,
+    async (row) => {
+      const targetId =
+        row.kind === 'portrait' ? row.portrait_id : row.question_id;
+      const targetField = row.kind === 'portrait' ? row.element_key : row.field;
+      const attempt = async (succeeded: boolean, category: ProviderCategory) =>
+        supabase.rpc('record_translation_attempt', {
+          target_kind: row.kind,
+          target_id: targetId,
+          target_field: targetField,
           target_locale: row.target_locale,
-        }
+          succeeded,
+          provider_category: succeeded ? null : category,
+        });
+
+      const result = await translate(
+        deeplKey,
+        row.original_text,
+        row.target_locale
       );
-      if (sameLanguageError) {
-        failed += 1;
-      } else {
-        skipped += 1;
+      if (!result.translation) {
+        await attempt(false, result.category);
+        return { state: 'failed', category: result.category };
       }
-      continue;
-    }
 
-    const { error: writeError } = await supabase.rpc(
-      'record_question_translation',
-      {
-        target_question: row.question_id,
-        target_field: row.field,
-        target_locale: row.target_locale,
-        text_value: result.text,
-        translation_engine: ENGINE,
+      const sameLanguage =
+        result.translation.detected_source_language
+          .slice(0, 2)
+          .toLowerCase() === row.target_locale;
+      const write =
+        row.kind === 'portrait'
+          ? await supabase.rpc(
+              sameLanguage ? 'record_same_language' : 'record_translation',
+              sameLanguage
+                ? {
+                    target_portrait: row.portrait_id,
+                    target_element: row.element_key,
+                    target_locale: row.target_locale,
+                  }
+                : {
+                    target_portrait: row.portrait_id,
+                    target_element: row.element_key,
+                    target_locale: row.target_locale,
+                    text_value: result.translation.text,
+                    translation_engine: ENGINE,
+                  }
+            )
+          : await supabase.rpc(
+              sameLanguage
+                ? 'record_same_question_language'
+                : 'record_question_translation',
+              sameLanguage
+                ? {
+                    target_question: row.question_id,
+                    target_field: row.field,
+                    target_locale: row.target_locale,
+                  }
+                : {
+                    target_question: row.question_id,
+                    target_field: row.field,
+                    target_locale: row.target_locale,
+                    text_value: result.translation.text,
+                    translation_engine: ENGINE,
+                  }
+            );
+      if (write.error || write.data !== true) {
+        await attempt(false, 'internal');
+        return { state: 'failed', category: 'internal' };
       }
-    );
-
-    if (writeError) {
-      failed += 1;
-    } else {
-      translated += 1;
+      await attempt(true, 'accepted');
+      return {
+        state: sameLanguage ? 'skipped' : 'translated',
+        category: 'accepted',
+      };
     }
-  }
+  );
+
+  const translated = outcomes.filter(
+    (item) => item.state === 'translated'
+  ).length;
+  const skipped = outcomes.filter((item) => item.state === 'skipped').length;
+  const failures = outcomes.filter((item) => item.state === 'failed');
+  const failed = failures.length;
 
   const succeeded = failed === 0;
   const queued = pending.length + pendingQuestions.length;
   const detail = `${translated} translated, ${skipped} already in target language, ${failed} failed, ${queued} queued`;
-  await finish(succeeded, detail);
+  const providerCategory =
+    failures.find((item) => item.category === 'auth')?.category ??
+    failures[0]?.category ??
+    'accepted';
+  await finishWorkerRun(supabase, workerRun, {
+    succeeded,
+    retryable: failed > 0 && providerCategory !== 'auth',
+    detail,
+    providerCategory,
+  });
 
   return jsonResponse(
     { configured: true, pending: queued, translated, skipped, failed },

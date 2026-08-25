@@ -1,8 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Crypto from 'expo-crypto';
 import { AppState } from 'react-native';
 
 import { getSupabase } from '@/lib/supabase';
+
+import { getAnalyticsSessionToken } from './session';
 
 import type {
   AnalyticsEvent,
@@ -24,7 +24,6 @@ import type {
  *      address or a location, because the table has no such column.
  */
 
-const INSTALL_ID_KEY = 'unumae.install_id';
 const FLUSH_INTERVAL_MS = 10_000;
 const FLUSH_AT_COUNT = 20;
 const MAX_BUFFER = 100;
@@ -34,36 +33,10 @@ interface QueuedEvent {
   properties?: AnalyticsProperties;
 }
 
-/**
- * A random identifier for this installation.
- *
- * Its only purpose is answering "did people come back the next day", which is
- * the one number worth knowing before spending anything on growth. It is not
- * an advertising identifier, it is disclosed on the privacy screen, and it
- * never leaves our database.
- */
-async function getInstallId(): Promise<string> {
-  try {
-    const existing = await AsyncStorage.getItem(INSTALL_ID_KEY);
-    if (existing) {
-      return existing;
-    }
-
-    const created = Crypto.randomUUID();
-    await AsyncStorage.setItem(INSTALL_ID_KEY, created);
-    return created;
-  } catch {
-    // Storage unavailable: use a per-session id rather than losing the event.
-    // Retention numbers will be slightly low, which is the right way to be
-    // wrong.
-    return Crypto.randomUUID();
-  }
-}
-
+/** Events are accepted only after the server has issued an attested session. */
 export function createSupabaseAnalytics(): AnalyticsProvider {
   let buffer: QueuedEvent[] = [];
   let timer: ReturnType<typeof setInterval> | null = null;
-  let installId: string | null = null;
 
   async function flush(): Promise<void> {
     if (buffer.length === 0) {
@@ -74,14 +47,16 @@ export function createSupabaseAnalytics(): AnalyticsProvider {
     buffer = [];
 
     try {
-      installId ??= await getInstallId();
-
-      await getSupabase().rpc('track_events', {
-        batch_install_id: installId,
-        batch: batch.map((item) => ({
-          event: item.event,
-          properties: item.properties ?? {},
-        })),
+      const installationSession = await getAnalyticsSessionToken();
+      if (!installationSession) return;
+      await getSupabase().functions.invoke('analytics-ingest', {
+        headers: { 'X-Installation-Session': installationSession },
+        body: {
+          events: batch.map((item) => ({
+            event: item.event,
+            properties: item.properties ?? {},
+          })),
+        },
       });
     } catch {
       // Deliberately silent, and deliberately not re-queued: a failing network

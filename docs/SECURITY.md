@@ -15,6 +15,8 @@ the person on screen.
 | Doxxing via profile data | Real-world danger | Country only; city and exact age optional and hideable (Article 8.2) |
 | Privilege escalation via RLS gap | Any of the above | Default deny; catalog-wide and role-based tests run on a fresh database in CI |
 | Credential leakage | Account takeover | Secrets never in the repo; tracked files are scanned in CI without printing secret values |
+| Queue flooding | Reports, push destinations, or analytics exhaust service capacity | Valid targets, attested installation sessions, strict payload bounds, ownership rules, layered quotas, and scheduled retention |
+| Silent worker loss | A crashed or looping worker leaves critical work unfinished | Five-minute leases, bounded attempts, dead-letter states, safe provider categories, receipt processing, and durable operational alerts |
 
 ## RLS is the security model
 
@@ -26,6 +28,8 @@ policies. Consequently:
   `scripts/verify-migrations.mjs` and `tests/schema-guard.test.ts`.
 - The service-role key **never** reaches the client. It exists only in Edge
   Functions and scheduled jobs.
+- Analytics and report ingestion cross bounded Edge Functions. Their HMACed
+  network keys and attested session hashes are never exposed through client RPCs.
 - Supabase's own guidance is to review RLS policies before production; Phase 13
   makes that a test suite, not a checklist.
 - `PUBLIC` receives no implicit function execution. Every client-callable RPC

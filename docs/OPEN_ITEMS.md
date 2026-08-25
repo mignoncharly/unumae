@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Roadmap v2 Phase 5 local implementation, 25 August 2026.
+Last updated: Roadmap v2 Phase 7 local implementation, 25 August 2026.
 
 ---
 
@@ -29,6 +29,8 @@ Last updated: Roadmap v2 Phase 5 local implementation, 25 August 2026.
 | 18 | ⚠️ **Configure and provider-test Phase 4 attestation in staging** | The server verifier, one-time challenge protocol, database registration, replay/expiry/malformed checks, and manual-review path now pass locally. Apple Team/App Attest/DeviceCheck credentials, Google Play Integrity credentials and certificate digests, the binding pepper, and real provider responses require the developer consoles, staging secrets, and supported physical devices. The native evidence client remains explicitly scheduled for Roadmap Phase 8. | Hosted Phase 4 completion and public beta. |
 | 19 | **Monitor the Expo toolchain's `uuid` advisory** | `npm audit --audit-level=high` passes, but the root tree currently reports 12 moderate transitive findings through Expo config tooling → `xcode` → `uuid`. npm's complete forced remediation downgrades to Expo 46, so take the next compatible Expo/upstream fix instead of breaking the app framework. | No current high-severity release block; review on every dependency update. |
 | 20 | ⚠️ **Promote and verify Phase 5 in staging** | Apply the bounded export/deletion migration in staging, export an account with assurance and moderation history on a physical device, and reconcile the live App Store Connect privacy questionnaire with `docs/APP_STORE.md`. The automated export intentionally withholds security and third-party identifiers; broader legal access requests require a staffed manual path. | Hosted Phase 5 completion and public beta. |
+| 21 | ⚠️ **Promote and load-test Phase 6 in staging** | Deploy `analytics-ingest`, `report-content`, the Phase 6 migration, and the binding pepper. Verify real attestation issues secure installation sessions, push registration succeeds on three physical installations, spoofed/rotated tokens fail, and report/analytics quotas return bounded errors under load. The native attestation client remains Phase 8. | Hosted Phase 6 completion and public beta. |
+| 22 | ⚠️ **Provider-test Phase 7 in staging** | Deploy `process-push-receipts` with the updated notification and translation workers. Verify DeepL/Expo/Resend authentication categories, delayed Expo receipts, permanent-token invalidation, Android channels on a physical device, and feed real storage/egress quota observations into `record_resource_quota_status`. | Hosted Phase 7 completion and reliable notification operations. |
 
 ## Mine — code
 

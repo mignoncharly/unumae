@@ -1,6 +1,7 @@
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { Platform } from 'react-native';
 
+import { getAnalyticsSessionToken } from '@/lib/analytics/session';
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 
@@ -72,6 +73,21 @@ export async function registerForPush(): Promise<string | null> {
   if (!notifications) {
     return null;
   }
+  const installationToken = await getAnalyticsSessionToken();
+  if (!installationToken) return null;
+
+  if (Platform.OS === 'android') {
+    await Promise.all([
+      notifications.setNotificationChannelAsync('general', {
+        name: 'Unumae',
+        importance: notifications.AndroidImportance.DEFAULT,
+      }),
+      notifications.setNotificationChannelAsync('selection', {
+        name: 'Selection invitations',
+        importance: notifications.AndroidImportance.HIGH,
+      }),
+    ]);
+  }
 
   const existing = await notifications.getPermissionsAsync();
   let granted = existing.granted;
@@ -93,12 +109,13 @@ export async function registerForPush(): Promise<string | null> {
     projectId ? { projectId } : undefined
   );
 
-  const { error } = await getSupabase().rpc('register_push_token', {
+  const { data, error } = await getSupabase().rpc('register_push_token', {
     push_token: token,
     device_platform: Platform.OS === 'ios' ? 'ios' : 'android',
+    installation_token: installationToken,
   });
 
-  if (error) {
+  if (error || data !== true) {
     throw new AppError('unknown', 'notifications.registerFailed', {
       cause: error,
     });

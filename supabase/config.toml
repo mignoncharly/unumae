@@ -88,3 +88,6 @@ enabled = false
 
 [analytics]
 enabled = false
+
+[functions.analytics-ingest]
+verify_jwt = false

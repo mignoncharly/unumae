@@ -742,7 +742,11 @@ export type Database = {
         Returns: boolean;
       };
       register_push_token: {
-        Args: { push_token: string; device_platform: 'ios' | 'android' };
+        Args: {
+          push_token: string;
+          device_platform: 'ios' | 'android';
+          installation_token: string;
+        };
         Returns: boolean;
       };
       unregister_push_token: {
@@ -783,14 +787,7 @@ export type Database = {
         Args: { target_draw: string; target_locale: string };
         Returns: QuestionTranslationRow[];
       };
-      /**
-       * Write-only for clients. No policy lets anybody read
-       * `analytics_events` from a client role, ever.
-       */
-      track_events: {
-        Args: { batch_install_id: string; batch: Json };
-        Returns: number;
-      };
+      /** Analytics writes cross the bounded analytics-ingest Edge function. */
       /** Activation, curiosity, engagement, memory, sharing. Moderators only. */
       analytics_kpis_guarded: {
         Args: { window_days?: number };

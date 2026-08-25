@@ -100,7 +100,6 @@ insert into expected_anon_rpcs (name) values
   ('is_published_portrait_object'),
   ('pool_hash'),
   ('selection_stats'),
-  ('track_events'),
   ('unnamed_countries'),
   ('year_zero_ends');
 

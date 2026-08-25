@@ -108,8 +108,8 @@ Deleting an account removes its normalized email, provider identifier, App
 Attest public key, and account-device association. The opaque platform
 abuse-prevention flag and the fact that it was bound remain without a user ID.
 That exception is disclosed before deletion and prevents delete/reinstall
-farming. Phase 5 inventories the same data in the full export and retention
-matrix.
+farming. The complete export and retention decision is recorded in
+`docs/PERSONAL_DATA_INVENTORY.md`.
 
 ## Deferred phone control
 

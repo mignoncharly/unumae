@@ -175,8 +175,9 @@ describe('data export is the data, not a summary (Article 8.2)', () => {
   });
 
   it('is scoped to the caller everywhere', () => {
-    const scopes = exportData.match(/\(select auth\.uid\(\)\)/g) ?? [];
-    expect(scopes.length).toBeGreaterThanOrEqual(3);
+    expect(exportData).toContain('subject uuid := (select auth.uid())');
+    const scopedQueries = exportData.match(/= subject|subject::text/g) ?? [];
+    expect(scopedQueries.length).toBeGreaterThanOrEqual(10);
   });
 });
 

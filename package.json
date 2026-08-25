@@ -19,6 +19,7 @@
     "test:db:phase2": "supabase test db supabase/tests/phase2_retryable_account_deletion.sql",
     "test:db:phase3": "supabase test db supabase/tests/phase3_database_contract.sql",
     "test:db:phase4": "supabase test db supabase/tests/phase4_account_assurance.sql",
+    "test:db:phase5": "supabase test db supabase/tests/phase5_privacy_export.sql",
     "test:edge": "deno test --config supabase/functions/deno.json --allow-env supabase/functions/_shared/*.test.ts",
     "verify:edge": "node scripts/verify-edge-functions.mjs",
     "db:types:local": "node scripts/generate-db-types.mjs --write",

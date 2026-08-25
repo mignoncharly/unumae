@@ -107,6 +107,12 @@ export default function PrivacyScreen() {
             {t('privacy.yourData').toUpperCase()}
           </Text>
           <Text color="textSecondary">{t('privacy.exportExplain')}</Text>
+          <Text color="textTertiary" variant="footnote">
+            {t('privacy.exportBoundary')}
+          </Text>
+          <Text color="textTertiary" variant="footnote">
+            {t('privacy.retainedDeviceFlag')}
+          </Text>
           <Button
             disabled={busy}
             icon="download"

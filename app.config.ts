@@ -100,12 +100,44 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         {
           NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypeDeviceID',
           // The random install identifier and platform attestation state.
-          // Linked while an account exists; the retained provider-side abuse
-          // flag is opaque and is not used for tracking.
+          // Linked while an account exists; the retained platform flag and
+          // database abuse record are opaque and are not used for tracking.
           NSPrivacyCollectedDataTypeLinked: true,
           NSPrivacyCollectedDataTypeTracking: false,
           NSPrivacyCollectedDataTypePurposes: [
             'NSPrivacyCollectedDataTypePurposeAnalytics',
+            'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+          ],
+        },
+        {
+          // Supabase Auth user id plus the stable Apple/Google provider id
+          // used for account assurance.
+          NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypeUserID',
+          NSPrivacyCollectedDataTypeLinked: true,
+          NSPrivacyCollectedDataTypeTracking: false,
+          NSPrivacyCollectedDataTypePurposes: [
+            'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+          ],
+        },
+        {
+          // Country and optional city are typed by the person rather than read
+          // from Location Services, but are still honestly declared as coarse
+          // location data.
+          NSPrivacyCollectedDataType:
+            'NSPrivacyCollectedDataTypeCoarseLocation',
+          NSPrivacyCollectedDataTypeLinked: true,
+          NSPrivacyCollectedDataTypeTracking: false,
+          NSPrivacyCollectedDataTypePurposes: [
+            'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+          ],
+        },
+        {
+          // Birth year, account-assurance state and moderation/account status.
+          NSPrivacyCollectedDataType:
+            'NSPrivacyCollectedDataTypeOtherDataTypes',
+          NSPrivacyCollectedDataTypeLinked: true,
+          NSPrivacyCollectedDataTypeTracking: false,
+          NSPrivacyCollectedDataTypePurposes: [
             'NSPrivacyCollectedDataTypePurposeAppFunctionality',
           ],
         },

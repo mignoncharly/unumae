@@ -6,8 +6,8 @@ secret values and user data are deliberately excluded.
 
 ## Status
 
-Phase 0 is implemented with one control-plane recapture still requiring a
-scoped Supabase personal access token:
+Phase 0 is complete. The production database and control-plane snapshot are
+current as of 25 August 2026:
 
 - [x] The selection-group route fix is retained and verified against a clean
       Android Metro bundle.
@@ -20,12 +20,16 @@ scoped Supabase personal access token:
       are recorded.
 - [x] Free-plan constraints and paid-plan blockers are written down.
 - [x] Release verification and rollback procedures are defined.
-- [ ] Re-run the hosted Auth check and Supabase function/secret inventory with
-      a scoped `SUPABASE_ACCESS_TOKEN`. The last successful hosted Auth evidence is
-      from 24 August 2026; this shell does not have that token.
+- [x] Deployed function versions, Edge secret names, and hosted Auth settings
+      were recaptured through an authenticated, read-only management session.
+- [x] `npm run verify` (621 tests), Expo Doctor (21/21), and the website
+      verification/build (33 pages) remain green.
 
-This last item blocks declaring the production control-plane snapshot fully
-current. It does not block local development.
+The recapture found one production configuration gap: `RESEND_API_KEY` and
+`NOTIFICATION_FROM_EMAIL` are absent from the Edge secret store. The
+`send-notifications` worker therefore records `email_not_configured` instead of
+sending the selected-user email fallback when push delivery does not succeed.
+This is tracked in `docs/OPEN_ITEMS.md` and must be fixed before public beta.
 
 ## Source and mobile release
 
@@ -126,14 +130,15 @@ The object policies captured were:
 The repository contains three functions. Each production endpoint returned HTTP
 200 to an unauthenticated `OPTIONS` request on 25 August 2026:
 
-| Function              | Local source SHA-256                                               | Endpoint  |
-| --------------------- | ------------------------------------------------------------------ | --------- |
-| `delete-account`      | `466770a85d1c2670c4aa84843d1b023eac91e1b4382b299b37c60a0055e7e4c7` | Reachable |
-| `send-notifications`  | `bbad89fbd3cfc7a019117d1c42480860088f2725a5d0c4930835f2da2dd88849` | Reachable |
-| `translate-portraits` | `c6a6af702b0e5312083bad21d8fd26d1c3f2597ac7e9f5eaa94a08ddbff3d3cf` | Reachable |
+| Function              | Version | Status   | Updated UTC            | Endpoint  | Remote bundle SHA-256                                             |
+| --------------------- | ------: | -------- | ---------------------- | --------- | ------------------------------------------------------------------ |
+| `delete-account`      |       3 | `ACTIVE` | `2026-08-24T14:32:03Z` | Reachable | `7318e41b20f0c5528f33ddd0361b16ceca37467f798b3e978807082cbb0a93ab` |
+| `send-notifications`  |       3 | `ACTIVE` | `2026-08-23T03:02:38Z` | Reachable | `4b57c846e6ac7ee8a3649c40f00e82fcb669034b3510c0b644d863a1277b8b9d` |
+| `translate-portraits` |       2 | `ACTIVE` | `2026-08-23T08:17:55Z` | Reachable | `3f6ad1f6e9eac7d3eb4aae3d11e0fcbc260bb06db9728dabaefe3599b9269752` |
 
-Reachability does not prove that deployed source matches these hashes.
-Deployment versions and Edge secret names live in the Supabase control plane:
+The remote bundle digest is Supabase's deployed artifact digest. It is not
+directly comparable to a hash of the unbundled local `index.ts` file. Reproduce
+the version and secret-name inventory with:
 
 ```bash
 supabase functions list --project-ref qpicjsjxdblrxdrdibge --output json
@@ -142,16 +147,19 @@ npm run verify:release-config
 ```
 
 Only secret names and digests may enter release evidence. Values must never be
-copied into this document. Expected environment names derived from source are:
+copied into this document. The captured names are:
 
-- Platform-provided: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
-- Translation: `DEEPL_API_KEY`
-- Email fallback: `RESEND_API_KEY`, `NOTIFICATION_FROM_EMAIL`
+- Platform-provided: `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
+  `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_URL`, `SUPABASE_JWKS`,
+  `SUPABASE_PUBLISHABLE_KEYS`, `SUPABASE_SECRET_KEYS`
+- Application-provided: `DEEPL_API_KEY`
+- Required by source but absent: `RESEND_API_KEY`, `NOTIFICATION_FROM_EMAIL`
 
-Hosted Auth last passed all six checks on 24 August 2026: production Site URL,
-native redirect, web redirect, Apple provider, both code-based email templates,
-and custom SMTP. Re-run the verifier before relying on that evidence for a
-release.
+Hosted Auth passed all six checks on 25 August 2026: production Site URL, native
+redirect, web redirect, Apple provider, both code-based email templates, and
+custom SMTP. The saved CLI token was passed directly from Windows Credential
+Manager to the verifier in process memory and was neither printed nor persisted
+by the repository.
 
 ## Current Free-plan constraints
 

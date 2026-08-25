@@ -1,5 +1,12 @@
 # Environment
 
+> Phase 0 note, 25 August 2026: this file describes the current topology, not
+> the roadmap target. `docs/implementation-roadmap-v2.md` supersedes the
+> one-hosted-project design for release planning: development and CI move to
+> isolated local stacks, while the two available hosted slots are reserved for
+> staging and production. Until Phase 10 is complete, there is still only one
+> Unumae hosted project and therefore no safe staging promotion step.
+
 **One Supabase project. One EAS project. One bundle identifier.**
 
 Decided 2026-08-22, superseding the three-environment design in earlier

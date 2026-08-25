@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Phase 5 native and release verification, 24 August 2026.
+Last updated: Roadmap v2 Phase 0 baseline, 25 August 2026.
 
 ---
 
@@ -18,6 +18,9 @@ Last updated: Phase 5 native and release verification, 24 August 2026.
 | 7 | **Check the share card on a real device** | Settings → Developer → Share card. It names which of the two native modules loaded, renders the card scaled to fit, and captures it to a real PNG that it then displays — the preview proves the layout, only the capture proves the capture. | Nothing — the fallback works. |
 | 8 | **Credentials remain local** | `docs/supa_keys.md` was used through redacting wrappers for the database deployment and live suites. It remains gitignored and unmodified. The authenticated CLI credential was passed to the read-only hosted Auth verifier in memory; no credential entered logs or version control. | Nothing. |
 | 10 | **EAS Maestro plan or a macOS runner** | Expo accepts built-in Maestro jobs only on a paid plan for this account. Run `npm run e2e:ios` on a Mac with Xcode/Maestro, or enable the plan and use `npm run e2e:ios:eas`. | Automated iPhone-size evidence; real-device checks remain separate. |
+| 11 | ⚠️ **Scoped Supabase management token for baseline recapture** | The database baseline and endpoint health are captured, but function deployment versions, Edge secret names, and current hosted Auth settings require a scoped `SUPABASE_ACCESS_TOKEN`. Run the three commands in `docs/PHASE0_BASELINE.md`; record no secret values. | Full Phase 0 control-plane acceptance and every production release. |
+| 12 | ⚠️ **Supabase paid-plan timing** | Roadmap v2 makes Pro a hard gate before production traffic. Free has no managed backups, one-day logs, quota restrictions, and inactivity pausing. | Production traffic. |
+| 13 | ⚠️ **Allocate the second hosted project to staging** | The current Unumae topology has production only. Development and CI will use local stacks; the remaining hosted slot must become isolated staging in Phase 10. | Staging verification and public beta promotion. |
 
 ## Mine — code
 
@@ -58,7 +61,7 @@ This table reflects the live deployment and verification completed on 24 August
 | Migrations | All 42 applied; local and remote histories match through `20260823230000` |
 | Edge Functions | `send-notifications` and `translate-portraits` remain scheduled; the current `delete-account` revision is deployed and passes complete live auth/data/media deletion verification |
 | Storage buckets | `avatars`, `portraits` — both private |
-| Scheduled jobs | eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send 00:15, translate 01:00, purge 03:30, expiry sweep every 15 min. Full table in `docs/OPERATIONS.md` |
+| Scheduled jobs | Nine active jobs captured on 25 August 2026: eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send/expiry/alerts every 5 minutes, translate 01:00, purge 03:30. Full baseline in `docs/PHASE0_BASELINE.md`. |
 | EAS project | `@mignoncharly/unumae` |
 | EAS build environment | Required Supabase client variables configured for `development` and `production`; profiles select their environment explicitly |
 | App Store Connect | Unumae app record `6804251671` for `com.unumae.app`; production build `0.1.0 (3)` successfully uploaded to TestFlight on 24 August 2026 and is processing with Apple |

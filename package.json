@@ -36,6 +36,7 @@
     "verify:memory:live": "node scripts/verify-memory-international.mjs --live",
     "verify:delete-account:live": "node scripts/verify-delete-account.mjs --live",
     "verify:release-config": "node scripts/verify-release-config.mjs",
+    "baseline:production": "node scripts/capture-production-baseline.mjs",
     "e2e:ios": "node scripts/run-ios-e2e.mjs",
     "e2e:ios:eas": "eas workflow:run .eas/workflows/e2e-ios.yml",
     "simulate": "node scripts/simulate-cycle.mjs",

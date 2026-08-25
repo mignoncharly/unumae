@@ -9,6 +9,25 @@
     "error": "Une erreur est survenue",
     "back": "Retour"
   },
+  "deletion": {
+    "statusFailed": "Impossible d’actualiser l’état de la suppression. La demande continuera en toute sécurité.",
+    "retainedSignals": "Si votre appareil porte un indicateur non identifiant de prévention des abus, celui-ci demeure après la suppression. Nous ne conservons ni empreinte d’adresse e-mail ni identifiant de compte fournisseur.",
+    "reauthentication": "Pour votre protection, saisissez le code à six chiffres envoyé par e-mail avant le début de la suppression.",
+    "verifyAction": "Vérifier et supprimer mon compte",
+    "statusTitle": "État de la suppression",
+    "correlation": "Référence d’assistance : {{id}}",
+    "continue": "Continuer",
+    "states": {
+      "requested": "Votre demande a été acceptée.",
+      "account_locked": "Votre compte est verrouillé. Le nettoyage des données privées va commencer.",
+      "storage_deleting": "Vos photos et médias privés sont en cours de suppression.",
+      "database_deleting": "Les données de votre compte sont en cours de suppression.",
+      "auth_deleting": "Votre compte de connexion est en cours de suppression.",
+      "completed": "Votre compte et vos données privées ont été supprimés.",
+      "retryable_failure": "Un problème temporaire a interrompu le nettoyage. Il reprendra automatiquement ; votre compte reste verrouillé.",
+      "manual_review": "Le nettoyage automatique n’a pas pu se terminer. Contactez l’assistance avec la référence ci-dessous ; votre compte reste verrouillé."
+    }
+  },
   "tabs": {
     "today": "Aujourd'hui",
     "archive": "Archive",

@@ -81,6 +81,25 @@ An `OPTIONS` response proves reachability, not source equivalence.
 - Edge rollback verification: synthetic suspend/restore, outbox supersession,
   appeal, export, deletion, and direct-RPC refusal for an inactive JWT.
 
+## Phase 2 account deletion
+
+- Keep every affected profile in `deletion_pending`; never restore access to a
+  partially deleted account.
+- Stop only `unumae-account-deletion` or `unumae-storage-reconcile` if continued
+  execution is worsening the incident. Preserve all request and cleanup rows.
+- Roll the Edge function forward to a compatible fix. Do not revert the
+  migration or restore the synchronous delete endpoint.
+- Requeue only the recorded `resume_stage`, then verify both storage prefixes,
+  the profile graph, and Auth in order. Never mark completion while Auth exists.
+- If cleanup reaches `manual_review`, use the correlation ID in incident notes;
+  never copy provider responses, object names, URLs, or credentials.
+- Keep `register-portrait-photo` available while a compatible mobile build is
+  active. If it must be contained, disable portrait upload rather than restoring
+  overwriting object paths.
+
+The forward-only recovery and evidence checklist are in
+`docs/PHASE2_ACCOUNT_DELETION.md`.
+
 ## Secrets
 
 - Never copy a secret into source, tickets, logs, or release evidence.

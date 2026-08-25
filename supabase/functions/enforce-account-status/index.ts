@@ -1,6 +1,7 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
+import { isServiceRoleRequest } from '../_shared/serviceRole.ts';
 
 type AccountStatus =
   'active' | 'suspended' | 'banned' | 'deletion_pending' | 'deleted';
@@ -45,7 +46,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
 
   // verify_jwt accepts any valid user JWT. This is a privileged worker, so it
   // additionally requires the exact service-role credential used by pg_net.
-  if (request.headers.get('Authorization') !== `Bearer ${serviceRoleKey}`) {
+  if (!(await isServiceRoleRequest(request, supabaseUrl, serviceRoleKey))) {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 

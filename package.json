@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "test": "jest",
     "test:db:phase1": "supabase test db supabase/tests/phase1_account_enforcement.sql",
+    "test:db:phase2": "supabase test db supabase/tests/phase2_retryable_account_deletion.sql",
     "test:watch": "jest --watch",
     "verify:migrations": "node scripts/verify-migrations.mjs",
     "verify": "npm run typecheck && npm run lint && npm run format:check && npm run verify:migrations && npm run test",

@@ -31,6 +31,8 @@ because at scale the tempting move is to let the numbers steer the product.
 | every 5 min | `invoke_notifications_if_due` | Retries due push/email delivery without creating empty job rows |
 | every 5 min | `refresh_operational_alerts` | Detects failed/stalled jobs, aging review, and at-risk cycles |
 | every minute | `enforce-account-status` | Applies versioned suspend/ban/restore outbox jobs to Auth session revocation |
+| every minute | `process-account-deletions` | Resumes lock-first deletion through storage, database, and Auth cleanup |
+| every 15 min | `reconcile-storage` | Deletes queued replacements and unreferenced objects older than one hour |
 
 pg_cron runs SQL; Edge Functions speak HTTP. `invoke_function` bridges the two
 with pg_net.
@@ -94,6 +96,14 @@ worker revokes refresh sessions rather than permanently banning Auth login,
 because suspended and banned people must still be able to authenticate for
 appeal, export, and deletion. PostgreSQL remains the immediate enforcement
 boundary before and after that re-authentication.
+
+Account deletion uses `deletion_requests`. `retryable_failure` resumes at the
+recorded stage; `manual_review` means ten attempts were exhausted. Operators use
+only the support correlation ID, correct the provider or data fault, and requeue
+that stage without reactivating the profile. Storage reconciliation is also
+leased and retryable. Alert on manual-review rows, sustained cleanup-queue
+growth, or quota growth that does not match registered portrait/profile paths.
+The complete runbook is `docs/PHASE2_ACCOUNT_DELETION.md`.
 
 This is not paranoia. `run_daily_draw` was broken from Phase 4 to Phase 14 and
 nothing noticed, because a scheduled job nobody can see the result of is

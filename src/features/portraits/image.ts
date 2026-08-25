@@ -27,19 +27,15 @@ export async function prepareForUpload(
 ): Promise<PreparedImage> {
   const longestEdge = Math.max(width, height);
 
-  // Already small enough: re-encoding would lose quality for nothing.
-  if (longestEdge <= MAX_EDGE) {
-    return { uri, width, height };
-  }
-
-  const scale = MAX_EDGE / longestEdge;
-
   try {
     const context = ImageManipulator.ImageManipulator.manipulate(uri);
-    context.resize({
-      width: Math.round(width * scale),
-      height: Math.round(height * scale),
-    });
+    if (longestEdge > MAX_EDGE) {
+      const scale = MAX_EDGE / longestEdge;
+      context.resize({
+        width: Math.round(width * scale),
+        height: Math.round(height * scale),
+      });
+    }
 
     const image = await context.renderAsync();
     const result = await image.saveAsync({
@@ -52,10 +48,10 @@ export async function prepareForUpload(
       width: result.width,
       height: result.height,
     };
-  } catch {
-    // If resizing fails, upload the original rather than losing the portrait.
-    // A slow upload beats no portrait at all.
-    return { uri, width, height };
+  } catch (error) {
+    // Upload registration accepts decoded JPEG only. Falling back to an
+    // arbitrary camera file would bypass extension/MIME consistency.
+    throw new Error('portrait_image_decode_failed', { cause: error });
   }
 }
 

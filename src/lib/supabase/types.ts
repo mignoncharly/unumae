@@ -22,6 +22,24 @@ export type Json =
 export type AccountStatus =
   'active' | 'suspended' | 'banned' | 'deletion_pending' | 'deleted';
 
+export type DeletionRequestState =
+  | 'requested'
+  | 'account_locked'
+  | 'storage_deleting'
+  | 'database_deleting'
+  | 'auth_deleting'
+  | 'completed'
+  | 'retryable_failure'
+  | 'manual_review';
+
+export type DeletionRequestRow = {
+  state: DeletionRequestState;
+  correlation_id: string;
+  requested_at: string;
+  completed_at: string | null;
+  was_published: boolean;
+};
+
 export type VerificationLevel =
   'none' | 'email' | 'device' | 'phone' | 'liveness';
 
@@ -570,6 +588,20 @@ export type Database = {
       export_my_data: {
         Args: Record<PropertyKey, never>;
         Returns: Json;
+      };
+      request_account_deletion: {
+        Args: { idempotency_key: string };
+        Returns: {
+          request_id: string;
+          state: DeletionRequestState;
+          correlation_id: string;
+          requested_at: string;
+          was_published: boolean;
+        }[];
+      };
+      my_deletion_request: {
+        Args: Record<PropertyKey, never>;
+        Returns: DeletionRequestRow[];
       };
       review_portrait: {
         Args: {

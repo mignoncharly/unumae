@@ -9,6 +9,25 @@
     "error": "Etwas ist schiefgelaufen",
     "back": "Zurück"
   },
+  "deletion": {
+    "statusFailed": "Der Löschstatus konnte nicht aktualisiert werden. Die Anfrage läuft sicher weiter.",
+    "retainedSignals": "Falls dein Gerät eine nicht identifizierende Missbrauchsschutz-Markierung hat, bleibt diese nach der Löschung bestehen. Wir speichern weder einen E-Mail-Hash noch eine Anbieter-Konto-ID.",
+    "reauthentication": "Gib zu deinem Schutz den sechsstelligen Code aus deiner E-Mail ein, bevor die Löschung beginnt.",
+    "verifyAction": "Bestätigen und mein Konto löschen",
+    "statusTitle": "Löschstatus",
+    "correlation": "Support-Referenz: {{id}}",
+    "continue": "Weiter",
+    "states": {
+      "requested": "Deine Anfrage wurde angenommen.",
+      "account_locked": "Dein Konto ist gesperrt. Die private Bereinigung beginnt in Kürze.",
+      "storage_deleting": "Deine privaten Fotos und Medien werden entfernt.",
+      "database_deleting": "Deine Kontodaten werden entfernt.",
+      "auth_deleting": "Dein Anmeldekonto wird entfernt.",
+      "completed": "Dein Konto und deine privaten Daten wurden gelöscht.",
+      "retryable_failure": "Ein vorübergehendes Problem hat die Bereinigung unterbrochen. Sie wird automatisch wiederholt; dein Konto bleibt gesperrt.",
+      "manual_review": "Die automatische Bereinigung konnte nicht abgeschlossen werden. Kontaktiere den Support mit der Referenz unten; dein Konto bleibt gesperrt."
+    }
+  },
   "tabs": {
     "today": "Heute",
     "archive": "Archiv",

@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Roadmap v2 Phase 0 baseline, 25 August 2026.
+Last updated: Roadmap v2 Phase 2 local implementation, 25 August 2026.
 
 ---
 
@@ -22,6 +22,8 @@ Last updated: Roadmap v2 Phase 0 baseline, 25 August 2026.
 | 12 | ⚠️ **Supabase paid-plan timing** | Roadmap v2 makes Pro a hard gate before production traffic. Free has no managed backups, one-day logs, quota restrictions, and inactivity pausing. | Production traffic. |
 | 13 | ⚠️ **Allocate the second hosted project to staging** | The current Unumae topology has production only. Development and CI will use local stacks; the remaining hosted slot must become isolated staging in Phase 10. | Staging verification and public beta promotion. |
 | 14 | ⚠️ **Promote Phase 1 through staging** | Account enforcement is implemented and passes a fresh local database, lint, 56 role-based pgTAP checks, and Edge smoke tests. Follow `docs/PHASE1_ACCOUNT_ENFORCEMENT.md`; do not make production the first hosted execution. | Phase 1 production completion and public beta. |
+
+| 15 | ⚠️ **Promote and failure-test Phase 2 in staging** | Retryable deletion passes 71 local database assertions and Edge bundle/auth-negative smoke tests. Inject list, pagination, removal, database, Auth, timeout, and partial-completion failures against hosted Storage/Auth before production. Follow `docs/PHASE2_ACCOUNT_DELETION.md`. | Phase 2 production completion and public beta. |
 
 ## Mine — code
 

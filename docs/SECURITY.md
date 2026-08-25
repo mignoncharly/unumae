@@ -64,7 +64,9 @@ only where it matters.
 
 ## Data protection
 
-- **Deletion**: account deletion removes profile data and media. An archived
+- **Deletion**: account deletion first locks the account, then a retryable
+  worker recursively removes private storage, profile data, and Auth in that
+  order. An archived
   Human may request removal, which leaves a tombstone — number and date remain,
   content does not (Article 8.6).
 - **Export**: users download a versioned JSON package through the native share

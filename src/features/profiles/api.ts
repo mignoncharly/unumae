@@ -1,6 +1,13 @@
+import * as Crypto from 'expo-crypto';
+
 import { AppError } from '@/lib/errors';
+import { queryPersister } from '@/lib/offline/persist';
 import { getSupabase } from '@/lib/supabase';
-import type { ProfileRow } from '@/lib/supabase/types';
+import type {
+  DeletionRequestRow,
+  DeletionRequestState,
+  ProfileRow,
+} from '@/lib/supabase/types';
 
 import type { CreateProfileInput, UpdateProfileInput } from './schema';
 
@@ -75,16 +82,75 @@ export async function updateMyProfile(
  * Function under the service role. Phase 9 ships that function; this is the
  * client half, and it fails loudly rather than pretending to succeed.
  */
-export async function deleteMyAccount(): Promise<void> {
-  const { error } = await getSupabase().functions.invoke('delete-account', {
-    method: 'POST',
-  });
+export interface DeletionAccepted {
+  accepted: true;
+  state: DeletionRequestState;
+  correlationId: string;
+  requestedAt: string;
+  wasPublished: boolean;
+}
 
-  if (error) {
+export async function deleteMyAccount(): Promise<DeletionAccepted> {
+  const { data, error } = await getSupabase().functions.invoke(
+    'delete-account',
+    {
+      method: 'POST',
+      body: { idempotencyKey: Crypto.randomUUID() },
+    }
+  );
+
+  if (error || data?.accepted !== true) {
     throw new AppError('unknown', 'settings.deleteFailed', { cause: error });
   }
 
-  await getSupabase().auth.signOut();
+  return data as DeletionAccepted;
+}
+
+export async function getMyDeletionRequest(): Promise<DeletionRequestRow | null> {
+  const { data, error } = await getSupabase().rpc('my_deletion_request');
+
+  if (error) {
+    throw new AppError('network', 'deletion.statusFailed', {
+      cause: error,
+    });
+  }
+  return data?.[0] ?? null;
+}
+
+export async function finishDeletedAccountSession(): Promise<void> {
+  await queryPersister.removeClient();
+  const { error } = await getSupabase().auth.signOut({ scope: 'local' });
+  if (error) {
+    throw new AppError('auth', 'auth.signOutFailed', { cause: error });
+  }
+}
+
+export async function sendDeletionReauthenticationCode(
+  email: string
+): Promise<void> {
+  const { error } = await getSupabase().auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: false },
+  });
+
+  if (error) {
+    throw new AppError('auth', 'auth.emailFailed', { cause: error });
+  }
+}
+
+export async function verifyDeletionReauthenticationCode(
+  email: string,
+  token: string
+): Promise<void> {
+  const { error } = await getSupabase().auth.verifyOtp({
+    email,
+    token,
+    type: 'email',
+  });
+
+  if (error) {
+    throw new AppError('auth', 'auth.codeInvalid', { cause: error });
+  }
 }
 
 /**

@@ -1,3 +1,5 @@
+import * as Crypto from 'expo-crypto';
+
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 import type { PortraitElementRow, PortraitRow } from '@/lib/supabase/types';
@@ -120,23 +122,29 @@ export async function uploadPortraitPhoto(
   const response = await fetch(uri);
   const blob = await response.arrayBuffer();
 
-  const extension = uri.split('.').pop()?.toLowerCase() ?? 'jpg';
-  const path = `${userId}/${portraitId}/photo.${extension}`;
+  if (blob.byteLength < 1 || blob.byteLength > 8 * 1024 * 1024) {
+    throw new AppError('validation', 'portrait.uploadFailed');
+  }
+
+  const path = `${userId}/${portraitId}/photo/${Crypto.randomUUID()}.jpg`;
 
   const { error } = await supabase.storage
     .from('portraits')
-    .upload(path, blob, { contentType: `image/${extension}`, upsert: true });
+    .upload(path, blob, { contentType: 'image/jpeg', upsert: false });
 
   if (error) {
     throw new AppError('unknown', 'portrait.uploadFailed', { cause: error });
   }
 
-  const { error: updateError } = await supabase
-    .from('portraits')
-    .update({ photo_path: path })
-    .eq('id', portraitId);
+  const { data, error: updateError } = await supabase.functions.invoke(
+    'register-portrait-photo',
+    { body: { portraitId, objectPath: path } }
+  );
 
-  if (updateError) {
+  if (updateError || data?.path !== path) {
+    // The Edge endpoint also attempts this cleanup. The client repeats it so a
+    // transport failure cannot turn the just-uploaded object into an orphan.
+    await supabase.storage.from('portraits').remove([path]);
     throw new AppError('unknown', 'portrait.uploadFailed', {
       cause: updateError,
     });

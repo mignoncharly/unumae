@@ -9,6 +9,25 @@
     "error": "Something went wrong",
     "back": "Back"
   },
+  "deletion": {
+    "statusFailed": "Could not refresh the deletion status. The request will keep running safely.",
+    "retainedSignals": "If your device has a non-identifying abuse-prevention flag, that flag remains after deletion. We do not retain an email hash or provider account identifier.",
+    "reauthentication": "For your protection, enter the six-digit code sent to your email before deletion begins.",
+    "verifyAction": "Verify and delete my account",
+    "statusTitle": "Deletion status",
+    "correlation": "Support reference: {{id}}",
+    "continue": "Continue",
+    "states": {
+      "requested": "Your request has been accepted.",
+      "account_locked": "Your account is locked. Private cleanup will begin shortly.",
+      "storage_deleting": "Your private photos and media are being removed.",
+      "database_deleting": "Your account records are being removed.",
+      "auth_deleting": "Your sign-in account is being removed.",
+      "completed": "Your account and private data have been deleted.",
+      "retryable_failure": "A temporary problem interrupted cleanup. It will retry automatically; your account remains locked.",
+      "manual_review": "Automatic cleanup could not finish. Contact support with the reference below; your account remains locked."
+    }
+  },
   "tabs": {
     "today": "Today",
     "archive": "Archive",

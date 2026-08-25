@@ -155,9 +155,9 @@ describe('full-cycle release fixture', () => {
   it('verifies complete account and media deletion on live', () => {
     const deletion = read('scripts/verify-delete-account.mjs');
     expect(deletion).toContain("functions.invoke('delete-account'");
-    expect(deletion).toContain('portrait photo and media storage are deleted');
     expect(deletion).toContain(
-      'draw audit row remains as an anonymous tombstone'
+      'referenced and 105 nested orphan portrait objects are gone'
     );
+    expect(deletion).toContain('draw survives only as an anonymous tombstone');
   });
 });

@@ -2,6 +2,7 @@ import { router, usePathname } from 'expo-router';
 import { useEffect } from 'react';
 
 import { useSession } from '@/features/auth/useSession';
+import { isProfilelessAccountRoute } from '@/features/profiles/deletion';
 import { useMyProfile } from '@/features/profiles/hooks';
 
 /**
@@ -40,7 +41,7 @@ export function OnboardingGate() {
 
     // Already there, or on the way. Navigating again would stack a second copy
     // of the screen behind the first.
-    if (pathname.includes('/profile')) {
+    if (isProfilelessAccountRoute(pathname)) {
       return;
     }
 

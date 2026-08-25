@@ -96,6 +96,11 @@ export default function OnboardingProfileScreen() {
               variant="ghost"
             />
           ) : null}
+          <Button
+            label={t('settings.deleteAccount')}
+            onPress={() => router.push('/settings/account')}
+            variant="ghost"
+          />
         </View>
       </Screen>
     );
@@ -264,6 +269,11 @@ export default function OnboardingProfileScreen() {
         <Text color="textTertiary" variant="footnote">
           {t('profile.privacyNote')}
         </Text>
+        <Button
+          label={t('settings.deleteAccount')}
+          onPress={() => router.push('/settings/account')}
+          variant="ghost"
+        />
       </Surface>
     </Screen>
   );

@@ -28,6 +28,30 @@ const DELETE_ACCOUNT = readFileSync(
   'utf8'
 );
 
+const PROCESS_DELETIONS = readFileSync(
+  join(
+    __dirname,
+    '..',
+    'supabase',
+    'functions',
+    'process-account-deletions',
+    'index.ts'
+  ),
+  'utf8'
+);
+
+const REGISTER_PHOTO = readFileSync(
+  join(
+    __dirname,
+    '..',
+    'supabase',
+    'functions',
+    'register-portrait-photo',
+    'index.ts'
+  ),
+  'utf8'
+);
+
 const CACHE_BOUNDARY = readFileSync(
   join(
     __dirname,
@@ -144,9 +168,17 @@ describe('Phase 2 privacy effects', () => {
   });
 
   it('deletes portrait photographs and optional media with the account', () => {
-    expect(DELETE_ACCOUNT).toContain(".select('photo_path, media_path')");
-    expect(DELETE_ACCOUNT).toContain(".from('portraits')");
-    expect(DELETE_ACCOUNT).toContain('.remove([...new Set(portraitFiles)])');
+    expect(DELETE_ACCOUNT).toContain(".rpc('request_account_deletion'");
+    expect(PROCESS_DELETIONS).toContain("'avatars'");
+    expect(PROCESS_DELETIONS).toContain("'portraits'");
+    expect(PROCESS_DELETIONS).toContain('.list(prefix, {');
+    expect(PROCESS_DELETIONS).toContain('.remove(batch)');
+    expect(PROCESS_DELETIONS).toContain('remaining.length > 0');
+  });
+
+  it('validates portrait identifiers before building an object-path matcher', () => {
+    expect(REGISTER_PHOTO).toContain('UUID_PATTERN.test(body.portraitId)');
+    expect(REGISTER_PHOTO).toContain('body.objectPath.length > 160');
   });
 
   it('treats an unmarked upgrade cache as untrusted', () => {

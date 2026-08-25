@@ -99,13 +99,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
         {
           NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypeDeviceID',
-          // The random install identifier. Linked, because it sits in the same
-          // row as a user id once somebody signs in, and saying otherwise
-          // would be a technicality rather than the truth.
+          // The random install identifier and platform attestation state.
+          // Linked while an account exists; the retained provider-side abuse
+          // flag is opaque and is not used for tracking.
           NSPrivacyCollectedDataTypeLinked: true,
           NSPrivacyCollectedDataTypeTracking: false,
           NSPrivacyCollectedDataTypePurposes: [
             'NSPrivacyCollectedDataTypePurposeAnalytics',
+            'NSPrivacyCollectedDataTypePurposeAppFunctionality',
           ],
         },
         {

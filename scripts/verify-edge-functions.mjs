@@ -22,7 +22,11 @@ const serviceFunctions = [
   'send-notifications',
   'translate-portraits',
 ];
-const userFunctions = ['delete-account', 'register-portrait-photo'];
+const userFunctions = [
+  'delete-account',
+  'device-attestation',
+  'register-portrait-photo',
+];
 const allFunctions = [...serviceFunctions, ...userFunctions];
 let failures = 0;
 let userId;
@@ -178,6 +182,89 @@ try {
   check(
     invalidPhoto.status === 400,
     'register-portrait-photo rejects invalid identifiers and paths'
+  );
+
+  const malformedAttestation = await call('device-attestation', {
+    token: userToken,
+    body: {
+      action: 'verify',
+      platform: 'ios',
+      challengeId: 'not-a-uuid',
+      challenge: 'not-base64url',
+      evidence: { kind: 'ios-app-attest' },
+      assuranceLevel: 'reviewed',
+    },
+  });
+  check(
+    malformedAttestation.status === 400,
+    'device-attestation rejects malformed evidence and client status claims'
+  );
+
+  async function requestAttestationChallenge() {
+    const response = await call('device-attestation', {
+      token: userToken,
+      body: { action: 'challenge', platform: 'ios' },
+    });
+    const body = await response.json();
+    check(
+      response.ok &&
+        typeof body.challengeId === 'string' &&
+        /^[A-Za-z0-9_-]{43}$/.test(body.challenge),
+      'device-attestation issues a bounded one-time challenge'
+    );
+    return body;
+  }
+
+  const expiredChallenge = await requestAttestationChallenge();
+  const expiredAt = new Date(Date.now() - 60_000).toISOString();
+  const createdAt = new Date(Date.now() - 6 * 60_000).toISOString();
+  const expireUpdate = await admin
+    .from('attestation_challenges')
+    .update({ created_at: createdAt, expires_at: expiredAt })
+    .eq('id', expiredChallenge.challengeId);
+  if (expireUpdate.error) throw expireUpdate.error;
+  const expiredEvidence = {
+    action: 'verify',
+    platform: 'ios',
+    challengeId: expiredChallenge.challengeId,
+    challenge: expiredChallenge.challenge,
+    evidence: {
+      kind: 'ios-app-attest',
+      keyId: 'a'.repeat(43),
+      attestation: 'a'.repeat(64),
+      deviceToken: 'b'.repeat(64),
+    },
+  };
+  const expiredResponse = await call('device-attestation', {
+    token: userToken,
+    body: expiredEvidence,
+  });
+  check(
+    expiredResponse.status === 409,
+    'device-attestation rejects expired challenges before provider verification'
+  );
+
+  const replayChallenge = await requestAttestationChallenge();
+  const replayEvidence = {
+    ...expiredEvidence,
+    challengeId: replayChallenge.challengeId,
+    challenge: replayChallenge.challenge,
+  };
+  const firstUse = await call('device-attestation', {
+    token: userToken,
+    body: replayEvidence,
+  });
+  check(
+    [400, 500, 503].includes(firstUse.status),
+    'malformed cryptographic evidence fails closed after consuming its challenge'
+  );
+  const replayed = await call('device-attestation', {
+    token: userToken,
+    body: replayEvidence,
+  });
+  check(
+    replayed.status === 409,
+    'device-attestation rejects a replayed challenge'
   );
 
   const idempotencyKey = randomUUID();

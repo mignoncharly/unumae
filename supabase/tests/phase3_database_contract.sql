@@ -88,6 +88,7 @@ insert into expected_anon_rpcs (name) values
   ('get_archive_countries'),
   ('get_archive_page'),
   ('get_archive_years'),
+  ('get_draw_commitment'),
   ('get_human'),
   ('get_portrait_elements'),
   ('get_portrait_translations'),

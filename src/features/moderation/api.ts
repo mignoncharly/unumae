@@ -3,6 +3,8 @@ import { GATE_WINDOW_DAYS } from '@/constants/retention';
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 import type {
+  AccountAssuranceReviewQueueRow,
+  AccountFlagReviewDecision,
   AccountStatus,
   AppealQueueRow,
   ArchiveRemovalQueueRow,
@@ -76,6 +78,35 @@ export async function getReportQueue(): Promise<ReportQueueRow[]> {
     throw new AppError('permission', 'common.error', { cause: error });
   }
   return data ?? [];
+}
+
+export async function getAccountAssuranceReviewQueue(): Promise<
+  AccountAssuranceReviewQueueRow[]
+> {
+  const { data, error } = await getSupabase().rpc(
+    'account_assurance_review_queue'
+  );
+  if (error) {
+    throw new AppError('permission', 'common.error', { cause: error });
+  }
+  return data ?? [];
+}
+
+export async function reviewAccountFlag(
+  flagId: string,
+  decision: AccountFlagReviewDecision,
+  note?: string
+): Promise<void> {
+  const { error } = await getSupabase().rpc('review_account_flag', {
+    target_flag: flagId,
+    target_decision: decision,
+    review_note: note ?? null,
+  });
+  if (error) {
+    throw new AppError('permission', 'moderation.actionFailed', {
+      cause: error,
+    });
+  }
 }
 
 export async function reviewPortrait(

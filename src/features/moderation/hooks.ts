@@ -4,6 +4,7 @@ import { useSession } from '@/features/auth/useSession';
 
 import {
   amIModerator,
+  getAccountAssuranceReviewQueue,
   getAppealQueue,
   getArchiveRemovalQueue,
   getCountryBalance,
@@ -23,6 +24,7 @@ import {
   resolveOperationalAlert,
   resolveReport,
   reviewAppeal,
+  reviewAccountFlag,
   reviewArchiveRemoval,
   reviewPortrait,
   reviewQuestion,
@@ -36,6 +38,7 @@ export const moderationKeys = {
   portraits: (userId: string) => ['moderation', userId, 'portraits'] as const,
   questions: (userId: string) => ['moderation', userId, 'questions'] as const,
   reports: (userId: string) => ['moderation', userId, 'reports'] as const,
+  assurance: (userId: string) => ['moderation', userId, 'assurance'] as const,
   appeals: (userId: string) => ['moderation', userId, 'appeals'] as const,
   removals: (userId: string) => ['moderation', userId, 'removals'] as const,
   cohorts: (userId: string) => ['moderation', userId, 'cohorts'] as const,
@@ -106,6 +109,16 @@ export function useReportQueue(enabled: boolean) {
   });
 }
 
+export function useAccountAssuranceReviewQueue(enabled: boolean) {
+  const userId = useModeratorUserId();
+  return useQuery({
+    queryKey: moderationKeys.assurance(userId),
+    queryFn: getAccountAssuranceReviewQueue,
+    enabled,
+    staleTime: QUEUE_STALE_TIME,
+  });
+}
+
 export function useModerationActions() {
   const queryClient = useQueryClient();
   const userId = useModeratorUserId();
@@ -130,6 +143,11 @@ export function useModerationActions() {
     report: useMutation({
       mutationFn: (input: Parameters<typeof resolveReport>) =>
         resolveReport(...input),
+      onSuccess: refresh,
+    }),
+    assurance: useMutation({
+      mutationFn: (input: Parameters<typeof reviewAccountFlag>) =>
+        reviewAccountFlag(...input),
       onSuccess: refresh,
     }),
     account: useMutation({

@@ -25,6 +25,9 @@ const eligibleProfile: ProfileRow = {
   selection_eligible: true,
   wants_selection: true,
   verification_level: 'device',
+  assurance_level: 'device_attested',
+  activity_requirement_met: true,
+  review_pending: false,
   account_status: 'active',
   account_status_version: 0,
   accepted_rules_at: '2027-01-01T00:00:00.000Z',
@@ -49,7 +52,7 @@ describe('eligibility is binary', () => {
 
   it('has no score, tier or partial state to express', () => {
     // The shape itself is the guarantee: a boolean and a list of reasons.
-    const result = evaluate({ verification_level: 'none' });
+    const result = evaluate({ assurance_level: 'contact_pending' });
     expect(Object.keys(result).sort()).toEqual(['eligible', 'reasons']);
     expect(typeof result.eligible).toBe('boolean');
   });
@@ -83,9 +86,27 @@ describe('each criterion excludes on its own', () => {
     );
   });
 
-  it('excludes someone unverified (Article 8.5)', () => {
-    expect(evaluate({ verification_level: 'none' }).reasons).toContain(
-      'not-verified'
+  it('requires a stable Apple or Google provider identity', () => {
+    expect(evaluate({ assurance_level: 'contact_verified' }).reasons).toContain(
+      'provider-not-verified'
+    );
+  });
+
+  it('requires a server-attested device', () => {
+    expect(
+      evaluate({ assurance_level: 'provider_verified' }).reasons
+    ).toContain('device-not-attested');
+  });
+
+  it('requires genuine product activity', () => {
+    expect(evaluate({ activity_requirement_met: false }).reasons).toContain(
+      'activity-required'
+    );
+  });
+
+  it('excludes unresolved duplicate signals pending review', () => {
+    expect(evaluate({ review_pending: true }).reasons).toContain(
+      'under-review'
     );
   });
 
@@ -131,7 +152,10 @@ describe('one human, one day, forever (Article 5.4)', () => {
       'no-profile',
       'account-not-active',
       'opted-out',
-      'not-verified',
+      'provider-not-verified',
+      'device-not-attested',
+      'activity-required',
+      'under-review',
       'rules-not-accepted',
       'under-age',
     ] as const) {
@@ -144,14 +168,14 @@ describe('reporting several reasons at once', () => {
   it('lists every unmet criterion rather than only the first', () => {
     const result = evaluate({
       wants_selection: false,
-      verification_level: 'none',
+      assurance_level: 'contact_verified',
       accepted_rules_at: null,
     });
 
     expect(result.reasons).toEqual([
       'opted-out',
       'rules-not-accepted',
-      'not-verified',
+      'provider-not-verified',
     ]);
   });
 });
@@ -183,60 +207,58 @@ describe('leaving the pool', () => {
  *
  * Three situations, three answers.
  */
-describe('waiting is not the same as unverified', () => {
+describe('waiting is not the same as missing assurance', () => {
   const dayOne = '2027-06-14T00:00:00.000Z';
   const longAgo = '2027-01-01T00:00:00.000Z';
 
-  it('says unverified only when the account really is', () => {
+  it('states precisely when only the contact is verified', () => {
     const result = evaluate({
-      verification_level: 'none',
+      assurance_level: 'contact_verified',
       created_at: longAgo,
       selection_eligible: false,
     });
-    expect(result.reasons).toContain('not-verified');
+    expect(result.reasons).toContain('provider-not-verified');
     expect(result.reasons).not.toContain('account-too-new');
   });
 
   it('says too new when the account is verified but young', () => {
     const result = evaluate({
-      verification_level: 'email',
+      assurance_level: 'device_attested',
       created_at: dayOne,
       selection_eligible: false,
     });
     expect(result.reasons).toContain('account-too-new');
-    expect(result.reasons).not.toContain('not-verified');
+    expect(result.reasons).not.toContain('provider-not-verified');
   });
 
   it('says awaiting the nightly pass when old enough and still not in', () => {
     // Verified, past seven days, but the refresh has not judged them yet. A
     // few hours at most, and nothing to act on.
     const result = evaluate({
-      verification_level: 'email',
+      assurance_level: 'device_attested',
       created_at: longAgo,
       selection_eligible: false,
     });
     expect(result.reasons).toContain('awaiting-refresh');
-    expect(result.reasons).not.toContain('not-verified');
+    expect(result.reasons).not.toContain('provider-not-verified');
     expect(result.reasons).not.toContain('account-too-new');
   });
 
-  it('never gives two answers to the same question', () => {
-    // The three are mutually exclusive by construction. Somebody told both
-    // "prove you are real" and "just wait" would have no idea which to believe.
-    for (const overrides of [
-      { verification_level: 'none' as const, created_at: dayOne },
-      { verification_level: 'email' as const, created_at: dayOne },
-      { verification_level: 'email' as const, created_at: longAgo },
-    ]) {
-      const reasons = evaluate({
-        ...overrides,
-        selection_eligible: false,
-      }).reasons;
-      const overlapping = reasons.filter((reason) =>
-        ['not-verified', 'account-too-new', 'awaiting-refresh'].includes(reason)
-      );
-      expect(overlapping).toHaveLength(1);
-    }
+  it('never claims only a refresh is pending when a real blocker exists', () => {
+    const missingProvider = evaluate({
+      assurance_level: 'contact_verified',
+      created_at: dayOne,
+      selection_eligible: false,
+    }).reasons;
+    expect(missingProvider).toContain('provider-not-verified');
+    expect(missingProvider).not.toContain('awaiting-refresh');
+
+    const fullyReady = evaluate({
+      assurance_level: 'device_attested',
+      created_at: longAgo,
+      selection_eligible: false,
+    }).reasons;
+    expect(fullyReady).toEqual(['awaiting-refresh']);
   });
 });
 

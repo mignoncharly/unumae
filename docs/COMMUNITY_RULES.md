@@ -50,8 +50,10 @@ business, a cause, or another platform.
 
 ### 4. Tell the truth about who you are.
 
-One account per person. Do not present yourself as somebody else, real or
-invented, and do not enter the draw on behalf of anyone but yourself.
+Do not create or operate duplicate accounts, present yourself as somebody else,
+or enter the draw on behalf of anyone but yourself. Account, provider, and
+device checks raise the cost of duplicates; they do not prove global human
+uniqueness.
 
 If you are selected, the story you tell must be your own. You may leave out
 anything you like — that is your right — but what you do say has to be true.

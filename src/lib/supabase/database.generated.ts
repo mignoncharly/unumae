@@ -858,6 +858,13 @@ export type Database = {
             referencedRelation: 'draw_precommits';
             referencedColumns: ['selection_date'];
           },
+          {
+            foreignKeyName: 'draw_precommit_candidates_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
         ];
       };
       draw_precommits: {

@@ -34,7 +34,7 @@ export const legalSections: Record<
       },
       {
         title: 'Account and device assurance',
-        body: 'For draw eligibility we keep your confirmed normalized email and stable Apple or Google provider identifier while your account exists. Apple App Attest and DeviceCheck or Google Play Integrity verify the app and device. Raw attestation payloads and raw network addresses are never stored. An opaque abuse-prevention device flag can remain with the platform provider after account deletion so deleting and reinstalling cannot create another draw entry.',
+        body: 'For draw eligibility we keep your confirmed normalized email and stable Apple or Google provider identifier while your account exists. Apple App Attest and DeviceCheck or Google Play Integrity verify the app and device. Raw attestation payloads and raw network addresses are never stored. An opaque abuse-prevention flag can remain at the platform and in our anti-abuse records after account deletion, without your user ID or personal information, so deleting and reinstalling cannot create another draw entry.',
       },
       {
         title: 'Website measurement without a profile',
@@ -54,7 +54,7 @@ export const legalSections: Record<
       },
       {
         title: 'Your rights',
-        body: 'You can export everything we hold about you, hide your city, leave the draw, delete your account, and ask to be removed from the Archive if you were published. All of it from inside the app, without asking anyone.',
+        body: 'You can download a structured export of the account data that applies to you, hide your city, leave the draw, delete your account, and ask to be removed from the Archive if you were published. The export identifies security fields and third-party identifiers withheld to protect abuse controls and other people. These controls are available inside the app; a person handles any broader legal access request.',
       },
       {
         title: 'Age',
@@ -116,7 +116,7 @@ export const legalSections: Record<
       },
       {
         title: 'Assurance du compte et de l’appareil',
-        body: 'Pour le tirage, nous conservons l’e-mail normalisé confirmé et l’identifiant Apple ou Google stable tant que le compte existe. App Attest et DeviceCheck d’Apple ou Play Integrity de Google vérifient l’application et l’appareil. Aucun justificatif brut ni adresse réseau brute n’est stocké. Un indicateur opaque anti-abus peut rester chez la plateforme après suppression afin d’empêcher un nouveau ticket par réinstallation.',
+        body: 'Pour le tirage, nous conservons l’e-mail normalisé confirmé et l’identifiant Apple ou Google stable tant que le compte existe. App Attest et DeviceCheck d’Apple ou Play Integrity de Google vérifient l’application et l’appareil. Aucun justificatif brut ni adresse réseau brute n’est stocké. Un indicateur opaque anti-abus peut rester chez la plateforme et dans nos registres anti-abus après suppression, sans identifiant utilisateur ni information personnelle, afin d’empêcher un nouveau ticket par réinstallation.',
       },
       {
         title: 'Mesure du site sans créer de profil',
@@ -136,7 +136,7 @@ export const legalSections: Record<
       },
       {
         title: 'Vos droits',
-        body: "Exporter tout ce que nous détenons sur vous, masquer votre ville, quitter le tirage, supprimer votre compte, et demander votre retrait de l'Archive si vous avez été publié. Tout cela depuis l'application, sans demander à personne.",
+        body: "Vous pouvez télécharger un export structuré des données de compte qui vous concernent, masquer votre ville, quitter le tirage, supprimer votre compte et demander votre retrait de l'Archive. L’export signale les champs de sécurité et identifiants tiers masqués pour protéger les contrôles anti-abus et les autres personnes. Une personne traite toute demande légale d’accès plus large.",
       },
       {
         title: 'Âge',
@@ -198,7 +198,7 @@ export const legalSections: Record<
       },
       {
         title: 'Konto- und Geräteprüfung',
-        body: 'Für die Auswahl speichern wir die bestätigte normalisierte E-Mail und die stabile Apple- oder Google-Anbieterkennung, solange das Konto besteht. Apple App Attest und DeviceCheck oder Google Play Integrity prüfen App und Gerät. Rohe Attestierungsdaten und rohe Netzwerkadressen werden nie gespeichert. Ein undurchsichtiges Missbrauchsflag kann nach Kontolöschung beim Plattformanbieter bleiben, damit Neuinstallation keinen weiteren Eintrag erzeugt.',
+        body: 'Für die Auswahl speichern wir die bestätigte normalisierte E-Mail und die stabile Apple- oder Google-Anbieterkennung, solange das Konto besteht. Apple App Attest und DeviceCheck oder Google Play Integrity prüfen App und Gerät. Rohe Attestierungsdaten und rohe Netzwerkadressen werden nie gespeichert. Ein undurchsichtiges Missbrauchsflag kann nach Kontolöschung beim Plattformanbieter und in unseren Missbrauchsschutz-Datensätzen bleiben, ohne Nutzer-ID oder personenbezogene Daten, damit Neuinstallation keinen weiteren Eintrag erzeugt.',
       },
       {
         title: 'Website-Messung ohne Profil',
@@ -218,7 +218,7 @@ export const legalSections: Record<
       },
       {
         title: 'Deine Rechte',
-        body: 'Alles exportieren, was wir über dich haben, deine Stadt verbergen, die Auswahl verlassen, dein Konto löschen und um Entfernung aus dem Archiv bitten, falls du veröffentlicht wurdest. Alles in der App, ohne jemanden zu fragen.',
+        body: 'Du kannst einen strukturierten Export der dich betreffenden Kontodaten herunterladen, deine Stadt verbergen, die Auswahl verlassen, dein Konto löschen und die Entfernung aus dem Archiv beantragen. Der Export nennt Sicherheitsfelder und Drittkennungen, die zum Schutz der Missbrauchskontrollen und anderer Personen zurückgehalten werden. Weitergehende gesetzliche Auskunftsanfragen bearbeitet ein Mensch.',
       },
       {
         title: 'Alter',

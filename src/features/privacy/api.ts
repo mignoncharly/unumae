@@ -11,6 +11,9 @@ import type {
 export async function exportMyData(): Promise<Json> {
   const { data, error } = await getSupabase().rpc('export_my_data');
   if (error) {
+    if (error.code === '54000') {
+      throw new AppError('unknown', 'privacy.exportTooLarge', { cause: error });
+    }
     throw new AppError('unknown', 'privacy.exportFailed', { cause: error });
   }
   return data;

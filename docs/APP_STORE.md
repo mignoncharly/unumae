@@ -21,22 +21,27 @@ screen.
 | Contact Info | Name | App Functionality |
 | User Content | Photos or Videos | App Functionality |
 | User Content | Other User Content | App Functionality |
-| Identifiers | Device ID | Analytics |
+| Identifiers | User ID | App Functionality |
+| Identifiers | Device ID | App Functionality, Analytics |
+| Location | Coarse Location | App Functionality |
+| Other Data | Other Data Types | App Functionality |
 | Usage Data | Product Interaction | Analytics |
 
-**Device ID** is the random per-installation identifier described in
-`docs/OPEN_ITEMS.md` and on the privacy page. It is declared as *linked*
-because once somebody signs in it sits in the same row as their user id.
-Declaring it unlinked would be a technicality rather than the truth.
+**Device ID** covers the random per-installation identifier and platform
+attestation state. **User ID** covers the Supabase account id and stable
+Apple/Google provider identifier. Both are linked while the account exists;
+the opaque platform flag and database abuse record retained after deletion
+have no user link.
+
+Country and optional city are typed by the person and never read from Location
+Services, but they still describe coarse location and are declared that way.
+Other Data Types covers birth year, assurance state, and account/moderation
+status.
 
 ### Privacy labels — "Data Not Collected"
 
-Location, contacts, health, financial info, browsing history, search history,
-sensitive info, purchases. None of it is collected, and there is no column for
-most of it.
-
-The country on a profile is **typed by the person**, not read from the device.
-It is not Location data and should not be declared as such.
+Precise location, contacts, health, financial info, browsing history, search
+history, sensitive info, and purchases are not collected.
 
 ### Age rating
 

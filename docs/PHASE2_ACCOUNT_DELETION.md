@@ -66,7 +66,7 @@ abuse control and a Free-plan quota control.
 | Provider `sub` / Auth identity | Deleted | Removed with `auth.users`. |
 | Moderation audit | Retained with user references set to null | Accountability and content-safety history without an identity link. |
 | Published draw | Human number, date, seed, pool hash, and count remain; identity/content references are removed | Verifiable anonymous archive tombstone. |
-| Device attestation abuse flag (Phase 4) | Retain at the platform vendor | Non-identifying per-device/per-developer abuse prevention; prevents delete-and-reinstall farming. It is disclosed before deletion and must enter the Phase 5 inventory. |
+| Device attestation abuse flag (Phase 4) | Retain the opaque platform flag and de-identified database record | Non-identifying per-device/per-developer abuse prevention; prevents delete-and-reinstall farming. The retained record has no user ID, email, provider identifier, raw token, or network address and is disclosed before deletion and in the Phase 5 inventory. |
 | Completed deletion request | Correlation ID, stage timestamps, counts, and hashed idempotency key remain; `user_id` is erased | Proves completion and supports incident review without retaining identity. |
 
 ## User experience

@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Roadmap v2 Phase 3 local implementation, 25 August 2026.
+Last updated: Roadmap v2 Phase 4 local implementation, 25 August 2026.
 
 ---
 
@@ -26,7 +26,7 @@ Last updated: Roadmap v2 Phase 3 local implementation, 25 August 2026.
 | 15 | ⚠️ **Promote and failure-test Phase 2 in staging** | Retryable deletion passes 71 local database assertions and Edge bundle/auth-negative smoke tests. Inject list, pagination, removal, database, Auth, timeout, and partial-completion failures against hosted Storage/Auth before production. Follow `docs/PHASE2_ACCOUNT_DELETION.md`. | Phase 2 production completion and public beta. |
 | 16 | ⚠️ **Enable required GitHub checks and branch protection** | Repository settings must require `Application`, `Website`, and `Fresh database and Edge Functions`, block direct release-branch pushes, and prevent administrator bypass. Workflow files cannot enforce their own required-check status. | CI as an enforceable release boundary. |
 | 17 | **Configure `EXPO_TOKEN` for release candidates** | The manual release-candidate workflow verifies an exact CI-passed SHA and then invokes the EAS Maestro workflow. It cannot authenticate until this scoped GitHub Actions secret exists. | Automated same-SHA native smoke evidence. |
-| 18 | ⚠️ **Complete attestation in Phase 4** | Phase 3 tests every implemented Edge authorization/provider boundary. Replay, malformed, and expired attestation-token cases cannot be truthfully tested until Phase 4 selects and implements App Attest/Play Integrity verification and registration. Add those cases to the existing Edge harness with the feature. | Phase 3's attestation sub-requirement, anti-farming controls, and public beta. |
+| 18 | ⚠️ **Configure and provider-test Phase 4 attestation in staging** | The server verifier, one-time challenge protocol, database registration, replay/expiry/malformed checks, and manual-review path now pass locally. Apple Team/App Attest/DeviceCheck credentials, Google Play Integrity credentials and certificate digests, the binding pepper, and real provider responses require the developer consoles, staging secrets, and supported physical devices. The native evidence client remains explicitly scheduled for Roadmap Phase 8. | Hosted Phase 4 completion and public beta. |
 | 19 | **Monitor the Expo toolchain's `uuid` advisory** | `npm audit --audit-level=high` passes, but the root tree currently reports 12 moderate transitive findings through Expo config tooling → `xcode` → `uuid`. npm's complete forced remediation downgrades to Expo 46, so take the next compatible Expo/upstream fix instead of breaking the app framework. | No current high-severity release block; review on every dependency update. |
 
 ## Mine — code

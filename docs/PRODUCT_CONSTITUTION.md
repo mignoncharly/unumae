@@ -189,18 +189,17 @@ not banned, not suspended, not shadow-restricted
 age ≥ 16                          (see Article 8.4)
 profile completed
 country known
-human verification passed
+stable Apple or Google provider account bound
+app and device integrity attested
+account age ≥ 7 days
+minimum genuine activity completed
+no unresolved duplicate-signal flag
 community rules accepted
 eligible_for_selection = true
 ```
 
-Deferred to a later phase, but reserved here so that adding them later is not a
-change of policy:
-
-```text
-recently active
-not a duplicate identity
-```
+These checks establish account and device assurance. They do not prove that a
+person is globally unique, and the product must never describe them that way.
 
 **Eligibility is binary.** There is no eligibility score, no tier, no "more eligible".
 A user is in the pool or is not in the pool, and every user in the pool has exactly

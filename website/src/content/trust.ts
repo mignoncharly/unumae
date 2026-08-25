@@ -189,7 +189,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'The daily draw is deliberately separated from popularity, payment, nationality, and editorial taste. Eligibility is binary; nobody is “more eligible” than anyone else.',
       },
       facts: [
-        { value: 'D−2', label: 'pool frozen at 00:00 UTC' },
+        { value: 'D−2', label: 'inputs committed before the draw' },
         { value: '1 + 3', label: 'primary and ordered backups' },
         { value: '12h', label: 'time to accept freely' },
         { value: 'Once', label: 'one Human, one day, forever' },
@@ -200,9 +200,11 @@ export const trustContent: Record<Locale, TrustCopy> = {
         introduction:
           'At pool-freeze time, every condition below must be true. There is no score or tier.',
         criteria: [
-          'The account is active and verified by email or Apple.',
+          'The account is active and has a stable Apple or Google provider identifier.',
+          'The genuine app and device passed platform attestation, and the device is not already bound to another pool account.',
           'The account is at least seven days old.',
-          'The person is 16 or older.',
+          'The birth year meets the conservative 16-on-January-1 UTC rule.',
+          'The account has genuine participation activity and no unresolved review flag.',
           'The community rules have been accepted.',
           'The person has chosen to enter the draw.',
           'The person has never previously been Today’s Human.',
@@ -217,14 +219,14 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'The ordering is produced once from an immutable snapshot, not from a live query that can drift.',
         steps: [
           {
-            time: 'D−2 · 00:00',
-            title: 'Freeze the eligible pool',
-            body: 'A hash records exactly who was included. Someone who becomes eligible a minute later waits for the next pool.',
+            time: 'D−2 · 23:50',
+            title: 'Freeze and commit the eligible pool',
+            body: 'We publish the pool hash, candidate count and a commitment to secret entropy. Someone who becomes eligible later waits for the next pool.',
           },
           {
-            time: 'D−2 · 00:05',
-            title: 'Record a secure seed',
-            body: 'The frozen pool and cryptographically secure random seed are stored without later modification.',
+            time: 'D−2 · 00:00',
+            title: 'Draw from the committed inputs',
+            body: 'The service can only use the already-frozen pool and cryptographically secure committed seed.',
           },
           {
             time: 'Same operation',
@@ -269,8 +271,8 @@ export const trustContent: Record<Locale, TrustCopy> = {
       audit: {
         eyebrow: '06 · What can be verified',
         title: 'The record makes reproduction possible.',
-        body: 'The pool hash, seed, ordered result, replacements, and draw version are retained so the selection can be reconstructed and audited.',
-        note: 'Public cryptographic verification is a future transparency goal, not a feature claimed for this pre-launch website.',
+        body: 'The pool hash, candidate count, entropy commitment, source, algorithm version, commit time, revealed seed, replacements, and draw version are retained so the selection can be reconstructed and audited.',
+        note: 'The commitment is public before the draw. The seed is revealed only after publication, when anyone can verify the commitment and reproduce the result.',
       },
     },
     guidelines: {
@@ -315,7 +317,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'Tell the truth about who you are.',
           paragraphs: [
-            'One account per person. Do not present yourself as somebody else, real or invented, and do not enter the draw on behalf of anyone but yourself.',
+            'Do not create or operate duplicate accounts, present yourself as somebody else, or enter the draw for another person. Account, provider, and device checks make duplicates harder; they do not prove global human uniqueness.',
             'If you are selected, the story you tell must be your own. You may leave out anything you like—that is your right—but what you do say has to be true.',
           ],
         },
@@ -456,7 +458,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'Le tirage quotidien est séparé de la popularité, du paiement, de la nationalité et du goût éditorial. L’éligibilité est binaire ; personne n’est « plus éligible ».',
       },
       facts: [
-        { value: 'J−2', label: 'groupe figé à 00:00 UTC' },
+        { value: 'J−2', label: 'entrées engagées avant le tirage' },
         { value: '1 + 3', label: 'personne principale et remplaçants' },
         { value: '12 h', label: 'pour accepter librement' },
         { value: 'Une fois', label: 'un Humain, un jour, pour toujours' },
@@ -467,9 +469,11 @@ export const trustContent: Record<Locale, TrustCopy> = {
         introduction:
           'Au moment où le groupe est figé, toutes les conditions suivantes doivent être remplies. Il n’existe ni score ni niveau.',
         criteria: [
-          'Le compte est actif et vérifié par e-mail ou Apple.',
+          'Le compte est actif et possède un identifiant de fournisseur Apple ou Google stable.',
+          'L’application et l’appareil authentiques ont passé l’attestation de plateforme, et l’appareil n’est pas déjà lié à un autre compte du groupe.',
           'Le compte existe depuis au moins sept jours.',
-          'La personne a 16 ans ou plus.',
+          'L’année de naissance satisfait la règle prudente des 16 ans au 1er janvier UTC.',
+          'Le compte a une participation réelle et aucun signal d’examen non résolu.',
           'Les règles de la communauté ont été acceptées.',
           'La personne a choisi de participer au tirage.',
           'La personne n’a jamais été l’Humain du jour.',
@@ -484,14 +488,14 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'L’ordre est produit une fois depuis un instantané immuable, et non depuis une requête en direct qui pourrait changer.',
         steps: [
           {
-            time: 'J−2 · 00:00',
-            title: 'Figer le groupe éligible',
-            body: 'Un hash consigne précisément qui en fait partie. Une personne devenue éligible une minute plus tard attend le groupe suivant.',
+            time: 'J−2 · 23:50',
+            title: 'Figer et engager le groupe éligible',
+            body: 'Nous publions l’empreinte du groupe, sa taille et un engagement sur l’entropie secrète. Une personne éligible plus tard attend le groupe suivant.',
           },
           {
-            time: 'J−2 · 00:05',
-            title: 'Enregistrer une graine sécurisée',
-            body: 'Le groupe figé et la graine aléatoire cryptographiquement sûre sont conservés sans modification ultérieure.',
+            time: 'J−2 · 00:00',
+            title: 'Tirer depuis les entrées engagées',
+            body: 'Le service ne peut utiliser que le groupe déjà figé et la graine cryptographiquement sûre déjà engagée.',
           },
           {
             time: 'Même opération',
@@ -534,15 +538,15 @@ export const trustContent: Record<Locale, TrustCopy> = {
       publication: {
         eyebrow: '05 · Avant publication',
         title: 'Être tiré au sort ne suffit pas pour être publié.',
-        body: 'Au lancement, la personne qui accepte passe une preuve de vie et crée un portrait guidé. Des contrôles automatiques et une personne examinent le portrait avant publication.',
+        body: 'Au lancement, la personne qui accepte crée un portrait guidé. Des contrôles automatiques et une personne examinent le portrait avant publication.',
         quietDay:
           'Si personne n’a accepté et passé la modération avant l’échéance, Unumae affiche un Jour calme. Le produit n’invente jamais un Humain, ne contourne pas le consentement et ne publie rien sans relecture.',
       },
       audit: {
         eyebrow: '06 · Ce qui peut être vérifié',
         title: 'L’enregistrement permet de reproduire le tirage.',
-        body: 'Le hash du groupe, la graine, l’ordre obtenu, les remplacements et la version du tirage sont conservés pour reconstruire et auditer la sélection.',
-        note: 'La vérification cryptographique publique est un objectif futur de transparence, pas une fonction revendiquée par ce site avant lancement.',
+        body: 'L’empreinte et la taille du groupe, l’engagement d’entropie, la source, la version de l’algorithme, l’heure d’engagement, la graine révélée, les remplacements et la version du tirage sont conservés.',
+        note: 'L’engagement est public avant le tirage. La graine n’est révélée qu’après publication, lorsque chacun peut vérifier l’engagement et reproduire le résultat.',
       },
     },
     guidelines: {
@@ -587,7 +591,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'Dites la vérité sur votre identité.',
           paragraphs: [
-            'Un compte par personne. Ne vous présentez pas comme quelqu’un d’autre, réel ou inventé, et ne participez pas au tirage au nom d’une autre personne.',
+            'Ne créez ni n’utilisez de comptes en double, ne vous présentez pas comme quelqu’un d’autre et ne participez pas pour autrui. Les contrôles rendent les doublons plus difficiles sans prouver l’unicité humaine mondiale.',
             'Si vous êtes sélectionné, l’histoire racontée doit être la vôtre. Vous pouvez omettre ce que vous voulez—c’est votre droit—mais ce que vous dites doit être vrai.',
           ],
         },
@@ -728,7 +732,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'Die tägliche Ziehung ist von Beliebtheit, Zahlung, Nationalität und redaktionellem Geschmack getrennt. Berechtigung ist binär; niemand ist „mehr berechtigt“.',
       },
       facts: [
-        { value: 'T−2', label: 'Pool um 00:00 UTC eingefroren' },
+        { value: 'T−2', label: 'Eingaben vor der Ziehung festgelegt' },
         { value: '1 + 3', label: 'Hauptperson und Ersatzpersonen' },
         { value: '12 Std.', label: 'Zeit zur freien Annahme' },
         { value: 'Einmal', label: 'ein Mensch, ein Tag, für immer' },
@@ -739,9 +743,11 @@ export const trustContent: Record<Locale, TrustCopy> = {
         introduction:
           'Beim Einfrieren des Pools müssen alle folgenden Bedingungen erfüllt sein. Es gibt weder Punktzahl noch Stufe.',
         criteria: [
-          'Das Konto ist aktiv und per E-Mail oder Apple bestätigt.',
+          'Das Konto ist aktiv und besitzt eine stabile Apple- oder Google-Anbieterkennung.',
+          'Die echte App und das Gerät haben die Plattform-Attestierung bestanden; das Gerät ist nicht an ein anderes Pool-Konto gebunden.',
           'Das Konto ist mindestens sieben Tage alt.',
-          'Die Person ist mindestens 16 Jahre alt.',
+          'Das Geburtsjahr erfüllt die vorsichtige Regel „16 am 1. Januar UTC“.',
+          'Das Konto zeigt echte Beteiligung und hat kein ungeklärtes Prüfsignal.',
           'Die Community-Regeln wurden akzeptiert.',
           'Die Person hat sich für die Ziehung entschieden.',
           'Die Person war noch nie Mensch des Tages.',
@@ -756,14 +762,14 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'Die Reihenfolge entsteht einmal aus einer unveränderlichen Momentaufnahme, nicht aus einer Live-Abfrage, die sich verschieben kann.',
         steps: [
           {
-            time: 'T−2 · 00:00',
-            title: 'Berechtigten Pool einfrieren',
-            body: 'Ein Hash hält genau fest, wer enthalten ist. Wer eine Minute später berechtigt wird, wartet auf den nächsten Pool.',
+            time: 'T−2 · 23:50',
+            title: 'Pool einfrieren und festlegen',
+            body: 'Wir veröffentlichen Pool-Hash, Anzahl und eine Verpflichtung auf geheime Entropie. Wer später berechtigt wird, wartet auf den nächsten Pool.',
           },
           {
-            time: 'T−2 · 00:05',
-            title: 'Sicheren Seed aufzeichnen',
-            body: 'Der eingefrorene Pool und ein kryptographisch sicherer Zufalls-Seed werden ohne spätere Änderung gespeichert.',
+            time: 'T−2 · 00:00',
+            title: 'Aus festgelegten Eingaben ziehen',
+            body: 'Der Dienst kann nur den bereits eingefrorenen Pool und den zuvor festgelegten kryptographisch sicheren Seed verwenden.',
           },
           {
             time: 'Ein Vorgang',
@@ -801,15 +807,15 @@ export const trustContent: Record<Locale, TrustCopy> = {
       publication: {
         eyebrow: '05 · Vor der Veröffentlichung',
         title: 'Ausgewählt zu sein reicht nicht, um live zu gehen.',
-        body: 'Zum Start durchläuft die Person nach ihrer Zustimmung eine Lebendigkeitsprüfung und erstellt ein geführtes Porträt. Automatische Prüfungen und ein Mensch prüfen es vor der Veröffentlichung.',
+        body: 'Zum Start erstellt die Person nach ihrer Zustimmung ein geführtes Porträt. Automatische Prüfungen und ein Mensch prüfen es vor der Veröffentlichung.',
         quietDay:
           'Hat bis zur Frist niemand zugesagt und die Prüfung bestanden, zeigt Unumae einen Stillen Tag. Es erfindet keinen Menschen, umgeht keine Zustimmung und veröffentlicht nichts ungeprüft.',
       },
       audit: {
         eyebrow: '06 · Was überprüfbar ist',
         title: 'Der Datensatz macht die Ziehung reproduzierbar.',
-        body: 'Pool-Hash, Seed, geordnetes Ergebnis, Ersetzungen und Ziehungsversion bleiben erhalten, damit die Auswahl rekonstruiert und geprüft werden kann.',
-        note: 'Öffentliche kryptographische Verifikation ist ein künftiges Transparenzziel, keine Funktion, die diese Vorab-Website behauptet.',
+        body: 'Pool-Hash und Anzahl, Entropie-Verpflichtung, Quelle, Algorithmusversion, Zeitpunkt, offengelegter Seed, Ersetzungen und Ziehungsversion bleiben für die Prüfung erhalten.',
+        note: 'Die Verpflichtung ist vor der Ziehung öffentlich. Der Seed wird erst nach Veröffentlichung offengelegt; dann können alle Verpflichtung und Ergebnis nachrechnen.',
       },
     },
     guidelines: {
@@ -854,7 +860,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'Sag die Wahrheit darüber, wer du bist.',
           paragraphs: [
-            'Ein Konto pro Person. Gib dich nicht als jemand anderes aus, ob real oder erfunden, und nimm nicht für jemand anderen an der Ziehung teil.',
+            'Erstelle und betreibe keine Doppelkonten, gib dich nicht als jemand anderes aus und nimm nicht für andere teil. Die Kontrollen erschweren Doppeleinträge, beweisen aber keine weltweite menschliche Eindeutigkeit.',
             'Wenn du ausgewählt wirst, muss die erzählte Geschichte deine eigene sein. Du darfst alles auslassen—das ist dein Recht—aber was du sagst, muss wahr sein.',
           ],
         },

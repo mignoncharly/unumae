@@ -33,6 +33,10 @@ export const legalSections: Record<
         body: 'We store a random identifier for your installation, so we can count how many people came back the next day. It is not linked to any advertising profile, it never leaves our database, and it is deleted after 90 days along with the events it belongs to.',
       },
       {
+        title: 'Account and device assurance',
+        body: 'For draw eligibility we keep your confirmed normalized email and stable Apple or Google provider identifier while your account exists. Apple App Attest and DeviceCheck or Google Play Integrity verify the app and device. Raw attestation payloads and raw network addresses are never stored. An opaque abuse-prevention device flag can remain with the platform provider after account deletion so deleting and reinstalling cannot create another draw entry.',
+      },
+      {
         title: 'Website measurement without a profile',
         body: 'On this website, we count only when someone chooses the selection explainer, Archive, or mission page. An event contains only its name, source page, and language, and follows the same 90-day retention. We set no analytics cookie or identifier, send nothing to an advertising service, honor Global Privacy Control and Do Not Track, and never measure a Human, story, question, Archive entry, or popularity.',
       },
@@ -46,7 +50,7 @@ export const legalSections: Record<
       },
       {
         title: 'How long we keep it',
-        body: 'Product analytics for 90 days. Everything else until you delete your account. Records of the daily draw are kept permanently, but they contain no published content — they are what makes the fairness of the draw checkable.',
+        body: 'Product analytics for 90 days. Account-linked assurance data is deleted with your account; the non-identifying platform device flag remains for abuse prevention. Draw and review audit records are retained without your provider identifier or normalized email. Daily draw records remain permanently so fairness stays checkable.',
       },
       {
         title: 'Your rights',
@@ -68,7 +72,7 @@ export const legalSections: Record<
       },
       {
         title: 'Your account',
-        body: 'One account per person, at least 16 years old, with a real email address you control. You are responsible for what is done with your account.',
+        body: 'You must be at least 16 under our birth-year rule, control the account you use, and not create or operate duplicate accounts. Provider and device checks deter duplicate draw entries but do not prove that every account maps to a globally unique person. You are responsible for what is done with your account.',
       },
       {
         title: 'Your content stays yours',
@@ -111,6 +115,10 @@ export const legalSections: Record<
         body: "Nous stockons un identifiant aléatoire pour votre installation, afin de compter combien de personnes reviennent le lendemain. Il n'est lié à aucun profil publicitaire, ne quitte jamais notre base, et est supprimé au bout de 90 jours avec les événements concernés.",
       },
       {
+        title: 'Assurance du compte et de l’appareil',
+        body: 'Pour le tirage, nous conservons l’e-mail normalisé confirmé et l’identifiant Apple ou Google stable tant que le compte existe. App Attest et DeviceCheck d’Apple ou Play Integrity de Google vérifient l’application et l’appareil. Aucun justificatif brut ni adresse réseau brute n’est stocké. Un indicateur opaque anti-abus peut rester chez la plateforme après suppression afin d’empêcher un nouveau ticket par réinstallation.',
+      },
+      {
         title: 'Mesure du site sans créer de profil',
         body: 'Sur ce site, nous comptons uniquement le choix d’ouvrir l’explication de la sélection, les Archives ou la page de mission. Un événement contient seulement son nom, la page d’origine et la langue, avec la même conservation de 90 jours. Aucun cookie ni identifiant analytique, aucun service publicitaire ; nous respectons Global Privacy Control et Do Not Track et ne mesurons jamais un Humain, une histoire, une question, une entrée des Archives ou sa popularité.',
       },
@@ -124,7 +132,7 @@ export const legalSections: Record<
       },
       {
         title: 'Combien de temps',
-        body: "Les statistiques produit pendant 90 jours. Le reste jusqu'à la suppression de votre compte. Les enregistrements du tirage quotidien sont conservés indéfiniment, mais ne contiennent aucun contenu publié — ce sont eux qui rendent l'équité vérifiable.",
+        body: 'Les statistiques produit sont conservées 90 jours. Les données d’assurance liées au compte sont supprimées avec lui ; l’indicateur opaque de plateforme reste pour prévenir les abus. Les audits de tirage et d’examen restent sans identifiant fournisseur ni e-mail normalisé.',
       },
       {
         title: 'Vos droits',
@@ -146,7 +154,7 @@ export const legalSections: Record<
       },
       {
         title: 'Votre compte',
-        body: 'Un compte par personne, au moins 16 ans, avec une adresse e-mail réelle que vous contrôlez. Vous êtes responsable de ce qui est fait avec votre compte.',
+        body: 'Vous devez avoir au moins 16 ans selon notre règle d’année de naissance, contrôler le compte utilisé et ne pas créer ni utiliser de comptes en double. Les contrôles de fournisseur et d’appareil découragent les doublons sans prouver qu’un compte correspond à une personne mondialement unique.',
       },
       {
         title: 'Votre contenu reste le vôtre',
@@ -189,6 +197,10 @@ export const legalSections: Record<
         body: 'Wir speichern eine zufällige Kennung für deine Installation, um zu zählen, wie viele Menschen am nächsten Tag wiederkommen. Sie ist mit keinem Werbeprofil verknüpft, verlässt unsere Datenbank nie und wird nach 90 Tagen zusammen mit den Ereignissen gelöscht.',
       },
       {
+        title: 'Konto- und Geräteprüfung',
+        body: 'Für die Auswahl speichern wir die bestätigte normalisierte E-Mail und die stabile Apple- oder Google-Anbieterkennung, solange das Konto besteht. Apple App Attest und DeviceCheck oder Google Play Integrity prüfen App und Gerät. Rohe Attestierungsdaten und rohe Netzwerkadressen werden nie gespeichert. Ein undurchsichtiges Missbrauchsflag kann nach Kontolöschung beim Plattformanbieter bleiben, damit Neuinstallation keinen weiteren Eintrag erzeugt.',
+      },
+      {
         title: 'Website-Messung ohne Profil',
         body: 'Auf dieser Website zählen wir nur, wenn jemand die Auswahlerklärung, das Archiv oder die Missionsseite öffnet. Ein Ereignis enthält nur seinen Namen, die Ausgangsseite und die Sprache und wird ebenfalls 90 Tage aufbewahrt. Wir setzen weder Analyse-Cookie noch Kennung, senden nichts an Werbedienste, beachten Global Privacy Control und Do Not Track und messen niemals einen Menschen, eine Geschichte, eine Frage, einen Archiveintrag oder Beliebtheit.',
       },
@@ -202,7 +214,7 @@ export const legalSections: Record<
       },
       {
         title: 'Wie lange',
-        body: 'Produktdaten 90 Tage. Alles andere, bis du dein Konto löschst. Die Aufzeichnungen der täglichen Auswahl bleiben dauerhaft, enthalten aber keinen veröffentlichten Inhalt — sie machen die Fairness überprüfbar.',
+        body: 'Produktdaten bleiben 90 Tage. Kontoverknüpfte Prüfdaten werden mit dem Konto gelöscht; das nicht identifizierende Plattform-Geräteflag bleibt zur Missbrauchsprävention. Auswahl- und Prüfaudits bleiben ohne Anbieterkennung oder normalisierte E-Mail erhalten.',
       },
       {
         title: 'Deine Rechte',
@@ -224,7 +236,7 @@ export const legalSections: Record<
       },
       {
         title: 'Dein Konto',
-        body: 'Ein Konto pro Person, mindestens 16 Jahre alt, mit einer echten E-Mail-Adresse, die dir gehört. Du bist verantwortlich für das, was mit deinem Konto geschieht.',
+        body: 'Du musst nach unserer Geburtsjahrregel mindestens 16 sein, dein verwendetes Konto kontrollieren und darfst keine Doppelkonten erstellen oder betreiben. Anbieter- und Geräteprüfungen erschweren Doppeleinträge, beweisen aber keine weltweit eindeutige Person.',
       },
       {
         title: 'Deine Inhalte bleiben deine',

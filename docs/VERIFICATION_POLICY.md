@@ -1,122 +1,119 @@
-# Verification policy
+# Account and device assurance policy
 
-What makes someone eligible for the draw, and what makes them safe to publish.
-Implements Product Constitution Article 8.5.
+What makes an account eligible for the draw, what the checks establish, and
+what they cannot establish.
 
-**Status:** revised for beta · **Adopted:** 2026-08-24 · **Phase:** 5
+**Status:** Roadmap v2 Phase 4 · **Adopted:** 2026-08-25
 
----
+## The claim
 
-## The principle it has to satisfy
+Unumae does not verify that an account belongs to a globally unique human.
+Without identity documents or a trusted identity provider, that claim would be
+false. The controls instead raise the cost of an additional draw entry and
+state exactly what passed.
 
-> Low friction to discover. High assurance only where it matters.
+Unumae does **not** collect biometric data. Account and device assurance uses
+provider identifiers and opaque platform integrity signals, not face or voice
+recognition, liveness checks, identity documents, or biometric templates.
 
-Two different things are being protected, and conflating them is the usual
-mistake:
-
-| Risk | What goes wrong | Where the friction belongs |
+| Level | What it means | What it does not mean |
 | --- | --- | --- |
-| A bot **enters the pool** | Dilutes everyone's chance; a botnet could farm selections | Cheap, automatic checks |
-| A bot or impostor **gets published** | A fabricated person is presented to the world as real | Expensive, human-grade checks |
+| `contact_verified` | The account's email was confirmed. | The person is unique or owns only one email. |
+| `provider_verified` | A stable Apple or Google provider identifier is bound. | Apple or Google proved a civil identity. |
+| `device_attested` | The platform verified a genuine app/device and its abuse flag was not already bound to another pool account. | One person owns the device, or will own it forever. |
+| `reviewed` | A moderator examined and cleared duplicate-signal flags. | The moderator proved global uniqueness. |
 
-Entering a pool costs the world nothing. Being published to it is irreversible.
-So the bar rises sharply at exactly one moment: selection.
+The legacy `verification_level` column remains for compatibility with old
+moderation records. It is not an eligibility authority. Clients cannot write
+either assurance field.
 
-## The bar to enter the pool
+## Pool entry
 
-`selection_eligible` becomes true when **all** of these hold:
-
-```text
-account_status = 'active'
-verification_level <> 'none'      -- email confirmed, or Apple
-account is at least 7 days old
-```
-
-And the draw additionally requires, at pool-freeze time:
+At refresh and again at pool freeze, the database independently requires:
 
 ```text
-wants_selection = true            -- the user's own choice (Article 5.6)
-accepted_rules_at is not null
-age >= 16
-never previously selected
+account_status = active
+wants_selection = true
+birth_year <= current UTC year - 16
+account age >= 7 days
+community rules accepted
+stable Apple or Google provider binding exists
+platform-attested device is bound to this pool account
+minimum participation exists (question, question vote, or Remember)
+no unresolved account flag
+never previously selected in a non-cancelled cycle
 ```
 
-### Why seven days
+Email-only accounts may read and hold a profile but cannot enter the pool. The
+birth-year rule is conservative: somebody is admitted only if they were at
+least 16 on January 1 UTC of the current year. It may delay an already-16 user,
+but does not knowingly admit a 15-year-old from year data alone.
 
-The pool freezes two days before a cycle. Seven days of account age means an
-attacker cannot register accounts for tomorrow's draw — anything created inside
-the last week is not in the frozen pool at all. Combined with per-account email
-confirmation, mass entry stops being a same-day operation and becomes a
-sustained one, which is a much smaller problem and a visible one.
+## Provider and email binding
 
-It also costs a genuine new user nothing they would notice. Nobody signs up for
-this product in order to be drawn the next morning.
+Provider bindings are copied server-side from `auth.identities.provider_id`.
+The database uniquely indexes `(provider, provider_id)`; the client never sends
+an assurance flag. A Sign in with Apple relay-address change therefore does not
+create another provider identity.
 
-### What is deliberately *not* required to enter
+Email normalization lowercases the address, removes a plus tag, removes dots
+only for Gmail-compatible domains, maps `googlemail.com` to `gmail.com`, and
+rejects ambiguous non-ASCII forms. The normalized value is unique. A maintained
+disposable-domain denylist is reviewed monthly and can be replaced without a
+client release.
 
-- **No phone number.** It excludes people in exactly the places this product
-  most wants to hear from, and it is the single most effective way to make a
-  global product quietly Western.
-- **No device attestation.** Useful against farms, but it fails on rooted
-  devices and older hardware, which again excludes the wrong people.
-- **No liveness check.** Asking eight billion people for a selfie to enter a
-  lottery they will probably never win is absurd, and it would be the largest
-  biometric collection in the product for no proportionate benefit.
+## Device attestation
 
-Phone and device signals are reserved as **responses to observed abuse**, not
-as a default toll. If a farm appears, they can be required of new accounts
-without amending this document — the columns exist.
+- iOS App Attest objects are verified against the registered Team ID and bundle
+  ID with a WebCrypto verifier in the Edge runtime. DeviceCheck bit 0 means the
+  device has already been bound at pool entry.
+- Android Play Integrity standard verdicts are decoded through Google's REST
+  API. Request hash, timestamp, package, app recognition, license, device
+  integrity, and configured certificate digests are checked. Device recall bit
+  1 is the pool-binding flag.
+- A random 256-bit challenge is stored only as SHA-256, expires after five
+  minutes, and is atomically consumed before provider verification. Reuse,
+  expiry, malformed evidence, and platform/evidence mismatch fail closed.
+- The Edge Function writes assurance state with the service role. Raw App
+  Attest objects, DeviceCheck tokens, Play Integrity tokens, and IP addresses
+  are never stored.
+- The vendor flag is set only when the other pool conditions are satisfied, not
+  at signup.
 
-## The bar to be published
+The client implementation that requests native platform evidence belongs to
+Roadmap Phase 8. Until a supported production build supplies it, accounts fail
+closed outside the pool; no production fallback marks a simulator or script as
+attested.
 
-When someone is drawn and accepts, before their portrait goes live:
+## Signals and manual review
 
-```text
-confirmed email or Apple account
-explicit invitation acceptance
-completed guided portrait
-human moderation approval
-```
+Opaque device conflicts, short-window HMACed network clusters, VPN/datacenter
+classification when available, and shared push destinations raise an account
+flag. A flag pauses pool entry; it never bans an account automatically.
 
-Beta does **not** collect biometric data or claim automated liveness. A
-moderator reviews the submitted portrait and guided answers before publication.
-If identity abuse appears in beta, publication pauses while the case is
-reviewed; an SDK must not be added merely to preserve an earlier promise.
+False-positive policy:
 
-Liveness can be reconsidered only as a separately designed feature with an
-explicit processor, consent, retention/deletion guarantees, accessibility
-fallbacks, and a new policy amendment. The dormant database switch and write
-RPC were removed in migration `20260823230000_release_assurance.sql` so code and
-public promises cannot silently drift apart.
+1. The user sees that eligibility is pending human review and that the account
+   is not banned.
+2. A moderator reviews shared-family-device, refurbished-device, transfer, and
+   cluster context within seven calendar days.
+3. `cleared` or `upheld` is written to the append-only review log with reviewer,
+   timestamp, and note. A cleared account is reconsidered at the next refresh.
+4. If the queue cannot be staffed within seven days, attestation remains a
+   production-traffic blocker; silent exclusion is not acceptable.
 
-## One person, one account
+## Deletion and retention
 
-The hardest problem here, and the one this policy does **not** solve. Nothing
-above prevents someone holding several accounts and multiplying their chances.
+Deleting an account removes its normalized email, provider identifier, App
+Attest public key, and account-device association. The opaque platform
+abuse-prevention flag and the fact that it was bound remain without a user ID.
+That exception is disclosed before deletion and prevents delete/reinstall
+farming. Phase 5 inventories the same data in the full export and retention
+matrix.
 
-Mitigations available without changing the principle:
+## Deferred phone control
 
-1. Email confirmation makes each account cost a distinct address.
-2. Seven-day age makes stockpiling slow and visible.
-3. Article 5.4 removes anyone published from every future pool, so the payoff
-   for holding many accounts is capped at one appearance each.
-4. Device signals can be turned on for new accounts if abuse is observed.
-
-An honest statement of where that leaves us: a determined person can improve
-their odds from 1-in-N to k-in-N with k accounts. At the scale where that
-matters, so does the sustained cost of maintaining them, and at that point the
-signals in (4) become proportionate. Pretending this is solved would be worse
-than saying it is not.
-
-## How the levels map
-
-| `verification_level` | Meaning | Grants |
-| --- | --- | --- |
-| `none` | Account exists, address unconfirmed | Read, ask, vote, Remember |
-| `email` | Email confirmed, or signed in with Apple | The above, plus the pool after 7 days |
-| `device` | Device signals checked | Reserved; abuse response |
-| `phone` | Phone confirmed | Reserved; abuse response |
-| `liveness` | Legacy/reserved value; not assigned by the beta product | None |
-
-Levels are set by the system only. No client role can write
-`verification_level` — see `docs/DATABASE.md`.
+Phone verification is not part of beta. If observed farming makes it
+proportionate, it is applied only at draw entry, stores only
+`HMAC-SHA256(pepper, E.164)`, rejects virtual/VoIP ranges, and requires updated
+privacy and store declarations before launch.

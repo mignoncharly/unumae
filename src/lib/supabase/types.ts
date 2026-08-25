@@ -43,6 +43,15 @@ export type DeletionRequestRow = {
 export type VerificationLevel =
   'none' | 'email' | 'device' | 'phone' | 'liveness';
 
+export type AssuranceLevel =
+  | 'contact_pending'
+  | 'contact_verified'
+  | 'provider_verified'
+  | 'device_attested'
+  | 'reviewed';
+
+export type AccountFlagReviewDecision = 'cleared' | 'upheld';
+
 export type ProfileRow = {
   id: string;
   username: string;
@@ -58,6 +67,9 @@ export type ProfileRow = {
   selection_eligible: boolean;
   wants_selection: boolean;
   verification_level: VerificationLevel;
+  assurance_level: AssuranceLevel;
+  activity_requirement_met: boolean;
+  review_pending: boolean;
   account_status: AccountStatus;
   account_status_version: number;
   accepted_rules_at: string | null;
@@ -118,6 +130,10 @@ export type DailyDrawPublicRow = {
   candidate_pool_hash: string;
   candidate_count: number;
   random_seed: string;
+  entropy_commitment: string;
+  randomness_source: string;
+  algorithm_version: string;
+  precommitted_at: string | null;
   selection_status: SelectionStatus;
   published_at: string | null;
 };
@@ -363,6 +379,16 @@ export type ArchiveRemovalQueueRow = {
   display_name: string | null;
   reason: string | null;
   created_at: string;
+};
+
+export type AccountAssuranceReviewQueueRow = {
+  flag_id: string;
+  user_id: string;
+  display_name: string;
+  signal_kind: string;
+  review_context: string | null;
+  flagged_at: string;
+  review_due_at: string;
 };
 
 export type Database = {
@@ -654,6 +680,18 @@ export type Database = {
       moderation_report_queue: {
         Args: Record<PropertyKey, never>;
         Returns: ReportQueueRow[];
+      };
+      account_assurance_review_queue: {
+        Args: Record<PropertyKey, never>;
+        Returns: AccountAssuranceReviewQueueRow[];
+      };
+      review_account_flag: {
+        Args: {
+          target_flag: string;
+          target_decision: AccountFlagReviewDecision;
+          review_note?: string | null;
+        };
+        Returns: boolean;
       };
       remove_question: {
         Args: { target_question: string; removal_reason?: string | null };

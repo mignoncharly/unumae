@@ -38,6 +38,89 @@ export type Database = {
   };
   public: {
     Tables: {
+      account_device_attestations: {
+        Row: {
+          assertion_counter: number;
+          attested_at: string;
+          device_flag_id: string;
+          id: string;
+          key_id_hash: string;
+          last_verified_at: string;
+          platform: Database['public']['Enums']['attestation_platform'];
+          public_key: string | null;
+          state: Database['public']['Enums']['attestation_state'];
+          user_id: string;
+        };
+        Insert: {
+          assertion_counter?: number;
+          attested_at?: string;
+          device_flag_id: string;
+          id?: string;
+          key_id_hash: string;
+          last_verified_at?: string;
+          platform: Database['public']['Enums']['attestation_platform'];
+          public_key?: string | null;
+          state?: Database['public']['Enums']['attestation_state'];
+          user_id: string;
+        };
+        Update: {
+          assertion_counter?: number;
+          attested_at?: string;
+          device_flag_id?: string;
+          id?: string;
+          key_id_hash?: string;
+          last_verified_at?: string;
+          platform?: Database['public']['Enums']['attestation_platform'];
+          public_key?: string | null;
+          state?: Database['public']['Enums']['attestation_state'];
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'account_device_attestations_device_flag_id_fkey';
+            columns: ['device_flag_id'];
+            isOneToOne: false;
+            referencedRelation: 'device_binding_flags';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'account_device_attestations_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      account_email_addresses: {
+        Row: {
+          confirmed_at: string | null;
+          normalized_email: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          confirmed_at?: string | null;
+          normalized_email: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          confirmed_at?: string | null;
+          normalized_email?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'account_email_addresses_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: true;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       account_enforcement_jobs: {
         Row: {
           attempt_count: number;
@@ -91,6 +174,48 @@ export type Database = {
           },
         ];
       };
+      account_flag_reviews: {
+        Row: {
+          created_at: string;
+          decision: Database['public']['Enums']['account_flag_review_decision'];
+          flag_id: string;
+          id: string;
+          note: string | null;
+          reviewer_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          decision: Database['public']['Enums']['account_flag_review_decision'];
+          flag_id: string;
+          id?: string;
+          note?: string | null;
+          reviewer_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          decision?: Database['public']['Enums']['account_flag_review_decision'];
+          flag_id?: string;
+          id?: string;
+          note?: string | null;
+          reviewer_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'account_flag_reviews_flag_id_fkey';
+            columns: ['flag_id'];
+            isOneToOne: false;
+            referencedRelation: 'account_flags';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'account_flag_reviews_reviewer_id_fkey';
+            columns: ['reviewer_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       account_flags: {
         Row: {
           cleared_at: string | null;
@@ -98,6 +223,10 @@ export type Database = {
           id: string;
           kind: Database['public']['Enums']['account_flag_kind'];
           note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          signal_hash: string | null;
+          signal_kind: string | null;
           user_id: string;
         };
         Insert: {
@@ -106,6 +235,10 @@ export type Database = {
           id?: string;
           kind: Database['public']['Enums']['account_flag_kind'];
           note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          signal_hash?: string | null;
+          signal_kind?: string | null;
           user_id: string;
         };
         Update: {
@@ -114,11 +247,57 @@ export type Database = {
           id?: string;
           kind?: Database['public']['Enums']['account_flag_kind'];
           note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          signal_hash?: string | null;
+          signal_kind?: string | null;
           user_id?: string;
         };
         Relationships: [
           {
+            foreignKeyName: 'account_flags_reviewed_by_fkey';
+            columns: ['reviewed_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'account_flags_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      account_network_signals: {
+        Row: {
+          asn: number | null;
+          id: string;
+          network_class: string | null;
+          network_hash: string;
+          observed_at: string;
+          user_id: string;
+        };
+        Insert: {
+          asn?: number | null;
+          id?: string;
+          network_class?: string | null;
+          network_hash: string;
+          observed_at?: string;
+          user_id: string;
+        };
+        Update: {
+          asn?: number | null;
+          id?: string;
+          network_class?: string | null;
+          network_hash?: string;
+          observed_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'account_network_signals_user_id_fkey';
             columns: ['user_id'];
             isOneToOne: false;
             referencedRelation: 'profiles';
@@ -243,6 +422,44 @@ export type Database = {
           },
         ];
       };
+      attestation_challenges: {
+        Row: {
+          challenge_hash: string;
+          consumed_at: string | null;
+          created_at: string;
+          expires_at: string;
+          id: string;
+          platform: Database['public']['Enums']['attestation_platform'];
+          user_id: string;
+        };
+        Insert: {
+          challenge_hash: string;
+          consumed_at?: string | null;
+          created_at?: string;
+          expires_at: string;
+          id?: string;
+          platform: Database['public']['Enums']['attestation_platform'];
+          user_id: string;
+        };
+        Update: {
+          challenge_hash?: string;
+          consumed_at?: string | null;
+          created_at?: string;
+          expires_at?: string;
+          id?: string;
+          platform?: Database['public']['Enums']['attestation_platform'];
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'attestation_challenges_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       content_reports: {
         Row: {
           created_at: string;
@@ -311,6 +528,7 @@ export type Database = {
       };
       daily_draws: {
         Row: {
+          algorithm_version: string;
           backup_1: string | null;
           backup_2: string | null;
           backup_3: string | null;
@@ -318,10 +536,13 @@ export type Database = {
           candidate_pool_hash: string;
           created_at: string;
           draw_version: number;
+          entropy_commitment: string | null;
           human_number: number | null;
           id: string;
+          precommitted_at: string | null;
           published_at: string | null;
           random_seed: string;
+          randomness_source: string;
           redacted_at: string | null;
           redacted_by: string | null;
           redaction_reason: string | null;
@@ -330,6 +551,7 @@ export type Database = {
           selection_status: Database['public']['Enums']['selection_status'];
         };
         Insert: {
+          algorithm_version?: string;
           backup_1?: string | null;
           backup_2?: string | null;
           backup_3?: string | null;
@@ -337,10 +559,13 @@ export type Database = {
           candidate_pool_hash: string;
           created_at?: string;
           draw_version?: number;
+          entropy_commitment?: string | null;
           human_number?: number | null;
           id?: string;
+          precommitted_at?: string | null;
           published_at?: string | null;
           random_seed: string;
+          randomness_source?: string;
           redacted_at?: string | null;
           redacted_by?: string | null;
           redaction_reason?: string | null;
@@ -349,6 +574,7 @@ export type Database = {
           selection_status?: Database['public']['Enums']['selection_status'];
         };
         Update: {
+          algorithm_version?: string;
           backup_1?: string | null;
           backup_2?: string | null;
           backup_3?: string | null;
@@ -356,10 +582,13 @@ export type Database = {
           candidate_pool_hash?: string;
           created_at?: string;
           draw_version?: number;
+          entropy_commitment?: string | null;
           human_number?: number | null;
           id?: string;
+          precommitted_at?: string | null;
           published_at?: string | null;
           random_seed?: string;
+          randomness_source?: string;
           redacted_at?: string | null;
           redacted_by?: string | null;
           redaction_reason?: string | null;
@@ -465,6 +694,62 @@ export type Database = {
         };
         Relationships: [];
       };
+      device_binding_flags: {
+        Row: {
+          bound_account_id: string | null;
+          first_seen_at: string;
+          id: string;
+          last_seen_at: string;
+          opaque_binding_hash: string;
+          platform: Database['public']['Enums']['attestation_platform'];
+          pool_bound_at: string | null;
+        };
+        Insert: {
+          bound_account_id?: string | null;
+          first_seen_at?: string;
+          id?: string;
+          last_seen_at?: string;
+          opaque_binding_hash: string;
+          platform: Database['public']['Enums']['attestation_platform'];
+          pool_bound_at?: string | null;
+        };
+        Update: {
+          bound_account_id?: string | null;
+          first_seen_at?: string;
+          id?: string;
+          last_seen_at?: string;
+          opaque_binding_hash?: string;
+          platform?: Database['public']['Enums']['attestation_platform'];
+          pool_bound_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'device_binding_flags_bound_account_id_fkey';
+            columns: ['bound_account_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      disposable_email_domains: {
+        Row: {
+          domain: string;
+          refreshed_at: string;
+          source: string;
+        };
+        Insert: {
+          domain: string;
+          refreshed_at?: string;
+          source?: string;
+        };
+        Update: {
+          domain?: string;
+          refreshed_at?: string;
+          source?: string;
+        };
+        Relationships: [];
+      };
       draw_candidates: {
         Row: {
           draw_id: string;
@@ -551,6 +836,62 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      draw_precommit_candidates: {
+        Row: {
+          selection_date: string;
+          user_id: string;
+        };
+        Insert: {
+          selection_date: string;
+          user_id: string;
+        };
+        Update: {
+          selection_date?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'draw_precommit_candidates_selection_date_fkey';
+            columns: ['selection_date'];
+            isOneToOne: false;
+            referencedRelation: 'draw_precommits';
+            referencedColumns: ['selection_date'];
+          },
+        ];
+      };
+      draw_precommits: {
+        Row: {
+          algorithm_version: string;
+          candidate_count: number;
+          candidate_pool_hash: string;
+          committed_at: string;
+          entropy_commitment: string;
+          randomness_source: string;
+          secret_seed: string;
+          selection_date: string;
+        };
+        Insert: {
+          algorithm_version?: string;
+          candidate_count: number;
+          candidate_pool_hash: string;
+          committed_at?: string;
+          entropy_commitment: string;
+          randomness_source?: string;
+          secret_seed: string;
+          selection_date: string;
+        };
+        Update: {
+          algorithm_version?: string;
+          candidate_count?: number;
+          candidate_pool_hash?: string;
+          committed_at?: string;
+          entropy_commitment?: string;
+          randomness_source?: string;
+          secret_seed?: string;
+          selection_date?: string;
+        };
+        Relationships: [];
       };
       founding_moderators: {
         Row: {
@@ -1096,6 +1437,8 @@ export type Database = {
           accepted_rules_at: string | null;
           account_status: Database['public']['Enums']['account_status'];
           account_status_version: number;
+          activity_requirement_met: boolean;
+          assurance_level: Database['public']['Enums']['assurance_level'];
           avatar_path: string | null;
           bio_short: string | null;
           birth_year: number;
@@ -1107,6 +1450,7 @@ export type Database = {
           id: string;
           languages: string[];
           locale: string;
+          review_pending: boolean;
           selection_eligible: boolean;
           updated_at: string;
           username: string;
@@ -1117,6 +1461,8 @@ export type Database = {
           accepted_rules_at?: string | null;
           account_status?: Database['public']['Enums']['account_status'];
           account_status_version?: number;
+          activity_requirement_met?: boolean;
+          assurance_level?: Database['public']['Enums']['assurance_level'];
           avatar_path?: string | null;
           bio_short?: string | null;
           birth_year: number;
@@ -1128,6 +1474,7 @@ export type Database = {
           id: string;
           languages?: string[];
           locale?: string;
+          review_pending?: boolean;
           selection_eligible?: boolean;
           updated_at?: string;
           username: string;
@@ -1138,6 +1485,8 @@ export type Database = {
           accepted_rules_at?: string | null;
           account_status?: Database['public']['Enums']['account_status'];
           account_status_version?: number;
+          activity_requirement_met?: boolean;
+          assurance_level?: Database['public']['Enums']['assurance_level'];
           avatar_path?: string | null;
           bio_short?: string | null;
           birth_year?: number;
@@ -1149,6 +1498,7 @@ export type Database = {
           id?: string;
           languages?: string[];
           locale?: string;
+          review_pending?: boolean;
           selection_eligible?: boolean;
           updated_at?: string;
           username?: string;
@@ -1156,6 +1506,35 @@ export type Database = {
           wants_selection?: boolean;
         };
         Relationships: [];
+      };
+      provider_bindings: {
+        Row: {
+          bound_at: string;
+          provider: string;
+          provider_id: string;
+          user_id: string;
+        };
+        Insert: {
+          bound_at?: string;
+          provider: string;
+          provider_id: string;
+          user_id: string;
+        };
+        Update: {
+          bound_at?: string;
+          provider?: string;
+          provider_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'provider_bindings_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       push_tokens: {
         Row: {
@@ -1443,6 +1822,18 @@ export type Database = {
       accept_community_rules_phase0: { Args: never; Returns: string };
       accept_selection: { Args: never; Returns: boolean };
       accept_selection_phase0: { Args: never; Returns: boolean };
+      account_assurance_review_queue: {
+        Args: never;
+        Returns: {
+          display_name: string;
+          flag_id: string;
+          flagged_at: string;
+          review_context: string;
+          review_due_at: string;
+          signal_kind: string;
+          user_id: string;
+        }[];
+      };
       account_deletion_is_open: { Args: never; Returns: boolean };
       advance_account_deletion: {
         Args: {
@@ -1512,6 +1903,10 @@ export type Database = {
       assert_account_active: { Args: never; Returns: undefined };
       assert_authenticated: { Args: never; Returns: undefined };
       assign_human_number: { Args: { target_draw: string }; Returns: number };
+      bind_verified_device_to_pool: {
+        Args: { target_binding_hash: string; target_user: string };
+        Returns: boolean;
+      };
       block_content_author: {
         Args: {
           target_id: string;
@@ -1527,6 +1922,10 @@ export type Database = {
         Returns: boolean;
       };
       block_user: { Args: { target_user: string }; Returns: boolean };
+      can_bind_device_to_pool: {
+        Args: { target_user: string };
+        Returns: boolean;
+      };
       can_insert_owned_storage_object: {
         Args: {
           object_metadata: Json;
@@ -1582,6 +1981,14 @@ export type Database = {
         Args: { target_job: string };
         Returns: boolean;
       };
+      consume_attestation_challenge: {
+        Args: {
+          target_challenge: string;
+          target_hash: string;
+          target_user: string;
+        };
+        Returns: boolean;
+      };
       country_balance: {
         Args: never;
         Returns: {
@@ -1599,6 +2006,15 @@ export type Database = {
           country_code: string;
           waiting: number;
         }[];
+      };
+      create_attestation_challenge: {
+        Args: {
+          target_expires_at: string;
+          target_hash: string;
+          target_platform: Database['public']['Enums']['attestation_platform'];
+          target_user: string;
+        };
+        Returns: string;
       };
       current_account_status: {
         Args: never;
@@ -1700,6 +2116,20 @@ export type Database = {
         Returns: {
           humans: number;
           year: number;
+        }[];
+      };
+      get_draw_commitment: {
+        Args: { target_date: string };
+        Returns: {
+          algorithm_version: string;
+          candidate_count: number;
+          candidate_pool_hash: string;
+          committed_at: string;
+          entropy_commitment: string;
+          randomness_source: string;
+          revealed_at: string;
+          revealed_seed: string;
+          selection_date: string;
         }[];
       };
       get_human: {
@@ -1831,6 +2261,11 @@ export type Database = {
         }[];
       };
       has_been_selected: { Args: never; Returns: boolean };
+      has_device_pool_assurance: {
+        Args: { target_user: string };
+        Returns: boolean;
+      };
+      has_minimum_activity: { Args: { target_user: string }; Returns: boolean };
       has_recent_authentication: {
         Args: { maximum_age?: string };
         Returns: boolean;
@@ -2018,6 +2453,10 @@ export type Database = {
           selection_status: Database['public']['Enums']['selection_status'];
         }[];
       };
+      normalize_assurance_email: {
+        Args: { raw_email: string };
+        Returns: string;
+      };
       notifications_due: {
         Args: never;
         Returns: {
@@ -2075,10 +2514,34 @@ export type Database = {
         }[];
       };
       pool_hash: { Args: { ids: string[] }; Returns: string };
+      precommit_daily_draw: { Args: { target_date: string }; Returns: string };
+      precommit_daily_draw_job: { Args: never; Returns: string };
       publish_due_cycles: { Args: never; Returns: number };
       publish_due_cycles_job: { Args: never; Returns: number };
       purge_old_analytics: { Args: never; Returns: number };
       quiet_day_cutoff: { Args: { target_date: string }; Returns: string };
+      raise_account_signal: {
+        Args: {
+          target_hash: string;
+          target_note: string;
+          target_signal: string;
+          target_user: string;
+        };
+        Returns: string;
+      };
+      recompute_account_assurance: {
+        Args: { target_user: string };
+        Returns: Database['public']['Enums']['assurance_level'];
+      };
+      record_account_network_signal: {
+        Args: {
+          target_asn?: number;
+          target_class?: string;
+          target_network_hash: string;
+          target_user: string;
+        };
+        Returns: boolean;
+      };
       record_notification_delivery: {
         Args: {
           delivery_channel: Database['public']['Enums']['notification_channel'];
@@ -2177,6 +2640,17 @@ export type Database = {
         };
         Returns: string;
       };
+      register_verified_device_attestation: {
+        Args: {
+          provider_reports_bound?: boolean;
+          target_binding_hash: string;
+          target_key_hash: string;
+          target_platform: Database['public']['Enums']['attestation_platform'];
+          target_public_key?: string;
+          target_user: string;
+        };
+        Returns: string;
+      };
       remember_human: { Args: { target_draw: string }; Returns: boolean };
       remember_human_phase0: {
         Args: { target_draw: string };
@@ -2185,6 +2659,10 @@ export type Database = {
       remove_question: {
         Args: { removal_reason?: string; target_question: string };
         Returns: boolean;
+      };
+      replace_disposable_email_domains: {
+        Args: { domains: string[]; source_name: string };
+        Returns: number;
       };
       report_content: {
         Args: {
@@ -2252,6 +2730,14 @@ export type Database = {
           returned_d1: number;
           returned_d7: number;
         }[];
+      };
+      review_account_flag: {
+        Args: {
+          review_note?: string;
+          target_decision: Database['public']['Enums']['account_flag_review_decision'];
+          target_flag: string;
+        };
+        Returns: boolean;
       };
       review_archive_removal: {
         Args: {
@@ -2347,6 +2833,10 @@ export type Database = {
       };
       submit_my_portrait: { Args: never; Returns: boolean };
       submit_my_portrait_phase0: { Args: never; Returns: boolean };
+      sync_account_assurance: {
+        Args: { target_user: string };
+        Returns: Database['public']['Enums']['assurance_level'];
+      };
       track_events: {
         Args: { batch: Json; batch_install_id: string };
         Returns: number;
@@ -2388,6 +2878,7 @@ export type Database = {
         | 'suspected_automation'
         | 'repeated_reports'
         | 'manual_watch';
+      account_flag_review_decision: 'cleared' | 'upheld';
       account_status:
         'active' | 'suspended' | 'banned' | 'deletion_pending' | 'deleted';
       analytics_event:
@@ -2416,6 +2907,14 @@ export type Database = {
         | 'share_sheet_opened';
       appeal_status: 'pending' | 'upheld' | 'overturned';
       archive_removal_status: 'pending' | 'approved' | 'declined' | 'cancelled';
+      assurance_level:
+        | 'contact_pending'
+        | 'contact_verified'
+        | 'provider_verified'
+        | 'device_attested'
+        | 'reviewed';
+      attestation_platform: 'ios' | 'android';
+      attestation_state: 'verified' | 'review_required' | 'revoked';
       deletion_request_state:
         | 'requested'
         | 'account_locked'
@@ -2619,6 +3118,7 @@ export const Constants = {
         'repeated_reports',
         'manual_watch',
       ],
+      account_flag_review_decision: ['cleared', 'upheld'],
       account_status: [
         'active',
         'suspended',
@@ -2653,6 +3153,15 @@ export const Constants = {
       ],
       appeal_status: ['pending', 'upheld', 'overturned'],
       archive_removal_status: ['pending', 'approved', 'declined', 'cancelled'],
+      assurance_level: [
+        'contact_pending',
+        'contact_verified',
+        'provider_verified',
+        'device_attested',
+        'reviewed',
+      ],
+      attestation_platform: ['ios', 'android'],
+      attestation_state: ['verified', 'review_required', 'revoked'],
       deletion_request_state: [
         'requested',
         'account_locked',

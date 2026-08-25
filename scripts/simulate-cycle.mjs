@@ -19,7 +19,7 @@
  * prints it.
  */
 
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 import { loadVerificationTarget } from './lib/verification-target.mjs';
 
@@ -38,6 +38,7 @@ const {
 } = loadVerificationTarget();
 
 let failures = 0;
+const simulationDrawIds = new Set();
 
 function step(passed, label, detail = '') {
   console.log(
@@ -72,11 +73,58 @@ const asUser = (token, path, options = {}) =>
 const rpc = (path, body = {}) =>
   svc(`/rest/v1/rpc/${path}`, { method: 'POST', body: JSON.stringify(body) });
 
+const postgresSha256 = (value) =>
+  `\\x${createHash('sha256').update(value).digest('hex')}`;
+
+/** Freeze and commit the pool before executing the draw, as production does. */
+async function runCommittedDraw(date) {
+  const commitment = await rpc('precommit_daily_draw', { target_date: date });
+  if (!commitment.ok) return commitment;
+  const draw = await rpc('run_daily_draw', { target_date: date });
+  if (draw.ok) {
+    const drawId = await draw.clone().json();
+    if (typeof drawId === 'string') simulationDrawIds.add(drawId);
+  }
+  return draw;
+}
+
 const utcDate = (offsetDays = 0) => {
   const date = new Date();
   date.setUTCDate(date.getUTCDate() + offsetDays);
   return date.toISOString().slice(0, 10);
 };
+
+async function allocateSimulationDates() {
+  const response = await svc(
+    '/rest/v1/draw_precommits?select=selection_date&limit=5000'
+  );
+  if (!response.ok) {
+    throw new Error(`list draw commitments: HTTP ${response.status}`);
+  }
+  const used = new Set(
+    (await response.json()).map((row) => row.selection_date)
+  );
+  const take = (startOffset, direction) => {
+    let offset = startOffset;
+    while (used.has(utcDate(offset))) offset += direction;
+    const date = utcDate(offset);
+    used.add(date);
+    return date;
+  };
+
+  // Commitments are intentionally append-only. Allocate unused source dates
+  // so the simulator remains repeatable without weakening that audit rule.
+  return {
+    firstCycle: take(14, 1),
+    secondCycle: take(14, 1),
+    escalation: take(14, 1),
+    silentEscalation: take(14, 1),
+    recovery: take(14, 1),
+    concurrent: take(14, 1),
+    emptyPool: take(14, 1),
+    quietDay: take(-4, -1),
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Cleanup
@@ -107,12 +155,17 @@ async function cleanup() {
    * role can, and this is the one place that is correct: a cycle that never
    * happened must not sit in the Archive with a human number.
    */
-  const removed = await svc(
-    `/rest/v1/daily_draws?selection_date=gte.${utcDate(-7)}&selection_date=lte.${utcDate(7)}`,
-    { method: 'DELETE', headers: { Prefer: 'return=representation' } }
-  );
-  const removedRows = removed.ok ? await removed.json() : [];
-  step(removed.ok, `removed ${removedRows.length} simulated draw(s)`);
+  let removedCount = 0;
+  let drawsRemoved = true;
+  for (const drawId of simulationDrawIds) {
+    const removed = await svc(`/rest/v1/daily_draws?id=eq.${drawId}`, {
+      method: 'DELETE',
+      headers: { Prefer: 'return=representation' },
+    });
+    drawsRemoved &&= removed.ok;
+    if (removed.ok) removedCount += (await removed.json()).length;
+  }
+  step(drawsRemoved, `removed ${removedCount} simulated draw(s)`);
 
   // Rewind the sequence so the next real Human is not #14.
   const rewind = await svc('/rest/v1/rpc/rewind_human_numbers', {
@@ -132,7 +185,7 @@ if (CLEAN_ONLY) {
 // ---------------------------------------------------------------------------
 
 /** A confirmed account with a finished profile, old enough and verified. */
-async function makeCandidate(index) {
+async function makeCandidate(index, activityDrawId) {
   const email = `${SIM_PREFIX}-${randomUUID()}@${SIM_DOMAIN}`;
   const password = randomUUID();
 
@@ -188,7 +241,73 @@ async function makeCandidate(index) {
     }),
   });
 
+  // The simulator exercises the server-side eligibility contract without
+  // pretending that its synthetic users can produce real Apple/Google
+  // attestations. Each fixture gets a stable provider binding, one genuine
+  // product action, and a distinct server-verified device binding.
+  const provider = await svc('/rest/v1/provider_bindings', {
+    method: 'POST',
+    body: JSON.stringify({
+      user_id: id,
+      provider: index % 2 === 0 ? 'apple' : 'google',
+      provider_id: `simulation-${id}`,
+    }),
+  });
+  if (!provider.ok) {
+    throw new Error(`provider binding: HTTP ${provider.status}`);
+  }
+
+  const activity = await svc('/rest/v1/remembers', {
+    method: 'POST',
+    body: JSON.stringify({ user_id: id, draw_id: activityDrawId }),
+  });
+  if (!activity.ok) {
+    throw new Error(`simulation activity: HTTP ${activity.status}`);
+  }
+
+  const bindingHash = postgresSha256(`simulation-device-${id}`);
+  const registered = await rpc('register_verified_device_attestation', {
+    target_user: id,
+    target_platform: index % 2 === 0 ? 'ios' : 'android',
+    target_binding_hash: bindingHash,
+    target_key_hash: postgresSha256(`simulation-key-${id}`),
+    target_public_key: null,
+    provider_reports_bound: false,
+  });
+  if (!registered.ok) {
+    throw new Error(`device registration: HTTP ${registered.status}`);
+  }
+
+  const bound = await rpc('bind_verified_device_to_pool', {
+    target_user: id,
+    target_binding_hash: bindingHash,
+  });
+  if (!bound.ok || (await bound.json()) !== true) {
+    throw new Error(`device binding: HTTP ${bound.status}`);
+  }
+
   return { id, token, email };
+}
+
+async function createSimulationActivityDraw() {
+  const id = randomUUID();
+  const response = await svc('/rest/v1/daily_draws', {
+    method: 'POST',
+    body: JSON.stringify({
+      id,
+      selection_date: utcDate(-7),
+      draw_version: Math.floor(Math.random() * 1_000_000) + 10_000,
+      candidate_pool_hash: '0'.repeat(64),
+      candidate_count: 0,
+      random_seed: 'simulation-activity-seed'.padEnd(64, '0'),
+      selection_status: 'cancelled',
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`activity draw: HTTP ${response.status}`);
+  }
+  simulationDrawIds.add(id);
+  return id;
 }
 
 // ---------------------------------------------------------------------------
@@ -203,7 +322,7 @@ async function runCycle(
 ) {
   console.log(`\ncycle ${date}`);
 
-  const draw = await rpc('run_daily_draw', { target_date: date });
+  const draw = await runCommittedDraw(date);
   if (
     !step(
       draw.ok,
@@ -466,10 +585,10 @@ async function runCycle(
  *   declining  — escalates immediately, because the candidate has answered
  *   silence    — escalates when the sweep finds the expired deadline
  */
-async function exerciseEscalation(date, people) {
+async function exerciseEscalation(date, silentDate, people) {
   console.log(`\nescalation ${date}`);
 
-  const draw = await rpc('run_daily_draw', { target_date: date });
+  const draw = await runCommittedDraw(date);
   if (!step(draw.ok, 'a cycle was drawn to decline', `HTTP ${draw.status}`)) {
     return;
   }
@@ -547,8 +666,7 @@ async function exerciseEscalation(date, people) {
   // --- silence -----------------------------------------------------------
   // Backdate the deadline rather than waiting twelve hours, then let the sweep
   // that runs every fifteen minutes in production find it.
-  const silentDate = utcDate(3);
-  const silentDraw = await rpc('run_daily_draw', { target_date: silentDate });
+  const silentDraw = await runCommittedDraw(silentDate);
   if (!step(silentDraw.ok, 'a second cycle was drawn, to be ignored')) {
     return;
   }
@@ -592,7 +710,7 @@ async function exerciseEscalation(date, people) {
 async function exerciseAccountRecovery(date, people) {
   console.log(`\naccount recovery ${date}`);
 
-  const draw = await rpc('run_daily_draw', { target_date: date });
+  const draw = await runCommittedDraw(date);
   if (!step(draw.ok, 'a recovery cycle was drawn', `HTTP ${draw.status}`)) {
     return;
   }
@@ -643,7 +761,7 @@ async function exerciseAccountRecovery(date, people) {
 async function exerciseQuietDay(date) {
   console.log(`\nquiet day cutoff ${date}`);
 
-  const draw = await rpc('run_daily_draw', { target_date: date });
+  const draw = await runCommittedDraw(date);
   if (
     !step(draw.ok, 'a past-cutoff cycle was recorded', `HTTP ${draw.status}`)
   ) {
@@ -668,6 +786,9 @@ async function exerciseQuietDay(date) {
 /** Two scheduler deliveries may race; only one active audit row may survive. */
 async function exerciseConcurrentDraw(date) {
   console.log(`\nconcurrent draw ${date}`);
+
+  const commitment = await rpc('precommit_daily_draw', { target_date: date });
+  if (!step(commitment.ok, 'the pool was committed before the race')) return;
 
   const responses = await Promise.all([
     rpc('run_daily_draw', { target_date: date }),
@@ -709,7 +830,7 @@ async function exerciseEmptyPool(date, people) {
   );
   await rpc('refresh_selection_eligibility');
 
-  const draw = await rpc('run_daily_draw', { target_date: date });
+  const draw = await runCommittedDraw(date);
   step(draw.ok, 'the scheduler recorded the empty pool', `HTTP ${draw.status}`);
 
   const state = await svc(
@@ -1078,8 +1199,10 @@ const people = [];
 let moderator;
 
 try {
+  const simulationDates = await allocateSimulationDates();
+  const activityDrawId = await createSimulationActivityDraw();
   for (let index = 0; index < CANDIDATES; index += 1) {
-    people.push(await makeCandidate(index));
+    people.push(await makeCandidate(index, activityDrawId));
   }
   step(
     people.length === CANDIDATES,
@@ -1107,11 +1230,11 @@ try {
   // Yesterday's cycle is archived rather than published, so the Archive has
   // something to show and today has a predecessor. Its return value is not
   // needed — only its existence is.
-  await runCycle(utcDate(4), people, moderator, {
+  await runCycle(simulationDates.firstCycle, people, moderator, {
     publish: false,
     finalDate: utcDate(-1),
   });
-  const today = await runCycle(utcDate(5), people, moderator, {
+  const today = await runCycle(simulationDates.secondCycle, people, moderator, {
     publish: true,
     finalDate: utcDate(0),
   });
@@ -1120,9 +1243,13 @@ try {
     await exerciseAudience(today.drawId, people, moderator, today.selected);
   }
 
-  await exerciseEscalation(utcDate(2), people);
-  await exerciseAccountRecovery(utcDate(6), people);
-  await exerciseQuietDay(utcDate(-4));
+  await exerciseEscalation(
+    simulationDates.escalation,
+    simulationDates.silentEscalation,
+    people
+  );
+  await exerciseAccountRecovery(simulationDates.recovery, people);
+  await exerciseQuietDay(simulationDates.quietDay);
 
   await exerciseInstruments(moderator);
 
@@ -1147,8 +1274,8 @@ try {
     'every entry has a number'
   );
 
-  await exerciseConcurrentDraw(utcDate(1));
-  await exerciseEmptyPool(utcDate(7), people);
+  await exerciseConcurrentDraw(simulationDates.concurrent);
+  await exerciseEmptyPool(simulationDates.emptyPool, people);
 } catch (error) {
   console.error(`\nRun failed: ${error.message}`);
   failures += 1;

@@ -14,10 +14,12 @@ import { Screen } from '@/components/ui/Screen';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Surface } from '@/components/ui/Surface';
 import { Text } from '@/components/ui/Text';
+import { TextField } from '@/components/ui/TextField';
 import { Toast } from '@/components/ui/Toast';
 import { signArchivePhoto } from '@/features/archive/api';
 import {
   useAmIModerator,
+  useAccountAssuranceReviewQueue,
   useAppealQueue,
   useArchiveRemovalQueue,
   useModerationActions,
@@ -33,6 +35,7 @@ type Tab =
   | 'portraits'
   | 'questions'
   | 'reports'
+  | 'assurance'
   | 'appeals'
   | 'removals'
   | 'signals'
@@ -59,6 +62,9 @@ export default function AdminScreen() {
   const { data: portraits } = usePortraitQueue(enabled && tab === 'portraits');
   const { data: questions } = useQuestionQueue(enabled && tab === 'questions');
   const { data: reports } = useReportQueue(enabled && tab === 'reports');
+  const { data: assuranceReviews } = useAccountAssuranceReviewQueue(
+    enabled && tab === 'assurance'
+  );
   const { data: appeals } = useAppealQueue(enabled && tab === 'appeals');
   const { data: removals } = useArchiveRemovalQueue(
     enabled && tab === 'removals'
@@ -101,6 +107,7 @@ export default function AdminScreen() {
                 'portraits',
                 'questions',
                 'reports',
+                'assurance',
                 'appeals',
                 'removals',
                 'signals',
@@ -292,6 +299,36 @@ export default function AdminScreen() {
             )
           ) : null}
 
+          {tab === 'assurance' ? (
+            assuranceReviews && assuranceReviews.length > 0 ? (
+              assuranceReviews.map((item) => (
+                <AccountAssuranceQueueItem
+                  busy={actions.assurance.isPending}
+                  dueAt={item.review_due_at}
+                  key={item.flag_id}
+                  onDecision={(decision, note) => {
+                    actions.assurance.mutate([item.flag_id, decision, note], {
+                      onError: () => setToast(t('moderation.actionFailed')),
+                      onSuccess: () =>
+                        setToast(
+                          t(
+                            decision === 'cleared'
+                              ? 'moderation.assuranceCleared'
+                              : 'moderation.assuranceUpheld'
+                          )
+                        ),
+                    });
+                  }}
+                  context={item.review_context}
+                  signal={item.signal_kind}
+                  title={item.display_name}
+                />
+              ))
+            ) : (
+              <EmptyState title={t('moderation.queueEmpty')} />
+            )
+          ) : null}
+
           {tab === 'appeals' ? (
             appeals && appeals.length > 0 ? (
               appeals.map((item) => (
@@ -362,6 +399,63 @@ export default function AdminScreen() {
         visible={toast !== null}
       />
     </>
+  );
+}
+
+function AccountAssuranceQueueItem({
+  title,
+  signal,
+  context,
+  dueAt,
+  busy,
+  onDecision,
+}: {
+  title: string;
+  signal: string;
+  context: string | null;
+  dueAt: string;
+  busy: boolean;
+  onDecision: (decision: 'cleared' | 'upheld', note: string) => void;
+}) {
+  const theme = useTheme();
+  const { t } = useTranslation();
+  const [note, setNote] = useState('');
+  const noteValid = note.trim().length >= 10;
+
+  return (
+    <Surface style={{ gap: theme.spacing.sm, marginBottom: theme.spacing.md }}>
+      <Text variant="callout">{title}</Text>
+      <Text color="textTertiary" variant="footnote">
+        {t('moderation.assuranceSignal', {
+          signal,
+          due: dueAt.slice(0, 10),
+        })}
+      </Text>
+      {context ? <Text color="textSecondary">{context}</Text> : null}
+      <TextField
+        label={t('moderation.assuranceReviewNote')}
+        hint={t('moderation.assuranceReviewNoteHint')}
+        maxLength={1000}
+        multiline
+        onChangeText={setNote}
+        value={note}
+      />
+      <View style={{ flexDirection: 'row', gap: theme.spacing.md }}>
+        <Button
+          disabled={busy || !noteValid}
+          label={t('moderation.clearFlag')}
+          onPress={() => onDecision('cleared', note.trim())}
+          style={{ flex: 1 }}
+        />
+        <Button
+          disabled={busy || !noteValid}
+          label={t('moderation.upholdFlag')}
+          onPress={() => onDecision('upheld', note.trim())}
+          style={{ flex: 1 }}
+          variant="secondary"
+        />
+      </View>
+    </Surface>
   );
 }
 

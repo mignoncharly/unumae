@@ -17,7 +17,10 @@ export type EligibilityReason =
   | 'no-profile'
   | 'account-not-active'
   | 'opted-out'
-  | 'not-verified'
+  | 'provider-not-verified'
+  | 'device-not-attested'
+  | 'activity-required'
+  | 'under-review'
   | 'account-too-new'
   | 'awaiting-refresh'
   | 'rules-not-accepted'
@@ -82,23 +85,35 @@ export function evaluateEligibility({
     reasons.push('rules-not-accepted');
   }
 
-  /*
-   * Three situations, and they were one message.
-   *
-   * "We still need to confirm that you are a real person" was shown whenever
-   * `selection_eligible` was false — which is true of every account for its
-   * first seven days, verified or not. So the first thing a new person read was
-   * that they had something left to prove, when they had only to wait. It is
-   * the message almost everybody meets in their first week, and it was wrong
-   * for almost all of them.
-   */
-  if (profile.verification_level === 'none') {
-    reasons.push('not-verified');
-  } else if (accountAgeInDays(profile, now) < MIN_ACCOUNT_AGE_DAYS) {
+  if (
+    profile.assurance_level === 'contact_pending' ||
+    profile.assurance_level === 'contact_verified'
+  ) {
+    reasons.push('provider-not-verified');
+  } else if (profile.assurance_level === 'provider_verified') {
+    reasons.push('device-not-attested');
+  }
+
+  if (!profile.activity_requirement_met) {
+    reasons.push('activity-required');
+  }
+  if (profile.review_pending) {
+    reasons.push('under-review');
+  }
+
+  if (accountAgeInDays(profile, now) < MIN_ACCOUNT_AGE_DAYS) {
     reasons.push('account-too-new');
-  } else if (!profile.selection_eligible) {
-    // Verified and old enough, but the nightly refresh has not judged them yet.
-    // A few hours at most, and honest about being nothing to act on.
+  } else if (
+    !profile.selection_eligible &&
+    !reasons.some((reason) =>
+      [
+        'provider-not-verified',
+        'device-not-attested',
+        'activity-required',
+        'under-review',
+      ].includes(reason)
+    )
+  ) {
     reasons.push('awaiting-refresh');
   }
 

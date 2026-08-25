@@ -116,12 +116,12 @@ export async function reviewQuestion(
 
 export async function resolveReport(
   reportId: string,
-  resolution: ReportResolutionAction,
+  actions: ReportResolutionAction[],
   note?: string
 ): Promise<void> {
-  const { error } = await getSupabase().rpc('resolve_report', {
+  const { error } = await getSupabase().rpc('resolve_report_v2', {
     target_report: reportId,
-    resolution,
+    actions,
     resolution_note: note ?? null,
   });
 

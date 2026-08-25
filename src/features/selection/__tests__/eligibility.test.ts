@@ -26,6 +26,7 @@ const eligibleProfile: ProfileRow = {
   wants_selection: true,
   verification_level: 'device',
   account_status: 'active',
+  account_status_version: 0,
   accepted_rules_at: '2027-01-01T00:00:00.000Z',
   created_at: '2027-01-01T00:00:00.000Z',
   updated_at: '2027-01-01T00:00:00.000Z',
@@ -61,7 +62,7 @@ describe('each criterion excludes on its own', () => {
     ).toEqual({ eligible: false, reasons: ['no-profile'] });
   });
 
-  it.each(['suspended', 'banned', 'deleted'] as const)(
+  it.each(['suspended', 'banned', 'deletion_pending', 'deleted'] as const)(
     'excludes a %s account',
     (status) => {
       const result = evaluate({ account_status: status });

@@ -30,6 +30,7 @@ because at scale the tempting move is to let the numbers steer the product.
 | every 5 min | `expire_invitations_job` | Expires, escalates, and immediately notifies the backup |
 | every 5 min | `invoke_notifications_if_due` | Retries due push/email delivery without creating empty job rows |
 | every 5 min | `refresh_operational_alerts` | Detects failed/stalled jobs, aging review, and at-risk cycles |
+| every minute | `enforce-account-status` | Applies versioned suspend/ban/restore outbox jobs to Auth session revocation |
 
 pg_cron runs SQL; Edge Functions speak HTTP. `invoke_function` bridges the two
 with pg_net.
@@ -85,6 +86,14 @@ Notification attempts are recorded separately in
 the logical dedupe row in `notification_log`; failed attempts remain retryable.
 Destinations are stored only as SHA-256 hashes. Selection falls back to the
 verified account email when no registered device accepts its push.
+
+Account restrictions use `account_enforcement_jobs`, not an unaudited direct
+provider call. The current status version supersedes older queued work, a worker
+claim has a five-minute lease, and failures retry with bounded error codes. The
+worker revokes refresh sessions rather than permanently banning Auth login,
+because suspended and banned people must still be able to authenticate for
+appeal, export, and deletion. PostgreSQL remains the immediate enforcement
+boundary before and after that re-authentication.
 
 This is not paranoia. `run_daily_draw` was broken from Phase 4 to Phase 14 and
 nothing noticed, because a scheduled job nobody can see the result of is

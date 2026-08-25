@@ -564,12 +564,25 @@
     "noReason": "No reason provided",
     "suspendAccount": "Suspend account",
     "banAccount": "Ban account",
+    "removeAndSuspend": "Remove + suspend",
+    "removeAndBan": "Remove + ban",
     "uphold": "Uphold",
     "upheld": "Decision upheld",
     "overturn": "Overturn",
     "overturned": "Decision overturned",
     "approveRemoval": "Remove from Archive",
     "reportedPhoto": "Reported portrait photograph"
+  },
+  "accountRestriction": {
+    "title": "Your account is restricted",
+    "availableActions": "Participation and profile changes are unavailable. You can still appeal a moderation decision, export your data, or delete your account.",
+    "status": {
+      "active": "Your account is active.",
+      "suspended": "Your account is suspended while a moderation decision is in effect.",
+      "banned": "Your account has been banned from participation.",
+      "deletion_pending": "Your account deletion is in progress.",
+      "deleted": "Your account has been deleted."
+    }
   },
   "privacy": {
     "title": "Privacy",

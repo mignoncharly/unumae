@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AccountStatusGate } from '@/components/shared/AccountStatusGate';
 import { AppLifecycle } from '@/components/shared/AppLifecycle';
 import { JourneyGate } from '@/components/shared/JourneyGate';
 import { NotificationCoordinator } from '@/components/shared/NotificationCoordinator';
@@ -73,6 +74,7 @@ export default function RootLayout() {
             {/* Renders nothing; sends a signed-in person with no profile to finish
                 it, which is the only way to be eligible for the draw. */}
             <OnboardingGate />
+            <AccountStatusGate />
             <JourneyGate />
             <Stack
               screenOptions={{

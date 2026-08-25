@@ -564,12 +564,25 @@
     "noReason": "Aucun motif indiqué",
     "suspendAccount": "Suspendre le compte",
     "banAccount": "Bannir le compte",
+    "removeAndSuspend": "Retirer + suspendre",
+    "removeAndBan": "Retirer + bannir",
     "uphold": "Confirmer",
     "upheld": "Décision confirmée",
     "overturn": "Annuler",
     "overturned": "Décision annulée",
     "approveRemoval": "Retirer des Archives",
     "reportedPhoto": "Photographie de portrait signalée"
+  },
+  "accountRestriction": {
+    "title": "Votre compte est restreint",
+    "availableActions": "La participation et les modifications du profil sont indisponibles. Vous pouvez toujours contester une décision, exporter vos données ou supprimer votre compte.",
+    "status": {
+      "active": "Votre compte est actif.",
+      "suspended": "Votre compte est suspendu pendant l’application d’une décision de modération.",
+      "banned": "Votre compte a été banni de la participation.",
+      "deletion_pending": "La suppression de votre compte est en cours.",
+      "deleted": "Votre compte a été supprimé."
+    }
   },
   "privacy": {
     "title": "Confidentialité",

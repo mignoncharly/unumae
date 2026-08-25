@@ -22,8 +22,10 @@ export function useMyProfile() {
     queryKey: profileKeys.me(userId ?? 'anonymous'),
     queryFn: () => getMyProfile(userId!),
     enabled: Boolean(userId),
-    // A profile changes when its owner changes it, and never otherwise.
+    // Moderation can change account_status while this client is open. Polling
+    // keeps the global account gate current even before Auth revocation lands.
     staleTime: 5 * 60 * 1000,
+    refetchInterval: 30 * 1000,
   });
 }
 

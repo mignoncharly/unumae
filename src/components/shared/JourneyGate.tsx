@@ -1,6 +1,7 @@
 import { router, useSegments } from 'expo-router';
 import { useEffect, useRef } from 'react';
 
+import { useMyProfile } from '@/features/profiles/hooks';
 import { journeyRoute } from '@/features/selection/journey';
 import { useHumanJourney } from '@/features/selection/journeyApi';
 
@@ -13,10 +14,15 @@ export function JourneyGate() {
   const segments = useSegments();
   const rootSegment = segments[0];
   const { data: journey } = useHumanJourney();
+  const { data: profile } = useMyProfile();
   const prompted = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (!journey || rootSegment === '(selection)') {
+    if (
+      !journey ||
+      profile?.account_status !== 'active' ||
+      rootSegment === '(selection)'
+    ) {
       return;
     }
 
@@ -31,7 +37,7 @@ export function JourneyGate() {
 
     prompted.current = key;
     router.push(journeyRoute(journey.action, journey.drawId));
-  }, [journey, rootSegment]);
+  }, [journey, profile?.account_status, rootSegment]);
 
   return null;
 }

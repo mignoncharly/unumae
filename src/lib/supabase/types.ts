@@ -19,7 +19,8 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export type AccountStatus = 'active' | 'suspended' | 'banned' | 'deleted';
+export type AccountStatus =
+  'active' | 'suspended' | 'banned' | 'deletion_pending' | 'deleted';
 
 export type VerificationLevel =
   'none' | 'email' | 'device' | 'phone' | 'liveness';
@@ -40,6 +41,7 @@ export type ProfileRow = {
   wants_selection: boolean;
   verification_level: VerificationLevel;
   account_status: AccountStatus;
+  account_status_version: number;
   accepted_rules_at: string | null;
   created_at: string;
   updated_at: string;
@@ -589,6 +591,14 @@ export type Database = {
         Args: {
           target_report: string;
           resolution: ReportResolutionAction;
+          resolution_note?: string | null;
+        };
+        Returns: boolean;
+      };
+      resolve_report_v2: {
+        Args: {
+          target_report: string;
+          actions: ReportResolutionAction[];
           resolution_note?: string | null;
         };
         Returns: boolean;

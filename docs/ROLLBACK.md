@@ -62,6 +62,25 @@ An `OPTIONS` response proves reachability, not source equivalence.
 - Restore only the changed URL, redirect, provider, template, SMTP, or limit.
 - Run `npm run verify:release-config`, then test new/returning email and Apple.
 
+## Phase 1 account enforcement
+
+- Keep the PostgreSQL account guards active during an incident; weakening them
+  is not an acceptable rollback for a worker or client failure.
+- If the Auth worker misbehaves, unschedule only
+  `unumae-account-enforcement`, preserve the outbox rows, and deploy the last
+  known-good/no-op worker. Database enforcement remains immediate.
+- A false suspension or ban is restored with the audited
+  `set_account_status(..., 'active', ...)` path. The new version supersedes any
+  older pending job; the person can then authenticate again.
+- If an active account is incorrectly blocked by an RLS or wrapper defect,
+  ship a forward compensating migration for that exact policy/function. Do not
+  grant execution on internal `*_phase0` functions to clients.
+- If `resolve_report_v2` is faulty, revoke its authenticated grant to contain
+  moderation writes. Do not re-enable the single-action v1 resolver; use a
+  reviewed compensating function that retains target/author validation.
+- Edge rollback verification: synthetic suspend/restore, outbox supersession,
+  appeal, export, deletion, and direct-RPC refusal for an inactive JWT.
+
 ## Secrets
 
 - Never copy a secret into source, tickets, logs, or release evidence.

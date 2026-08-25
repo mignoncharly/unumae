@@ -197,7 +197,7 @@ export default function AdminScreen() {
                     item.note ? ` · ${item.note}` : ''
                   }`}
                   onApprove={() => {
-                    actions.report.mutate([item.report_id, 'dismiss'], {
+                    actions.report.mutate([item.report_id, ['dismiss']], {
                       onError: () => setToast(t('moderation.actionFailed')),
                       onSuccess: () => setToast(t('moderation.dismissed')),
                     });
@@ -207,8 +207,8 @@ export default function AdminScreen() {
                       [
                         item.report_id,
                         item.target_type === 'profile'
-                          ? 'suspend_account'
-                          : 'remove_content',
+                          ? ['suspend_account']
+                          : ['remove_content'],
                       ],
                       {
                         onError: () => setToast(t('moderation.actionFailed')),
@@ -240,10 +240,13 @@ export default function AdminScreen() {
                     {item.target_type !== 'profile' ? (
                       <Button
                         disabled={actions.report.isPending}
-                        label={t('moderation.suspendAccount')}
+                        label={t('moderation.removeAndSuspend')}
                         onPress={() => {
                           actions.report.mutate(
-                            [item.report_id, 'suspend_account'],
+                            [
+                              item.report_id,
+                              ['remove_content', 'suspend_account'],
+                            ],
                             {
                               onError: () =>
                                 setToast(t('moderation.actionFailed')),
@@ -258,12 +261,25 @@ export default function AdminScreen() {
                     ) : null}
                     <Button
                       disabled={actions.report.isPending}
-                      label={t('moderation.banAccount')}
+                      label={t(
+                        item.target_type === 'profile'
+                          ? 'moderation.banAccount'
+                          : 'moderation.removeAndBan'
+                      )}
                       onPress={() => {
-                        actions.report.mutate([item.report_id, 'ban_account'], {
-                          onError: () => setToast(t('moderation.actionFailed')),
-                          onSuccess: () => setToast(t('moderation.actioned')),
-                        });
+                        actions.report.mutate(
+                          [
+                            item.report_id,
+                            item.target_type === 'profile'
+                              ? ['ban_account']
+                              : ['remove_content', 'ban_account'],
+                          ],
+                          {
+                            onError: () =>
+                              setToast(t('moderation.actionFailed')),
+                            onSuccess: () => setToast(t('moderation.actioned')),
+                          }
+                        );
                       }}
                       style={{ flex: 1 }}
                       variant="danger"

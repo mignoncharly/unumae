@@ -21,6 +21,7 @@ Last updated: Roadmap v2 Phase 0 baseline, 25 August 2026.
 | 11 | ⚠️ **Configure the production selection-email fallback** | The Phase 0 secret inventory found that `RESEND_API_KEY` and `NOTIFICATION_FROM_EMAIL` are absent. Without them, `send-notifications` records `email_not_configured` when a selected user has no successful push. Confirm the sender domain in Resend, set both Edge secrets using `docs/OPERATIONS.md`, and exercise the fallback end to end. | Reliable selection delivery and public beta. |
 | 12 | ⚠️ **Supabase paid-plan timing** | Roadmap v2 makes Pro a hard gate before production traffic. Free has no managed backups, one-day logs, quota restrictions, and inactivity pausing. | Production traffic. |
 | 13 | ⚠️ **Allocate the second hosted project to staging** | The current Unumae topology has production only. Development and CI will use local stacks; the remaining hosted slot must become isolated staging in Phase 10. | Staging verification and public beta promotion. |
+| 14 | ⚠️ **Promote Phase 1 through staging** | Account enforcement is implemented and passes a fresh local database, lint, 56 role-based pgTAP checks, and Edge smoke tests. Follow `docs/PHASE1_ACCOUNT_ENFORCEMENT.md`; do not make production the first hosted execution. | Phase 1 production completion and public beta. |
 
 ## Mine — code
 

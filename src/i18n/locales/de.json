@@ -564,12 +564,25 @@
     "noReason": "Kein Grund angegeben",
     "suspendAccount": "Konto sperren",
     "banAccount": "Konto ausschließen",
+    "removeAndSuspend": "Entfernen + sperren",
+    "removeAndBan": "Entfernen + ausschließen",
     "uphold": "Bestätigen",
     "upheld": "Entscheidung bestätigt",
     "overturn": "Aufheben",
     "overturned": "Entscheidung aufgehoben",
     "approveRemoval": "Aus dem Archiv entfernen",
     "reportedPhoto": "Gemeldetes Porträtfoto"
+  },
+  "accountRestriction": {
+    "title": "Dein Konto ist eingeschränkt",
+    "availableActions": "Teilnahme und Profiländerungen sind nicht verfügbar. Du kannst weiterhin Einspruch einlegen, deine Daten exportieren oder dein Konto löschen.",
+    "status": {
+      "active": "Dein Konto ist aktiv.",
+      "suspended": "Dein Konto ist gesperrt, solange die Moderationsentscheidung gilt.",
+      "banned": "Dein Konto wurde von der Teilnahme ausgeschlossen.",
+      "deletion_pending": "Die Löschung deines Kontos läuft.",
+      "deleted": "Dein Konto wurde gelöscht."
+    }
   },
   "privacy": {
     "title": "Datenschutz",

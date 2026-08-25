@@ -20,6 +20,8 @@
     "test:db:phase3": "supabase test db supabase/tests/phase3_database_contract.sql",
     "test:db:phase4": "supabase test db supabase/tests/phase4_account_assurance.sql",
     "test:db:phase5": "supabase test db supabase/tests/phase5_privacy_export.sql",
+    "test:db:phase6": "supabase test db supabase/tests/phase6_abuse_data_integrity.sql",
+    "test:db:phase7": "supabase test db supabase/tests/phase7_worker_notification_reliability.sql",
     "test:edge": "deno test --config supabase/functions/deno.json --allow-env supabase/functions/_shared/*.test.ts",
     "verify:edge": "node scripts/verify-edge-functions.mjs",
     "db:types:local": "node scripts/generate-db-types.mjs --write",

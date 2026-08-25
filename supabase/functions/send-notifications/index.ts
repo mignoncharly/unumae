@@ -6,7 +6,12 @@ import {
   classifyExpoTickets,
   type ExpoTicket,
 } from '../_shared/notificationDelivery.ts';
-import { fetchProvider } from '../_shared/providerFetch.ts';
+import { fetchWithTimeout } from '../_shared/providerFetch.ts';
+import {
+  finishWorkerRun,
+  startWorkerRun,
+  type WorkerInvocation,
+} from '../_shared/workerRun.ts';
 
 type Category = 'daily' | 'selected' | 'answered' | 'anniversary';
 type Locale = 'en' | 'fr' | 'de';
@@ -133,38 +138,38 @@ Deno.serve(async (request: Request): Promise<Response> => {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 
-  const payload = (await request.json().catch(() => ({}))) as {
-    jobRunId?: number;
-  };
+  const payload = (await request.json().catch(() => ({}))) as WorkerInvocation;
   const admin = createClient(supabaseUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
-
-  const finish = async (succeeded: boolean, detail: string) => {
-    if (typeof payload.jobRunId === 'number') {
-      await admin.rpc('complete_job_run', {
-        target_run: payload.jobRunId,
-        succeeded,
-        result_detail: detail,
-      });
-    }
-  };
+  const workerRun = await startWorkerRun(admin, payload, 'send-notifications');
+  if (!workerRun) return jsonResponse({ error: 'job_run_unavailable' }, 409);
 
   const { data: due, error } = await admin.rpc('notifications_due');
   if (error) {
-    await finish(false, 'Notification queue could not be read');
+    await finishWorkerRun(admin, workerRun, {
+      succeeded: false,
+      retryable: true,
+      detail: 'Notification queue could not be read',
+      providerCategory: 'internal',
+    });
     return jsonResponse({ error: 'queue_unavailable' }, 500);
   }
 
   const rows = (due ?? []) as DueRow[];
   if (rows.length === 0) {
-    await finish(true, 'No notifications due');
+    await finishWorkerRun(admin, workerRun, {
+      succeeded: true,
+      detail: 'No notifications due',
+      providerCategory: 'accepted',
+    });
     return jsonResponse({ events: 0, delivered: 0 });
   }
 
   const delivered = new Set<string>();
   let attempts = 0;
   let failures = 0;
+  const providerCategories = new Set<string>();
 
   const record = async (
     row: DueRow,
@@ -202,7 +207,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
 
   for (let start = 0; start < pushTargets.length; start += 100) {
     const batch = pushTargets.slice(start, start + 100);
-    const response = await fetchProvider(
+    const transport = await fetchWithTimeout(
       'https://exp.host/--/api/v2/push/send',
       {
         method: 'POST',
@@ -216,35 +221,44 @@ Deno.serve(async (request: Request): Promise<Response> => {
             sound: 'default',
             ...compose(row),
             ...(row.category === 'selected'
-              ? { categoryId: 'selection_invitation' }
-              : {}),
+              ? {
+                  categoryId: 'selection_invitation',
+                  channelId: 'selection',
+                }
+              : { channelId: 'general' }),
             data: row.route_data,
           }))
         ),
       }
     );
+    const response = transport.response;
     if (!response) {
+      providerCategories.add(transport.category);
       for (const { row, token } of batch) {
-        await record(row, 'push', token, false, undefined, 'expo_unreachable');
+        await record(row, 'push', token, false, undefined, transport.category);
       }
       continue;
     }
 
     if (!response.ok) {
+      const category =
+        response.status === 401 || response.status === 403
+          ? 'auth'
+          : response.status === 429
+            ? 'rate_limited'
+            : response.status >= 400 && response.status < 500
+              ? 'invalid_request'
+              : 'provider_error';
+      providerCategories.add(category);
       for (const { row, token } of batch) {
-        await record(
-          row,
-          'push',
-          token,
-          false,
-          undefined,
-          `expo_http_${response.status}`
-        );
+        await record(row, 'push', token, false, undefined, category);
       }
       continue;
     }
 
-    const result = (await response.json()) as { data?: ExpoTicket[] };
+    const result = (await response.json().catch(() => ({}))) as {
+      data?: ExpoTicket[];
+    };
     const deliveries = classifyExpoTickets(batch.length, result.data ?? []);
     for (const [index, target] of batch.entries()) {
       const delivery = deliveries[index];
@@ -256,12 +270,17 @@ Deno.serve(async (request: Request): Promise<Response> => {
         delivery.providerReference,
         delivery.failureCode
       );
-
-      if (
-        !delivery.succeeded &&
-        delivery.failureCode === 'DeviceNotRegistered'
-      ) {
-        await admin.rpc('disable_push_token', { failed_token: target.token });
+      if (delivery.succeeded && delivery.providerReference) {
+        await admin.rpc('enqueue_expo_push_receipt', {
+          target_ticket: delivery.providerReference,
+          target_token: target.token,
+          target_user: target.row.user_id,
+        });
+      } else if (delivery.failureCode) {
+        providerCategories.add(delivery.failureCode);
+        if (delivery.failureCode === 'permanent_destination') {
+          await admin.rpc('disable_push_token', { failed_token: target.token });
+        }
       }
     }
   }
@@ -281,6 +300,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
     }
 
     if (!resendKey || !fromEmail) {
+      providerCategories.add('not_configured');
       await record(
         row,
         'email',
@@ -293,45 +313,57 @@ Deno.serve(async (request: Request): Promise<Response> => {
     }
 
     const copy = EMAIL_COPY[localeFor(row.locale)];
-    const emailResponse = await fetchProvider('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${resendKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: fromEmail,
-        to: [row.email],
-        subject: copy.subject,
-        text: `${copy.heading}\n\n${copy.body}\n\n${copy.action}: onehuman://invitation\n\n${copy.note}`,
-        html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:auto;padding:32px;color:#11121A"><p style="color:#315CF5;font-weight:700">UNUMAE</p><h1>${copy.heading}</h1><p>${copy.body}</p><p><a href="onehuman://invitation" style="display:inline-block;background:#315CF5;color:white;text-decoration:none;padding:14px 22px;border-radius:999px;font-weight:600">${copy.action}</a></p><p style="color:#777E91">${copy.note}</p></div>`,
-      }),
-    });
+    const emailTransport = await fetchWithTimeout(
+      'https://api.resend.com/emails',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${resendKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: fromEmail,
+          to: [row.email],
+          subject: copy.subject,
+          text: `${copy.heading}\n\n${copy.body}\n\n${copy.action}: onehuman://invitation\n\n${copy.note}`,
+          html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:auto;padding:32px;color:#11121A"><p style="color:#315CF5;font-weight:700">UNUMAE</p><h1>${copy.heading}</h1><p>${copy.body}</p><p><a href="onehuman://invitation" style="display:inline-block;background:#315CF5;color:white;text-decoration:none;padding:14px 22px;border-radius:999px;font-weight:600">${copy.action}</a></p><p style="color:#777E91">${copy.note}</p></div>`,
+        }),
+      }
+    );
+    const emailResponse = emailTransport.response;
     if (!emailResponse) {
+      providerCategories.add(emailTransport.category);
       await record(
         row,
         'email',
         row.email,
         false,
         undefined,
-        'email_unreachable'
+        emailTransport.category
       );
       continue;
     }
 
     const emailResult = (await emailResponse.json().catch(() => ({}))) as {
       id?: string;
-      name?: string;
     };
+    const emailCategory = emailResponse.ok
+      ? undefined
+      : emailResponse.status === 401 || emailResponse.status === 403
+        ? 'auth'
+        : emailResponse.status === 429
+          ? 'rate_limited'
+          : emailResponse.status >= 400 && emailResponse.status < 500
+            ? 'invalid_request'
+            : 'provider_error';
+    if (emailCategory) providerCategories.add(emailCategory);
     await record(
       row,
       'email',
       row.email,
       emailResponse.ok,
       emailResult.id,
-      emailResponse.ok
-        ? undefined
-        : (emailResult.name ?? `resend_http_${emailResponse.status}`)
+      emailCategory
     );
   }
 
@@ -340,7 +372,18 @@ Deno.serve(async (request: Request): Promise<Response> => {
   ).length;
   const succeeded = undelivered === 0;
   const detail = `${delivered.size}/${rows.length} event(s) delivered; ${attempts} attempt(s); ${failures} failed attempt(s)`;
-  await finish(succeeded, detail);
+  const providerCategory = providerCategories.has('auth')
+    ? 'auth'
+    : (providerCategories.values().next().value ?? 'accepted');
+  await finishWorkerRun(admin, workerRun, {
+    succeeded,
+    retryable:
+      !succeeded &&
+      providerCategory !== 'auth' &&
+      providerCategory !== 'not_configured',
+    detail,
+    providerCategory,
+  });
 
   return jsonResponse(
     { events: rows.length, delivered: delivered.size, undelivered, attempts },

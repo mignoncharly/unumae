@@ -27,9 +27,12 @@ because at scale the tempting move is to let the numbers steer the product.
 | 00:10 | `notify_selected_candidate_job` | Writes the invitation and records the outcome |
 | 01:00 | `translate-portraits` | Edge Function, via pg_net |
 | 03:30 | `purge_old_analytics` | Ninety-day retention, enforced |
+| 03:45 | `purge_phase6_operational_data` | Delivery, dismissed-report, session, challenge, and rate-counter retention |
 | every 5 min | `expire_invitations_job` | Expires, escalates, and immediately notifies the backup |
 | every 5 min | `invoke_notifications_if_due` | Retries due push/email delivery without creating empty job rows |
 | every 5 min | `refresh_operational_alerts` | Detects failed/stalled jobs, aging review, and at-risk cycles |
+| every 5 min | `retry_worker_runs` | Recovers expired Edge leases and redispatches bounded retries |
+| every 15 min | `process-push-receipts` | Checks Expo delivery receipts and disables permanently invalid destinations |
 | every minute | `enforce-account-status` | Applies versioned suspend/ban/restore outbox jobs to Auth session revocation |
 | every minute | `process-account-deletions` | Resumes lock-first deletion through storage, database, and Auth cleanup |
 | every 15 min | `reconcile-storage` | Deletes queued replacements and unreferenced objects older than one hour |
@@ -149,7 +152,9 @@ identifier, and `tests/analytics-schema.test.ts` asserts those columns do not
 exist. That was decided in Phase 11 and this is the bill arriving, on time and
 worth paying.
 
-So the signals are weak and honest:
+Platform attestation now issues a short-lived opaque installation session. It
+can enforce queue quotas without storing a raw network address or a client-
+chosen device identifier. The remaining behavioral signals are weak and honest:
 
 | Signal | Means |
 | --- | --- |
@@ -232,7 +237,7 @@ supabase test db
 npm run test:edge
 npm run verify:integration
 npm run simulate
-supabase functions serve --no-verify-jwt # separate terminal
+supabase functions serve --no-verify-jwt --env-file supabase/functions/ci.env # separate terminal
 npm run verify:edge
 supabase stop --no-backup
 ```

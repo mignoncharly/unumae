@@ -2,15 +2,16 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
 import { isServiceRoleRequest } from '../_shared/serviceRole.ts';
+import {
+  finishWorkerRun,
+  startWorkerRun,
+  type WorkerInvocation,
+} from '../_shared/workerRun.ts';
 
 interface CleanupJob {
   job_id: string;
   bucket_id: 'avatars' | 'portraits';
   object_name: string;
-}
-
-interface InvocationPayload {
-  jobRunId?: number;
 }
 
 Deno.serve(async (request: Request): Promise<Response> => {
@@ -30,22 +31,40 @@ Deno.serve(async (request: Request): Promise<Response> => {
     return jsonResponse({ error: 'unauthorized' }, 401);
   }
 
-  const payload = (await request.json().catch(() => ({}))) as InvocationPayload;
+  const payload = (await request.json().catch(() => ({}))) as WorkerInvocation;
   const admin = createClient(supabaseUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
+  const workerRun = await startWorkerRun(admin, payload, 'reconcile-storage');
+  if (!workerRun) return jsonResponse({ error: 'job_run_unavailable' }, 409);
 
   const { data: enqueued, error: enqueueError } = await admin.rpc(
     'enqueue_orphan_storage_objects',
     { limit_rows: 500 }
   );
-  if (enqueueError) return jsonResponse({ error: 'enqueue_failed' }, 500);
+  if (enqueueError) {
+    await finishWorkerRun(admin, workerRun, {
+      succeeded: false,
+      retryable: true,
+      detail: 'storage_enqueue_failed',
+      providerCategory: 'internal',
+    });
+    return jsonResponse({ error: 'enqueue_failed' }, 500);
+  }
 
   const { data, error: claimError } = await admin.rpc(
     'claim_storage_cleanup_jobs',
     { limit_rows: 100 }
   );
-  if (claimError) return jsonResponse({ error: 'claim_failed' }, 500);
+  if (claimError) {
+    await finishWorkerRun(admin, workerRun, {
+      succeeded: false,
+      retryable: true,
+      detail: 'storage_claim_failed',
+      providerCategory: 'internal',
+    });
+    return jsonResponse({ error: 'claim_failed' }, 500);
+  }
 
   const jobs = (data ?? []) as CleanupJob[];
   let completed = 0;
@@ -90,13 +109,12 @@ Deno.serve(async (request: Request): Promise<Response> => {
     completed += 1;
   }
 
-  if (typeof payload.jobRunId === 'number') {
-    await admin.rpc('complete_job_run', {
-      target_run: payload.jobRunId,
-      succeeded: failed === 0,
-      result_detail: `enqueued=${enqueued ?? 0};claimed=${jobs.length};completed=${completed};failed=${failed}`,
-    });
-  }
+  await finishWorkerRun(admin, workerRun, {
+    succeeded: failed === 0,
+    retryable: failed > 0,
+    detail: `enqueued=${enqueued ?? 0};claimed=${jobs.length};completed=${completed};failed=${failed}`,
+    providerCategory: failed > 0 ? 'provider_error' : 'accepted',
+  });
 
   console.log(
     JSON.stringify({

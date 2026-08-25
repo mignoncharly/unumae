@@ -1,5 +1,6 @@
 import type { GrowthGateCheck } from '@/constants/retention';
 import { GATE_WINDOW_DAYS } from '@/constants/retention';
+import { getAnalyticsSessionToken } from '@/lib/analytics/session';
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 import type {
@@ -34,11 +35,11 @@ export async function reportContent(
   reason: ReportReason,
   note?: string
 ): Promise<void> {
-  const { error } = await getSupabase().rpc('report_content', {
-    report_target_type: targetType,
-    report_target_id: targetId,
-    report_reason: reason,
-    report_note: note ?? null,
+  const installationToken = await getAnalyticsSessionToken();
+  if (!installationToken) throw new AppError('unknown', 'report.failed');
+  const { error } = await getSupabase().functions.invoke('report-content', {
+    headers: { 'X-Installation-Session': installationToken },
+    body: { targetType, targetId, reason, note: note ?? null },
   });
 
   if (error) {

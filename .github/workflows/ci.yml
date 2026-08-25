@@ -93,7 +93,7 @@ jobs:
         run: npm run simulate
       - name: Start Edge Functions for black-box tests
         run: |
-          supabase functions serve --no-verify-jwt > edge-functions.log 2>&1 &
+          supabase functions serve --no-verify-jwt --env-file supabase/functions/ci.env > edge-functions.log 2>&1 &
           echo $! > edge-functions.pid
       - name: Verify Edge HTTP and worker contracts
         run: npm run verify:edge

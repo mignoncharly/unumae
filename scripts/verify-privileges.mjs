@@ -42,8 +42,6 @@ const ANON_ALLOWED = new Set([
   'get_archive_countries',
   'get_archive_years',
   'get_portrait_translations',
-  // Writing an event is open to guests; reading anything back is not.
-  'track_events',
   // When Year Zero ends is public — the Archive's first day is on the Archive.
   // Who is inside it is derived per row and never asked as a question.
   'year_zero_ends',
@@ -108,7 +106,14 @@ const PROBES = [
     'set_notification_settings',
     { daily: false, selected: true, answered: true, anniversary: false },
   ],
-  ['register_push_token', { push_token: 'probe', device_platform: 'ios' }],
+  [
+    'register_push_token',
+    {
+      push_token: 'probe',
+      device_platform: 'ios',
+      installation_token: 'probe',
+    },
+  ],
   ['unregister_push_token', { push_token: 'probe' }],
   ['notifications_due', {}],
   [
@@ -132,7 +137,6 @@ const PROBES = [
 
   // Phase 11 — a guest may write an event and read nothing.
   // An empty batch, so running the probe does not pollute the analytics table.
-  ['track_events', { batch_install_id: NIL_UUID, batch: [] }],
   ['analytics_kpis_guarded', {}],
   ['purge_old_analytics', {}],
   ['revoke_moderator', { target_email: 'probe@example.com' }],

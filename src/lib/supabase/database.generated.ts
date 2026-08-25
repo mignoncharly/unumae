@@ -38,6 +38,27 @@ export type Database = {
   };
   public: {
     Tables: {
+      abuse_rate_limits: {
+        Row: {
+          key_hash: string;
+          request_count: number;
+          scope: string;
+          window_started_at: string;
+        };
+        Insert: {
+          key_hash: string;
+          request_count?: number;
+          scope: string;
+          window_started_at: string;
+        };
+        Update: {
+          key_hash?: string;
+          request_count?: number;
+          scope?: string;
+          window_started_at?: string;
+        };
+        Relationships: [];
+      };
       account_device_attestations: {
         Row: {
           assertion_counter: number;
@@ -900,6 +921,66 @@ export type Database = {
         };
         Relationships: [];
       };
+      expo_push_receipts: {
+        Row: {
+          attempts: number;
+          available_at: string;
+          created_at: string;
+          lease_expires_at: string | null;
+          lease_token: string | null;
+          max_attempts: number;
+          provider_category: string | null;
+          push_token: string;
+          status: string;
+          ticket_id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          attempts?: number;
+          available_at?: string;
+          created_at?: string;
+          lease_expires_at?: string | null;
+          lease_token?: string | null;
+          max_attempts?: number;
+          provider_category?: string | null;
+          push_token: string;
+          status?: string;
+          ticket_id: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          attempts?: number;
+          available_at?: string;
+          created_at?: string;
+          lease_expires_at?: string | null;
+          lease_token?: string | null;
+          max_attempts?: number;
+          provider_category?: string | null;
+          push_token?: string;
+          status?: string;
+          ticket_id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'expo_push_receipts_push_token_fkey';
+            columns: ['push_token'];
+            isOneToOne: false;
+            referencedRelation: 'push_tokens';
+            referencedColumns: ['token'];
+          },
+          {
+            foreignKeyName: 'expo_push_receipts_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       founding_moderators: {
         Row: {
           added_at: string;
@@ -918,33 +999,99 @@ export type Database = {
         };
         Relationships: [];
       };
+      installation_sessions: {
+        Row: {
+          created_at: string;
+          device_attestation_id: string;
+          expires_at: string;
+          id: string;
+          last_seen_at: string;
+          revoked_at: string | null;
+          token_hash: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          device_attestation_id: string;
+          expires_at: string;
+          id?: string;
+          last_seen_at?: string;
+          revoked_at?: string | null;
+          token_hash: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          device_attestation_id?: string;
+          expires_at?: string;
+          id?: string;
+          last_seen_at?: string;
+          revoked_at?: string | null;
+          token_hash?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'installation_sessions_device_attestation_id_fkey';
+            columns: ['device_attestation_id'];
+            isOneToOne: true;
+            referencedRelation: 'account_device_attestations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'installation_sessions_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       job_runs: {
         Row: {
+          attempts: number;
           completed_at: string | null;
           detail: string | null;
           id: number;
           job: string;
+          lease_expires_at: string | null;
+          lease_token: string | null;
+          max_attempts: number;
+          next_attempt_at: string;
           ok: boolean;
+          provider_category: string | null;
           ran_at: string;
           request_id: number | null;
           status: string;
         };
         Insert: {
+          attempts?: number;
           completed_at?: string | null;
           detail?: string | null;
           id?: never;
           job: string;
+          lease_expires_at?: string | null;
+          lease_token?: string | null;
+          max_attempts?: number;
+          next_attempt_at?: string;
           ok: boolean;
+          provider_category?: string | null;
           ran_at?: string;
           request_id?: number | null;
           status?: string;
         };
         Update: {
+          attempts?: number;
           completed_at?: string | null;
           detail?: string | null;
           id?: never;
           job?: string;
+          lease_expires_at?: string | null;
+          lease_token?: string | null;
+          max_attempts?: number;
+          next_attempt_at?: string;
           ok?: boolean;
+          provider_category?: string | null;
           ran_at?: string;
           request_id?: number | null;
           status?: string;
@@ -1546,6 +1693,7 @@ export type Database = {
       push_tokens: {
         Row: {
           created_at: string;
+          installation_session_id: string | null;
           last_seen_at: string;
           platform: Database['public']['Enums']['push_platform'];
           token: string;
@@ -1553,6 +1701,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          installation_session_id?: string | null;
           last_seen_at?: string;
           platform: Database['public']['Enums']['push_platform'];
           token: string;
@@ -1560,12 +1709,20 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          installation_session_id?: string | null;
           last_seen_at?: string;
           platform?: Database['public']['Enums']['push_platform'];
           token?: string;
           user_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'push_tokens_installation_session_id_fkey';
+            columns: ['installation_session_id'];
+            isOneToOne: false;
+            referencedRelation: 'installation_sessions';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'push_tokens_user_id_fkey';
             columns: ['user_id'];
@@ -1724,6 +1881,36 @@ export type Database = {
           },
         ];
       };
+      resource_quota_status: {
+        Row: {
+          database_limit_bytes: number | null;
+          egress_limit_bytes: number | null;
+          egress_used_bytes: number | null;
+          id: boolean;
+          sampled_at: string;
+          storage_limit_bytes: number | null;
+          storage_used_bytes: number | null;
+        };
+        Insert: {
+          database_limit_bytes?: number | null;
+          egress_limit_bytes?: number | null;
+          egress_used_bytes?: number | null;
+          id?: boolean;
+          sampled_at?: string;
+          storage_limit_bytes?: number | null;
+          storage_used_bytes?: number | null;
+        };
+        Update: {
+          database_limit_bytes?: number | null;
+          egress_limit_bytes?: number | null;
+          egress_used_bytes?: number | null;
+          id?: boolean;
+          sampled_at?: string;
+          storage_limit_bytes?: number | null;
+          storage_used_bytes?: number | null;
+        };
+        Relationships: [];
+      };
       scheduler_status: {
         Row: {
           checked_at: string;
@@ -1781,6 +1968,42 @@ export type Database = {
           manual_review_at?: string | null;
           object_name?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      translation_failures: {
+        Row: {
+          attempts: number;
+          first_failed_at: string;
+          last_failed_at: string;
+          provider_category: string;
+          status: string;
+          target_field: string;
+          target_id: string;
+          target_kind: string;
+          target_locale: string;
+        };
+        Insert: {
+          attempts?: number;
+          first_failed_at?: string;
+          last_failed_at?: string;
+          provider_category: string;
+          status?: string;
+          target_field: string;
+          target_id: string;
+          target_kind: string;
+          target_locale: string;
+        };
+        Update: {
+          attempts?: number;
+          first_failed_at?: string;
+          last_failed_at?: string;
+          provider_category?: string;
+          status?: string;
+          target_field?: string;
+          target_id?: string;
+          target_kind?: string;
+          target_locale?: string;
         };
         Relationships: [];
       };
@@ -1910,6 +2133,16 @@ export type Database = {
       assert_account_active: { Args: never; Returns: undefined };
       assert_authenticated: { Args: never; Returns: undefined };
       assign_human_number: { Args: { target_draw: string }; Returns: number };
+      authorize_installation_request: {
+        Args: {
+          maximum_requests: number;
+          target_scope: string;
+          target_session_hash: string;
+          target_user: string;
+          window_seconds: number;
+        };
+        Returns: boolean;
+      };
       bind_verified_device_to_pool: {
         Args: { target_binding_hash: string; target_user: string };
         Returns: boolean;
@@ -1960,6 +2193,14 @@ export type Database = {
           user_id: string;
         }[];
       };
+      claim_expo_push_receipts: {
+        Args: { batch_size?: number };
+        Returns: {
+          lease_token: string;
+          push_token: string;
+          ticket_id: string;
+        }[];
+      };
       claim_storage_cleanup_jobs: {
         Args: { limit_rows?: number };
         Returns: {
@@ -1967,6 +2208,14 @@ export type Database = {
           job_id: string;
           object_name: string;
         }[];
+      };
+      claim_worker_run: {
+        Args: {
+          presented_lease?: string;
+          target_job: string;
+          target_run: number;
+        };
+        Returns: string;
       };
       close_unfilled_cycle: {
         Args: { close_reason: string; target_draw: string };
@@ -1980,12 +2229,42 @@ export type Database = {
         Args: { target_job: string };
         Returns: boolean;
       };
+      complete_expo_push_receipt: {
+        Args: {
+          delivered: boolean;
+          permanent_failure: boolean;
+          result_provider_category: string;
+          target_lease: string;
+          target_ticket: string;
+        };
+        Returns: boolean;
+      };
       complete_job_run: {
         Args: { result_detail: string; succeeded: boolean; target_run: number };
         Returns: boolean;
       };
       complete_storage_cleanup_job: {
         Args: { target_job: string };
+        Returns: boolean;
+      };
+      complete_worker_run: {
+        Args: {
+          result_detail: string;
+          result_provider_category?: string;
+          retryable: boolean;
+          succeeded: boolean;
+          target_lease: string;
+          target_run: number;
+        };
+        Returns: boolean;
+      };
+      consume_abuse_rate_limit: {
+        Args: {
+          maximum_requests: number;
+          target_key_hash: string;
+          target_scope: string;
+          window_seconds: number;
+        };
         Returns: boolean;
       };
       consume_attestation_challenge: {
@@ -2023,6 +2302,15 @@ export type Database = {
         };
         Returns: string;
       };
+      create_attested_installation_session: {
+        Args: {
+          target_attestation: string;
+          target_expires_at: string;
+          target_token_hash: string;
+          target_user: string;
+        };
+        Returns: string;
+      };
       current_account_status: {
         Args: never;
         Returns: Database['public']['Enums']['account_status'];
@@ -2038,6 +2326,14 @@ export type Database = {
       draw_order: { Args: { ids: string[]; seed: string }; Returns: string[] };
       draw_rank: { Args: { candidate: string; seed: string }; Returns: string };
       enforce_quiet_day_cutoff: { Args: never; Returns: number };
+      enqueue_expo_push_receipt: {
+        Args: {
+          target_ticket: string;
+          target_token: string;
+          target_user: string;
+        };
+        Returns: boolean;
+      };
       enqueue_orphan_storage_objects: {
         Args: { limit_rows?: number };
         Returns: number;
@@ -2047,6 +2343,7 @@ export type Database = {
       expire_stale_invitations: { Args: never; Returns: number };
       export_my_data: { Args: never; Returns: Json };
       export_my_data_phase2: { Args: never; Returns: Json };
+      export_my_data_phase5: { Args: never; Returns: Json };
       fail_account_deletion: {
         Args: { error_code: string; target_request: string };
         Returns: boolean;
@@ -2276,6 +2573,15 @@ export type Database = {
       has_recent_authentication: {
         Args: { maximum_age?: string };
         Returns: boolean;
+      };
+      ingest_analytics_events: {
+        Args: {
+          batch: Json;
+          marketing_only?: boolean;
+          target_network_hash: string;
+          target_session_hash: string;
+        };
+        Returns: number;
       };
       integrity_signals: {
         Args: { window_days?: number };
@@ -2526,6 +2832,7 @@ export type Database = {
       publish_due_cycles: { Args: never; Returns: number };
       publish_due_cycles_job: { Args: never; Returns: number };
       purge_old_analytics: { Args: never; Returns: number };
+      purge_phase6_operational_data: { Args: never; Returns: Json };
       quiet_day_cutoff: { Args: { target_date: string }; Returns: string };
       raise_account_signal: {
         Args: {
@@ -2580,6 +2887,16 @@ export type Database = {
         };
         Returns: boolean;
       };
+      record_resource_quota_status: {
+        Args: {
+          database_limit_bytes: number;
+          egress_limit_bytes: number;
+          egress_used_bytes: number;
+          storage_limit_bytes: number;
+          storage_used_bytes: number;
+        };
+        Returns: boolean;
+      };
       record_same_language: {
         Args: {
           target_element: Database['public']['Enums']['portrait_element_key'];
@@ -2606,6 +2923,17 @@ export type Database = {
         };
         Returns: boolean;
       };
+      record_translation_attempt: {
+        Args: {
+          provider_category?: string;
+          succeeded: boolean;
+          target_field: string;
+          target_id: string;
+          target_kind: string;
+          target_locale: string;
+        };
+        Returns: string;
+      };
       recover_selected_draw: {
         Args: {
           recovery_reason: string;
@@ -2614,6 +2942,7 @@ export type Database = {
         };
         Returns: boolean;
       };
+      recover_worker_runs: { Args: never; Returns: number };
       redact_portrait: {
         Args: { removal_reason?: string; target_portrait: string };
         Returns: boolean;
@@ -2623,14 +2952,24 @@ export type Database = {
         Returns: string;
       };
       refresh_operational_alerts: { Args: never; Returns: number };
+      refresh_operational_alerts_phase6: { Args: never; Returns: number };
       refresh_selection_eligibility: { Args: never; Returns: number };
-      register_push_token: {
-        Args: {
-          device_platform: Database['public']['Enums']['push_platform'];
-          push_token: string;
-        };
-        Returns: boolean;
-      };
+      register_push_token:
+        | {
+            Args: {
+              device_platform: Database['public']['Enums']['push_platform'];
+              push_token: string;
+            };
+            Returns: boolean;
+          }
+        | {
+            Args: {
+              device_platform: Database['public']['Enums']['push_platform'];
+              installation_token: string;
+              push_token: string;
+            };
+            Returns: boolean;
+          };
       register_push_token_phase0: {
         Args: {
           device_platform: Database['public']['Enums']['push_platform'];
@@ -2738,6 +3077,7 @@ export type Database = {
           returned_d7: number;
         }[];
       };
+      retry_worker_runs: { Args: never; Returns: number };
       review_account_flag: {
         Args: {
           review_note?: string;
@@ -2911,7 +3251,9 @@ export type Database = {
         | 'question_unvoted'
         | 'human_forgotten'
         | 'remembered_library_opened'
-        | 'share_sheet_opened';
+        | 'share_sheet_opened'
+        | 'selection_explainer_opened'
+        | 'mission_opened';
       appeal_status: 'pending' | 'upheld' | 'overturned';
       archive_removal_status: 'pending' | 'approved' | 'declined' | 'cancelled';
       assurance_level:
@@ -3157,6 +3499,8 @@ export const Constants = {
         'human_forgotten',
         'remembered_library_opened',
         'share_sheet_opened',
+        'selection_explainer_opened',
+        'mission_opened',
       ],
       appeal_status: ['pending', 'upheld', 'overturned'],
       archive_removal_status: ['pending', 'approved', 'declined', 'cancelled'],

@@ -2,6 +2,11 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
 import { isServiceRoleRequest } from '../_shared/serviceRole.ts';
+import {
+  finishWorkerRun,
+  startWorkerRun,
+  type WorkerInvocation,
+} from '../_shared/workerRun.ts';
 
 type AccountStatus =
   'active' | 'suspended' | 'banned' | 'deletion_pending' | 'deleted';
@@ -11,10 +16,6 @@ interface EnforcementJob {
   user_id: string;
   target_status: AccountStatus;
   status_version: number;
-}
-
-interface InvocationPayload {
-  jobRunId?: number;
 }
 
 /**
@@ -54,7 +55,13 @@ Deno.serve(async (request: Request): Promise<Response> => {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  const payload = (await request.json().catch(() => ({}))) as InvocationPayload;
+  const payload = (await request.json().catch(() => ({}))) as WorkerInvocation;
+  const workerRun = await startWorkerRun(
+    admin,
+    payload,
+    'enforce-account-status'
+  );
+  if (!workerRun) return jsonResponse({ error: 'job_run_unavailable' }, 409);
   const { data, error: claimError } = await admin.rpc(
     'claim_account_enforcement_jobs',
     { limit_rows: 10 }
@@ -67,13 +74,12 @@ Deno.serve(async (request: Request): Promise<Response> => {
         error_code: 'claim_failed',
       })
     );
-    if (typeof payload.jobRunId === 'number') {
-      await admin.rpc('complete_job_run', {
-        target_run: payload.jobRunId,
-        succeeded: false,
-        result_detail: 'account_enforcement_claim_failed',
-      });
-    }
+    await finishWorkerRun(admin, workerRun, {
+      succeeded: false,
+      retryable: true,
+      detail: 'account_enforcement_claim_failed',
+      providerCategory: 'internal',
+    });
     return jsonResponse({ error: 'claim_failed' }, 500);
   }
 
@@ -127,13 +133,12 @@ Deno.serve(async (request: Request): Promise<Response> => {
     completed += 1;
   }
 
-  if (typeof payload.jobRunId === 'number') {
-    await admin.rpc('complete_job_run', {
-      target_run: payload.jobRunId,
-      succeeded: failed === 0,
-      result_detail: `claimed=${jobs.length};completed=${completed};failed=${failed}`,
-    });
-  }
+  await finishWorkerRun(admin, workerRun, {
+    succeeded: failed === 0,
+    retryable: failed > 0,
+    detail: `claimed=${jobs.length};completed=${completed};failed=${failed}`,
+    providerCategory: failed > 0 ? 'provider_error' : 'accepted',
+  });
 
   console.log(
     JSON.stringify({

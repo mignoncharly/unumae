@@ -64,7 +64,7 @@ supabase test db
 npm run test:edge
 npm run verify:integration
 npm run simulate
-supabase functions serve --no-verify-jwt # leave running in another terminal
+supabase functions serve --no-verify-jwt --env-file supabase/functions/ci.env # leave running in another terminal
 npm run verify:edge
 supabase stop --no-backup
 ```

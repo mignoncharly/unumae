@@ -67,7 +67,7 @@ describe('analytics cannot become tracking', () => {
       ),
     ].map((match) => match[1]);
     const values = [...new Set([...created, ...added])];
-    expect(values).toHaveLength(23);
+    expect(values).toHaveLength(25);
     expect(values).toEqual(
       expect.arrayContaining([
         "'active_day'",
@@ -77,14 +77,18 @@ describe('analytics cannot become tracking', () => {
         "'human_forgotten'",
         "'remembered_library_opened'",
         "'share_sheet_opened'",
+        "'selection_explainer_opened'",
+        "'mission_opened'",
       ])
     );
   });
 
-  it('drops an event name it does not recognise rather than raising', () => {
-    // A client from an older release must not fail because a name changed.
-    expect(functionBodyOf('track_events')).toContain(
-      "where item ->> 'event' = any ("
+  it('drops a bounded minority of event names it does not recognise', () => {
+    expect(functionBodyOf('ingest_analytics_events')).toContain(
+      'analytics invalid-event ratio exceeded'
+    );
+    expect(functionBodyOf('ingest_analytics_events')).toContain(
+      "value ->> 'event' = any ("
     );
   });
 
@@ -92,7 +96,9 @@ describe('analytics cannot become tracking', () => {
     expect(FLAT).toContain(
       "create unique index idx_analytics_active_day_once on public.analytics_events (install_id, occurred_on) where event = 'active_day'"
     );
-    expect(functionBodyOf('track_events')).toContain('on conflict do nothing');
+    expect(functionBodyOf('ingest_analytics_events')).toContain(
+      'on conflict do nothing'
+    );
   });
 
   it('caps the size of properties', () => {
@@ -123,9 +129,12 @@ describe('nobody can read what was collected', () => {
     expect(ALL_SQL).not.toMatch(/policy[^;]*on public\.analytics_events/);
   });
 
-  it('lets a guest write, because a guest is most of the audience', () => {
+  it('allows writes only through the service-backed Edge boundary', () => {
     expect(FLAT).toContain(
-      'grant execute on function public.track_events(uuid, jsonb) to anon, authenticated'
+      'grant execute on function public.ingest_analytics_events( bytea, bytea, jsonb, boolean ) to service_role'
+    );
+    expect(FLAT).toContain(
+      'revoke execute on function public.track_events(uuid, jsonb) from public, anon, authenticated, service_role'
     );
   });
 

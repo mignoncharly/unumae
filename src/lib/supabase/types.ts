@@ -492,6 +492,30 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
       };
+      get_my_portrait_answer_revisions: {
+        Args: { target_portrait: string };
+        Returns: {
+          element_key: PortraitElementKeyEnum;
+          revision: number;
+        }[];
+      };
+      save_my_portrait_answer: {
+        Args: {
+          target_portrait: string;
+          target_key: PortraitElementKeyEnum;
+          target_answer: string;
+          expected_revision: number;
+        };
+        Returns: number;
+      };
+      save_answers_and_submit_my_portrait: {
+        Args: {
+          target_portrait: string;
+          submitted_answers: Json;
+          expected_revisions: Json;
+        };
+        Returns: boolean;
+      };
       get_todays_human: {
         Args: Record<PropertyKey, never>;
         Returns: TodaysHumanRow[];
@@ -766,6 +790,10 @@ export type Database = {
         };
         Returns: boolean;
       };
+      patch_notification_setting: {
+        Args: { setting_name: string; setting_value: boolean };
+        Returns: boolean;
+      };
       get_notification_settings: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -774,6 +802,10 @@ export type Database = {
           answered: boolean;
           anniversary: boolean;
         }[];
+      };
+      request_attestation_review: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
       };
       /** Added alongside the original, never in place of it (Article 9.6). */
       get_portrait_translations: {

@@ -17,6 +17,16 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
+const command = process.argv[2] ?? 'list';
+if (
+  command === 'push' &&
+  (!process.env.CI || process.env.GITHUB_ACTIONS !== 'true')
+) {
+  console.error(
+    'Hosted migration promotion is CI-only. Use the protected promotion workflow.'
+  );
+  process.exit(1);
+}
 const CREDENTIALS_FILE =
   process.env.CREDENTIALS_FILE ?? join(ROOT, 'docs', 'supa_keys.md');
 
@@ -48,8 +58,6 @@ if (!password || !projectId) {
 // The password is user-chosen and routinely contains @ ! # — characters that
 // silently corrupt a connection URL unless encoded.
 const dbUrl = `postgresql://postgres:${encodeURIComponent(password)}@db.${projectId}.supabase.co:5432/postgres`;
-
-const command = process.argv[2] ?? 'list';
 
 const ARGS = {
   push: ['supabase', 'db', 'push', '--db-url', dbUrl],

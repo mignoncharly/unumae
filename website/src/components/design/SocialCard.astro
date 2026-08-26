@@ -1,5 +1,6 @@
 ---
 import { homeContent } from '../../content/home';
+import { publicContent } from '../../content/public';
 import { socialContent } from '../../content/social';
 import type { Locale } from '../../content/site';
 import {
@@ -10,27 +11,42 @@ import {
 
 interface Props {
   locale: Locale;
-  mode?: 'brand' | 'template' | 'human';
+  mode?: 'brand' | 'template' | 'human' | 'archive-human';
   human?: HumanShareCardInput;
+  archiveHuman?: {
+    displayName: string;
+    country: string;
+    humanNumber: string;
+    selectionDate: string;
+  };
 }
 
-const { locale, mode = 'brand', human } = Astro.props;
+const { locale, mode = 'brand', human, archiveHuman } = Astro.props;
 if (mode === 'human' && !human) {
   throw new Error('Human social-card mode requires Human data.');
+}
+if (mode === 'archive-human' && !archiveHuman) {
+  throw new Error('Archive Human social-card mode requires published data.');
 }
 
 const copy = socialContent[locale];
 const tagline = homeContent[locale].hero;
 const approved =
   mode === 'human' && human ? prepareHumanShareCard(human) : null;
-const firstName = approved?.firstName ?? copy.templateFirstName;
-const country = approved?.country ?? copy.templateCountry;
+const firstName =
+  archiveHuman?.displayName.trim().split(/\s+/)[0]?.slice(0, 24) ??
+  approved?.firstName ??
+  copy.templateFirstName;
+const country =
+  archiveHuman?.country ?? approved?.country ?? copy.templateCountry;
 const quote = approved?.quote ?? copy.templateQuote;
 const quoteLines = wrapSocialQuote(quote);
 const accessibleLabel =
   mode === 'brand'
     ? copy.imageAlt
-    : `${copy.templateLabel}: ${firstName}, ${country}. ${quote}`;
+    : mode === 'archive-human'
+      ? `${firstName}, ${archiveHuman?.humanNumber}, ${country}`
+      : `${copy.templateLabel}: ${firstName}, ${country}. ${quote}`;
 ---
 
 <svg
@@ -87,7 +103,9 @@ const accessibleLabel =
     ) : (
       <>
         <text x="76" y="164" class="social-card__eyebrow">
-          {copy.templateLabel}
+          {mode === 'archive-human'
+            ? publicContent[locale].archive.hero.eyebrow
+            : copy.templateLabel}
         </text>
         <text x="72" y="285" class="social-card__name">
           {firstName}
@@ -95,14 +113,35 @@ const accessibleLabel =
         <text x="76" y="340" class="social-card__country">
           {country}
         </text>
-        <text x="650" y="212" class="social-card__quote">
-          {quoteLines.map((line, index) => (
-            <tspan x="650" dy={index === 0 ? 0 : 48}>
-              {index === 0 ? `“${line}` : line}
-              {index === quoteLines.length - 1 ? '”' : ''}
-            </tspan>
-          ))}
-        </text>
+        {mode === 'archive-human' ? (
+          <>
+            <text
+              x="1124"
+              y="235"
+              text-anchor="end"
+              class="social-card__archive-number"
+            >
+              {archiveHuman?.humanNumber}
+            </text>
+            <text
+              x="1124"
+              y="292"
+              text-anchor="end"
+              class="social-card__archive-date"
+            >
+              {archiveHuman?.selectionDate}
+            </text>
+          </>
+        ) : (
+          <text x="650" y="212" class="social-card__quote">
+            {quoteLines.map((line, index) => (
+              <tspan x="650" dy={index === 0 ? 0 : 48}>
+                {index === 0 ? `“${line}` : line}
+                {index === quoteLines.length - 1 ? '”' : ''}
+              </tspan>
+            ))}
+          </text>
+        )}
         <text x="76" y="524" class="social-card__tagline">
           {tagline.firstLine}
         </text>
@@ -156,7 +195,8 @@ const accessibleLabel =
   .social-card__meta,
   .social-card__eyebrow,
   .social-card__country,
-  .social-card__template-note {
+  .social-card__template-note,
+  .social-card__archive-date {
     font-family: 'Inter Variable', Arial, sans-serif;
     font-weight: 700;
     letter-spacing: 3px;
@@ -208,6 +248,15 @@ const accessibleLabel =
 
   .social-card__tagline {
     font-size: 34px;
+  }
+
+  .social-card__archive-number {
+    font-family: 'Newsreader Variable', Georgia, serif;
+    font-size: 76px;
+  }
+
+  .social-card__archive-date {
+    font-size: 18px;
   }
 
   .social-card__template-note {

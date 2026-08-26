@@ -3,9 +3,8 @@ import { z } from 'zod';
 /**
  * Configuration, validated once at import time.
  *
- * One Supabase project for the whole lifecycle — there is deliberately no
- * environment switch here. See docs/ENVIRONMENTS.md for why that decision was
- * taken and what it costs.
+ * Environment selection happens in app.config.ts and EAS profiles. This module
+ * validates only the public client values delivered to the selected build.
  *
  * Anything invalid fails loudly here rather than as a confusing runtime error
  * three screens later.
@@ -13,6 +12,7 @@ import { z } from 'zod';
 const EnvSchema = z.object({
   supabaseUrl: z.string().url(),
   supabaseAnonKey: z.string().min(1),
+  googleCloudProjectNumber: z.string().regex(/^\d+$/).or(z.literal('')),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
@@ -20,6 +20,8 @@ export type Env = z.infer<typeof EnvSchema>;
 const raw = {
   supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? '',
   supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '',
+  googleCloudProjectNumber:
+    process.env.EXPO_PUBLIC_GOOGLE_CLOUD_PROJECT_NUMBER ?? '',
 };
 
 const parsed = EnvSchema.safeParse(raw);
@@ -33,7 +35,7 @@ export const isConfigured = parsed.success;
 
 export const env: Env = parsed.success
   ? parsed.data
-  : { supabaseUrl: '', supabaseAnonKey: '' };
+  : { supabaseUrl: '', supabaseAnonKey: '', googleCloudProjectNumber: '' };
 
 export const configErrors: string[] = parsed.success
   ? []
@@ -41,6 +43,6 @@ export const configErrors: string[] = parsed.success
       (issue) => `${issue.path.join('.')}: ${issue.message}`
     );
 
-/** `qpicjsjxdblrxdrdibge`. Not a secret — it is the host name. */
+/** Public project reference parsed from the selected environment URL. */
 export const projectRef: string =
   /https:\/\/([a-z0-9]+)\.supabase\./.exec(env.supabaseUrl)?.[1] ?? 'unknown';

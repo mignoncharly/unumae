@@ -1,87 +1,62 @@
-# Environment
+# Environments
 
-> Phase 3 update, 25 August 2026: development and CI now use isolated local
-> Supabase stacks. The only hosted Unumae project is production; the second
-> hosted slot remains reserved for staging in Phase 10. There is therefore a
-> fresh-database CI gate, but still no safe hosted staging promotion step.
+Unumae uses four execution environments across two hosted Supabase projects.
+Development and CI are disposable local stacks; staging and production are
+separate hosted projects.
 
-**One hosted Supabase project today. Ephemeral local development and CI. One
-EAS project and bundle identifier.**
+| Environment | Database | Permitted use |
+| --- | --- | --- |
+| Development | `supabase start`, one stack per developer | Migration authoring, seeds, ordinary testing |
+| CI | Fresh Supabase CLI stack in Docker | Empty-database migrations and automated integration tests |
+| Staging | Hosted Project A | Provider, device, cron, migration, and release-candidate verification |
+| Production | Hosted Project B (`qpicjsjxdblrxdrdibge`) | Production traffic only |
 
-The target topology is local development, disposable local CI, hosted staging,
-and hosted production. Staging is the only missing environment.
+The second hosted project must be allocated to staging before any hosted
+promotion. It must never become a shared development database.
 
-## The setup
+## Hard boundaries
 
-| Thing | Value |
-| --- | --- |
-| Supabase project | `qpicjsjxdblrxdrdibge` |
-| EAS project | `@mignoncharly/unumae` (`75cfb922-5d90-4436-965d-e67672558ed3`) |
-| iOS bundle identifier | `com.unumae.app` |
-| Deep link scheme | `onehuman://` |
-| Apple Team ID | `UB67843RJK` |
+- Root `.env` is local development only and points to `127.0.0.1:54321`.
+- CI starts its own local stack and receives no hosted credentials.
+- GitHub Environments named `staging` and `production` hold separate project
+  refs, database passwords, access tokens, Edge secrets, and approval rules.
+- `scripts/verify-promotion-target.mjs` refuses local promotion, refuses a
+  staging target equal to production, and refuses an unapproved production ref.
+- `.github/workflows/promote.yml` checks out a full SHA and requires a successful
+  `CI` run for that exact SHA before applying migrations or Edge Functions.
+- No manual production SQL and no local production function deployment.
+- Production administrators require MFA and least-privilege access. GitHub
+  production environment approval must have no administrator bypass.
 
-There is no hosted staging project yet and no `.dev` or `.staging` bundle
-suffix. Local Supabase credentials are discovered from `supabase status`; CI
-never receives hosted database credentials.
+## Mobile builds
 
-## What this costs, stated plainly
+Cloud development, simulator, E2E, and staging profiles all use the EAS
+`staging` environment. Only the production profile uses EAS `production`.
+`app.config.ts` rejects a staging build aimed at the production project and a
+production build aimed anywhere else.
 
-For any command explicitly aimed at the hosted project:
-
-- **A destructive migration is immediately live.** Migrations are append-only
-  and additive, and `npm run verify` checks them before they are applied, but
-  there is no rehearsal step. Read a migration twice before `npm run db:push`.
-- **Test data becomes real data.** Hosted verification must be deliberate and
-  self-cleaning. Ordinary development and all CI integration tests stay local.
-- **There is still no hosted rehearsal.** The local stack proves migrations and
-  contracts from empty, but cannot prove provider configuration or hosted-plan
-  behavior. Phase 10 staging remains a release blocker.
-
-These are accepted, not overlooked. If the project later needs a rehearsal
-environment, the migration pipeline already supports it — `scripts/db.mjs`
-reads `CREDENTIALS_FILE`, so a second project is a credential file away.
-
-## Configuration
-
-`.env`, gitignored, local only:
+Configure public client values separately:
 
 ```bash
-EXPO_PUBLIC_SUPABASE_URL=https://qpicjsjxdblrxdrdibge.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=<publishable key>
-```
-
-For EAS builds the same two values are set as plaintext EAS environment
-variables rather than committed. They are configured for both `development`
-and `production`; `eas.json` explicitly selects the matching environment for
-each build profile:
-
-```bash
-eas env:create development --name EXPO_PUBLIC_SUPABASE_URL --value https://qpicjsjxdblrxdrdibge.supabase.co --visibility plaintext
-eas env:create development --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <publishable key> --visibility plaintext
+eas env:create staging --name EXPO_PUBLIC_SUPABASE_URL --value https://<staging-ref>.supabase.co --visibility plaintext
+eas env:create staging --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <staging-publishable-key> --visibility plaintext
+eas env:create staging --name EXPO_PUBLIC_GOOGLE_CLOUD_PROJECT_NUMBER --value <staging-number> --visibility plaintext
 eas env:create production --name EXPO_PUBLIC_SUPABASE_URL --value https://qpicjsjxdblrxdrdibge.supabase.co --visibility plaintext
-eas env:create production --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <publishable key> --visibility plaintext
+eas env:create production --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <production-publishable-key> --visibility plaintext
+eas env:create production --name EXPO_PUBLIC_GOOGLE_CLOUD_PROJECT_NUMBER --value <production-number> --visibility plaintext
 ```
 
-The anon key is public by design — it is safe in the client only because Row
-Level Security is enabled on every table. It stays out of the repository
-anyway, because a key in a repository is a key you cannot rotate quietly.
+These three values are public by design. Service-role, provider, signing, and
+database credentials never receive an `EXPO_PUBLIC_` prefix.
 
-## Platform
+## Promotion order
 
-iOS first. The Android block in `app.config.ts` exists so the project stays
-cross-platform — nothing in `src/` is iOS-only by construction — but no Android
-work is done, and none should be started before the iOS product is real.
+1. Author and test against local development.
+2. CI reconstructs and tests a fresh local database.
+3. Run `Promote hosted environment` for staging using the exact CI-passed SHA.
+4. Complete staging provider, physical-device, deletion, cycle, and alert tests.
+5. Approve the same SHA for production in the protected GitHub Environment.
+6. Capture migration/function evidence and monitor the next daily cycle.
 
-## Commands
-
-```bash
-npm run db:push          # apply pending migrations to the project
-npm run db:list          # what is applied
-npm run verify:integration # local draw, role and RLS probes
-npm run simulate           # complete local daily-cycle integration
-npm run verify:live        # explicit hosted draw, role and RLS probes
-
-npx supabase functions deploy delete-account --project-ref qpicjsjxdblrxdrdibge
-eas build --profile development --platform ios
-```
+Seed moderators after signup through the audited operator RPCs in
+`docs/MODERATION.md`; no future migration contains a personal email address.

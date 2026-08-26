@@ -5,25 +5,38 @@
   },
   "build": {
     "development": {
-      "environment": "development",
+      "environment": "staging",
+      "env": { "APP_ENV": "staging" },
       "developmentClient": true,
       "distribution": "internal",
       "ios": { "simulator": false }
     },
     "development-simulator": {
-      "environment": "development",
+      "environment": "staging",
+      "env": { "APP_ENV": "staging" },
       "developmentClient": true,
       "distribution": "internal",
       "ios": { "simulator": true }
     },
     "e2e-test": {
-      "environment": "development",
+      "environment": "staging",
+      "env": { "APP_ENV": "staging" },
       "withoutCredentials": true,
-      "ios": { "simulator": true }
+      "ios": { "simulator": true },
+      "android": { "buildType": "apk" }
+    },
+    "staging": {
+      "environment": "staging",
+      "env": { "APP_ENV": "staging" },
+      "distribution": "internal",
+      "autoIncrement": true,
+      "android": { "buildType": "apk" }
     },
     "production": {
       "environment": "production",
-      "autoIncrement": true
+      "env": { "APP_ENV": "production" },
+      "autoIncrement": true,
+      "android": { "buildType": "app-bundle" }
     }
   },
   "submit": {

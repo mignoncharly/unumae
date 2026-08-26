@@ -14,18 +14,11 @@
  * The app is unchanged: it verifies this code exactly as it would verify one
  * that arrived by email.
  *
- * A development tool. It needs the service role key, so it can only be run by
- * somebody who already has the credential file, and it works for any address —
- * which is precisely why it is not something to leave lying around a server.
+ * A local-development tool. It uses only the throwaway admin credential from
+ * `supabase status` and cannot target staging or production.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
-const CREDENTIALS_FILE =
-  process.env.CREDENTIALS_FILE ?? join(ROOT, 'docs', 'supa_keys.md');
+import { execFileSync } from 'node:child_process';
 
 const email = process.argv[2];
 
@@ -34,26 +27,21 @@ if (!email || !email.includes('@')) {
   process.exit(1);
 }
 
-if (!existsSync(CREDENTIALS_FILE)) {
-  console.error(`No credential file at ${CREDENTIALS_FILE}.`);
-  process.exit(1);
-}
-
-const creds = Object.fromEntries(
-  readFileSync(CREDENTIALS_FILE, 'utf8')
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line.includes('='))
-    .map((line) => {
-      const index = line.indexOf('=');
-      return [line.slice(0, index).trim(), line.slice(index + 1).trim()];
-    })
+const status = execFileSync('supabase', ['status', '-o', 'env'], {
+  encoding: 'utf8',
+});
+const local = Object.fromEntries(
+  status
+    .split(/\r?\n/)
+    .map((line) => line.match(/^([A-Z_]+)="?([^"\r\n]+)"?$/))
+    .filter(Boolean)
+    .map((match) => [match[1], match[2]])
 );
-
-const { project_url: url, service_role_secret: serviceKey } = creds;
+const url = local.API_URL ?? local.SUPABASE_URL;
+const serviceKey = local.SERVICE_ROLE_KEY ?? local.SECRET_KEY;
 
 if (!url || !serviceKey) {
-  console.error('Credential file needs project_url and service_role_secret.');
+  console.error('Local credentials unavailable. Run `supabase start`.');
   process.exit(1);
 }
 

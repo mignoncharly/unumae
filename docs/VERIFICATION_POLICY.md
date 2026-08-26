@@ -80,10 +80,11 @@ client release.
 - The vendor flag is set only when the other pool conditions are satisfied, not
   at signup.
 
-The client implementation that requests native platform evidence belongs to
-Roadmap Phase 8. Until a supported production build supplies it, accounts fail
-closed outside the pool; no production fallback marks a simulator or script as
-attested.
+The Phase 8 client requests App Attest plus DeviceCheck on iOS and Play
+Integrity standard verdicts on Android. Expo Go, web, simulators, unsupported
+devices, and binaries without the native module fail closed outside the pool;
+no development fallback marks a simulator or script as attested. Unsupported
+or rejected physical devices can request the human-review path below.
 
 ## Signals and manual review
 

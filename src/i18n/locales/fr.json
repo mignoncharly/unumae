@@ -44,7 +44,8 @@
     "meetRandom": "Rencontrer un Human au hasard",
     "selectingTomorrow": "Sélection du human de demain…",
     "removed": "L’Human du jour a été retiré",
-    "removedBody": "Son numéro et sa journée restent dans les Archives, mais son identité et son histoire ne sont plus publiées."
+    "removedBody": "Son numéro et sa journée restent dans les Archives, mais son identité et son histoire ne sont plus publiées.",
+    "malformed": "Le Human du jour ne peut pas être affiché de manière sûre. Actualisez pour réessayer."
   },
   "questions": {
     "title": "Questions",
@@ -347,6 +348,18 @@
       "accountTooNew": "Votre compte est encore récent. Le vivier vous est ouvert sept jours après votre inscription — il n’y a rien à faire d’ici là.",
       "awaitingRefresh": "Vous remplissez les conditions. La liste des personnes éligibles est reconstruite chaque nuit, et vous serez sur la prochaine."
     }
+  },
+  "attestation": {
+    "title": "Vérifier cette application et cet appareil",
+    "body": "Apple ou Google peut confirmer qu’il s’agit de l’application authentique sur un appareil compatible. Cela empêche un appareil de participer avec plusieurs comptes, sans établir votre identité.",
+    "verify": "Vérifier cet appareil",
+    "development": "L’attestation ne fonctionne pas dans Expo Go ni dans un simulateur. Utilisez un build de développement signé sur un appareil physique. Ce build reste hors du tirage.",
+    "unsupported": "Cet appareil ne peut pas terminer l’attestation de la plateforme. Vous pouvez demander un examen humain.",
+    "retryable": "Le service de vérification est momentanément indisponible. Veuillez réessayer.",
+    "rejected": "La plateforme n’a pas pu vérifier l’application ou l’appareil. Réessayez ou demandez un examen humain.",
+    "requestReview": "Demander un examen humain",
+    "reviewPending": "Une personne examinera ce signal sous sept jours. Votre compte n’est pas banni, mais reste hors du tirage jusqu’à la décision.",
+    "reviewFailed": "Impossible de demander l’examen. Veuillez réessayer."
   },
   "invitation": {
     "title": "Vous avez été sélectionné.",

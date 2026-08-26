@@ -68,9 +68,16 @@ export default function PrivacyScreen() {
               trailing={
                 <SettingsSwitch
                   label={t('privacy.hideCity')}
-                  onValueChange={(value) =>
-                    updateProfile.mutate({ city_hidden: value })
-                  }
+                  onValueChange={(value) => {
+                    setError(undefined);
+                    updateProfile.mutate(
+                      { city_hidden: value },
+                      {
+                        onError: (caught) =>
+                          setError(t(toAppError(caught).messageKey)),
+                      }
+                    );
+                  }}
                   value={profile.city_hidden}
                 />
               }

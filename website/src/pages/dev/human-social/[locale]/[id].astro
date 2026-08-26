@@ -1,0 +1,77 @@
+---
+import SocialCard from '../../../../components/design/SocialCard.astro';
+import { locales, type Locale } from '../../../../content/site';
+import {
+  getHumanSnapshots,
+  type HumanSnapshot,
+} from '../../../../lib/human-snapshots';
+import '../../../../styles/global.css';
+
+export async function getStaticPaths() {
+  const snapshots = await getHumanSnapshots();
+  return locales.flatMap((locale) =>
+    snapshots.map((snapshot) => ({
+      params: { locale, id: snapshot.human.draw_id },
+      props: { locale, snapshot },
+    }))
+  );
+}
+
+interface Props {
+  locale: Locale;
+  snapshot: HumanSnapshot;
+}
+
+const { locale, snapshot } = Astro.props;
+const country = snapshot.human.country_code
+  ? (new Intl.DisplayNames([locale], { type: 'region' }).of(
+      snapshot.human.country_code
+    ) ?? snapshot.human.country_code)
+  : '';
+const humanNumber = `#${String(snapshot.human.human_number).padStart(4, '0')}`;
+const selectionDate = new Intl.DateTimeFormat(locale, {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+}).format(new Date(`${snapshot.human.selection_date}T00:00:00Z`));
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1200, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Unumae Human social-card render target</title>
+  </head>
+  <body>
+    <SocialCard
+      locale={locale}
+      mode="archive-human"
+      archiveHuman={{
+        displayName: snapshot.human.display_name ?? '',
+        country,
+        humanNumber,
+        selectionDate,
+      }}
+    />
+  </body>
+</html>
+
+<style is:global>
+  html {
+    min-width: 0;
+  }
+
+  body {
+    width: 1200px;
+    height: 630px;
+    min-height: 0;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .social-card {
+    width: 1200px;
+    height: 630px;
+  }
+</style>

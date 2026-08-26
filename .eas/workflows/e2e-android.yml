@@ -1,0 +1,35 @@
+name: Android release smoke tests
+
+jobs:
+  build_android_for_e2e:
+    name: Build Android emulator APK
+    type: build
+    params:
+      platform: android
+      profile: e2e-test
+
+  test_pixel_6:
+    name: Pixel 6 / Android 35
+    needs: [build_android_for_e2e]
+    type: maestro
+    runs_on: linux-large-nested-virtualization
+    params:
+      build_id: ${{ needs.build_android_for_e2e.outputs.build_id }}
+      flow_path: .maestro/release-smoke.yml
+      device_identifier: { android: 'pixel_6' }
+      android_system_image_package: 'system-images;android-35;google_apis_playstore;x86_64'
+      record_screen: true
+      retries: 1
+
+  test_small_android:
+    name: Small Android / Android 35
+    needs: [build_android_for_e2e]
+    type: maestro
+    runs_on: linux-large-nested-virtualization
+    params:
+      build_id: ${{ needs.build_android_for_e2e.outputs.build_id }}
+      flow_path: .maestro/release-smoke.yml
+      device_identifier: { android: 'pixel_2' }
+      android_system_image_package: 'system-images;android-35;google_apis;x86_64'
+      record_screen: true
+      retries: 1

@@ -39,19 +39,28 @@ To connect them to an approved Supabase project, set
 `PUBLIC_SUPABASE_ANON_KEY`. The key is the public anon key; a service-role key
 must never be exposed through a `PUBLIC_` variable.
 
-The browser reader is intentionally limited to the anonymous RPC allowlist used
+The public reader is intentionally limited to the anonymous RPC allowlist used
 by these pages: today's Human, published portrait elements, approved questions,
 Archive entries, Random Human, countries, and years. It does not read tables,
 display Remember totals, or expose country/year counts. Portrait paths are
 resolved through short-lived signed URLs.
 
+When live data is enabled, each release generates static HTML snapshots for
+published Human links. Their name, Archive number, date, portrait, localized
+canonical metadata, structured data, and social card are useful without
+JavaScript. The browser then refreshes the publication-gated data with bounded
+timeouts and retries. Removed or newly published records fall back to the
+generic guarded page until the next release build.
+
 ## Sharing and discovery
 
 Every public route emits localized canonical and alternate links, Open Graph
-and X large-card metadata, and a Schema.org graph. Generic EN, FR, and DE cards
-are used for static previews, so no candidate or draft Human can enter a social
-cache. The guarded Human template is reviewable at `/dev/share-card`; it only
-accepts live content with an explicitly approved quote.
+and X large-card metadata, and a Schema.org graph. Published Human snapshots
+receive person-specific ProfilePage metadata and raster social cards generated
+only from the anonymous publication boundary. Generic EN, FR, and DE cards are
+used elsewhere, so no candidate or draft Human can enter a social cache. The
+guarded quote template remains reviewable at `/dev/share-card` and only accepts
+live content with an explicitly approved quote.
 
 The site does not emit an App Store banner or universal-link association yet.
 Those require the real App Store identifier, deployed HTTPS origin, Apple Team

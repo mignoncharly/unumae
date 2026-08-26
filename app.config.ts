@@ -1,17 +1,41 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
 /**
- * One Supabase project, one EAS project, one bundle identifier.
+ * One EAS project and bundle identifier, with isolated local, staging, and
+ * production Supabase environments. Cloud development and device-test builds
+ * deliberately use staging; only a production profile may use production.
  *
- * An earlier revision carried development / staging / production triples. That
- * separation was removed deliberately: this project uses a single database for
- * its whole lifecycle, and configuration that pretends otherwise is a source of
- * mistakes rather than a safeguard. See docs/ENVIRONMENTS.md.
- *
- * iOS first. The Android block stays so the project remains cross-platform —
- * nothing here is iOS-only by construction — but no Android work is done yet.
+ * Both supported mobile platforms are configured here. Platform-specific
+ * release evidence and signing requirements live in the release checklist.
  */
 const BUNDLE_ID = 'com.unumae.app';
+const PRODUCTION_PROJECT_REF = 'qpicjsjxdblrxdrdibge';
+const APP_ENV = process.env.APP_ENV ?? 'development';
+const configuredProjectRef =
+  /https:\/\/([a-z0-9]+)\.supabase\./.exec(
+    process.env.EXPO_PUBLIC_SUPABASE_URL ?? ''
+  )?.[1] ?? null;
+
+if (!['development', 'staging', 'production'].includes(APP_ENV)) {
+  throw new Error(`Unsupported APP_ENV: ${APP_ENV}`);
+}
+if (APP_ENV === 'development' && configuredProjectRef !== null) {
+  throw new Error('Local development cannot use a hosted Supabase project.');
+}
+if (
+  APP_ENV === 'production' &&
+  configuredProjectRef !== PRODUCTION_PROJECT_REF
+) {
+  throw new Error(
+    'Production builds must use the approved production project.'
+  );
+}
+if (APP_ENV === 'staging' && configuredProjectRef === PRODUCTION_PROJECT_REF) {
+  throw new Error('Staging builds cannot use the production Supabase project.');
+}
+const IS_PRODUCTION_BUILD =
+  process.env.EAS_BUILD_PROFILE === 'production' ||
+  process.env.APP_ENV === 'production';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -34,6 +58,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: BUNDLE_ID,
+    entitlements: {
+      'com.apple.developer.devicecheck.appattest-environment':
+        IS_PRODUCTION_BUILD ? 'production' : 'development',
+    },
     config: {
       // Unumae uses only exempt encryption supplied by the operating system
       // and standard HTTPS. Encoding this keeps TestFlight/App Store Connect
@@ -175,6 +203,23 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     package: BUNDLE_ID,
+    blockedPermissions: ['android.permission.RECORD_AUDIO'],
+    softwareKeyboardLayoutMode: 'resize',
+    adaptiveIcon: {
+      foregroundImage: './assets/icon.png',
+      backgroundColor: '#FFFFFF',
+    },
+    intentFilters: [
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [
+          { scheme: 'https', host: 'unumae.app', pathPrefix: '/human/' },
+          { scheme: 'https', host: 'www.unumae.app', pathPrefix: '/human/' },
+        ],
+        category: ['BROWSABLE', 'DEFAULT'],
+      },
+    ],
   },
   web: {
     bundler: 'metro',
@@ -215,6 +260,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         photosPermission:
           'Unumae uses your photo library so you can choose the photograph for your portrait.',
+        // Portraits are still images. Explicitly disabling microphone access
+        // prevents the image-picker plugin from adding RECORD_AUDIO back after
+        // the top-level Android blocked-permission list has been evaluated.
+        microphonePermission: false,
       },
     ],
     // Sharing a rendered card rather than only a link. Both this and
@@ -231,6 +280,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true,
   },
   extra: {
+    environment: APP_ENV,
     eas: {
       // `eas init` cannot write into a dynamic config, so this is set by hand.
       // Not a secret: it identifies the project, it does not authorise anything.

@@ -4,7 +4,7 @@ import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
 import type { PortraitElementRow, PortraitRow } from '@/lib/supabase/types';
 
-import type { PortraitElementKey } from './prompts';
+import { PORTRAIT_PROMPTS, type PortraitElementKey } from './prompts';
 
 /**
  * The author's side of the portrait.
@@ -17,6 +17,7 @@ import type { PortraitElementKey } from './prompts';
 export interface PortraitWithElements {
   portrait: PortraitRow;
   answers: Partial<Record<PortraitElementKey, string>>;
+  revisions: Record<PortraitElementKey, number>;
   photoUrl: string | null;
 }
 
@@ -51,6 +52,20 @@ export async function getMyPortrait(): Promise<PortraitWithElements | null> {
     answers[element.element_key] = element.answer;
   }
 
+  const { data: revisionRows, error: revisionError } = await supabase.rpc(
+    'get_my_portrait_answer_revisions',
+    { target_portrait: portrait.id }
+  );
+  if (revisionError) {
+    throw new AppError('network', 'common.error', { cause: revisionError });
+  }
+  const revisions = Object.fromEntries(
+    PORTRAIT_PROMPTS.map((prompt) => [prompt.key, 0])
+  ) as Record<PortraitElementKey, number>;
+  for (const row of revisionRows ?? []) {
+    revisions[row.element_key] = row.revision;
+  }
+
   let photoUrl: string | null = null;
   if (portrait.photo_path) {
     const { data } = await supabase.storage
@@ -59,7 +74,7 @@ export async function getMyPortrait(): Promise<PortraitWithElements | null> {
     photoUrl = data?.signedUrl ?? null;
   }
 
-  return { portrait, answers, photoUrl };
+  return { portrait, answers, revisions, photoUrl };
 }
 
 /**
@@ -78,35 +93,20 @@ export async function startMyPortrait(): Promise<string | null> {
 export async function saveAnswer(
   portraitId: string,
   key: PortraitElementKey,
-  answer: string
-): Promise<void> {
-  const trimmed = answer.trim();
+  answer: string,
+  expectedRevision: number
+): Promise<number> {
+  const { data, error } = await getSupabase().rpc('save_my_portrait_answer', {
+    target_portrait: portraitId,
+    target_key: key,
+    target_answer: answer,
+    expected_revision: expectedRevision,
+  });
 
-  // Clearing an answer removes the row rather than storing an empty string:
-  // an unanswered prompt is absent, not blank.
-  if (trimmed.length === 0) {
-    const { error } = await getSupabase()
-      .from('portrait_elements')
-      .delete()
-      .eq('portrait_id', portraitId)
-      .eq('element_key', key);
-
-    if (error) {
-      throw new AppError('validation', 'portrait.saveFailed', { cause: error });
-    }
-    return;
-  }
-
-  const { error } = await getSupabase()
-    .from('portrait_elements')
-    .upsert(
-      { portrait_id: portraitId, element_key: key, answer: trimmed },
-      { onConflict: 'portrait_id,element_key' }
-    );
-
-  if (error) {
+  if (error || typeof data !== 'number') {
     throw new AppError('validation', 'portrait.saveFailed', { cause: error });
   }
+  return data;
 }
 
 /**
@@ -153,8 +153,22 @@ export async function uploadPortraitPhoto(
   return path;
 }
 
-export async function submitMyPortrait(): Promise<void> {
-  const { data, error } = await getSupabase().rpc('submit_my_portrait');
+export async function saveAnswersAndSubmitMyPortrait(
+  portraitId: string,
+  answers: Partial<Record<PortraitElementKey, string>>,
+  revisions: Record<PortraitElementKey, number>
+): Promise<void> {
+  const submittedAnswers = Object.fromEntries(
+    PORTRAIT_PROMPTS.map((prompt) => [prompt.key, answers[prompt.key] ?? ''])
+  );
+  const { data, error } = await getSupabase().rpc(
+    'save_answers_and_submit_my_portrait',
+    {
+      target_portrait: portraitId,
+      submitted_answers: submittedAnswers,
+      expected_revisions: revisions,
+    }
+  );
 
   if (error) {
     throw new AppError('validation', 'portrait.submitFailed', { cause: error });

@@ -68,6 +68,7 @@ export function Screen({
   return (
     <View style={frame} testID={testID}>
       <ScrollView
+        automaticallyAdjustKeyboardInsets
         contentInsetAdjustmentBehavior="never"
         keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"

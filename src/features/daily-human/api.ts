@@ -74,6 +74,10 @@ export async function getTodaysHuman(): Promise<TodaysHuman | null> {
     return { human, elements: [], photoUrl: null };
   }
 
+  if (!human.portrait_id || !human.display_name || !human.country_code) {
+    throw new AppError('validation', 'today.malformed');
+  }
+
   return {
     human,
     elements: await getPortraitElements(human.draw_id),

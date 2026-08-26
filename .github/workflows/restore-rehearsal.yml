@@ -1,0 +1,59 @@
+name: Restore rehearsal
+
+on:
+  workflow_dispatch:
+    inputs:
+      backup_generation:
+        description: Generation under s3://bucket/unumae/ (UTC timestamp)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  restore:
+    name: Timed restore into disposable local stack
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: production-backup
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520 # v3.0.0
+        with:
+          version: 2.84.2
+      - name: Install restore clients
+        run: sudo apt-get update && sudo apt-get install -y age awscli postgresql-client
+      - name: Download and decrypt one complete generation
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ vars.BACKUP_S3_REGION }}
+          BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
+          BACKUP_S3_ENDPOINT: ${{ vars.BACKUP_S3_ENDPOINT }}
+          AGE_SECRET_KEY: ${{ secrets.BACKUP_AGE_SECRET_KEY }}
+          GENERATION: ${{ inputs.backup_generation }}
+        run: |
+          endpoint=()
+          test -z "$BACKUP_S3_ENDPOINT" || endpoint=(--endpoint-url "$BACKUP_S3_ENDPOINT")
+          mkdir restore
+          aws "${endpoint[@]}" s3 cp "s3://$BACKUP_S3_BUCKET/unumae/$GENERATION/" restore --recursive
+          cd restore
+          sha256sum --check SHA256SUMS
+          printf '%s\n' "$AGE_SECRET_KEY" > age-key.txt
+          age --decrypt --identity age-key.txt --output database.dump database.dump.age
+          age --decrypt --identity age-key.txt --output storage.tar.gz storage.tar.gz.age
+          tar -tzf storage.tar.gz > storage-files.txt
+      - name: Restore and record elapsed time
+        run: |
+          started="$(date +%s)"
+          supabase start
+          local_database_url="$(supabase status -o env | sed -n 's/^DB_URL="\{0,1\}\([^"[:space:]]*\)"\{0,1\}$/\1/p')"
+          test -n "$local_database_url"
+          pg_restore --dbname "$local_database_url" --clean --if-exists --no-owner --no-privileges --exit-on-error restore/database.dump
+          psql "$local_database_url" -v ON_ERROR_STOP=1 -c 'select count(*) from public.profiles'
+          elapsed="$(( $(date +%s) - started ))"
+          printf '### Restore rehearsal\n\n- Generation: `%s`\n- Commit: `%s`\n- Elapsed: **%s seconds**\n' "${{ inputs.backup_generation }}" "$GITHUB_SHA" "$elapsed" >> "$GITHUB_STEP_SUMMARY"
+      - name: Destroy disposable restore target
+        if: always()
+        run: supabase stop --no-backup

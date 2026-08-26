@@ -657,6 +657,12 @@ Relative size: Medium to large
 
 Core journeys survive rapid taps, offline transitions, stale data, app restarts, and both supported mobile platforms. Attestation failures are explained and recoverable.
 
+Implementation note (2026-08-26): the Phase 8 database/client/native work and
+Android EAS/Maestro coverage are complete locally; see
+`docs/PHASE8_MOBILE_CORRECTNESS.md`. Signed physical-device attestation,
+Android workflow execution, release signing, and store-link verification remain
+release evidence rather than claims made from the local checkout.
+
 ---
 
 # Phase 9 — Website, CSP, metadata, and quality gate
@@ -681,6 +687,13 @@ Relative size: Medium
 ## Completion gate
 
 Public URLs produce useful metadata without JavaScript, CSP no longer depends on unrestricted inline execution, the complete quality suite reliably runs in CI, and no public surface overstates verification.
+
+Implementation note (2026-08-26): published Human links now receive build-time
+localized HTML snapshots, ProfilePage metadata, and person-specific raster
+social cards from the anonymous publication boundary. Public reads use bounded
+timeouts and retries; the Nginx CSP has no `unsafe-inline`; browser projects are
+isolated and aggregated before Lighthouse; and CI runs the complete website
+quality gate. See `docs/PHASE9_WEBSITE_QUALITY.md`.
 
 ---
 
@@ -753,6 +766,16 @@ Define and rehearse procedures for:
 ## Completion gate
 
 Development and CI cannot reach staging or production. Staging and production have fully separate Auth, storage, secrets, and scheduled jobs. Service-role keys exist only in CI secrets and the platform secret store. Migrations promote through the documented path. A scheduled logical backup runs to external storage with a restore procedure that has actually been executed and timed. Every critical daily-cycle dependency has a documented recovery path.
+
+Implementation note (2026-08-26): repository controls are complete locally:
+hosted promotion is protected, exact-SHA, and CI-provenance checked; mobile
+builds separate staging from production; scheduler credentials migrate to
+Supabase Vault; encrypted database and Storage backups, pruning, failure alerts,
+hosted health checks, and a timed disposable restore workflow are defined; and
+critical incident runbooks exist. External staging allocation, protected secret
+configuration, a successfully scheduled backup, and actual timed restore
+evidence remain required before the completion gate is claimed. See
+`docs/PHASE10_OPERATIONAL_READINESS.md`.
 
 ---
 

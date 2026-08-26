@@ -9,39 +9,21 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
-const credentialsFile =
-  process.env.CREDENTIALS_FILE ?? join(ROOT, 'docs', 'supa_keys.md');
-
-if (!existsSync(credentialsFile)) {
-  console.error(`No credential file at ${credentialsFile}.`);
-  console.error('Set CREDENTIALS_FILE to its location.');
+if (!process.env.CI || process.env.GITHUB_ACTIONS !== 'true') {
+  console.error('Hosted baselines are CI-only after Phase 10.');
   process.exit(1);
 }
-
-const credentials = Object.fromEntries(
-  readFileSync(credentialsFile, 'utf8')
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line.includes('='))
-    .map((line) => {
-      const separator = line.indexOf('=');
-      return [
-        line.slice(0, separator).trim(),
-        line.slice(separator + 1).trim(),
-      ];
-    })
-);
-
-const password = credentials.supabase_password;
-const projectRef = credentials.project_id;
+const password = process.env.SUPABASE_DB_PASSWORD;
+const projectRef = process.env.SUPABASE_PROJECT_REF;
 
 if (!password || !projectRef || !/^[a-z0-9]{20}$/.test(projectRef)) {
-  console.error('Credential file needs supabase_password and project_id.');
+  console.error(
+    'Protected environment needs database password and project ref.'
+  );
   process.exit(1);
 }
 
@@ -113,7 +95,9 @@ with public_tables as (
   select id, public, file_size_limit, allowed_mime_types
   from storage.buckets
 ), configured_job_secrets as (
-  select key from public.job_secrets
+  select replace(name, 'unumae_', '') as key
+  from vault.secrets
+  where name in ('unumae_functions_url', 'unumae_service_role_key')
 )
 select jsonb_build_object(
   'captured_at_utc', timezone('utc', now()),
@@ -185,13 +169,7 @@ const result = spawnSync(
   }
 );
 
-const redact = (value) =>
-  [password, credentials.service_role_secret]
-    .filter(Boolean)
-    .reduce(
-      (redacted, secret) => redacted.split(secret).join('<redacted>'),
-      value ?? ''
-    );
+const redact = (value) => (value ?? '').split(password).join('<redacted>');
 
 if (result.stdout) {
   const sanitized = redact(result.stdout).trim();

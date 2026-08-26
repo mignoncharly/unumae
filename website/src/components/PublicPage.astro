@@ -231,7 +231,5 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
       )
     }
   </main>
-  <script>
-    import '../scripts/public-pages.ts';
-  </script>
+  {dataMode === 'live' && <script>import '../scripts/public-pages.ts';</script>}
 </BaseLayout>

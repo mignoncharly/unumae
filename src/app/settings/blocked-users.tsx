@@ -76,6 +76,11 @@ export default function BlockedUsersScreen() {
             title={t('privacy.blockedUsersEmpty')}
           />
         )}
+        {unblock.isError ? (
+          <Text color="danger" variant="footnote">
+            {t(toAppError(unblock.error).messageKey)}
+          </Text>
+        ) : null}
       </Screen>
     </>
   );

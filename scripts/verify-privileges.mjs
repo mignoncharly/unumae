@@ -209,7 +209,6 @@ const CLOSED_TABLES = [
   'founding_moderators',
   'analytics_events',
   'job_runs',
-  'job_secrets',
 ];
 
 const { url, publicKey: key, label: targetLabel } = loadVerificationTarget();

@@ -1,8 +1,8 @@
-import { router, usePathname } from 'expo-router';
+import { router, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 
 import { useSession } from '@/features/auth/useSession';
-import { isProfilelessAccountRoute } from '@/features/profiles/deletion';
+import { isProfilelessAccountSegments } from '@/features/profiles/deletion';
 import { useMyProfile } from '@/features/profiles/hooks';
 
 /**
@@ -28,7 +28,7 @@ import { useMyProfile } from '@/features/profiles/hooks';
  */
 export function OnboardingGate() {
   const session = useSession();
-  const pathname = usePathname();
+  const segments = useSegments();
   const { data: profile, isLoading } = useMyProfile();
 
   const signedIn = session.status === 'authenticated';
@@ -41,12 +41,12 @@ export function OnboardingGate() {
 
     // Already there, or on the way. Navigating again would stack a second copy
     // of the screen behind the first.
-    if (isProfilelessAccountRoute(pathname)) {
+    if (isProfilelessAccountSegments(segments)) {
       return;
     }
 
     router.push('/(onboarding)/profile');
-  }, [needsProfile, pathname]);
+  }, [needsProfile, segments]);
 
   return null;
 }

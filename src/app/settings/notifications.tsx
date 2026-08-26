@@ -66,7 +66,13 @@ export default function NotificationsScreen() {
   }
 
   function toggle(key: keyof NotificationSettings, value: boolean) {
-    update.mutate({ ...(settings ?? DEFAULTS), [key]: value });
+    setError(undefined);
+    update.mutate(
+      { key, value },
+      {
+        onError: (caught) => setError(t(toAppError(caught).messageKey)),
+      }
+    );
   }
 
   return (
@@ -147,10 +153,3 @@ export default function NotificationsScreen() {
     </>
   );
 }
-
-const DEFAULTS: NotificationSettings = {
-  daily: false,
-  selected: true,
-  answered: true,
-  anniversary: false,
-};

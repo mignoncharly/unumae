@@ -23,39 +23,43 @@ if (
   isRouteKey(source) &&
   !privacySignalEnabled(navigator.doNotTrack, navigator.globalPrivacyControl)
 ) {
-  document.addEventListener('click', (event) => {
-    const target = event.target;
-    if (!(target instanceof Element)) {
-      return;
-    }
+  document.addEventListener(
+    'click',
+    (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) {
+        return;
+      }
 
-    const action = target.closest<HTMLElement>('[data-analytics-event]');
-    const eventName = action?.dataset.analyticsEvent;
-    if (!eventName || !isMarketingEvent(eventName)) {
-      return;
-    }
+      const action = target.closest<HTMLElement>('[data-analytics-event]');
+      const eventName = action?.dataset.analyticsEvent;
+      if (!eventName || !isMarketingEvent(eventName)) {
+        return;
+      }
 
-    const payload: MarketingEventPayload = {
-      event: eventName,
-      locale,
-      source,
-    };
-    const body = JSON.stringify(payload);
+      const payload: MarketingEventPayload = {
+        event: eventName,
+        locale,
+        source,
+      };
+      const body = JSON.stringify(payload);
 
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(
-        endpoint,
-        new Blob([body], { type: 'application/json' })
-      );
-      return;
-    }
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(
+          endpoint,
+          new Blob([body], { type: 'application/json' })
+        );
+        return;
+      }
 
-    void fetch(endpoint, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body,
-      credentials: 'same-origin',
-      keepalive: true,
-    });
-  });
+      void fetch(endpoint, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body,
+        credentials: 'same-origin',
+        keepalive: true,
+      });
+    },
+    { capture: true }
+  );
 }

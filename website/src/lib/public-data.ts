@@ -75,7 +75,13 @@ type PublicRpc =
 interface PublicDataConfig {
   url: string;
   anonKey: string;
+  requestTimeoutMs?: number;
+  maxAttempts?: number;
 }
+
+const RETRYABLE_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
+const DEFAULT_REQUEST_TIMEOUT_MS = 8_000;
+const DEFAULT_MAX_ATTEMPTS = 3;
 
 /**
  * Browser-only reader for the database's explicit anonymous RPC allowlist.
@@ -88,8 +94,15 @@ interface PublicDataConfig {
 export class PublicDataClient {
   private readonly baseUrl: string;
   private readonly headers: HeadersInit;
+  private readonly requestTimeoutMs: number;
+  private readonly maxAttempts: number;
 
-  constructor({ url, anonKey }: PublicDataConfig) {
+  constructor({
+    url,
+    anonKey,
+    requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
+    maxAttempts = DEFAULT_MAX_ATTEMPTS,
+  }: PublicDataConfig) {
     const parsed = new URL(url);
     if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') {
       throw new Error('Public data URL must use HTTPS.');
@@ -101,13 +114,55 @@ export class PublicDataClient {
       Authorization: `Bearer ${anonKey}`,
       'Content-Type': 'application/json',
     };
+    this.requestTimeoutMs = Math.max(1, Math.floor(requestTimeoutMs));
+    this.maxAttempts = Math.max(1, Math.floor(maxAttempts));
+  }
+
+  private async request(input: string, init: RequestInit): Promise<Response> {
+    let lastError: unknown;
+
+    for (let attempt = 1; attempt <= this.maxAttempts; attempt += 1) {
+      const controller = new AbortController();
+      const timeout = setTimeout(
+        () => controller.abort(new Error('Public reader timed out.')),
+        this.requestTimeoutMs
+      );
+
+      try {
+        const response = await fetch(input, {
+          ...init,
+          signal: controller.signal,
+        });
+        if (
+          response.ok ||
+          !RETRYABLE_STATUS.has(response.status) ||
+          attempt === this.maxAttempts
+        ) {
+          return response;
+        }
+      } catch (error) {
+        lastError = error;
+        if (attempt === this.maxAttempts) {
+          throw error;
+        }
+      } finally {
+        clearTimeout(timeout);
+      }
+
+      // Public RPCs are read-only, so a bounded retry cannot duplicate a
+      // mutation. The short backoff keeps navigation responsive while giving
+      // transient provider and mobile-network failures time to clear.
+      await new Promise((resolve) => setTimeout(resolve, 200 * attempt));
+    }
+
+    throw lastError ?? new Error('Public reader request failed.');
   }
 
   private async rpc<T>(
     name: PublicRpc,
     args: Record<string, unknown> = {}
   ): Promise<T> {
-    const response = await fetch(`${this.baseUrl}/rest/v1/rpc/${name}`, {
+    const response = await this.request(`${this.baseUrl}/rest/v1/rpc/${name}`, {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify(args),
@@ -205,7 +260,7 @@ export class PublicDataClient {
       .split('/')
       .map((segment) => encodeURIComponent(segment))
       .join('/');
-    const response = await fetch(
+    const response = await this.request(
       `${this.baseUrl}/storage/v1/object/sign/portraits/${safePath}`,
       {
         method: 'POST',
@@ -233,7 +288,7 @@ export class PublicDataClient {
   async signPhotos(paths: (string | null)[]): Promise<Map<string, string>> {
     const unique = [...new Set(paths.filter((path): path is string => !!path))];
     if (unique.length === 0) return new Map();
-    const response = await fetch(
+    const response = await this.request(
       `${this.baseUrl}/storage/v1/object/sign/portraits`,
       {
         method: 'POST',

@@ -44,7 +44,8 @@
     "meetRandom": "Einen zufälligen Human treffen",
     "selectingTomorrow": "Der Human von morgen wird ausgewählt…",
     "removed": "Der heutige Human wurde entfernt",
-    "removedBody": "Human-Nummer und Tag bleiben im Archiv, aber Identität und Geschichte werden nicht mehr veröffentlicht."
+    "removedBody": "Human-Nummer und Tag bleiben im Archiv, aber Identität und Geschichte werden nicht mehr veröffentlicht.",
+    "malformed": "Der heutige Human kann nicht sicher angezeigt werden. Aktualisiere die Seite und versuche es erneut."
   },
   "questions": {
     "title": "Fragen",
@@ -347,6 +348,18 @@
       "accountTooNew": "Dein Konto ist noch neu. Der Pool öffnet sich sieben Tage nach deiner Anmeldung — bis dahin gibt es nichts zu tun.",
       "awaitingRefresh": "Du erfüllst die Bedingungen. Die Liste aller Berechtigten wird jede Nacht neu erstellt, und du bist auf der nächsten."
     }
+  },
+  "attestation": {
+    "title": "App und Gerät bestätigen",
+    "body": "Apple oder Google kann bestätigen, dass dies die echte App auf einem unterstützten Gerät ist. So kann ein Gerät nicht über mehrere Konten teilnehmen; deine Identität wird damit nicht festgestellt.",
+    "verify": "Dieses Gerät bestätigen",
+    "development": "In Expo Go oder einem Simulator ist keine Attestation möglich. Nutze einen signierten Development-Build auf einem echten Gerät. Dieser Build bleibt außerhalb der Auswahl.",
+    "unsupported": "Dieses Gerät kann die Plattform-Attestation nicht abschließen. Du kannst stattdessen eine menschliche Prüfung anfordern.",
+    "retryable": "Der Plattformdienst ist gerade nicht erreichbar. Bitte versuche es erneut.",
+    "rejected": "Die Plattform konnte App oder Gerät nicht bestätigen. Versuche es erneut oder fordere eine menschliche Prüfung an.",
+    "requestReview": "Menschliche Prüfung anfordern",
+    "reviewPending": "Ein Mensch prüft dieses Gerätesignal innerhalb von sieben Tagen. Dein Konto ist nicht gesperrt, bleibt aber bis zur Klärung außerhalb der Auswahl.",
+    "reviewFailed": "Prüfung konnte nicht angefordert werden. Bitte versuche es erneut."
   },
   "invitation": {
     "title": "Du wurdest ausgewählt.",

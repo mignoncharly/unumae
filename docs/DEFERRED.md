@@ -101,8 +101,10 @@ line that is not negotiable:
 Selection probability = NEVER monetized
 ```
 
-**Android** (Phase 17) — the architecture is cross-platform and development
-happens in Expo Go on Android, but no Android-specific work has been done.
+**Android** (Phase 17) — the architecture and substantial compatibility work
+are preserved, but Android is not part of the current iOS release. Provider
+eligibility, Play configuration, signing, verified app links, and device
+evidence are tracked in `POST_IOS_ANDROID.md`.
 
 **Full web/PWA** (Phase 17) — the website is the archive and the share surface;
 the native app is the product.

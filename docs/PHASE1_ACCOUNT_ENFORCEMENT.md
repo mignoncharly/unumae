@@ -21,8 +21,8 @@ release record for Phase 1 of `docs/implementation-roadmap-v2.md`.
       export, or account deletion.
 - [x] Fresh-database migration, database lint, 56 executable pgTAP assertions,
       Edge runtime smoke tests, and client tests pass.
-- [ ] Promote through an isolated staging project, then production. Production
-      deployment is intentionally not part of this local implementation commit.
+- [ ] Deploy through the protected exact-SHA workflow to the single hosted
+      project and complete bounded synthetic verification.
 
 ## Account-state policy
 
@@ -131,17 +131,17 @@ moderator, banned moderator, and service-role contexts. It calls the real RPCs,
 exercises direct RLS writes, verifies compound moderation audit rows, and proves
 outbox idempotency, supersession, session revocation, and completion.
 
-## Promotion order
+## Hosted deployment order
 
-1. Capture a staging baseline and confirm a recoverable backup.
-2. Deploy `enforce-account-status` to staging.
-3. Apply both Phase 1 migrations to staging.
-4. Run `npm run test:db:phase1` locally and the equivalent authenticated live
-   probes against staging.
-5. Suspend and restore a synthetic staging user; observe the outbox, Auth
+1. Capture a sanitized hosted baseline and confirm a recoverable backup.
+2. Deploy `enforce-account-status` and both Phase 1 migrations through the
+   protected exact-SHA workflow.
+3. Run `npm run test:db:phase1` locally and the equivalent authenticated live
+   probes against the hosted project.
+4. Suspend and restore a synthetic hosted user; observe the outbox, Auth
    session revocation, restricted client, appeal, export, and deletion paths.
-6. Promote the exact migration and function artifacts to production.
-7. Observe the cron invocation, job history, and outbox through at least one
+5. Clean up the synthetic user and capture the post-deployment baseline.
+6. Observe the cron invocation, job history, and outbox through at least one
    successful restriction and restoration.
 
 Do not apply the migration without deploying the worker in the same release:

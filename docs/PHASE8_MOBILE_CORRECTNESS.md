@@ -1,8 +1,9 @@
-# Phase 8 — mobile correctness, attestation client, and Android
+# Phase 8 — iOS mobile correctness and attestation client
 
-Phase 8 is implemented locally. Production rollout still requires signed
-physical-device builds, provider configuration, and the Android EAS/Maestro
-workflow described below.
+Phase 8 is implemented locally. The current release is iOS-only and still
+requires signed physical-iPhone builds and Apple provider configuration.
+Existing Android work is preserved for `POST_IOS_ANDROID.md` and does not block
+the iOS release.
 
 ## Mutation correctness
 
@@ -48,30 +49,24 @@ and append-only review decision flow then provide a seven-day human-review
 path. Development state never raises assurance or bypasses production pool
 enforcement.
 
-Required release configuration:
+Required iOS release configuration:
 
-- Public EAS variable `EXPO_PUBLIC_GOOGLE_CLOUD_PROJECT_NUMBER` in development
-  and production.
-- Existing Edge secrets from `docs/VERIFICATION_POLICY.md`, including Apple
-  Team/bundle configuration, DeviceCheck key material, Google Play service
-  account JSON, package name, certificate digests, and the binding pepper.
+- Apple Team/bundle configuration, DeviceCheck key material, and the binding
+  pepper from `docs/VERIFICATION_POLICY.md`.
 - App Attest enabled for `com.unumae.app`; development builds receive the
   development entitlement and production builds the production entitlement.
-- Play Integrity enabled and linked to the Play Console app.
 
-## Android completion
+## Preserved Android work — deferred
 
-Android now has verified HTTPS app links for `/human/*`, the custom app scheme,
-adaptive icon configuration, resize keyboard behavior, safe-area/keyboard
-insets, notification permission after channel creation, image downscaling and
-private-prefix upload behavior, native stack back handling, and managed EAS
-release signing. Production produces an AAB; the E2E profile produces an APK.
+Android-compatible intent filters, adaptive icon configuration, resize keyboard
+behavior, safe-area/keyboard insets, notification channels, image downscaling,
+private-prefix upload behavior, native stack back handling, managed EAS release
+configuration, Play Integrity client code, and an EAS/Maestro workflow are
+present. They are not release evidence and do not block iOS.
 
-`.eas/workflows/e2e-android.yml` runs the shared guest navigation smoke flow on
-a Pixel 6 Play Store image and a smaller Pixel-class emulator. The Play Store
-image is necessary for Play Integrity coverage; emulator attestation is still
-expected to remain outside the production draw unless Google returns the
-configured production verdict.
+Remaining Android provider eligibility, Play configuration, signed builds,
+`assetlinks.json`, and physical-device verification are tracked only in
+`POST_IOS_ANDROID.md`.
 
 ## Verification
 
@@ -80,20 +75,14 @@ Local automated evidence:
 - `npm run test:db:phase8` — 12 executable pgTAP assertions.
 - `npm run typecheck`, `npm run lint`, `npm run format:check`.
 - `npm test -- --runInBand` and migration/type verification.
-- Expo config/schema checks and native module autolinking for Apple/Android.
+- Expo config/schema checks and native module autolinking.
 
 Release evidence still required:
 
 - App Attest plus DeviceCheck on a signed physical iPhone.
-- Play Integrity on Play internal testing with the release certificate.
 - Review-request resolution by a moderator and eligibility refresh.
-- Android notification action/open, denied permission, offline retry, image
-  picker/upload, HTTPS/custom deep links, keyboard, safe areas, and hardware
-  Back on small and current devices.
-- Successful Android EAS build, Maestro workflow, managed signing, and internal
-  Play track install.
 
-Current external blockers observed on 2026-08-26: the EAS production
-environment does not yet contain `EXPO_PUBLIC_GOOGLE_CLOUD_PROJECT_NUMBER`, and
-EAS rejects Maestro-job validation until the account has a paid plan. Neither
-condition is bypassed in application code.
+Current external iOS blocker observed on 2026-08-26: EAS rejects hosted
+Maestro-job validation until the account has a paid plan. A local macOS runner
+remains available. Android-only configuration is deferred and is not an iOS
+blocker.

@@ -1,4 +1,4 @@
-name: Promote hosted environment
+name: Deploy hosted environment
 
 on:
   workflow_dispatch:
@@ -7,26 +7,21 @@ on:
         description: Full commit SHA with a successful CI run
         required: true
         type: string
-      target:
-        description: Hosted environment to promote
-        required: true
-        type: choice
-        options: [staging, production]
 
 permissions:
   actions: read
   contents: read
 
 concurrency:
-  group: promote-${{ inputs.target }}
+  group: deploy-hosted
   cancel-in-progress: false
 
 jobs:
-  promote:
-    name: Promote exact CI-passed commit to ${{ inputs.target }}
+  deploy:
+    name: Deploy exact CI-passed commit to the hosted project
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    environment: ${{ inputs.target }}
+    environment: production
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -47,13 +42,18 @@ jobs:
         run: |
           test "$(git rev-parse HEAD)" = "$RELEASE_SHA"
           node scripts/verify-ci-provenance.mjs
-      - name: Link only the environment-scoped project
+      - name: Verify the single approved hosted project
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
           PRODUCTION_PROJECT_REF: ${{ vars.PRODUCTION_PROJECT_REF }}
-        run: node scripts/verify-promotion-target.mjs "${{ inputs.target }}"
+        run: node scripts/verify-promotion-target.mjs
+      - name: Capture sanitized pre-deployment baseline
+        env:
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+        run: node scripts/capture-production-baseline.mjs >> "$GITHUB_STEP_SUMMARY"
       - name: Apply reviewed forward migrations
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -78,13 +78,13 @@ jobs:
             test "$function_name" = "_shared" && continue
             supabase functions deploy "$function_name" --project-ref "$SUPABASE_PROJECT_REF"
           done
-      - name: Record promoted migration state
+      - name: Record deployed migration state
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
         run: supabase migration list --linked
-      - name: Capture sanitized hosted baseline
+      - name: Capture sanitized post-deployment baseline
         env:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}

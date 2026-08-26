@@ -55,6 +55,9 @@ then atomically attaches only a validated path to the portrait.
 
 ## Local reproduction
 
+`npm install` installs the exact Deno `2.1.4` development dependency used by
+CI, so `npm run test:edge` does not depend on an arbitrary system Deno version.
+
 ```bash
 supabase start
 supabase db reset --yes
@@ -80,8 +83,8 @@ artifact.
   protect the release branch. A committed workflow cannot enforce that setting.
 - `EXPO_TOKEN` must be added as a scoped Actions secret before the manual
   release-candidate workflow can launch EAS.
-- Hosted staging does not exist until Phase 10, so no staging deployment or
-  exact-artifact promotion claim is made here.
+- There is no hosted staging project. Phase 10 provides an exact-SHA protected
+  deployment and bounded verification path for the single hosted project.
 - Attestation verification is introduced in roadmap Phase 4. The Edge harness
   is ready to receive replay, malformed, and expired token cases, but Phase 3
   cannot test a protocol that has not yet been selected or implemented.

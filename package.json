@@ -5,7 +5,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "start:staging": "cross-env APP_ENV=staging expo start",
+    "start:hosted": "cross-env APP_ENV=hosted expo start",
     "ios": "expo run:ios",
     "android": "expo run:android",
     "web": "expo start --web",
@@ -111,6 +111,7 @@
     "@types/jest": "^29.5.14",
     "@types/react": "^19.2.18",
     "cross-env": "^10.1.0",
+    "deno": "2.1.4",
     "eslint": "^9.39.5",
     "eslint-config-expo": "^57.0.1",
     "eslint-config-prettier": "^10.1.8",

@@ -37,7 +37,7 @@ Implemented locally on 25 August 2026.
 
 ## Hosted rollout
 
-Apply the migration to staging first, exercise an authenticated export for an
-account with moderation and assurance history, verify the generated file on a
-physical device, and reconcile the App Store Connect questionnaire with
-`docs/APP_STORE.md` before promoting the same migration/build to production.
+After local and CI verification, deploy through the protected single-project
+workflow. Exercise a synthetic authenticated export with moderation and
+assurance history, verify the generated file on a physical iPhone, clean up the
+fixture, and reconcile App Store Connect with `docs/APP_STORE.md`.

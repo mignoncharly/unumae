@@ -3,7 +3,8 @@
 Revised for two hard constraints that emerged during review:
 
 1. **No identity-document verification is available.** Human-uniqueness cannot be proven. The plan now enforces what is enforceable and changes the product claim to match, rather than implying a guarantee that does not exist.
-2. **Supabase Free plan — two active projects total.** The project limit applies across every organization where you are Owner or Administrator, so a second organization does not create a third project. A separate development project is therefore not available, and managed backups / point-in-time recovery are not available at all.
+2. **One hosted Supabase project.** Unumae intentionally uses the existing single project for hosted verification and eventual production. Development and CI use disposable local stacks; no staging project or staging service configuration will be introduced.
+3. **iOS-first release.** Android-compatible code is preserved, but Android builds, Play Integrity, provider eligibility, `assetlinks.json`, and Android device verification are post-iOS work and do not block the current release.
 
 ## What changed from v1
 
@@ -17,10 +18,10 @@ Revised for two hard constraints that emerged during review:
 | 5     | Adds anti-abuse signals and retained device flags to the inventory with documented withholding                                        |
 | 6     | Installation sessions become attestation-backed rather than UUID-backed                                                               |
 | 8     | Absorbs the client-side attestation work                                                                                              |
-| 10    | **Rewritten.** Three environments across two projects; self-managed logical backups; Pro upgrade becomes an explicit release gate     |
+| 10    | **Rewritten.** Local/CI plus one hosted project; self-managed logical backups; Pro upgrade becomes an explicit release gate             |
 | Gates | Pro-plan upgrade added as a production prerequisite                                                                                   |
 
-Phases 1–5 remain public-beta blockers. Every phase uses forward-only migrations, executable database tests, structured logging, and a staged deployment before production.
+Phases 1–5 remain public-beta blockers. Every phase uses forward-only migrations, executable database tests, structured logging, and a protected exact-SHA hosted deployment.
 
 The full database test platform lands in Phase 3, but targeted executable regression tests ship alongside every earlier fix. Do not defer testing of Phases 1 and 2 to Phase 3.
 
@@ -48,7 +49,7 @@ Goal: Establish a reproducible starting point, and record the platform constrain
 - Create a release checklist that distinguishes:
   - Local static verification
   - Local ephemeral-database verification
-  - Staging verification
+  - Bounded hosted verification
   - EAS device verification
 - Do not promote to public beta until Phases 1–5 are complete.
 
@@ -353,8 +354,8 @@ Make these required checks before merging. Keep the pre-push hook as a convenien
 
 - Only EAS-build commits that passed required CI.
 - Run Maestro smoke tests against the same commit SHA.
-- Run live verification against **staging** after deployment.
-- Promote the exact tested artifacts and migrations to production.
+- Run bounded live verification against the single hosted project after deployment.
+- Deploy only the exact CI-tested artifacts and migrations through the protected workflow.
 
 ## Completion gate
 
@@ -399,7 +400,7 @@ Levels, in ascending strength:
 | ------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
 | `contact_verified`  | An email address exists and was confirmed                                                              | Magic link / password confirm             |
 | `provider_verified` | A stable third-party account identifier is bound to this account                                       | Sign in with Apple / Google               |
-| `device_attested`   | Requests originate from a genuine app on a genuine device not already bound to a pool-eligible account | DeviceCheck + App Attest / Play Integrity |
+| `device_attested`   | Requests originate from a genuine app on a genuine device not already bound to a pool-eligible account | iOS: DeviceCheck + App Attest; Android deferred |
 | `reviewed`          | A human moderator examined duplicate-signal flags and cleared the account                              | Manual review queue                       |
 
 Product copy states what is verified. Nothing implies uniqueness of person.
@@ -437,11 +438,11 @@ This is the single highest-leverage control available without identity documents
 - **DeviceCheck** — two bits of per-device, per-developer server-side state that survive app deletion and reinstall. Use one bit as "this device has been bound to a pool-eligible account." Read and set it from an Edge Function using an Apple-issued key; never from the client.
 - **App Attest** — hardware-backed proof that the request comes from your genuine, unmodified app on a genuine Apple device. This closes the "script calling the RPC directly" vector that route guards and client checks cannot.
 
-**Android**
+**Android — post-iOS backlog**
 
-- **Play Integrity** — device and app integrity verdicts, plus the reinstall-persistent per-device recall mechanism as the DeviceCheck analogue. Verify verdicts server-side in an Edge Function.
+- **Play Integrity** — preserve the existing client/server integration, but defer provider eligibility, release configuration, and physical-device evidence to `docs/POST_IOS_ANDROID.md`.
 
-Both platform mechanisms are free. Neither returns personal data; both return opaque per-device state scoped to your developer account.
+The current iOS mechanisms are free and return opaque per-device state scoped to the developer account rather than personal data. Android is not part of the current release gate.
 
 Design notes:
 
@@ -634,7 +635,7 @@ Every queued job eventually completes, enters a visible dead-letter state, or ra
 
 ---
 
-# Phase 8 — Mobile correctness, attestation client, and Android completion
+# Phase 8 — iOS mobile correctness and attestation client
 
 Priority: P1
 Relative size: Medium to large
@@ -648,20 +649,18 @@ Relative size: Medium to large
 - Replace substring onboarding-route checks with exact Expo Router segments.
 - Show a recoverable error instead of returning null for malformed live data.
 - Confirm notification-response retries and marking-open behavior.
-- **Implement the client half of Phase 4.3 item 3**: App Attest key generation and assertion on iOS, Play Integrity token request on Android, attestation failure states, and a graceful path for simulators and development builds that does not weaken production enforcement.
+- **Implement the iOS client half of Phase 4.3 item 3**: App Attest key generation and assertion, DeviceCheck, attestation failure states, and a graceful path for simulators and development builds that does not weaken production enforcement.
 - **Design the attestation failure UX**: a user on an unsupported or flagged device must see an explanation and a review path, not a silent exclusion from the draw.
-- Complete Android-specific work: notification channels, permission flows, image picker and storage behavior, deep links, universal/app links, keyboard and safe-area layouts, back navigation, release signing.
-- Add Android Maestro and device coverage if Android release remains in scope.
+- Preserve existing Android-compatible code. Android provider eligibility, Play Integrity release configuration, signed builds, verified app links, and device coverage are deferred to `docs/POST_IOS_ANDROID.md`.
 
 ## Completion gate
 
-Core journeys survive rapid taps, offline transitions, stale data, app restarts, and both supported mobile platforms. Attestation failures are explained and recoverable.
+Core journeys survive rapid taps, offline transitions, stale data, and app restarts on iOS. App Attest/DeviceCheck failures are explained and recoverable. Android is not part of this completion gate.
 
-Implementation note (2026-08-26): the Phase 8 database/client/native work and
-Android EAS/Maestro coverage are complete locally; see
-`docs/PHASE8_MOBILE_CORRECTNESS.md`. Signed physical-device attestation,
-Android workflow execution, release signing, and store-link verification remain
-release evidence rather than claims made from the local checkout.
+Implementation note (2026-08-26): the Phase 8 database/client/native work is
+complete locally; see `docs/PHASE8_MOBILE_CORRECTNESS.md`. Signed physical-iPhone
+attestation and iOS release verification remain required. Existing Android work
+is preserved but is explicitly outside the current release scope.
 
 ---
 
@@ -697,34 +696,29 @@ quality gate. See `docs/PHASE9_WEBSITE_QUALITY.md`.
 
 ---
 
-# Phase 10 — Environment separation and operational readiness
+# Phase 10 — Single-project operational readiness
 
 Priority: P1 operational safety; begin planning early
-Relative size: Medium (reduced — the third project is unnecessary)
+Relative size: Medium
 
-Goal: Development and automated verification cannot mutate production, and a documented recovery path exists for every critical dependency, within a two-project limit.
+Goal: Local development and CI cannot mutate the hosted project, hosted changes are controlled and reproducible where practical, and every critical dependency has a documented recovery path.
 
-## 10.1 Three environments across two projects
+## 10.1 Local/CI plus one hosted project
 
-The missing environment is local, not hosted.
+| Context         | Where                                                  | Purpose |
+| --------------- | ------------------------------------------------------ | ------- |
+| **Development** | Supabase CLI local stack, in Docker, one per developer | Day-to-day development, migration authoring, seeding |
+| **CI**          | Ephemeral local stack inside the CI runner             | Fresh-database migration and integration tests |
+| **Hosted**      | Existing Supabase project                              | Controlled hosted verification and eventual production traffic |
 
-| Environment     | Where                                                  | Purpose                                                                                                                                                                             |
-| --------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Development** | Supabase CLI local stack, in Docker, one per developer | Day-to-day development, migration authoring, seeding. No shared state — nobody can break anyone else's work.                                                                        |
-| **CI**          | Ephemeral local stack inside the CI runner             | Fresh-database migration and integration tests per Phase 3.1. Created and destroyed per run.                                                                                        |
-| **Staging**     | Project A                                              | Shared, production-like. Real cron jobs, staging-scoped Edge secrets, staging Resend configuration, staging push credentials, device builds pointed here. Live verification target. |
-| **Production**  | Project B                                              | Production only.                                                                                                                                                                    |
-
-Do **not** use Project A as a shared development database. That is the worst configuration available: developers mutate the same state you are supposed to be validating releases against, and staging stops meaning anything.
-
-A second organization does not create a third project — the limit follows the administering account across organizations.
+There is no staging Supabase project. Hosted verification uses bounded synthetic data, explicit cleanup, and production-safe probes. Destructive failure injection remains local unless a recoverable hosted test is explicitly approved.
 
 ## 10.2 Credential and promotion discipline
 
-- Distinct per environment: Auth users, storage buckets, Edge secrets, Resend configuration, push credentials where practical, cron and webhook endpoints.
-- Service-role credentials never appear in a developer `.env`. They exist only in CI secrets and the Supabase secret store. Local development uses the local stack's own throwaway service key.
-- Migrations promote local → CI → staging → production. No manual production SQL.
-- Production Edge Function deploys happen only from CI, from a commit that passed required checks.
+- Hosted service credentials never appear in a developer `.env`. They exist only in the protected GitHub Environment and the Supabase secret store. Local development uses the local stack's throwaway service key.
+- Migrations move local → CI → the single hosted project. No manual hosted SQL.
+- Hosted Edge Function deploys happen only from CI, from the exact commit that passed required checks.
+- The workflow captures sanitized hosted baselines before and after deployment.
 - Remove personal email addresses from future immutable migrations; seed moderators through controlled operational tooling.
 - Rotate job secrets out of ordinary database tables into the platform secret store.
 - Require MFA and least privilege for anyone with production access.
@@ -746,8 +740,7 @@ Managed daily backups and PITR require a paid plan. Treat the upgrade as a launc
 
 ## 10.4 Availability on the current tier
 
-- Free projects pause after roughly a week without API requests. Staging will pause between release cycles; keep it warm with a scheduled ping from CI, or accept the resume delay and document it in the release checklist.
-- Confirm whether internal scheduled jobs alone are sufficient to keep production active. If not, add an external uptime ping so a quiet period cannot pause production.
+- Confirm whether internal scheduled jobs alone keep the hosted project active. If not, retain the external hosted-health ping so a quiet period cannot pause it.
 - Monitor database size, file storage, egress, and monthly active users against quota. On this tier, exceeding them degrades service rather than generating a bill.
 
 ## 10.5 Incident procedures
@@ -765,17 +758,15 @@ Define and rehearse procedures for:
 
 ## Completion gate
 
-Development and CI cannot reach staging or production. Staging and production have fully separate Auth, storage, secrets, and scheduled jobs. Service-role keys exist only in CI secrets and the platform secret store. Migrations promote through the documented path. A scheduled logical backup runs to external storage with a restore procedure that has actually been executed and timed. Every critical daily-cycle dependency has a documented recovery path.
+Development and CI use local databases and receive no hosted credentials. The existing hosted project has verified Auth, Storage, Edge Functions, cron, Vault secret names, required iOS providers, synchronized migrations, EAS linkage, and a sanitized baseline. Service credentials exist only in protected automation and the platform secret store. A scheduled logical and Storage backup runs externally, with a restore procedure that has been executed and timed.
 
 Implementation note (2026-08-26): repository controls are complete locally:
-hosted promotion is protected, exact-SHA, and CI-provenance checked; mobile
-builds separate staging from production; scheduler credentials migrate to
-Supabase Vault; encrypted database and Storage backups, pruning, failure alerts,
-hosted health checks, and a timed disposable restore workflow are defined; and
-critical incident runbooks exist. External staging allocation, protected secret
-configuration, a successfully scheduled backup, and actual timed restore
-evidence remain required before the completion gate is claimed. See
-`docs/PHASE10_OPERATIONAL_READINESS.md`.
+hosted deployment is protected, exact-SHA, and CI-provenance checked; scheduler
+credentials migrate to Supabase Vault; encrypted database and Storage backups,
+pruning, failure alerts, hosted health checks, and a timed disposable restore
+workflow are defined. The single hosted baseline audit, protected configuration,
+a successfully scheduled backup, and actual timed restore evidence remain
+required. See `docs/PHASE10_OPERATIONAL_READINESS.md`.
 
 ---
 
@@ -794,8 +785,8 @@ evidence remain required before the completion gate is claimed. See
 ### Before meaningful user growth
 
 - Complete Phases 6–8.
-- Environment separation from Phase 10 fully in place.
-- Device attestation shipped on both platforms, with the manual-review path staffed.
+- The single hosted baseline and safeguards from Phase 10 are fully in place.
+- App Attest and DeviceCheck ship on iOS, with the manual-review path staffed.
 
 ### Before broad public marketing
 
@@ -815,17 +806,17 @@ Baseline
   → complete privacy guarantees
   → paid plan + backups
   → abuse and worker hardening
-  → attestation client + Android completion
+  → iOS attestation client and device verification
   → web, operations, verifiable draw
 ```
 
-# Open decisions requiring an explicit answer
+# Resolved product decisions
 
-These are not engineering tasks. They need a written decision before the phases that depend on them.
-
-1. **Age strategy**: Option A (birth year, conservative cutoff) or Option B (full date of birth). Blocks Phase 4.1 and Phase 5.4.
-2. **Email-only accounts**: read-only participation, or no account at all? Blocks Phase 4.3 item 1.
-3. **Email hash retention after deletion**: retain or not. Blocks Phase 2.6 and Phase 5.1.
-4. **Storage backup**: back up user photos, or state explicitly that they are not backed up. Blocks Phase 10.3.
-5. **Attestation false-positive policy**: who reviews, in what time frame, and what the user sees while waiting. Blocks Phase 4.3 item 3 and Phase 8.
-6. **Paid-plan timing**: which milestone triggers the upgrade. Blocks the production traffic gate.
+1. Age uses Option A: birth year with the conservative January 1 cutoff.
+2. Email-only accounts may read and maintain a profile but cannot enter the draw.
+3. The normalized email is deleted with the account and is not retained as a hash.
+4. User photos are included in the external backup design.
+5. Attestation false positives receive an explained manual-review path with a seven-day service target.
+6. The paid-plan gate remains before public production traffic.
+7. The current release is iOS-only; Android is deferred to `docs/POST_IOS_ANDROID.md`.
+8. Unumae uses one hosted Supabase project and one EAS project; staging is not introduced.

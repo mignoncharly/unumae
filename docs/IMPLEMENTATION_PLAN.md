@@ -9,6 +9,11 @@ original). This file tracks status only.
 > requirement is explicit acceptance, a completed guided portrait, and human
 > moderation; no biometric data is collected. `docs/VERIFICATION_POLICY.md` is
 > authoritative.
+>
+> **Release-model revision (26 August 2026):** Unumae is iOS-first and uses one
+> hosted Supabase project plus one EAS project. Android is deferred to
+> `docs/POST_IOS_ANDROID.md`; `docs/implementation-roadmap-v2.md` is the
+> authoritative release-hardening plan.
 
 | # | Phase | Status | Launch blocker |
 | --- | --- | --- | --- |
@@ -49,9 +54,10 @@ Delivered:
 - i18n in EN / FR / DE, no hardcoded UI strings, canonical English
 - Supabase client with a connection probe surfaced in Settings
 - TanStack Query, Zustand (persisted preferences), Zod validation
-- Three environments driven by `APP_ENV`, credentials validated at import
-- `npm run verify` and a pre-push hook standing in for CI
-- 54 tests across five suites
+- Local, hosted-test, and production runtime modes driven by `APP_ENV`, with
+  local/CI databases plus one hosted project
+- `npm run verify`, a pre-push hook, and required GitHub Actions CI
+- The current automated suites recorded in CI and roadmap-v2 evidence
 - `docs/ARCHITECTURE.md`, `DATABASE.md`, `SECURITY.md`
 
 Phase 1 "done" criteria from the plan:
@@ -85,9 +91,9 @@ Component testing starts here: 19 render tests, including two that fail the
 build if a downvote affordance or a guest vote ever appears.
 
 Also in this phase: Supabase credentials wired and the connection verified
-against the live project, `eas.json` with development / staging / production
-profiles, and a fix to the Phase 1 connection probe, which read local storage
-and so could not fail.
+against the hosted project, `eas.json` with hosted development/test and
+production profiles backed by one EAS variable environment, and a fix to the
+Phase 1 connection probe, which read local storage and so could not fail.
 
 ## Phase 3 — Authentication & user profile ✅
 
@@ -627,12 +633,13 @@ set it.
 
 ## Phase 17 — deferred
 
-Monetization, Android and full web/PWA. Macro-phase H, post-launch. See
-`docs/DEFERRED.md`.
+Monetization and full web/PWA remain Macro-phase H. Android release work is
+explicitly post-iOS in `docs/POST_IOS_ANDROID.md`.
 
 ## Working agreements
 
-- **No GitHub Actions.** `npm run verify` runs locally and on pre-push.
+- `npm run verify` runs locally and on pre-push; GitHub Actions is the required
+  merge and exact-SHA deployment boundary.
 - **Commit and push every change.**
 - A constitution parameter never changes alone: `src/constants/constitution.ts`
   and `docs/PRODUCT_CONSTITUTION.md` are asserted against each other.

@@ -2,8 +2,8 @@
 /**
  * Migration validation — part of `npm run verify`.
  *
- * This project runs no GitHub Actions. The pre-push hook runs `npm run verify`,
- * so these checks stand between a broken migration and the remote.
+ * The pre-push hook and GitHub Actions both run `npm run verify`, so these
+ * checks stand between a broken migration and the protected release branch.
  *
  * Checks:
  *   1. Every file is named <14-digit timestamp>_<snake_case>.sql

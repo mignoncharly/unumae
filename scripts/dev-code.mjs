@@ -15,7 +15,7 @@
  * that arrived by email.
  *
  * A local-development tool. It uses only the throwaway admin credential from
- * `supabase status` and cannot target staging or production.
+ * `supabase status` and cannot target the hosted project.
  */
 
 import { execFileSync } from 'node:child_process';

@@ -1,20 +1,22 @@
-# Phase 10 — environment separation and operational readiness
+# Phase 10 — single-project operational readiness
 
-Phase 10 repository controls are implemented locally on 26 August 2026.
-External project allocation, protected-environment configuration, scheduled
-backup execution, and a timed restore remain operator evidence.
+Phase 10 repository controls are implemented locally. Unumae intentionally
+uses one hosted Supabase project and one EAS project; staging is not part of the
+architecture.
 
 Implemented controls:
 
-- local-only development and ephemeral CI with no hosted credentials;
-- staging/production EAS separation and build-time project-ref rejection;
-- protected, exact-SHA, CI-provenance promotion workflow;
+- disposable local development and ephemeral CI with no hosted credentials;
+- one protected hosted deployment target with exact-SHA CI provenance checks;
+- one EAS variable environment, with hosted test builds distinguished from App
+  Store production builds by `APP_ENV`;
+- sanitized hosted baselines before and after deployment;
 - scheduler credentials migrated from `public.job_secrets` into Supabase Vault;
 - daily encrypted database and Storage export outside Supabase, automatic
   retention pruning, and failure issues;
 - disposable timed restore rehearsal;
-- six-hour staging/production keep-warm, service-health, and database-disk check;
-- incident procedures for every Phase 10 critical dependency.
+- six-hour hosted keep-warm, service-health, and database-disk checks;
+- incident procedures for every critical dependency.
 
 Local verification:
 
@@ -25,6 +27,8 @@ supabase db reset --yes
 supabase test db supabase/tests/phase10_operational_readiness.sql
 ```
 
-The completion gate is not claimed until both hosted projects are distinct,
-their GitHub/EAS/Edge/Auth/Storage/cron configuration is audited, backups are
-observed in external storage, and a restore workflow records real elapsed time.
+The completion gate is not claimed until the existing hosted Supabase project,
+Auth, Storage, Edge Functions, cron jobs, Vault secret names, required iOS
+providers, migration history, EAS linkage, and public environment variables are
+audited and captured. A scheduled encrypted backup must be observed outside
+Supabase and a restore workflow must record real elapsed time.

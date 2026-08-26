@@ -5,13 +5,17 @@ const root = join(__dirname, '..');
 const read = (...parts: string[]) => readFileSync(join(root, ...parts), 'utf8');
 
 describe('Phase 10 operational readiness', () => {
-  it('keeps ordinary CI local and hosted promotion exact-SHA only', () => {
+  it('keeps ordinary CI local and hosted deployment exact-SHA only', () => {
     const ci = read('.github', 'workflows', 'ci.yml');
     const promote = read('.github', 'workflows', 'promote.yml');
     expect(ci).toContain('supabase start');
     expect(ci).not.toContain('SUPABASE_ACCESS_TOKEN');
     expect(promote).toContain('verify-ci-provenance.mjs');
     expect(promote).toContain('verify-promotion-target.mjs');
+    expect(promote).toContain('environment: production');
+    expect(promote).not.toContain('inputs.target');
+    expect(promote).toContain('Capture sanitized pre-deployment baseline');
+    expect(promote).toContain('Capture sanitized post-deployment baseline');
   });
 
   it('backs up database and photos encrypted outside Supabase and rehearses restore', () => {

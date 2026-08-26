@@ -22,3 +22,12 @@ export function isDeletionTerminal(state: DeletionRequestState): boolean {
 export function isProfilelessAccountRoute(pathname: string): boolean {
   return pathname === '/profile' || pathname === '/settings/account';
 }
+
+export function isProfilelessAccountSegments(
+  segments: readonly string[]
+): boolean {
+  return (
+    (segments[0] === '(onboarding)' && segments[1] === 'profile') ||
+    (segments[0] === 'settings' && segments[1] === 'account')
+  );
+}

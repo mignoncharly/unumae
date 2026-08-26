@@ -22,11 +22,19 @@ const migrations = readdirSync(join(root, 'supabase', 'migrations'))
   )
   .join('\n');
 
-const applicationTables = [
+const createdApplicationTables = [
   ...migrations.matchAll(
     /create table(?: if not exists)? public\.([a-z0-9_]+)/gi
   ),
 ].map((match) => match[1]);
+const droppedApplicationTables = new Set(
+  [
+    ...migrations.matchAll(/drop table(?: if exists)? public\.([a-z0-9_]+)/gi),
+  ].map((match) => match[1])
+);
+const applicationTables = createdApplicationTables.filter(
+  (table) => !droppedApplicationTables.has(table)
+);
 const inventoryTables = [...inventory.matchAll(/^\| `([a-z0-9_]+)` \|/gim)].map(
   (match) => match[1]
 );

@@ -1,40 +1,19 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..');
-
-function parseCredentialFile(path) {
-  if (!existsSync(path)) {
-    throw new Error(`No credential file at ${path}.`);
-  }
-  return Object.fromEntries(
-    readFileSync(path, 'utf8')
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter((line) => line.includes('='))
-      .map((line) => {
-        const index = line.indexOf('=');
-        return [line.slice(0, index).trim(), line.slice(index + 1).trim()];
-      })
-  );
-}
 
 export function loadVerificationTarget() {
   if (process.argv.includes('--live')) {
-    const path =
-      process.env.CREDENTIALS_FILE ?? join(ROOT, 'docs', 'supa_keys.md');
-    const credentials = parseCredentialFile(path);
+    if (!process.env.CI || process.env.GITHUB_ACTIONS !== 'true') {
+      throw new Error('Hosted verification is CI-only after Phase 10.');
+    }
     const target = {
-      url: credentials.project_url,
-      publicKey: credentials.publishable_key,
-      secretKey: credentials.service_role_secret,
-      label: 'live project',
+      url: process.env.SUPABASE_URL,
+      publicKey: process.env.SUPABASE_ANON_KEY,
+      secretKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      label: `${process.env.PROMOTION_TARGET ?? 'hosted'} project`,
     };
     if (!target.url || !target.publicKey || !target.secretKey) {
       throw new Error(
-        'Credential file needs project_url, publishable_key and service_role_secret.'
+        'Hosted GitHub Environment needs URL, anon key, and service-role key.'
       );
     }
     return target;

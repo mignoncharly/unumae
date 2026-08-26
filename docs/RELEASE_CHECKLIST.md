@@ -13,7 +13,8 @@ traffic is additionally blocked by the paid-plan gate.
 - [ ] `npm ci` completed from the committed lockfile.
 - [ ] `npm run verify` passed.
 - [ ] `npx expo-doctor` passed all checks.
-- [ ] `npm --prefix website run verify` passed.
+- [ ] `npm --prefix website run quality` passed, including every browser
+      profile and Lighthouse after any unrelated browser failure.
 - [ ] Root and website production dependency audits were reviewed.
 - [ ] Every new migration is forward-only and has a rollback entry.
 - [ ] No secret, credential file, generated bundle, or private data is staged.
@@ -41,9 +42,9 @@ all three checks; a local hook is not a security boundary.
 
 ## 3. Staging verification
 
-The current topology has no dedicated Unumae staging project. Phase 10 creates
-it from the second hosted-project slot. Until then, these boxes cannot be
-truthfully checked and public beta remains blocked.
+Phase 10 provides the protected promotion boundary. These boxes become
+checkable only after the second hosted-project slot is allocated and its
+separate GitHub, EAS, Auth, Storage, secret, and cron configuration is complete.
 
 - [ ] CI promoted the exact tested migration set to staging.
 - [ ] Staging migrations match the release commit.
@@ -67,6 +68,15 @@ truthfully checked and public beta remains blocked.
       `docs/IOS_RELEASE_VERIFICATION.md` passed.
 - [ ] Native auth, push, export, deletion, sharing, offline recovery, and
       account switching were exercised on physical hardware.
+- [ ] App Attest and DeviceCheck passed on a signed physical iPhone; the
+      simulator showed the non-attested development explanation.
+- [ ] Play Integrity passed from an internal-track Android build signed with
+      the release key; unsupported/rejected-device review was exercised.
+- [ ] Android EAS/Maestro passed on small and current devices, including app
+      links, notification opens/actions, picker/upload, keyboard, safe areas,
+      offline recovery, and hardware Back.
+- [ ] The Android AAB signing certificate matches the Play Integrity allowlist
+      and managed EAS credentials recorded for this release.
 - [ ] App Store privacy answers and manifest match released behavior.
 
 ## 5. Production promotion

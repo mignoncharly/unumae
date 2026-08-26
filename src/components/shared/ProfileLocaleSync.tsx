@@ -35,6 +35,9 @@ export function ProfileLocaleSync() {
         onSuccess: () => {
           attempted.current = null;
         },
+        onError: () => {
+          attempted.current = null;
+        },
       }
     );
   }, [desired, profile, update]);

@@ -96,6 +96,12 @@ An `OPTIONS` response proves reachability, not source equivalence.
 - Keep `register-portrait-photo` available while a compatible mobile build is
   active. If it must be contained, disable portrait upload rather than restoring
   overwriting object paths.
+- Phase 8 mobile builds call `save_my_portrait_answer`,
+  `save_answers_and_submit_my_portrait`, `patch_notification_setting`, and
+  `request_attestation_review`. Keep these RPCs and
+  `portrait_element_revisions` until all Phase 8 binaries are retired. They are
+  additive and safe for older clients. Removing the App Attest entitlement or
+  native module requires a new binary; it cannot be rolled back server-side.
 
 The forward-only recovery and evidence checklist are in
 `docs/PHASE2_ACCOUNT_DELETION.md`.

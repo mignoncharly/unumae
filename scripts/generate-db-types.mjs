@@ -13,8 +13,10 @@ const WRITE = process.argv.includes('--write');
 
 let generated;
 try {
+  const supabaseExecutable =
+    process.platform === 'win32' ? 'supabase.exe' : 'supabase';
   generated = execFileSync(
-    'supabase',
+    supabaseExecutable,
     ['gen', 'types', 'typescript', '--local'],
     { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }
   );

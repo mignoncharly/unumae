@@ -43,16 +43,15 @@ with pg_net.
 ### Credentials
 
 `invoke_function` needs the project's functions URL and a service role key.
-Neither can live in a migration, because migrations are committed. They live in
-`public.job_secrets` — RLS on, no policy, no grants to any client role — and are
-written by:
+Neither value can live in a migration. Both are encrypted in Supabase Vault and
+are written through a service-role-only configuration RPC by:
 
 ```bash
 npm run db:settings
 ```
 
-That reads `docs/supa_keys.md` and prints neither value. Re-run it after
-rotating the key.
+That reads the gitignored credential file and prints neither value. Re-run it
+separately in staging and production after rotating either environment's key.
 
 The notification Edge Function also needs two function secrets for the
 selection-email fallback:

@@ -44,7 +44,8 @@
     "meetRandom": "Meet a random Human",
     "selectingTomorrow": "Selecting tomorrow's human…",
     "removed": "Today's Human has been removed",
-    "removedBody": "Their Human number and day remain in the Archive, but their identity and story are no longer published."
+    "removedBody": "Their Human number and day remain in the Archive, but their identity and story are no longer published.",
+    "malformed": "Today's Human could not be displayed safely. Refresh to try again."
   },
   "questions": {
     "title": "Questions",
@@ -347,6 +348,18 @@
       "accountTooNew": "Your account is still new. The pool opens to you seven days after you join — there is nothing to do until then.",
       "awaitingRefresh": "You qualify. The list of everyone eligible is rebuilt each night, and you will be on the next one."
     }
+  },
+  "attestation": {
+    "title": "Verify this app and device",
+    "body": "Apple or Google can confirm that this is the genuine app on a supported device. The result prevents one device entering the draw through several accounts; it does not identify you.",
+    "verify": "Verify this device",
+    "development": "Attestation cannot run in Expo Go or a simulator. Use a signed development build on a physical device. This build remains outside the draw.",
+    "unsupported": "This device cannot complete platform attestation. You can ask a person to review the device instead.",
+    "retryable": "The platform verification service is unavailable right now. Please try again.",
+    "rejected": "The platform could not verify this app or device. You may try again or request human review.",
+    "requestReview": "Request human review",
+    "reviewPending": "A person will review this device signal within seven days. Your account is not banned, but it stays outside the draw until the review is resolved.",
+    "reviewFailed": "Could not request review. Please try again."
   },
   "invitation": {
     "title": "You were selected.",

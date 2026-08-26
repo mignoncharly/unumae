@@ -2,6 +2,7 @@ import {
   hasRecentAuthentication,
   isDeletionTerminal,
   isProfilelessAccountRoute,
+  isProfilelessAccountSegments,
   RECENT_AUTHENTICATION_MS,
 } from '../deletion';
 
@@ -35,5 +36,11 @@ describe('account deletion state', () => {
     expect(isProfilelessAccountRoute('/settings/account')).toBe(true);
     expect(isProfilelessAccountRoute('/settings/profile')).toBe(false);
     expect(isProfilelessAccountRoute('/today')).toBe(false);
+    expect(isProfilelessAccountSegments(['(onboarding)', 'profile'])).toBe(
+      true
+    );
+    expect(isProfilelessAccountSegments(['settings', 'account'])).toBe(true);
+    expect(isProfilelessAccountSegments(['settings', 'profile'])).toBe(false);
+    expect(isProfilelessAccountSegments(['other', 'profile'])).toBe(false);
   });
 });

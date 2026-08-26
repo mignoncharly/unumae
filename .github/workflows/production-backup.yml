@@ -1,0 +1,75 @@
+name: Encrypted production backup
+
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: production-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    name: Database and storage backup
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: production-backup
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Install pinned operating-system clients
+        run: sudo apt-get update && sudo apt-get install -y age awscli postgresql-client
+      - name: Export database and private storage
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          mkdir -p backup
+          pg_dump "$DATABASE_URL" --format=custom --no-owner --no-privileges --file backup/database.dump
+          node scripts/export-storage-backup.mjs backup/storage
+          tar -C backup -czf backup/storage.tar.gz storage
+      - name: Encrypt and checksum before upload
+        env:
+          BACKUP_AGE_RECIPIENT: ${{ vars.BACKUP_AGE_RECIPIENT }}
+        run: |
+          age --recipient "$BACKUP_AGE_RECIPIENT" --output backup/database.dump.age backup/database.dump
+          age --recipient "$BACKUP_AGE_RECIPIENT" --output backup/storage.tar.gz.age backup/storage.tar.gz
+          sha256sum backup/*.age > backup/SHA256SUMS
+          rm backup/database.dump backup/storage.tar.gz
+          rm -rf backup/storage
+      - name: Upload outside Supabase and prune expired generations
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ vars.BACKUP_S3_REGION }}
+          BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
+          BACKUP_S3_ENDPOINT: ${{ vars.BACKUP_S3_ENDPOINT }}
+          BACKUP_RETENTION_DAYS: ${{ vars.BACKUP_RETENTION_DAYS }}
+        run: |
+          stamp="$(date -u +%Y-%m-%dT%H-%M-%SZ)"
+          endpoint=()
+          test -z "$BACKUP_S3_ENDPOINT" || endpoint=(--endpoint-url "$BACKUP_S3_ENDPOINT")
+          aws "${endpoint[@]}" s3 cp backup "s3://$BACKUP_S3_BUCKET/unumae/$stamp/" --recursive --sse AES256
+          cutoff="$(date -u -d "${BACKUP_RETENTION_DAYS:-35} days ago" +%s)"
+          aws "${endpoint[@]}" s3api list-objects-v2 --bucket "$BACKUP_S3_BUCKET" --prefix unumae/ --output json |
+            jq -r '.Contents[]? | [.Key, .LastModified] | @tsv' |
+            while IFS=$'\t' read -r key modified; do
+              test "$(date -u -d "$modified" +%s)" -ge "$cutoff" ||
+                aws "${endpoint[@]}" s3 rm "s3://$BACKUP_S3_BUCKET/$key"
+            done
+      - name: Open or update backup-failure alert
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing="$(gh issue list --state open --search 'Production backup failed in:title' --json number --jq '.[0].number // empty')"
+          if test -n "$existing"; then
+            gh issue comment "$existing" --body "Backup failed again: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          else
+            gh issue create --title 'Production backup failed' --body "Investigate immediately: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          fi

@@ -11,6 +11,7 @@ if (root) {
       : 'en'
   ) as Locale;
   const copy = publicContent[locale];
+  const hasSnapshot = root.dataset.hasSnapshot === 'true';
   const drawId = location.pathname.split('/').filter(Boolean).at(-1) ?? '';
   const validDrawId =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
@@ -50,7 +51,7 @@ if (root) {
       return;
     }
 
-    showState('loading');
+    if (!hasSnapshot) showState('loading');
     try {
       const url = root.dataset.supabaseUrl;
       const anonKey = root.dataset.supabaseAnonKey;
@@ -169,7 +170,9 @@ if (root) {
       query<HTMLElement>('[data-no-questions]').hidden = questions.length > 0;
       showState('live');
     } catch {
-      showState('error');
+      // A generated snapshot is a complete no-JavaScript fallback. A failed
+      // refresh must not replace already published content with an error.
+      showState(hasSnapshot ? 'live' : 'error');
     }
   };
 

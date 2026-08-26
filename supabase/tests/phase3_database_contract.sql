@@ -178,9 +178,9 @@ select is(
 );
 
 select is(
-  has_table_privilege('authenticated', 'public.job_secrets', 'SELECT'),
-  false,
-  'scheduler secrets are not readable by authenticated clients'
+  to_regclass('public.job_secrets'),
+  null,
+  'scheduler secrets are absent from the public schema'
 );
 
 select is(

@@ -22,30 +22,17 @@ But it creates a chicken-and-egg problem. Until one row exists in that table:
 
 So the first moderator is not a nice-to-have. Nothing goes live without one.
 
-## 2. How it is solved — you do not need to do anything
+## 2. Bootstrap through controlled tooling
 
-`public.founding_moderators` holds emails that should become moderators. A
-trigger on `profiles` promotes them **automatically the moment they finish
-onboarding**.
-
-Currently seeded:
-
-| Email | Note |
-| --- | --- |
-| `charles.nguenkam@gmail.com` | Project owner |
-| `mignoncharly@yahoo.fr` | Project owner, second address |
-
-Both are there because I do not know which one you will sign up with. Whichever
-you use, you become a moderator on profile creation. If you would rather only
-one be listed, delete the other row — see §5.
-
-The migration also **backfills**: if a profile already exists for either
-address, it was promoted when the migration ran. So this works whether you sign
-up before or after today.
+Phase 10 empties the legacy `public.founding_moderators` bootstrap table so a
+personal address does not remain as dormant access-control data. Create the
+account, complete onboarding, then have a production administrator call the
+audited service-role grant in the protected environment. Never seed a personal
+email in an immutable migration.
 
 ### What you will actually see
 
-1. Open the app, sign in with one of those addresses.
+1. Open the app, sign in with the intended staff address.
 2. Complete onboarding (username, name, year of birth, country).
 3. Settings now shows a **Moderation** row that was not there before.
 4. Open it: five tabs — Portraits, Questions, Reports, Appeals, and Archive
@@ -87,14 +74,9 @@ From the Supabase dashboard → SQL editor:
 select public.grant_moderator('someone@example.com');
 ```
 
-Returns `true` on success, `false` if that email has no profile yet — in which
-case add them to `founding_moderators` instead and they are promoted when they
-sign up:
-
-```sql
-insert into public.founding_moderators (email, note)
-values ('someone@example.com', 'Why they are being added');
-```
+Returns `true` on success and `false` if that email has no profile yet. In that
+case the person must finish onboarding before the operator retries; do not add a
+future address to the legacy bootstrap table.
 
 ## 5. Removing one
 
@@ -102,15 +84,8 @@ values ('someone@example.com', 'Why they are being added');
 select public.revoke_moderator('someone@example.com');
 ```
 
-And, if they were seeded, stop them being re-promoted on a fresh environment:
-
-```sql
-delete from public.founding_moderators where email = 'someone@example.com';
-```
-
-Removing a `founding_moderators` row **does not** demote anybody who is already
-a moderator — the two tables are independent on purpose, so an accidental
-delete cannot silently strip somebody's access mid-shift.
+The legacy bootstrap table remains empty. Revocation changes the active role;
+there is no separate seed row to clean up.
 
 ## 6. Checking, and fixing it by hand
 

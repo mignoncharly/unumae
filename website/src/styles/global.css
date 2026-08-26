@@ -1673,6 +1673,11 @@ code {
   overflow: clip;
 }
 
+.home-main > :not(.home-hero) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 50rem;
+}
+
 .home-hero,
 .home-section,
 .manifesto__inner,

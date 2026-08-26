@@ -43,7 +43,8 @@ policies. Consequently:
 | --- | --- | --- |
 | `EXPO_PUBLIC_SUPABASE_URL` | `.env`, EAS env | — (public) |
 | `EXPO_PUBLIC_SUPABASE_ANON_KEY` | `.env`, EAS env | — (public, RLS-protected) |
-| Service-role key | Supabase dashboard, Edge Function env | The app bundle, the repo, any log |
+| `EXPO_PUBLIC_GOOGLE_CLOUD_PROJECT_NUMBER` | `.env`, EAS env | Public project identifier |
+| Service-role key | Supabase Edge env, encrypted Vault scheduler entry, protected GitHub Environment | Developer `.env`, app bundle, repo, or log |
 | Apple signing keys | EAS credentials | The repo |
 
 `.gitignore` excludes `.env*` except `.env.example`. Any `EXPO_PUBLIC_` prefixed
@@ -52,8 +53,14 @@ that the value is public.
 
 GitHub workflows use read-only repository permissions and immutable action
 commit SHAs. Database CI uses only the throwaway keys produced by its local
-Supabase stack. The release-candidate workflow refuses to run EAS/Maestro unless
-GitHub records a successful `CI` workflow for the exact requested commit SHA.
+Supabase stack. Release-candidate and hosted-promotion workflows refuse to act
+unless GitHub records a successful `CI` workflow for the exact requested SHA.
+
+The public website's production CSP permits scripts, styles, fonts, and static
+assets only from the reviewed origins and does not use `unsafe-inline`.
+Person-specific HTML and social cards are generated only from anonymous RPCs
+that already enforce publication and redaction state; candidate and draft data
+are never build inputs.
 
 ## Authentication (Phase 3)
 

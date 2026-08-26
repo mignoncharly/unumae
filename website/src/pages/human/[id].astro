@@ -1,0 +1,23 @@
+---
+import HumanPage from '../../components/HumanPage.astro';
+import {
+  getHumanSnapshots,
+  type HumanSnapshot,
+} from '../../lib/human-snapshots';
+
+export async function getStaticPaths() {
+  const snapshots = await getHumanSnapshots();
+  return snapshots.map((snapshot) => ({
+    params: { id: snapshot.human.draw_id },
+    props: { snapshot },
+  }));
+}
+
+interface Props {
+  snapshot: HumanSnapshot;
+}
+
+const { snapshot } = Astro.props;
+---
+
+<HumanPage locale="en" snapshot={snapshot} />

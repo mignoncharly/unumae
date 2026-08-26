@@ -182,7 +182,17 @@ export default function TodayScreen() {
 
   const portraitId = today.human.portrait_id;
   if (!portraitId || !today.human.display_name || !today.human.country_code) {
-    return null;
+    return (
+      <Screen
+        contentContainerStyle={{ justifyContent: 'center' }}
+        testID="today-screen"
+      >
+        <ErrorState
+          error={toAppError(new Error('malformed live data'))}
+          onRetry={() => void refetch()}
+        />
+      </Screen>
+    );
   }
 
   return (

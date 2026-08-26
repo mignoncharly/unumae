@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Roadmap v2 Phase 7 local implementation, 25 August 2026.
+Last updated: Roadmap v2 Phase 10 local implementation, 26 August 2026.
 
 ---
 
@@ -20,7 +20,7 @@ Last updated: Roadmap v2 Phase 7 local implementation, 25 August 2026.
 | 10 | **EAS Maestro plan or a macOS runner** | Expo accepts built-in Maestro jobs only on a paid plan for this account. Run `npm run e2e:ios` on a Mac with Xcode/Maestro, or enable the plan and use `npm run e2e:ios:eas`. | Automated iPhone-size evidence; real-device checks remain separate. |
 | 11 | ⚠️ **Configure the production selection-email fallback** | The Phase 0 secret inventory found that `RESEND_API_KEY` and `NOTIFICATION_FROM_EMAIL` are absent. Without them, `send-notifications` records `email_not_configured` when a selected user has no successful push. Confirm the sender domain in Resend, set both Edge secrets using `docs/OPERATIONS.md`, and exercise the fallback end to end. | Reliable selection delivery and public beta. |
 | 12 | ⚠️ **Supabase paid-plan timing** | Roadmap v2 makes Pro a hard gate before production traffic. Free has no managed backups, one-day logs, quota restrictions, and inactivity pausing. | Production traffic. |
-| 13 | ⚠️ **Allocate the second hosted project to staging** | The current Unumae topology has production only. Development and CI will use local stacks; the remaining hosted slot must become isolated staging in Phase 10. | Staging verification and public beta promotion. |
+| 13 | ⚠️ **Allocate and configure the second hosted project as staging** | Phase 10 repository boundaries are ready, but an operator must create Project A and configure protected GitHub/EAS environments, separate Auth, Storage, Edge secrets, cron, providers, and monitoring. | Staging verification and public beta promotion. |
 | 14 | ⚠️ **Promote Phase 1 through staging** | Account enforcement is implemented and passes a fresh local database, lint, 56 role-based pgTAP checks, and Edge smoke tests. Follow `docs/PHASE1_ACCOUNT_ENFORCEMENT.md`; do not make production the first hosted execution. | Phase 1 production completion and public beta. |
 
 | 15 | ⚠️ **Promote and failure-test Phase 2 in staging** | Retryable deletion passes 71 local database assertions and Edge bundle/auth-negative smoke tests. Inject list, pagination, removal, database, Auth, timeout, and partial-completion failures against hosted Storage/Auth before production. Follow `docs/PHASE2_ACCOUNT_DELETION.md`. | Phase 2 production completion and public beta. |
@@ -73,7 +73,7 @@ August 2026.
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | Nine active jobs captured on 25 August 2026: eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send/expiry/alerts every 5 minutes, translate 01:00, purge 03:30. Full baseline in `docs/PHASE0_BASELINE.md`. |
 | EAS project | `@mignoncharly/unumae` |
-| EAS build environment | Required Supabase client variables configured for `development` and `production`; profiles select their environment explicitly |
+| EAS build environment | Phase 10 profiles now isolate `staging` from `production`; protected values still require operator configuration and verification |
 | App Store Connect | Unumae app record `6804251671` for `com.unumae.app`; production build `0.1.0 (3)` successfully uploaded to TestFlight on 24 August 2026 and is processing with Apple |
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Hosted Auth/email | Production Site URL, native/web redirects, six-digit confirmation and magic-link templates, Apple provider, and custom SMTP all pass the read-only release check |

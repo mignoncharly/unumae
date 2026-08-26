@@ -34,6 +34,10 @@ function functionBody(name: string): string {
  * these tests keep it from being quietly weakened.
  */
 describe('the first moderator', () => {
+  it('removes immutable personal-address bootstrap data in Phase 10', () => {
+    expect(FLAT).toContain('truncate table public.founding_moderators');
+  });
+
   it('is promoted automatically when their profile is created', () => {
     expect(FLAT).toContain(
       'create trigger profiles_promote_founding_moderator after insert on public.profiles'

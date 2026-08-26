@@ -53,12 +53,17 @@ export function useUpdateNotificationSettings() {
   const userId = session.session?.user.id ?? 'anonymous';
 
   return useMutation({
-    mutationFn: async (settings: NotificationSettings) => {
-      const { error } = await getSupabase().rpc('set_notification_settings', {
-        daily: settings.daily,
-        selected: settings.selected,
-        answered: settings.answered,
-        anniversary: settings.anniversary,
+    scope: { id: `notification-settings:${userId}` },
+    mutationFn: async ({
+      key,
+      value,
+    }: {
+      key: keyof NotificationSettings;
+      value: boolean;
+    }) => {
+      const { error } = await getSupabase().rpc('patch_notification_setting', {
+        setting_name: key,
+        setting_value: value,
       });
 
       if (error) {
@@ -66,10 +71,33 @@ export function useUpdateNotificationSettings() {
           cause: error,
         });
       }
-      return settings;
+      return { key, value };
     },
-    onSuccess: (settings) => {
-      queryClient.setQueryData(notificationKeys.settings(userId), settings);
+    onMutate: async ({ key, value }) => {
+      await queryClient.cancelQueries({
+        queryKey: notificationKeys.settings(userId),
+      });
+      const previous = queryClient.getQueryData<NotificationSettings>(
+        notificationKeys.settings(userId)
+      );
+      queryClient.setQueryData<NotificationSettings>(
+        notificationKeys.settings(userId),
+        { ...(previous ?? DEFAULT_SETTINGS), [key]: value }
+      );
+      return { previous };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(
+          notificationKeys.settings(userId),
+          context.previous
+        );
+      }
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({
+        queryKey: notificationKeys.settings(userId),
+      });
     },
   });
 }

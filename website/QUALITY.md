@@ -1,6 +1,6 @@
 # Marketing-site quality gate
 
-Run the complete Phase 7 gate from the repository root:
+Run the complete Phase 9 gate from the repository root:
 
 ```bash
 npm run web:quality
@@ -8,8 +8,19 @@ npm run web:quality
 
 The command runs Astro and TypeScript diagnostics, lint, formatting, a
 production quality build, HTML validation, the static route/link/metadata
-audit, the browser matrix, and Lighthouse. It fails on any result below the
-documented bar.
+audit, each browser profile in an isolated process, and Lighthouse. Browser
+failures do not prevent Lighthouse from running; all failures are aggregated
+and the overall command remains red.
+
+Each Lighthouse route receives a fresh temporary Chrome profile and process.
+This prevents simulated-mobile renderer work from degrading later route scores
+or leaving the final audit unable to terminate, especially on Windows.
+
+Firefox qualification runs in the required Linux CI job. The local Windows
+orchestrator skips that one renderer because its Playwright subprocess can hang
+outside the test timeout and cannot be terminated reliably; Chromium and both
+WebKit profiles still run locally. This isolates infrastructure behavior
+without weakening the required remote gate.
 
 Install the browser engines once on a new machine:
 
@@ -19,10 +30,12 @@ npm --prefix website exec -- playwright install chromium firefox webkit
 
 ## Coverage
 
-- Every one of the 24 public locale/route combinations is checked for a
+- Every one of the 24 core locale/route combinations plus three representative
+  person-specific Human snapshots is checked for a
   reachable document, one main landmark and H1, responsive bounds, local links,
   heading order, canonical and alternate URLs, social metadata, JSON-LD, and
-  sitemap membership.
+  sitemap membership. Human snapshots additionally require localized
+  ProfilePage metadata and a generated Open Graph image.
 - Axe checks representative page structures against WCAG 2.2 A and AA. The
   browser suite also checks keyboard skip navigation, uniquely named
   landmarks, a screen-reader-compatible reading structure, reduced motion,

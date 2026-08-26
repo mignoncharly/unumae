@@ -3,12 +3,15 @@ import PublicState from './ui/PublicState.astro';
 import { publicContent } from '../content/public';
 import type { Locale } from '../content/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { createHumanMetadata } from '../lib/metadata';
+import type { HumanSnapshot } from '../lib/human-snapshots';
 
 interface Props {
   locale: Locale;
+  snapshot?: HumanSnapshot;
 }
 
-const { locale } = Astro.props;
+const { locale, snapshot } = Astro.props;
 const copy = publicContent[locale];
 const dataMode = import.meta.env.PUBLIC_DATA_MODE === 'live' ? 'live' : 'off';
 const supabaseUrl =
@@ -21,6 +24,32 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
     'PUBLIC_DATA_MODE=live requires PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY.'
   );
 }
+
+const site =
+  Astro.site ?? new URL(import.meta.env.SITE_ORIGIN ?? 'http://localhost:4321');
+const pageMetadata = snapshot
+  ? createHumanMetadata(locale, snapshot.human, site)
+  : undefined;
+const humanNumber = snapshot?.human.human_number
+  ? `#${String(snapshot.human.human_number).padStart(4, '0')}`
+  : '—';
+const humanDate = snapshot
+  ? new Intl.DateTimeFormat(locale, {
+      dateStyle: 'long',
+      timeZone: 'UTC',
+    }).format(new Date(`${snapshot.human.selection_date}T00:00:00Z`))
+  : '';
+const regionNames = new Intl.DisplayNames([locale], { type: 'region' });
+const humanLocation = snapshot
+  ? [
+      snapshot.human.city,
+      snapshot.human.country_code
+        ? regionNames.of(snapshot.human.country_code)
+        : null,
+    ]
+      .filter(Boolean)
+      .join(' · ')
+  : '';
 ---
 
 <BaseLayout
@@ -28,7 +57,8 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
   page="archive"
   title={`${copy.archive.hero.title} · Unumae`}
   description={copy.archive.hero.introduction}
-  omitCanonicalLinks
+  omitCanonicalLinks={!snapshot}
+  pageMetadata={pageMetadata}
 >
   <main
     id="main-content"
@@ -36,25 +66,28 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
     class="public-main human-public-page"
     data-public-human
     data-data-mode={dataMode}
+    data-has-snapshot={snapshot ? 'true' : 'false'}
     data-supabase-url={supabaseUrl}
     data-supabase-anon-key={supabaseAnonKey}
   >
     <header class="public-hero">
       <p class="eyebrow">{copy.archive.hero.eyebrow}</p>
-      <h1>{copy.archive.hero.title}</h1>
-      <p class="introduction">{copy.archive.hero.introduction}</p>
+      <h1>{snapshot?.human.display_name ?? copy.archive.hero.title}</h1>
+      <p class="introduction">
+        {pageMetadata?.description ?? copy.archive.hero.introduction}
+      </p>
     </header>
 
     <div class="public-stage">
       <PublicState
         state="launch"
         content={copy.archive.launch}
-        hidden={dataMode === 'live'}
+        hidden={dataMode === 'live' || Boolean(snapshot)}
       />
       <PublicState
         state="loading"
         content={copy.archive.loading}
-        hidden={dataMode !== 'live'}
+        hidden={dataMode !== 'live' || Boolean(snapshot)}
       />
       <PublicState state="not-found" content={copy.archive.noMatch} />
       <PublicState state="error" content={copy.archive.error}>
@@ -63,16 +96,21 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
         </button>
       </PublicState>
 
-      <article class="today-human" data-state="live" hidden aria-live="polite">
+      <article
+        class="today-human"
+        data-state="live"
+        hidden={!snapshot}
+        aria-live="polite"
+      >
         <header class="today-human__header">
           <div>
             <p class="eyebrow">{copy.archive.hero.eyebrow}</p>
             <p class="today-human__number">
               <span>{copy.today.live.humanLabel}</span>
-              <strong data-human-number>—</strong>
+              <strong data-human-number>{humanNumber}</strong>
             </p>
           </div>
-          <p data-human-date></p>
+          <p data-human-date>{humanDate}</p>
         </header>
 
         <div class="today-human__identity">
@@ -102,9 +140,17 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
             </div>
           </div>
           <div class="today-human__nameplate">
-            <h2 data-human-name>{copy.archive.hero.title}</h2>
-            <p data-human-location></p>
-            <p class="today-human__founding" data-human-founding hidden></p>
+            <h2 data-human-name>
+              {snapshot?.human.display_name ?? copy.archive.hero.title}
+            </h2>
+            <p data-human-location>{humanLocation}</p>
+            <p
+              class="today-human__founding"
+              data-human-founding
+              hidden={snapshot?.human.founding !== true}
+            >
+              {copy.today.live.foundingLabel}
+            </p>
           </div>
         </div>
 
@@ -120,7 +166,16 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
         <section class="today-portrait" aria-labelledby="human-portrait-title">
           <p class="eyebrow">01</p>
           <h2 id="human-portrait-title">{copy.today.live.portraitLabel}</h2>
-          <dl data-portrait-list></dl>
+          <dl data-portrait-list>
+            {
+              snapshot?.portrait.map((element) => (
+                <div>
+                  <dt>{copy.today.live.prompts[element.element_key]}</dt>
+                  <dd>{element.answer}</dd>
+                </div>
+              ))
+            }
+          </dl>
         </section>
 
         <section
@@ -129,8 +184,28 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
         >
           <p class="eyebrow">02</p>
           <h2 id="human-questions-title">{copy.today.live.questionsTitle}</h2>
-          <ol data-question-list></ol>
-          <p data-no-questions hidden>{copy.today.live.noQuestions}</p>
+          <ol data-question-list>
+            {
+              snapshot?.questions.map((question) => (
+                <li>
+                  <p class="public-question__body">{question.body}</p>
+                  <p
+                    class:list={[
+                      'public-question__answer',
+                      {
+                        'public-question__answer--pending': !question.answer,
+                      },
+                    ]}
+                  >
+                    {question.answer ?? copy.today.live.unanswered}
+                  </p>
+                </li>
+              ))
+            }
+          </ol>
+          <p data-no-questions hidden={(snapshot?.questions.length ?? 0) > 0}>
+            {copy.today.live.noQuestions}
+          </p>
         </section>
 
         <p class="today-human__guest-note">{copy.today.live.guestNote}</p>

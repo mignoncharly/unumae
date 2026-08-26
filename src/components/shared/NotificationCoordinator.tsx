@@ -18,6 +18,26 @@ import {
 import { getSupabase } from '@/lib/supabase';
 
 const handledResponses = new Set<string>();
+const RESPONSE_ATTEMPTS = 3;
+
+async function retryResponseOperation<T>(
+  operation: () => Promise<T>
+): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= RESPONSE_ATTEMPTS; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (attempt < RESPONSE_ATTEMPTS) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 250 * 2 ** (attempt - 1))
+        );
+      }
+    }
+  }
+  throw lastError;
+}
 
 /**
  * Opens every notification into the product state it describes, including
@@ -75,37 +95,38 @@ export function NotificationCoordinator() {
         ReturnType<typeof notifications.getLastNotificationResponseAsync>
       >,
       source: 'cold_start' | 'warm_start'
-    ) => {
+    ): Promise<boolean> => {
       if (!response) {
-        return;
+        return false;
       }
 
       const responseKey = `${response.notification.request.identifier}:${response.actionIdentifier}`;
       if (handledResponses.has(responseKey)) {
-        return;
+        return true;
       }
-      handledResponses.add(responseKey);
 
       const data = response.notification.request.content.data;
       const category = notificationCategory(data);
+
+      const invitationId = notificationInvitationId(data);
+      if (category === 'selected' && invitationId) {
+        const supabase = getSupabase();
+        await retryResponseOperation(async () => {
+          await supabase.auth.getSession();
+          const { error } = await supabase.rpc('mark_invitation_opened', {
+            target_invitation: invitationId,
+            open_source: 'notification',
+          });
+          if (error) throw error;
+        });
+      }
+
       track('notification_opened', {
         action: notificationAction(response.actionIdentifier),
         category,
         destination: notificationDestination(data),
         source,
       });
-
-      const invitationId = notificationInvitationId(data);
-      if (category === 'selected' && invitationId) {
-        const supabase = getSupabase();
-        await supabase.auth.getSession();
-        await supabase
-          .rpc('mark_invitation_opened', {
-            target_invitation: invitationId,
-            open_source: 'notification',
-          })
-          .then(() => undefined);
-      }
 
       if (response.actionIdentifier === ACCEPT_SELECTION_ACTION) {
         const supabase = getSupabase();
@@ -116,10 +137,12 @@ export function NotificationCoordinator() {
         if (!error && accepted) {
           track('selection_accepted', { source: 'notification' });
           router.replace('/(selection)/portrait');
-          return;
+          handledResponses.add(responseKey);
+          return true;
         }
         router.replace('/(selection)/invitation');
-        return;
+        handledResponses.add(responseKey);
+        return true;
       }
 
       if (response.actionIdentifier === DECLINE_SELECTION_ACTION) {
@@ -130,17 +153,21 @@ export function NotificationCoordinator() {
         if (!error) {
           track('selection_declined', { source: 'notification' });
           router.replace('/(tabs)');
-          return;
+          handledResponses.add(responseKey);
+          return true;
         }
         router.replace('/(selection)/invitation');
-        return;
+        handledResponses.add(responseKey);
+        return true;
       }
 
       router.push(notificationRoute(data));
+      handledResponses.add(responseKey);
+      return true;
     };
 
     const subscription = notifications.addNotificationResponseReceivedListener(
-      (response) => void handle(response, 'warm_start')
+      (response) => void handle(response, 'warm_start').catch(() => undefined)
     );
 
     void notifications
@@ -149,8 +176,9 @@ export function NotificationCoordinator() {
         if (!response) {
           return;
         }
-        await handle(response, 'cold_start');
-        await notifications.clearLastNotificationResponseAsync();
+        if (await handle(response, 'cold_start')) {
+          await notifications.clearLastNotificationResponseAsync();
+        }
       })
       .catch(() => undefined);
 

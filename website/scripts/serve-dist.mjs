@@ -67,5 +67,12 @@ server.listen(port, host, () => {
 });
 
 for (const signal of ['SIGINT', 'SIGTERM']) {
-  process.on(signal, () => server.close(() => process.exit(0)));
+  process.on(signal, () => {
+    server.close(() => process.exit(0));
+    // Playwright terminates this helper while browsers may still own HTTP/1.1
+    // keep-alive sockets. Closing those connections prevents renderer jobs
+    // from hanging after their final test on Windows and Linux alike.
+    server.closeAllConnections();
+    setTimeout(() => process.exit(0), 1_000).unref();
+  });
 }

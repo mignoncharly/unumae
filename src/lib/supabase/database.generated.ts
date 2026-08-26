@@ -1098,24 +1098,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      job_secrets: {
-        Row: {
-          key: string;
-          updated_at: string;
-          value: string;
-        };
-        Insert: {
-          key: string;
-          updated_at?: string;
-          value: string;
-        };
-        Update: {
-          key?: string;
-          updated_at?: string;
-          value?: string;
-        };
-        Relationships: [];
-      };
       moderation_appeals: {
         Row: {
           appellant_id: string | null;
@@ -1465,6 +1447,32 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'moderators';
             referencedColumns: ['user_id'];
+          },
+        ];
+      };
+      portrait_element_revisions: {
+        Row: {
+          element_key: Database['public']['Enums']['portrait_element_key'];
+          portrait_id: string;
+          revision: number;
+        };
+        Insert: {
+          element_key: Database['public']['Enums']['portrait_element_key'];
+          portrait_id: string;
+          revision?: number;
+        };
+        Update: {
+          element_key?: Database['public']['Enums']['portrait_element_key'];
+          portrait_id?: string;
+          revision?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'portrait_element_revisions_portrait_id_fkey';
+            columns: ['portrait_id'];
+            isOneToOne: false;
+            referencedRelation: 'portraits';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -2258,6 +2266,10 @@ export type Database = {
         };
         Returns: boolean;
       };
+      configure_job_secret: {
+        Args: { secret_name: string; secret_value: string };
+        Returns: undefined;
+      };
       consume_abuse_rate_limit: {
         Args: {
           maximum_requests: number;
@@ -2450,6 +2462,13 @@ export type Database = {
           portrait_id: string;
           published_at: string;
           selection_date: string;
+        }[];
+      };
+      get_my_portrait_answer_revisions: {
+        Args: { target_portrait: string };
+        Returns: {
+          element_key: Database['public']['Enums']['portrait_element_key'];
+          revision: number;
         }[];
       };
       get_notification_settings: {
@@ -2808,6 +2827,10 @@ export type Database = {
           segment: string;
         }[];
       };
+      patch_notification_setting: {
+        Args: { setting_name: string; setting_value: boolean };
+        Returns: boolean;
+      };
       pending_question_translations: {
         Args: { batch_size?: number };
         Returns: {
@@ -3046,6 +3069,7 @@ export type Database = {
         Args: { request_reason?: string; target_draw: string };
         Returns: string;
       };
+      request_attestation_review: { Args: never; Returns: string };
       resolve_operational_alert: {
         Args: { target_alert: number };
         Returns: boolean;
@@ -3126,6 +3150,23 @@ export type Database = {
       rewind_human_numbers: { Args: never; Returns: number };
       run_daily_draw: { Args: { target_date: string }; Returns: string };
       run_daily_draw_job: { Args: never; Returns: string };
+      save_answers_and_submit_my_portrait: {
+        Args: {
+          expected_revisions: Json;
+          submitted_answers: Json;
+          target_portrait: string;
+        };
+        Returns: boolean;
+      };
+      save_my_portrait_answer: {
+        Args: {
+          expected_revision: number;
+          target_answer: string;
+          target_key: Database['public']['Enums']['portrait_element_key'];
+          target_portrait: string;
+        };
+        Returns: number;
+      };
       scheduler_installed: {
         Args: never;
         Returns: {

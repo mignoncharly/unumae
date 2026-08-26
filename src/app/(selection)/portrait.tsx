@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as ImagePicker from 'expo-image-picker';
 import { Stack, router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, View } from 'react-native';
 
@@ -18,8 +18,8 @@ import { useSession } from '@/features/auth/useSession';
 import {
   getMyPortrait,
   saveAnswer,
+  saveAnswersAndSubmitMyPortrait,
   startMyPortrait,
-  submitMyPortrait,
   uploadPortraitPhoto,
 } from '@/features/portraits/api';
 import { prepareForUpload } from '@/features/portraits/image';
@@ -56,8 +56,17 @@ export default function PortraitScreen() {
   >({});
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [autosaves, setAutosaves] = useState(0);
   const [toast, setToast] = useState<string | null>(null);
   const [error, setError] = useState<string>();
+  const revisions = useRef(
+    Object.fromEntries(PORTRAIT_PROMPTS.map(({ key }) => [key, 0])) as Record<
+      PortraitElementKey,
+      number
+    >
+  );
+  const pendingSaves = useRef(new Map<PortraitElementKey, Promise<void>>());
+  const submitting = useRef(false);
 
   useEffect(() => {
     let active = true;
@@ -69,6 +78,7 @@ export default function PortraitScreen() {
           if (!active) return;
           setPortraitId(existing.portrait.id);
           setAnswers(existing.answers);
+          revisions.current = existing.revisions;
           setHasPhoto(existing.portrait.photo_path !== null);
           setPhotoUri(existing.photoUrl);
         } else {
@@ -133,24 +143,51 @@ export default function PortraitScreen() {
 
   async function handleBlur(key: PortraitElementKey) {
     if (!portraitId) return;
+    const value = answers[key] ?? '';
+    const previous = pendingSaves.current.get(key) ?? Promise.resolve();
+    setAutosaves((count) => count + 1);
+    const request = previous
+      .catch(() => undefined)
+      .then(async () => {
+        revisions.current[key] = await saveAnswer(
+          portraitId,
+          key,
+          value,
+          revisions.current[key]
+        );
+      });
+    pendingSaves.current.set(key, request);
     try {
-      await saveAnswer(portraitId, key, answers[key] ?? '');
+      await request;
     } catch (caught) {
       setError(t(toAppError(caught).messageKey));
+    } finally {
+      if (pendingSaves.current.get(key) === request) {
+        pendingSaves.current.delete(key);
+      }
+      setAutosaves((count) => Math.max(0, count - 1));
     }
   }
 
   async function handleSubmit() {
+    if (!portraitId || submitting.current) return;
+    submitting.current = true;
     setBusy(true);
     setError(undefined);
     try {
-      await submitMyPortrait();
+      await Promise.all(pendingSaves.current.values());
+      await saveAnswersAndSubmitMyPortrait(
+        portraitId,
+        answers,
+        revisions.current
+      );
       track('portrait_submitted');
       await queryClient.invalidateQueries({ queryKey: journeyKeys.all });
       router.replace('/(selection)/status');
     } catch (caught) {
       setError(t(toAppError(caught).messageKey));
     } finally {
+      submitting.current = false;
       setBusy(false);
     }
   }
@@ -260,7 +297,7 @@ export default function PortraitScreen() {
           </Text>
 
           <Button
-            disabled={!completeness.canSubmit || busy}
+            disabled={!completeness.canSubmit || busy || autosaves > 0}
             icon="send"
             label={t('portrait.submit')}
             onPress={handleSubmit}

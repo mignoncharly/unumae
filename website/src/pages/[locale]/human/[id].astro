@@ -1,0 +1,27 @@
+---
+import HumanPage from '../../../components/HumanPage.astro';
+import {
+  getHumanSnapshots,
+  type HumanSnapshot,
+} from '../../../lib/human-snapshots';
+import { translatedLocales, type Locale } from '../../../content/site';
+
+export async function getStaticPaths() {
+  const snapshots = await getHumanSnapshots();
+  return translatedLocales.flatMap((locale) =>
+    snapshots.map((snapshot) => ({
+      params: { locale, id: snapshot.human.draw_id },
+      props: { locale, snapshot },
+    }))
+  );
+}
+
+interface Props {
+  locale: Locale;
+  snapshot: HumanSnapshot;
+}
+
+const { locale, snapshot } = Astro.props;
+---
+
+<HumanPage locale={locale} snapshot={snapshot} />

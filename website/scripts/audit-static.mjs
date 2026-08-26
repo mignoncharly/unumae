@@ -18,11 +18,17 @@ const pages = [
   'terms',
 ];
 
+const sharedHuman = '/human/00000000-0000-4000-8000-000000000001';
 const publicRoutes = locales.flatMap((locale) =>
   pages.map((page) => {
     const prefix = locale === 'en' ? '' : `/${locale}`;
     return page ? `${prefix}/${page}` : prefix || '/';
   })
+);
+publicRoutes.push(
+  ...locales.map((locale) =>
+    locale === 'en' ? sharedHuman : `/${locale}${sharedHuman}`
+  )
 );
 
 const fail = (message) => {
@@ -109,6 +115,18 @@ for (const route of publicRoutes) {
     fail(`${route}: missing structured data`);
   }
   JSON.parse(jsonLd[1]);
+
+  if (route.includes('/human/')) {
+    if (!html.includes('Amina') || !html.includes('ProfilePage')) {
+      fail(`${route}: Human snapshot metadata is not person-specific`);
+    }
+    const image = html.match(/property="og:image" content="([^"]+)"/);
+    if (!image) fail(`${route}: Human snapshot is missing an Open Graph image`);
+    const imagePath = new URL(image[1]).pathname.replace(/^\//, '');
+    if (!existsSync(new URL(imagePath, dist))) {
+      fail(`${route}: Human Open Graph image was not generated`);
+    }
+  }
 }
 
 const htmlFiles = walk(distPath).filter((path) => extname(path) === '.html');
@@ -161,6 +179,41 @@ for (const forbidden of [
 ]) {
   if (analyticsSource.includes(forbidden)) {
     fail(`Analytics source contains forbidden field: ${forbidden}`);
+  }
+}
+
+const publicDataSource = read(new URL('lib/public-data.ts', sourceRoot));
+for (const required of [
+  'AbortController',
+  'DEFAULT_REQUEST_TIMEOUT_MS',
+  'DEFAULT_MAX_ATTEMPTS',
+  'RETRYABLE_STATUS',
+]) {
+  if (!publicDataSource.includes(required)) {
+    fail(`Public data policy is missing ${required}`);
+  }
+}
+
+const csp = read(
+  new URL('infra/nginx/security-headers.conf', new URL('../', sourceRoot))
+);
+if (csp.includes("'unsafe-inline'")) {
+  fail('Production CSP still permits unrestricted inline code or styles');
+}
+
+const publicCopy = [
+  read(new URL('content/home.ts', sourceRoot)),
+  read(new URL('content/public.ts', sourceRoot)),
+  read(new URL('content/site.ts', sourceRoot)),
+  read(new URL('content/trust.ts', sourceRoot)),
+].join('\n');
+for (const overstatedClaim of [
+  /verified human/i,
+  /humain vérifié/i,
+  /verifizierter mensch/i,
+]) {
+  if (overstatedClaim.test(publicCopy)) {
+    fail(`Public copy overstates person verification: ${overstatedClaim}`);
   }
 }
 

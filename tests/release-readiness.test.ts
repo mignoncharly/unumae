@@ -14,9 +14,10 @@ describe('Phase 5 iOS release automation', () => {
   const packageLock = JSON.parse(read('package-lock.json'));
 
   it('selects the EAS environment that contains the client configuration', () => {
-    expect(eas.build.development.environment).toBe('development');
-    expect(eas.build['development-simulator'].environment).toBe('development');
-    expect(eas.build['e2e-test'].environment).toBe('development');
+    expect(eas.build.development.environment).toBe('staging');
+    expect(eas.build['development-simulator'].environment).toBe('staging');
+    expect(eas.build['e2e-test'].environment).toBe('staging');
+    expect(eas.build.staging.environment).toBe('staging');
     expect(eas.build.production.environment).toBe('production');
   });
 

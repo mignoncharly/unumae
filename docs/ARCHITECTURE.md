@@ -77,21 +77,22 @@ fails loudly rather than three screens later. The app still runs unconfigured �
 guest viewing degrades to an empty state instead of crashing on a fresh
 checkout.
 
-iOS first. The Android config block exists so the project stays cross-platform;
-no Android work is started yet.
+iOS is the current release target. Existing Android-compatible application,
+configuration, attestation, notification, and EAS work is preserved but is not
+an iOS launch gate. Its remaining release work is in `POST_IOS_ANDROID.md`.
 
-## Verification instead of GitHub Actions
+## Verification and GitHub Actions
 
-This project runs **no GitHub Actions**. The same checks run locally and are
-enforced by a git hook, so nothing unverified reaches the remote:
+The core checks run locally and through the pre-push hook. GitHub Actions adds
+the required fresh-database, Edge, website, audit, and secret-scanning boundary:
 
 ```bash
 npm run verify   # typecheck → lint → format:check → migrations → tests
 ```
 
 `.githooks/pre-push` runs it on every push. `npm install` installs the hook via
-the `prepare` script (`git config core.hooksPath .githooks`). The emergency
-bypass is `git push --no-verify`, and it should stay unused.
+the `prepare` script (`git config core.hooksPath .githooks`). A local bypass
+does not bypass protected remote checks.
 
 What the pipeline covers today:
 

@@ -159,23 +159,26 @@ websites. No advertising SDK, no attribution SDK, no data broker.
 | Contact Info | Name | App Functionality |
 | User Content | Photos or Videos | App Functionality |
 | User Content | Other User Content | App Functionality |
-| Identifiers | Device ID | Analytics |
+| Identifiers | User ID | App Functionality |
+| Identifiers | Device ID | App Functionality, Analytics |
+| Location | Coarse Location | App Functionality |
+| Other Data | Other Data Types | App Functionality |
 | Usage Data | Product Interaction | Analytics |
 
 Notes that matter:
 
-- **Device ID** is a random per-installation UUID generated on device. It is not an
-  advertising identifier. It exists only to answer "did people come back the next
-  day", and it never leaves our own database. It is declared *linked* because once
-  somebody signs in it sits in the same row as their user id — declaring it unlinked
-  would be a technicality rather than the truth.
+- **Device ID** covers the random installation session and platform attestation
+  state. It is not an advertising identifier and is used only for app
+  functionality, abuse prevention, and first-party analytics.
+- **User ID** covers the Supabase account id and stable provider identifier.
 - **Analytics are first-party only** — a table in our own Supabase database. There is
   no third-party analytics SDK in the app.
-- **Location is NOT collected.** The country on a profile is **typed by the person**,
-  never read from the device. It must not be declared as Location data. City is
-  optional and can be hidden. Precise location is never requested and must never
-  become required.
-- **Not collected at all:** location, contacts, health, fitness, financial info,
+- **Coarse Location is declared.** Country and optional city are typed by the
+  person and never read from Location Services, but still describe coarse
+  location. Precise location is never requested.
+- **Other Data Types** covers birth year, assurance state, and account/moderation
+  status.
+- **Not collected at all:** precise location, contacts, health, fitness, financial info,
   browsing history, search history, sensitive info, purchases, physical address,
   phone number.
 - **No biometric data.** An earlier draft required a liveness selfie; it was

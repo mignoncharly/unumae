@@ -16,9 +16,9 @@ worker checks receipts after fifteen minutes. `DeviceNotRegistered` and sender
 mismatch disable the destination; transient failures retry five times and then
 enter visible dead letter. Provider response text is not retained.
 
-Android creates `general` and high-importance `selection` channels before
-requesting notification permission or registering a token. Server messages
-name the corresponding channel.
+Existing Android code creates `general` and high-importance `selection`
+channels before permission or token registration. It is preserved for the
+post-iOS Android release and is not part of the current release gate.
 
 Operational alerts now cover repeated worker failures, expired leases, queue
 growth, worker and receipt dead letters, provider authentication, notification
@@ -37,5 +37,6 @@ npm run verify:integration
 npm run verify:safety
 ```
 
-Provider delivery, receipt timing, Android channel presentation, and hosted
-quota observations still require staging credentials and physical devices.
+Provider delivery, receipt timing, iOS notification presentation, and hosted
+quota observations still require protected hosted credentials and a physical
+iPhone. Android presentation is deferred to `POST_IOS_ANDROID.md`.

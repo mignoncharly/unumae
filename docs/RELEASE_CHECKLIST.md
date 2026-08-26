@@ -40,25 +40,30 @@ Required GitHub checks are `Application`, `Website`, and `Fresh database and
 Edge Functions`. Protect the release branch against direct pushes and require
 all three checks; a local hook is not a security boundary.
 
-## 3. Staging verification
+## 3. Hosted infrastructure and verification
 
-Phase 10 provides the protected promotion boundary. These boxes become
-checkable only after the second hosted-project slot is allocated and its
-separate GitHub, EAS, Auth, Storage, secret, and cron configuration is complete.
+Unumae has one hosted Supabase project and one EAS project. There is no staging
+environment. Hosted probes therefore use bounded synthetic data, explicit
+cleanup, and a protected exact-SHA deployment after local and CI verification.
 
-- [ ] CI promoted the exact tested migration set to staging.
-- [ ] Staging migrations match the release commit.
+- [ ] The existing hosted Supabase project is correctly linked.
+- [ ] Auth, Storage, Edge Functions, cron jobs, Vault secret names, and required
+      iOS providers match the approved configuration.
+- [ ] Hosted migrations match the release commit.
 - [ ] Edge Function deployment versions match the release record.
-- [ ] Auth, storage, cron, and secret names match the approved baseline.
+- [ ] EAS project linkage and the single hosted variable environment are correct.
+- [ ] A sanitized pre-deployment hosted baseline was captured.
 - [ ] Draw, safety, privacy, memory, deletion, and full-cycle suites passed.
 - [ ] Failed jobs and synthetic data were cleaned up.
-- [ ] Promotion approval names the exact evidence and commit SHA.
+- [ ] A sanitized post-deployment baseline was captured and reviewed.
+- [ ] Deployment approval names the exact evidence and commit SHA.
+- [ ] No secret value entered source, logs, artifacts, or release evidence.
 
 ## 4. EAS and native-device verification
 
 - [ ] The release-candidate workflow checked out a full commit SHA and proved a
       successful `CI` run exists for that exact SHA.
-- [ ] The build commit passed static, database, and staging verification.
+- [ ] The build commit passed static, database, and bounded hosted verification.
 - [ ] `eas config --platform ios --profile production` is correct.
 - [ ] Only expected public Supabase client variables are loaded.
 - [ ] A new immutable iOS build number and EAS build ID are recorded.
@@ -70,14 +75,11 @@ separate GitHub, EAS, Auth, Storage, secret, and cron configuration is complete.
       account switching were exercised on physical hardware.
 - [ ] App Attest and DeviceCheck passed on a signed physical iPhone; the
       simulator showed the non-attested development explanation.
-- [ ] Play Integrity passed from an internal-track Android build signed with
-      the release key; unsupported/rejected-device review was exercised.
-- [ ] Android EAS/Maestro passed on small and current devices, including app
-      links, notification opens/actions, picker/upload, keyboard, safe areas,
-      offline recovery, and hardware Back.
-- [ ] The Android AAB signing certificate matches the Play Integrity allowlist
-      and managed EAS credentials recorded for this release.
 - [ ] App Store privacy answers and manifest match released behavior.
+
+Android is not part of the current release. Its provider, Play Integrity,
+signed-build, app-link, and device-verification gates live in
+`docs/POST_IOS_ANDROID.md` and do not block iOS.
 
 ## 5. Production promotion
 
@@ -102,14 +104,13 @@ separate GitHub, EAS, Auth, Storage, secret, and cron configuration is complete.
 | Release                      |                        |
 | Commit SHA                   |                        |
 | Latest migration             |                        |
-| Staging project              |                        |
-| Production project           | `qpicjsjxdblrxdrdibge` |
+| Hosted Supabase project      | `qpicjsjxdblrxdrdibge` |
 | EAS build ID / build number  |                        |
 | Verification timestamp (UTC) |                        |
 | Operator                     |                        |
 | Static result                |                        |
 | Ephemeral DB result          |                        |
-| Staging result               |                        |
+| Hosted verification result   |                        |
 | Device result                |                        |
 | Production result            |                        |
 | Baseline diff                |                        |

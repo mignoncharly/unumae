@@ -1,12 +1,13 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
 /**
- * One EAS project and bundle identifier, with isolated local, staging, and
- * production Supabase environments. Cloud development and device-test builds
- * deliberately use staging; only a production profile may use production.
+ * One EAS project, bundle identifier, and hosted Supabase project. Ordinary
+ * development stays local. Explicit hosted development/device-test builds and
+ * production builds use the same approved hosted project because Unumae does
+ * not maintain a staging project.
  *
- * Both supported mobile platforms are configured here. Platform-specific
- * release evidence and signing requirements live in the release checklist.
+ * Both mobile platforms remain configured for portability. The current release
+ * target is iOS; Android release evidence is explicitly deferred.
  */
 const BUNDLE_ID = 'com.unumae.app';
 const PRODUCTION_PROJECT_REF = 'qpicjsjxdblrxdrdibge';
@@ -16,22 +17,19 @@ const configuredProjectRef =
     process.env.EXPO_PUBLIC_SUPABASE_URL ?? ''
   )?.[1] ?? null;
 
-if (!['development', 'staging', 'production'].includes(APP_ENV)) {
+if (!['development', 'hosted', 'production'].includes(APP_ENV)) {
   throw new Error(`Unsupported APP_ENV: ${APP_ENV}`);
 }
 if (APP_ENV === 'development' && configuredProjectRef !== null) {
   throw new Error('Local development cannot use a hosted Supabase project.');
 }
 if (
-  APP_ENV === 'production' &&
+  (APP_ENV === 'hosted' || APP_ENV === 'production') &&
   configuredProjectRef !== PRODUCTION_PROJECT_REF
 ) {
   throw new Error(
-    'Production builds must use the approved production project.'
+    'Hosted builds must use the single approved Supabase project.'
   );
-}
-if (APP_ENV === 'staging' && configuredProjectRef === PRODUCTION_PROJECT_REF) {
-  throw new Error('Staging builds cannot use the production Supabase project.');
 }
 const IS_PRODUCTION_BUILD =
   process.env.EAS_BUILD_PROFILE === 'production' ||

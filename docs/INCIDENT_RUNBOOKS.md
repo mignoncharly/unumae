@@ -25,7 +25,7 @@ and requeue from `resume_stage`. Verify Storage, profile graph, then Auth.
 
 ## Credential exposure
 
-Revoke and rotate the exposed credential immediately in staging or production,
+Revoke and rotate the exposed credential immediately in the hosted project,
 Vault, GitHub/EAS, providers, and backup storage as applicable. Review audit
 logs from the earliest possible exposure. Record only secret names and rotation
 times, never values. Rebuild mobile binaries if a non-public value entered one.
@@ -48,8 +48,8 @@ content ad hoc. Upgrade capacity before resuming growth traffic.
 
 Confirm status through the Management API and Supabase dashboard, resume the
 project, check migration and function versions, verify scheduled jobs and Vault
-configuration, then run hosted health and the daily-cycle smoke suite. Staging
-resume delay is acceptable; production traffic requires the paid-plan gate.
+configuration, then run hosted health and the daily-cycle smoke suite. Public
+production traffic requires the paid-plan gate.
 
 ## Data loss
 

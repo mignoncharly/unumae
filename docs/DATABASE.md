@@ -185,5 +185,5 @@ npx supabase db reset     # re-apply migrations + seed.sql
 npx supabase gen types typescript --local > src/lib/supabase/types.ts
 ```
 
-`supabase/seed.sql` never contains real people and never runs against staging or
-production.
+`supabase/seed.sql` never contains real people and never runs against the hosted
+project.

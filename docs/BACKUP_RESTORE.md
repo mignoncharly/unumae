@@ -44,7 +44,7 @@ Required environment configuration:
 5. Investigate any warning or missing object; never call a partial restore a pass.
 
 For an incident restore, create a new isolated project or local stack first.
-Never test restoration over staging or production. After validation, decide
+Never test restoration over the active hosted project. After validation, decide
 whether to promote the recovered project, replay post-backup events, or notify
 affected users. Rotation of all credentials is mandatory if the loss involved
 credential exposure.

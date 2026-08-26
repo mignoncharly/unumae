@@ -50,8 +50,8 @@ are written through a service-role-only configuration RPC by:
 npm run db:settings
 ```
 
-That reads the gitignored credential file and prints neither value. Re-run it
-separately in staging and production after rotating either environment's key.
+That reads the owner-managed gitignored credential file and prints neither
+value. Re-run it for the single hosted project after rotating either key.
 
 The notification Edge Function also needs two function secrets for the
 selection-email fallback:

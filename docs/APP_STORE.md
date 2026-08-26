@@ -122,7 +122,7 @@ sign-in path. Configured for `com.unumae.app`.
 | **Screenshots** | 6.7" and 6.5" required. They need a real published Human, so they come after the first live cycle. |
 | **Description and keywords** | Marketing copy; the site's homepage is the natural source. |
 | **App Store listing URL** | Add the badge and smart banner only after App Store Connect provides the real URL and numeric app ID. |
-| **First build** | `eas build --profile production --platform ios` |
+| **Final release build** | Build the exact CI-passed reconciliation/release SHA with `eas build --profile production --platform ios`. Earlier TestFlight build 3 is evidence, not the final artifact. |
 
 If a light wordmark is ever drawn, the dark
 variant becomes:

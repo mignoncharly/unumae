@@ -1,5 +1,10 @@
 # Account and device assurance policy
 
+> Release scope: App Attest and DeviceCheck are the current iOS launch gates.
+> Existing Play Integrity support is retained for portability, but Android
+> provider configuration and evidence are deferred to
+> `docs/POST_IOS_ANDROID.md`.
+
 What makes an account eligible for the draw, what the checks establish, and
 what they cannot establish.
 

@@ -43,6 +43,6 @@ review, Archive removal, independent appeals, push cleanup, and export. It
 deletes its synthetic users and cycles afterward and never prints credentials.
 
 Before release, deploy both Phase 2 migrations and the updated
-`delete-account` Edge Function, run the safety verifier against an isolated
-staging project, and confirm the JSON share sheet and account media deletion on
-a development iPhone build.
+`delete-account` Edge Function through the protected exact-SHA workflow, run
+bounded safety probes against the single hosted project, and confirm the JSON
+share sheet and account media deletion on a development iPhone build.

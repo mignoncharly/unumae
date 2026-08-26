@@ -1,8 +1,7 @@
 # Phase 2 account deletion
 
-Status: implemented and verified locally on 25 August 2026. Staging and
-production promotion are intentionally pending the environment gate recorded in
-`OPEN_ITEMS.md`.
+Status: implemented and verified locally on 25 August 2026. Protected hosted
+deployment and bounded verification are pending the gate in `OPEN_ITEMS.md`.
 
 This phase follows Phase 2 of `implementation-roadmap-v2.md`. Account deletion
 is now a durable, retryable operation. The database locks the account before any
@@ -95,22 +94,23 @@ out or claim success until the server operation completes.
 - The local CLI's legacy-JWT gateway currently throws an ES256/CryptoKey type
   mismatch for its own service token. The internal signed authorization path was
   therefore tested with only that emulator gateway layer disabled. Shipped code
-  still requires a verified service credential, and staging must repeat the
-  smoke through the hosted gateway before rollout.
+  still requires a verified service credential, and the protected hosted probe
+  must repeat the smoke through the real gateway.
 
-## Promotion order
+## Hosted deployment order
 
-1. Apply the migration to staging.
-2. Deploy `register-portrait-photo`, `reconcile-storage`,
+1. Confirm a recoverable backup and capture a sanitized hosted baseline.
+2. Through the protected exact-SHA workflow, deploy the migration plus
+   `register-portrait-photo`, `reconcile-storage`,
    `process-account-deletions`, then the revised `delete-account`.
-3. Configure the existing scheduler secrets for staging and confirm both new
+3. Configure the hosted scheduler secrets and confirm both new
    cron calls produce successful `job_runs`.
 4. Run `npm run test:db:phase2`, the live deletion verifier, and a physical
-   device deletion with more than 100 nested objects and an injected failure at
-   each stage.
+   iPhone deletion with more than 100 nested objects. Keep destructive failure
+   injection local unless a recoverable hosted test is explicitly approved.
 5. Confirm the completed row is anonymized, both prefixes are empty, the Auth
    user is absent, and only documented tombstones remain.
-6. Promote the same commit and function bundles to production.
+6. Clean up test state and capture the sanitized post-deployment baseline.
 
 Do not deploy the revised client before `register-portrait-photo`: new clients
 depend on server-side upload registration. Do not deploy the revised

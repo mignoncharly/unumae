@@ -20,17 +20,16 @@ Last updated: Roadmap v2 Phase 10 local implementation, 26 August 2026.
 | 10 | **EAS Maestro plan or a macOS runner** | Expo accepts built-in Maestro jobs only on a paid plan for this account. Run `npm run e2e:ios` on a Mac with Xcode/Maestro, or enable the plan and use `npm run e2e:ios:eas`. | Automated iPhone-size evidence; real-device checks remain separate. |
 | 11 | ⚠️ **Configure the production selection-email fallback** | The Phase 0 secret inventory found that `RESEND_API_KEY` and `NOTIFICATION_FROM_EMAIL` are absent. Without them, `send-notifications` records `email_not_configured` when a selected user has no successful push. Confirm the sender domain in Resend, set both Edge secrets using `docs/OPERATIONS.md`, and exercise the fallback end to end. | Reliable selection delivery and public beta. |
 | 12 | ⚠️ **Supabase paid-plan timing** | Roadmap v2 makes Pro a hard gate before production traffic. Free has no managed backups, one-day logs, quota restrictions, and inactivity pausing. | Production traffic. |
-| 13 | ⚠️ **Allocate and configure the second hosted project as staging** | Phase 10 repository boundaries are ready, but an operator must create Project A and configure protected GitHub/EAS environments, separate Auth, Storage, Edge secrets, cron, providers, and monitoring. | Staging verification and public beta promotion. |
-| 14 | ⚠️ **Promote Phase 1 through staging** | Account enforcement is implemented and passes a fresh local database, lint, 56 role-based pgTAP checks, and Edge smoke tests. Follow `docs/PHASE1_ACCOUNT_ENFORCEMENT.md`; do not make production the first hosted execution. | Phase 1 production completion and public beta. |
-
-| 15 | ⚠️ **Promote and failure-test Phase 2 in staging** | Retryable deletion passes 71 local database assertions and Edge bundle/auth-negative smoke tests. Inject list, pagination, removal, database, Auth, timeout, and partial-completion failures against hosted Storage/Auth before production. Follow `docs/PHASE2_ACCOUNT_DELETION.md`. | Phase 2 production completion and public beta. |
+| 13 | ⚠️ **Verify the single hosted infrastructure baseline** | Audit the existing project's Auth, Storage, Edge Functions, cron, Vault secret names, required iOS providers, migrations, EAS linkage, and public variables; capture a sanitized baseline. No staging project is planned. | Hosted verification and public beta deployment. |
+| 14 | ⚠️ **Deploy and verify Phase 1 on the hosted project** | Account enforcement passes local database, pgTAP, Edge, and client checks. Use the protected exact-SHA workflow, a synthetic account, explicit cleanup, and pre/post baselines. | Phase 1 hosted completion and public beta. |
+| 15 | ⚠️ **Deploy and verify Phase 2 on the hosted project** | Retryable deletion passes local database and Edge checks. Keep destructive failure injection local; use a disposable hosted account for bounded real Storage/Auth and physical-iPhone deletion verification. | Phase 2 hosted completion and public beta. |
 | 16 | ⚠️ **Enable required GitHub checks and branch protection** | Repository settings must require `Application`, `Website`, and `Fresh database and Edge Functions`, block direct release-branch pushes, and prevent administrator bypass. Workflow files cannot enforce their own required-check status. | CI as an enforceable release boundary. |
 | 17 | **Configure `EXPO_TOKEN` for release candidates** | The manual release-candidate workflow verifies an exact CI-passed SHA and then invokes the EAS Maestro workflow. It cannot authenticate until this scoped GitHub Actions secret exists. | Automated same-SHA native smoke evidence. |
-| 18 | ⚠️ **Configure and provider-test Phase 4 attestation in staging** | The server verifier, one-time challenge protocol, database registration, replay/expiry/malformed checks, and manual-review path now pass locally. Apple Team/App Attest/DeviceCheck credentials, Google Play Integrity credentials and certificate digests, the binding pepper, and real provider responses require the developer consoles, staging secrets, and supported physical devices. The native evidence client remains explicitly scheduled for Roadmap Phase 8. | Hosted Phase 4 completion and public beta. |
+| 18 | ⚠️ **Configure and provider-test iOS attestation** | The server verifier, challenge protocol, registration, replay/expiry/malformed checks, client, and review path pass locally. Apple Team/App Attest/DeviceCheck credentials, the binding pepper, real provider responses, and a physical iPhone remain. Android/Play Integrity is deferred. | Hosted Phase 4 completion and public beta. |
 | 19 | **Monitor the Expo toolchain's `uuid` advisory** | `npm audit --audit-level=high` passes, but the root tree currently reports 12 moderate transitive findings through Expo config tooling → `xcode` → `uuid`. npm's complete forced remediation downgrades to Expo 46, so take the next compatible Expo/upstream fix instead of breaking the app framework. | No current high-severity release block; review on every dependency update. |
-| 20 | ⚠️ **Promote and verify Phase 5 in staging** | Apply the bounded export/deletion migration in staging, export an account with assurance and moderation history on a physical device, and reconcile the live App Store Connect privacy questionnaire with `docs/APP_STORE.md`. The automated export intentionally withholds security and third-party identifiers; broader legal access requests require a staffed manual path. | Hosted Phase 5 completion and public beta. |
-| 21 | ⚠️ **Promote and load-test Phase 6 in staging** | Deploy `analytics-ingest`, `report-content`, the Phase 6 migration, and the binding pepper. Verify real attestation issues secure installation sessions, push registration succeeds on three physical installations, spoofed/rotated tokens fail, and report/analytics quotas return bounded errors under load. The native attestation client remains Phase 8. | Hosted Phase 6 completion and public beta. |
-| 22 | ⚠️ **Provider-test Phase 7 in staging** | Deploy `process-push-receipts` with the updated notification and translation workers. Verify DeepL/Expo/Resend authentication categories, delayed Expo receipts, permanent-token invalidation, Android channels on a physical device, and feed real storage/egress quota observations into `record_resource_quota_status`. | Hosted Phase 7 completion and reliable notification operations. |
+| 20 | ⚠️ **Deploy and verify Phase 5 on the hosted project** | Exercise a bounded export for a synthetic account with assurance/moderation history on a physical iPhone, clean it up, and reconcile App Store Connect privacy answers with `docs/APP_STORE.md`. | Hosted Phase 5 completion and public beta. |
+| 21 | ⚠️ **Deploy and verify Phase 6 on the hosted project** | Deploy the functions/migration through the exact-SHA workflow. Verify a real iOS attestation issues a secure installation session and bounded report/analytics/token checks behave correctly; keep abusive load testing local. | Hosted Phase 6 completion and public beta. |
+| 22 | ⚠️ **Provider-test Phase 7 on iOS** | Verify DeepL, Expo Push and Resend categories, delayed receipts, permanent-token invalidation, iOS notification behavior, and real hosted quota observations. Android channels are deferred. | Hosted Phase 7 completion and reliable notification operations. |
 
 ## Mine — code
 
@@ -42,14 +41,14 @@ reasoning in `docs/DEFERRED.md`.
 | 1 | AI Interview Assistant | The plan excludes it from the MVP in as many words. It would put a language model between a person and their own words before we know whether the guided prompts are enough. |
 | 2 | Human Story Engine | Needs a corpus that does not exist yet, and a definition of "interesting" that is not engagement — which this product has deliberately made unmeasurable per person. |
 | 3 | Where Are They Now? | Needs five years. Nothing to build; nothing must be broken in the meantime. |
-| 4 | Monetization, Android, full PWA | Phase 17, macro-phase H, post-launch. |
+| 4 | Monetization, Android, full PWA | Post-launch. Android's preserved work and remaining gates are in `POST_IOS_ANDROID.md`. |
 | 5 | Stronger identity assurance, only if beta abuse justifies it | Liveness was explicitly removed from the beta policy and database in Phase 5. Any future version needs consent, a processor, accessibility fallback, retention/deletion guarantees, and a policy amendment. |
 | 6 | Optional audio/video portrait element | Later. |
 
 ## Needs a native build, not Expo Go
 
-Development happens in Expo Go on Android. These work in the code but cannot be
-exercised there, and are flagged rather than reworked:
+The release target is iOS. These features require an iOS development/TestFlight
+build rather than Expo Go or a simulator:
 
 | Feature | Why | State |
 | --- | --- | --- |
@@ -73,7 +72,7 @@ August 2026.
 | Storage buckets | `avatars`, `portraits` — both private |
 | Scheduled jobs | Nine active jobs captured on 25 August 2026: eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send/expiry/alerts every 5 minutes, translate 01:00, purge 03:30. Full baseline in `docs/PHASE0_BASELINE.md`. |
 | EAS project | `@mignoncharly/unumae` |
-| EAS build environment | Phase 10 profiles now isolate `staging` from `production`; protected values still require operator configuration and verification |
+| EAS build environment | One EAS project and one hosted `production` variable environment; linkage and protected values still require operator verification |
 | App Store Connect | Unumae app record `6804251671` for `com.unumae.app`; production build `0.1.0 (3)` successfully uploaded to TestFlight on 24 August 2026 and is processing with Apple |
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Hosted Auth/email | Production Site URL, native/web redirects, six-digit confirmation and magic-link templates, Apple provider, and custom SMTP all pass the read-only release check |

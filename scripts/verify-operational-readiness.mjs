@@ -30,9 +30,11 @@ forbidText(
 const promotion = read('.github', 'workflows', 'promote.yml');
 for (const contract of [
   'verify-ci-provenance.mjs',
-  'environment: ${{ inputs.target }}',
+  'environment: production',
+  'Capture sanitized pre-deployment baseline',
   'supabase db push --linked',
   'supabase functions deploy',
+  'Capture sanitized post-deployment baseline',
 ]) {
   requireText(
     promotion,
@@ -101,18 +103,21 @@ for (const path of [
 }
 
 const eas = JSON.parse(read('eas.json'));
-for (const profile of [
-  'development',
-  'development-simulator',
-  'e2e-test',
-  'staging',
-]) {
-  if (eas.build?.[profile]?.environment !== 'staging') {
-    failures.push(`EAS ${profile} must use the staging environment.`);
+for (const profile of ['development', 'development-simulator', 'e2e-test']) {
+  if (eas.build?.[profile]?.environment !== 'production') {
+    failures.push(`EAS ${profile} must use the single hosted environment.`);
+  }
+  if (eas.build?.[profile]?.env?.APP_ENV !== 'hosted') {
+    failures.push(
+      `EAS ${profile} must identify itself as a hosted test build.`
+    );
   }
 }
+if (eas.build?.staging) {
+  failures.push('EAS must not define a staging profile.');
+}
 if (eas.build?.production?.environment !== 'production') {
-  failures.push('EAS production must use only the production environment.');
+  failures.push('EAS production must use the single hosted environment.');
 }
 
 if (failures.length > 0) {

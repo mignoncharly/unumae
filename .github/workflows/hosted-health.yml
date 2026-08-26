@@ -11,14 +11,10 @@ permissions:
 
 jobs:
   check:
-    name: Check ${{ matrix.target }}
+    name: Check hosted project
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [staging, production]
-    environment: ${{ matrix.target }}
+    environment: production
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Keep warm and check service/disk health
@@ -32,7 +28,7 @@ jobs:
         if: failure()
         env:
           GH_TOKEN: ${{ github.token }}
-          ALERT_TITLE: Hosted ${{ matrix.target }} health check failed
+          ALERT_TITLE: Hosted production health check failed
         run: |
           existing="$(gh issue list --state open --search "$ALERT_TITLE in:title" --json number --jq '.[0].number // empty')"
           body="Investigate project health, quota, or pause state: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"

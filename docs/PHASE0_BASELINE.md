@@ -1,5 +1,9 @@
 # Phase 0 production baseline
 
+> Historical snapshot: captured before the later decision to use one hosted
+> Supabase project and launch iOS first. Current environment policy lives in
+> `docs/ENVIRONMENTS.md`; historical Android bundle evidence below is retained.
+
 Captured 25 August 2026. This is the reproducible starting point for
 `docs/implementation-roadmap-v2.md`. It contains configuration metadata only;
 secret values and user data are deliberately excluded.
@@ -167,7 +171,7 @@ These are architectural inputs, not temporary warnings:
 
 | Constraint      | Current limit / behavior                                                 | Roadmap consequence                                                                    |
 | --------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| Active projects | Two across all organizations where the account is Owner or Administrator | Development and CI use local ephemeral stacks; hosted slots are staging and production |
+| Active projects | Two across all organizations where the account is Owner or Administrator | Product decision uses one hosted project; development and CI remain local |
 | Database        | 500 MB per project; exceeding it can make the database read-only         | Monitor size and keep retention jobs operational                                       |
 | File storage    | 1 GB per organization billing-period average                             | Orphan cleanup and deletion reconciliation are mandatory                               |
 | Egress          | 5 GB uncached and 5 GB cached                                            | Monitor photo traffic and signed-media delivery                                        |
@@ -175,7 +179,7 @@ These are architectural inputs, not temporary warnings:
 | Logs            | One day accessible                                                       | Persist operational outcomes in application tables                                     |
 | Managed backups | Not included                                                             | Self-managed encrypted logical dumps are required before real user data                |
 | PITR            | Not included; paid add-on                                                | Pro is a production-traffic gate and PITR needs a separate decision                    |
-| Inactivity      | Free projects may pause after about seven days of insufficient activity  | Staging needs a resume/warm-up step; production cannot rely on Free availability       |
+| Inactivity      | Free projects may pause after about seven days of insufficient activity  | Hosted health monitoring and the paid production gate remain required                  |
 
 Authoritative references: [billing and quotas](https://supabase.com/docs/guides/platform/billing-on-supabase),
 [database size](https://supabase.com/docs/guides/platform/database-size),

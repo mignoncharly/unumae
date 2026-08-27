@@ -40,7 +40,7 @@ const warm = await fetch(`${projectUrl}/auth/v1/health`, {
 if (!warm.ok)
   throw new Error(`Hosted Auth health check failed: HTTP ${warm.status}`);
 
-await management('/health?services=db,auth,storage&timeout_ms=20000');
+await management('/health?services=db&services=auth&services=storage');
 const disk = await management('/config/disk/util');
 const size = Number(disk.metrics?.fs_size_bytes ?? 0);
 const used = Number(disk.metrics?.fs_used_bytes ?? 0);

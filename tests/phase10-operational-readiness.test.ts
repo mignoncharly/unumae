@@ -15,6 +15,7 @@ describe('Phase 10 operational readiness', () => {
     expect(promote).toContain('environment: production');
     expect(promote).not.toContain('inputs.target');
     expect(promote).toContain('Capture sanitized pre-deployment baseline');
+    expect(promote).toContain('SUPABASE_DB_POOLER_URL');
     expect(promote).toContain('Capture sanitized post-deployment baseline');
   });
 

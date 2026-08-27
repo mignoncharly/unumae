@@ -19,12 +19,43 @@ if (!process.env.CI || process.env.GITHUB_ACTIONS !== 'true') {
 }
 const password = process.env.SUPABASE_DB_PASSWORD;
 const projectRef = process.env.SUPABASE_PROJECT_REF;
+const poolerUrl = process.env.SUPABASE_DB_POOLER_URL;
 
 if (!password || !projectRef || !/^[a-z0-9]{20}$/.test(projectRef)) {
   console.error(
     'Protected environment needs database password and project ref.'
   );
   process.exit(1);
+}
+
+let connectionArgs = [
+  '--host',
+  `db.${projectRef}.supabase.co`,
+  '--port',
+  '5432',
+  '--username',
+  'postgres',
+  '--dbname',
+  'postgres',
+];
+
+if (poolerUrl) {
+  const parsed = new URL(poolerUrl);
+  const expectedUser = `postgres.${projectRef}`;
+  if (
+    parsed.protocol !== 'postgresql:' ||
+    !parsed.hostname.endsWith('.pooler.supabase.com') ||
+    parsed.port !== '5432' ||
+    parsed.username !== expectedUser ||
+    parsed.password ||
+    parsed.pathname !== '/postgres'
+  ) {
+    console.error(
+      'SUPABASE_DB_POOLER_URL must be the password-free linked session-pooler URL for the approved project.'
+    );
+    process.exit(1);
+  }
+  connectionArgs = ['--dbname', poolerUrl];
 }
 
 const sql = String.raw`
@@ -145,14 +176,7 @@ select jsonb_build_object(
 const result = spawnSync(
   'psql',
   [
-    '--host',
-    `db.${projectRef}.supabase.co`,
-    '--port',
-    '5432',
-    '--username',
-    'postgres',
-    '--dbname',
-    'postgres',
+    ...connectionArgs,
     '--no-password',
     '--tuples-only',
     '--no-align',

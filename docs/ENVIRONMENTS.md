@@ -27,6 +27,10 @@ fresh backup.
 - `.github/workflows/promote.yml` checks out a full SHA, requires successful CI
   for that exact revision, and captures sanitized baselines before and after
   applying migrations and Edge Functions.
+- Because the direct database hostname is IPv6-only, hosted baselines use the
+  password-free linked session-pooler URL in `SUPABASE_DB_POOLER_URL`. The
+  script validates its Supabase host, port, username, database, and project ref
+  before connecting.
 - No manual hosted SQL and no local hosted function deployment.
 - Hosted administrators require MFA and least privilege. GitHub production
   approval must have no administrator bypass.

@@ -53,6 +53,7 @@ jobs:
         env:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+          SUPABASE_DB_POOLER_URL: ${{ vars.SUPABASE_DB_POOLER_URL }}
         run: node scripts/capture-production-baseline.mjs >> "$GITHUB_STEP_SUMMARY"
       - name: Apply reviewed forward migrations
         env:
@@ -88,4 +89,5 @@ jobs:
         env:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+          SUPABASE_DB_POOLER_URL: ${{ vars.SUPABASE_DB_POOLER_URL }}
         run: node scripts/capture-production-baseline.mjs >> "$GITHUB_STEP_SUMMARY"

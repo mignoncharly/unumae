@@ -8,6 +8,7 @@ describe('Phase 10 operational readiness', () => {
   it('keeps ordinary CI local and hosted deployment exact-SHA only', () => {
     const ci = read('.github', 'workflows', 'ci.yml');
     const promote = read('.github', 'workflows', 'promote.yml');
+    const health = read('.github', 'workflows', 'hosted-health.yml');
     expect(ci).toContain('supabase start');
     expect(ci).not.toContain('SUPABASE_ACCESS_TOKEN');
     expect(promote).toContain('verify-ci-provenance.mjs');
@@ -17,6 +18,7 @@ describe('Phase 10 operational readiness', () => {
     expect(promote).toContain('Capture sanitized pre-deployment baseline');
     expect(promote).toContain('SUPABASE_DB_POOLER_URL');
     expect(promote).toContain('Capture sanitized post-deployment baseline');
+    expect(health).toContain('SUPABASE_ANON_KEY');
   });
 
   it('backs up database and photos encrypted outside Supabase and rehearses restore', () => {

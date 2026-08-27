@@ -46,6 +46,11 @@ Unumae has one hosted Supabase project and one EAS project. There is no staging
 environment. Hosted probes therefore use bounded synthetic data, explicit
 cleanup, and a protected exact-SHA deployment after local and CI verification.
 
+Infrastructure baseline status: completed on 27 August 2026 for commit
+`521257678bb388dccf1418b1002ea2ed694b6ed0`. See
+`docs/PHASE_B_HOSTED_BASELINE.md`. The checkboxes below remain reusable for each
+future release candidate and are not permanently pre-checked by that baseline.
+
 - [ ] The existing hosted Supabase project is correctly linked.
 - [ ] Auth, Storage, Edge Functions, cron jobs, Vault secret names, and required
       iOS providers match the approved configuration.

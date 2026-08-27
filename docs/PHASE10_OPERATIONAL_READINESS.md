@@ -27,8 +27,11 @@ supabase db reset --yes
 supabase test db supabase/tests/phase10_operational_readiness.sql
 ```
 
-The completion gate is not claimed until the existing hosted Supabase project,
-Auth, Storage, Edge Functions, cron jobs, Vault secret names, required iOS
-providers, migration history, EAS linkage, and public environment variables are
-audited and captured. A scheduled encrypted backup must be observed outside
-Supabase and a restore workflow must record real elapsed time.
+The hosted-infrastructure portion of the completion gate was achieved on
+27 August 2026. The existing Supabase project, Auth, Storage, Edge Functions,
+cron jobs, Vault secret names, required iOS provider secret names, migration
+history, EAS linkage, public environment variables, and sanitized baseline were
+audited and captured in `docs/PHASE_B_HOSTED_BASELINE.md`.
+
+Phase 10 is not fully complete until Phase E observes a scheduled encrypted
+backup outside Supabase and a restore workflow records real elapsed time.

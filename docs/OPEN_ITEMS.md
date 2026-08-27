@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Roadmap v2 Phase 10 local implementation, 26 August 2026.
+Last updated: Phase B hosted infrastructure closeout, 27 August 2026.
 
 ---
 
@@ -18,14 +18,14 @@ Last updated: Roadmap v2 Phase 10 local implementation, 26 August 2026.
 | 7 | **Check the share card on a real device** | Settings → Developer → Share card. It names which of the two native modules loaded, renders the card scaled to fit, and captures it to a real PNG that it then displays — the preview proves the layout, only the capture proves the capture. | Nothing — the fallback works. |
 | 8 | **Credentials remain local** | `docs/supa_keys.md` was used through redacting wrappers for the database deployment and live suites. It remains gitignored and unmodified. The authenticated CLI credential was passed to the read-only hosted Auth verifier in memory; no credential entered logs or version control. | Nothing. |
 | 10 | **EAS Maestro plan or a macOS runner** | Expo accepts built-in Maestro jobs only on a paid plan for this account. Run `npm run e2e:ios` on a Mac with Xcode/Maestro, or enable the plan and use `npm run e2e:ios:eas`. | Automated iPhone-size evidence; real-device checks remain separate. |
-| 11 | ⚠️ **Configure the production selection-email fallback** | The Phase 0 secret inventory found that `RESEND_API_KEY` and `NOTIFICATION_FROM_EMAIL` are absent. Without them, `send-notifications` records `email_not_configured` when a selected user has no successful push. Confirm the sender domain in Resend, set both Edge secrets using `docs/OPERATIONS.md`, and exercise the fallback end to end. | Reliable selection delivery and public beta. |
+| 11 | ✅ **Production selection-email credentials configured** | `RESEND_API_KEY` and `NOTIFICATION_FROM_EMAIL` are present in the hosted Edge secret store. End-to-end fallback delivery remains a Phase D provider test. | Nothing in Phase B. |
 | 12 | ⚠️ **Supabase paid-plan timing** | Roadmap v2 makes Pro a hard gate before production traffic. Free has no managed backups, one-day logs, quota restrictions, and inactivity pausing. | Production traffic. |
-| 13 | ⚠️ **Verify the single hosted infrastructure baseline** | Audit the existing project's Auth, Storage, Edge Functions, cron, Vault secret names, required iOS providers, migrations, EAS linkage, and public variables; capture a sanitized baseline. No staging project is planned. | Hosted verification and public beta deployment. |
+| 13 | ✅ **Single hosted infrastructure baseline complete** | Auth, Storage, 11 Edge Functions, 16 cron jobs, Vault secret names, required iOS/provider secret names, 52 migrations, EAS linkage, public variables, and sanitized pre/post baselines were verified. See `docs/PHASE_B_HOSTED_BASELINE.md`. | Nothing. |
 | 14 | ⚠️ **Deploy and verify Phase 1 on the hosted project** | Account enforcement passes local database, pgTAP, Edge, and client checks. Use the protected exact-SHA workflow, a synthetic account, explicit cleanup, and pre/post baselines. | Phase 1 hosted completion and public beta. |
 | 15 | ⚠️ **Deploy and verify Phase 2 on the hosted project** | Retryable deletion passes local database and Edge checks. Keep destructive failure injection local; use a disposable hosted account for bounded real Storage/Auth and physical-iPhone deletion verification. | Phase 2 hosted completion and public beta. |
-| 16 | ⚠️ **Enable required GitHub checks and branch protection** | Repository settings must require `Application`, `Website`, and `Fresh database and Edge Functions`, block direct release-branch pushes, and prevent administrator bypass. Workflow files cannot enforce their own required-check status. | CI as an enforceable release boundary. |
-| 17 | **Configure `EXPO_TOKEN` for release candidates** | The manual release-candidate workflow verifies an exact CI-passed SHA and then invokes the EAS Maestro workflow. It cannot authenticate until this scoped GitHub Actions secret exists. | Automated same-SHA native smoke evidence. |
-| 18 | ⚠️ **Configure and provider-test iOS attestation** | The server verifier, challenge protocol, registration, replay/expiry/malformed checks, client, and review path pass locally. Apple Team/App Attest/DeviceCheck credentials, the binding pepper, real provider responses, and a physical iPhone remain. Android/Play Integrity is deferred. | Hosted Phase 4 completion and public beta. |
+| 16 | ✅ **Required GitHub checks and branch protection enabled** | `main` requires strict `Application`, `Website`, and `Fresh database and Edge Functions` checks. Pull requests are required, stale approvals are dismissed, and administrator enforcement is enabled. | Nothing. |
+| 17 | ✅ **`EXPO_TOKEN` configured** | The GitHub Actions secret exists and authenticates as the EAS project owner. | Nothing. |
+| 18 | ⚠️ **Provider-test iOS attestation** | All required hosted Apple/App Attest/DeviceCheck secret names and the binding pepper are present. Genuine provider responses still require a signed build and physical iPhone in the deferred native portion of Phase D. Android/Play Integrity is deferred. | Native iOS release gate and public beta. |
 | 19 | **Monitor the Expo toolchain's `uuid` advisory** | `npm audit --audit-level=high` passes, but the root tree currently reports 12 moderate transitive findings through Expo config tooling → `xcode` → `uuid`. npm's complete forced remediation downgrades to Expo 46, so take the next compatible Expo/upstream fix instead of breaking the app framework. | No current high-severity release block; review on every dependency update. |
 | 20 | ⚠️ **Deploy and verify Phase 5 on the hosted project** | Exercise a bounded export for a synthetic account with assurance/moderation history on a physical iPhone, clean it up, and reconcile App Store Connect privacy answers with `docs/APP_STORE.md`. | Hosted Phase 5 completion and public beta. |
 | 21 | ⚠️ **Deploy and verify Phase 6 on the hosted project** | Deploy the functions/migration through the exact-SHA workflow. Verify a real iOS attestation issues a secure installation session and bounded report/analytics/token checks behave correctly; keep abusive load testing local. | Hosted Phase 6 completion and public beta. |
@@ -67,12 +67,12 @@ August 2026.
 | Thing | State |
 | --- | --- |
 | Supabase project | `qpicjsjxdblrxdrdibge`, CLI linked |
-| Migrations | All 42 applied; local and remote histories match through `20260823230000` |
-| Edge Functions | All active: `delete-account` v3, `send-notifications` v3, and `translate-portraits` v2. The current `delete-account` revision passes complete live auth/data/media deletion verification. Selection-email fallback remains blocked by the missing Resend secrets above. |
+| Migrations | All 52 applied; local and remote histories match through `20260826120000` |
+| Edge Functions | All 11 repository functions are deployed and `ACTIVE`, with no missing or extra hosted functions. All 11 routes pass CORS preflight. |
 | Storage buckets | `avatars`, `portraits` — both private |
-| Scheduled jobs | Nine active jobs captured on 25 August 2026: eligibility 23:50, draw 00:00 for D+2, publish 00:01, notify 00:10, send/expiry/alerts every 5 minutes, translate 01:00, purge 03:30. Full baseline in `docs/PHASE0_BASELINE.md`. |
+| Scheduled jobs | All 16 hosted cron jobs are active; scheduled-function credentials are present in Vault. |
 | EAS project | `@mignoncharly/unumae` |
-| EAS build environment | One EAS project and one hosted `production` variable environment; linkage and protected values still require operator verification |
+| EAS build environment | One EAS project and one hosted `production` variable environment; project linkage and `EXPO_TOKEN` authentication are verified. |
 | App Store Connect | Unumae app record `6804251671` for `com.unumae.app`; production build `0.1.0 (3)` successfully uploaded to TestFlight on 24 August 2026 and is processing with Apple |
 | Apple provider | enabled, `com.unumae.app` confirmed in its Client IDs |
 | Hosted Auth/email | Production Site URL, native/web redirects, six-digit confirmation and magic-link templates, Apple provider, and custom SMTP all pass the read-only release check |
@@ -83,7 +83,7 @@ August 2026.
 | **Full loop, end to end** | **passes — draw, invitation, acceptance, portrait, moderation, publication, audience, Archive** |
 | **Escalation** | **passes — decline and silence both promote a backup who can actually accept** |
 | Nightly jobs | pg_net → Edge Function proven end to end: one queued call produced 30 translations |
-| Tests | 621 offline passing; Expo Doctor 21/21; release config, draw, anonymous privileges, signed-in security, safety/privacy, memory/international, complete account deletion, and full-cycle live suites passing |
+| Tests | 667 tests across 49 suites passed locally; exact-`main` Application, Website, fresh-database, pgTAP, Edge, security, Expo Doctor, secret-scan, and audit gates passed remotely. |
 | Marketing website | Live at `https://unumae.app`; isolated Nginx site, TLS, monitoring and renewal verified |
 
 ## Commands worth remembering

@@ -1,10 +1,26 @@
 # Implementation roadmap (v2)
 
-Revised for two hard constraints that emerged during review:
+Revised for three hard constraints that emerged during review:
 
 1. **No identity-document verification is available.** Human-uniqueness cannot be proven. The plan now enforces what is enforceable and changes the product claim to match, rather than implying a guarantee that does not exist.
 2. **One hosted Supabase project.** Unumae intentionally uses the existing single project for hosted verification and eventual production. Development and CI use disposable local stacks; no staging project or staging service configuration will be introduced.
 3. **iOS-first release.** Android-compatible code is preserved, but Android builds, Play Integrity, provider eligibility, `assetlinks.json`, and Android device verification are post-iOS work and do not block the current release.
+
+## Current execution status
+
+| Execution phase | Status | Evidence / next gate |
+| --- | --- | --- |
+| A — Reconcile and secure `main` | Complete | `main` is the source of truth and exact-SHA CI is green. |
+| B — Hosted infrastructure baseline | **Complete** | See `docs/PHASE_B_HOSTED_BASELINE.md`. |
+| C — Hosted verification of Phases 1–6 | **Next** | Run bounded hosted account, deletion, export, attestation, limits, and Storage-lifecycle checks. |
+| D — iOS services and device behavior | Pending | Automated provider checks first; signed builds and physical-iPhone checks remain deferred until authorized. |
+| E — Operational safety | Pending | Observe backups, rehearse restore, and exercise incident runbooks. |
+| F — Legal, moderation, and App Store readiness | Pending | Requires reviewed copy, staffed processes, listing metadata, and device screenshots. |
+| G — Alpha, private beta, and launch | Pending | Begins only after the preceding gates pass. |
+
+There is no staging phase. Phase B refers to the existing single hosted
+Supabase/EAS environment. Android is not part of any current iOS release exit
+criterion.
 
 ## What changed from v1
 
@@ -760,13 +776,13 @@ Define and rehearse procedures for:
 
 Development and CI use local databases and receive no hosted credentials. The existing hosted project has verified Auth, Storage, Edge Functions, cron, Vault secret names, required iOS providers, synchronized migrations, EAS linkage, and a sanitized baseline. Service credentials exist only in protected automation and the platform secret store. A scheduled logical and Storage backup runs externally, with a restore procedure that has been executed and timed.
 
-Implementation note (2026-08-26): repository controls are complete locally:
-hosted deployment is protected, exact-SHA, and CI-provenance checked; scheduler
-credentials migrate to Supabase Vault; encrypted database and Storage backups,
-pruning, failure alerts, hosted health checks, and a timed disposable restore
-workflow are defined. The single hosted baseline audit, protected configuration,
-a successfully scheduled backup, and actual timed restore evidence remain
-required. See `docs/PHASE10_OPERATIONAL_READINESS.md`.
+Implementation note (2026-08-27): the single hosted infrastructure baseline is
+complete. Protected exact-SHA deployment, synchronized migrations, active Edge
+Functions, Auth, private Storage, cron, Vault secret names, required iOS
+provider secret names, EAS linkage, and hosted health were verified; see
+`docs/PHASE_B_HOSTED_BASELINE.md`. A successfully scheduled encrypted backup
+and actual timed restore evidence remain Phase E requirements. See
+`docs/PHASE10_OPERATIONAL_READINESS.md`.
 
 ---
 

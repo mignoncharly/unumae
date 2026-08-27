@@ -3,11 +3,21 @@
 const projectRef = process.env.SUPABASE_PROJECT_REF;
 const projectUrl = process.env.SUPABASE_URL?.replace(/\/$/, '');
 const token = process.env.SUPABASE_ACCESS_TOKEN;
-const maximumDiskRatio = Number(process.env.MAXIMUM_DISK_RATIO ?? '0.8');
-if (!/^[a-z0-9]{20}$/.test(projectRef ?? '') || !projectUrl || !token) {
+const publicKey = process.env.SUPABASE_ANON_KEY;
+const configuredDiskRatio = process.env.MAXIMUM_DISK_RATIO?.trim();
+const maximumDiskRatio = Number(configuredDiskRatio || '0.8');
+if (
+  !/^[a-z0-9]{20}$/.test(projectRef ?? '') ||
+  !projectUrl ||
+  !token ||
+  !publicKey
+) {
   throw new Error(
-    'SUPABASE_PROJECT_REF, SUPABASE_URL, and SUPABASE_ACCESS_TOKEN are required.'
+    'SUPABASE_PROJECT_REF, SUPABASE_URL, SUPABASE_ACCESS_TOKEN, and SUPABASE_ANON_KEY are required.'
   );
+}
+if (!(maximumDiskRatio > 0 && maximumDiskRatio <= 1)) {
+  throw new Error('MAXIMUM_DISK_RATIO must be greater than 0 and at most 1.');
 }
 
 const management = async (path) => {
@@ -24,6 +34,7 @@ const management = async (path) => {
 };
 
 const warm = await fetch(`${projectUrl}/auth/v1/health`, {
+  headers: { apikey: publicKey },
   signal: AbortSignal.timeout(20_000),
 });
 if (!warm.ok)

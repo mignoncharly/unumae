@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Install pinned operating-system clients
-        run: sudo apt-get update && sudo apt-get install -y age awscli postgresql-client
+        run: sudo apt-get update && sudo apt-get install -y age postgresql-client
       - name: Export database and private storage
         env:
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
@@ -42,26 +42,24 @@ jobs:
           sha256sum backup/*.age > backup/SHA256SUMS
           rm backup/database.dump backup/storage.tar.gz
           rm -rf backup/storage
-      - name: Upload outside Supabase and prune expired generations
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ vars.BACKUP_S3_REGION }}
-          BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
-          BACKUP_S3_ENDPOINT: ${{ vars.BACKUP_S3_ENDPOINT }}
-          BACKUP_RETENTION_DAYS: ${{ vars.BACKUP_RETENTION_DAYS }}
+      - name: Allocate backup generation
+        id: generation
         run: |
-          stamp="$(date -u +%Y-%m-%dT%H-%M-%SZ)"
-          endpoint=()
-          test -z "$BACKUP_S3_ENDPOINT" || endpoint=(--endpoint-url "$BACKUP_S3_ENDPOINT")
-          aws "${endpoint[@]}" s3 cp backup "s3://$BACKUP_S3_BUCKET/unumae/$stamp/" --recursive --sse AES256
-          cutoff="$(date -u -d "${BACKUP_RETENTION_DAYS:-35} days ago" +%s)"
-          aws "${endpoint[@]}" s3api list-objects-v2 --bucket "$BACKUP_S3_BUCKET" --prefix unumae/ --output json |
-            jq -r '.Contents[]? | [.Key, .LastModified] | @tsv' |
-            while IFS=$'\t' read -r key modified; do
-              test "$(date -u -d "$modified" +%s)" -ge "$cutoff" ||
-                aws "${endpoint[@]}" s3 rm "s3://$BACKUP_S3_BUCKET/$key"
-            done
+          echo "value=$(date -u +%Y-%m-%dT%H-%M-%SZ)" >> "$GITHUB_OUTPUT"
+      - name: Upload encrypted generation to GitHub artifact storage
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: unumae-backup-${{ steps.generation.outputs.value }}
+          path: backup
+          if-no-files-found: error
+          retention-days: 35
+          compression-level: 0
+      - name: Record backup generation
+        run: |
+          printf '### Production backup\n\n- Generation: `%s`\n- Artifact: `unumae-backup-%s`\n- Commit: `%s`\n- Retention: **35 days**\n' \
+            "${{ steps.generation.outputs.value }}" \
+            "${{ steps.generation.outputs.value }}" \
+            "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
       - name: Open or update backup-failure alert
         if: failure()
         env:

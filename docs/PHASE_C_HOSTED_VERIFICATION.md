@@ -1,6 +1,6 @@
 # Phase C — hosted verification of Phases 1–6
 
-Status: **Ready to run; hosted evidence not yet captured.**
+Status: **Complete; hosted evidence captured on 28 August 2026.**
 
 Phase C uses the one hosted Supabase project and the protected `production`
 GitHub Environment. It does not create a staging project, require a signed
@@ -38,16 +38,16 @@ not an assertion that the difference is harmless.
 
 | Field | Value |
 | --- | --- |
-| Workflow run | |
-| Tested `main` SHA | |
+| Workflow run | [Phase C hosted verification run 33154080116](https://github.com/mignoncharly/unumae/actions/runs/33154080116) |
+| Tested `main` SHA | `24f630ef477ad73275c2eeb9ea5b53a0cdc75eb2` |
 | Hosted Supabase project | `qpicjsjxdblrxdrdibge` |
-| Pre-verification baseline | |
-| Post-verification baseline | |
-| Migration/function parity | |
-| Phase 1–6 probes | |
-| Synthetic cleanup | |
-| Baseline diff | |
-| Operator / UTC timestamp | |
+| Pre-verification baseline | Captured by the protected workflow; sanitized |
+| Post-verification baseline | Captured by the protected workflow; sanitized |
+| Migration/function parity | Passed |
+| Phase 1–6 probes | All bounded hosted probes passed |
+| Synthetic cleanup | Passed; probe-owned fixtures were removed |
+| Baseline diff | None after excluding `captured_at_utc` |
+| Operator / UTC timestamp | Automated GitHub Actions run / 28 August 2026 UTC |
 
 ## Phase C exit decision
 

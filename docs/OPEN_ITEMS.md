@@ -3,7 +3,7 @@
 Who owns what, so nothing is forgotten between sessions. Updated at the end of
 each phase. ⚠️ blocks a real cycle from running.
 
-Last updated: Phase B hosted infrastructure closeout, 27 August 2026.
+Last updated: Phase C hosted verification closeout, 28 August 2026.
 
 ---
 
@@ -21,14 +21,14 @@ Last updated: Phase B hosted infrastructure closeout, 27 August 2026.
 | 11 | ✅ **Production selection-email credentials configured** | `RESEND_API_KEY` and `NOTIFICATION_FROM_EMAIL` are present in the hosted Edge secret store. End-to-end fallback delivery remains a Phase D provider test. | Nothing in Phase B. |
 | 12 | ⚠️ **Supabase paid-plan timing** | Roadmap v2 makes Pro a hard gate before production traffic. Free has no managed backups, one-day logs, quota restrictions, and inactivity pausing. | Production traffic. |
 | 13 | ✅ **Single hosted infrastructure baseline complete** | Auth, Storage, 11 Edge Functions, 16 cron jobs, Vault secret names, required iOS/provider secret names, 52 migrations, EAS linkage, public variables, and sanitized pre/post baselines were verified. See `docs/PHASE_B_HOSTED_BASELINE.md`. | Nothing. |
-| 14 | ⚠️ **Deploy and verify Phase 1 on the hosted project** | Account enforcement passes local database, pgTAP, Edge, and client checks. Use the protected exact-SHA workflow, a synthetic account, explicit cleanup, and pre/post baselines. | Phase 1 hosted completion and public beta. |
-| 15 | ⚠️ **Deploy and verify Phase 2 on the hosted project** | Retryable deletion passes local database and Edge checks. Keep destructive failure injection local; use a disposable hosted account for bounded real Storage/Auth and physical-iPhone deletion verification. | Phase 2 hosted completion and public beta. |
+| 14 | ✅ **Deploy and verify Phase 1 on the hosted project** | Hosted bounded account-enforcement, moderation, appeal, token, and privacy-boundary checks passed with explicit cleanup in Phase C run [33154080116](https://github.com/mignoncharly/unumae/actions/runs/33154080116). | Nothing; native release work remains in Phase D. |
+| 15 | ⚠️ **Complete the native portion of Phase 2 deletion verification** | Hosted bounded deletion, Storage cleanup, Auth cleanup, and retry/idempotency checks passed in Phase C. Physical-iPhone deletion and native media/share behavior remain for Phase D. | Native iOS release gate and public beta. |
 | 16 | ✅ **Required GitHub checks and branch protection enabled** | `main` requires strict `Application`, `Website`, and `Fresh database and Edge Functions` checks. Pull requests are required, stale approvals are dismissed, and administrator enforcement is enabled. | Nothing. |
 | 17 | ✅ **`EXPO_TOKEN` configured** | The GitHub Actions secret exists and authenticates as the EAS project owner. | Nothing. |
 | 18 | ⚠️ **Provider-test iOS attestation** | All required hosted Apple/App Attest/DeviceCheck secret names and the binding pepper are present. Genuine provider responses still require a signed build and physical iPhone in the deferred native portion of Phase D. Android/Play Integrity is deferred. | Native iOS release gate and public beta. |
 | 19 | **Monitor the Expo toolchain's `uuid` advisory** | `npm audit --audit-level=high` passes, but the root tree currently reports 12 moderate transitive findings through Expo config tooling → `xcode` → `uuid`. npm's complete forced remediation downgrades to Expo 46, so take the next compatible Expo/upstream fix instead of breaking the app framework. | No current high-severity release block; review on every dependency update. |
-| 20 | ⚠️ **Deploy and verify Phase 5 on the hosted project** | Exercise a bounded export for a synthetic account with assurance/moderation history on a physical iPhone, clean it up, and reconcile App Store Connect privacy answers with `docs/APP_STORE.md`. | Hosted Phase 5 completion and public beta. |
-| 21 | ⚠️ **Deploy and verify Phase 6 on the hosted project** | Deploy the functions/migration through the exact-SHA workflow. Verify a real iOS attestation issues a secure installation session and bounded report/analytics/token checks behave correctly; keep abusive load testing local. | Hosted Phase 6 completion and public beta. |
+| 20 | ⚠️ **Complete the native portion of Phase 5 export verification** | Hosted bounded export scoping/completeness and cleanup passed in Phase C. Physical-iPhone share-sheet evidence and final App Store privacy reconciliation remain. | Native iOS release gate and public beta. |
+| 21 | ⚠️ **Complete the provider portion of Phase 6 verification** | Hosted bounded report, analytics, token, malformed-request, replay/stale-request, and manual-review checks passed in Phase C. Genuine iOS App Attest/DeviceCheck evidence remains for Phase D. | Native iOS release gate and public beta. |
 | 22 | ⚠️ **Provider-test Phase 7 on iOS** | Verify DeepL, Expo Push and Resend categories, delayed receipts, permanent-token invalidation, iOS notification behavior, and real hosted quota observations. Android channels are deferred. | Hosted Phase 7 completion and reliable notification operations. |
 
 ## Mine — code

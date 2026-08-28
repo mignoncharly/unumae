@@ -5,7 +5,7 @@ This checklist implements the verification layers required by Phase 0 of
 migration, build, environment, date, operator, result, and evidence location.
 
 Public beta is blocked until roadmap Phases 1–5 are complete. Production
-traffic is additionally blocked by the paid-plan gate.
+traffic is additionally blocked by the device and moderation gates.
 
 ## 1. Local static verification
 
@@ -89,7 +89,8 @@ signed-build, app-link, and device-verification gates live in
 ## 5. Production promotion
 
 - [ ] Roadmap Phases 1–5 are complete for public beta.
-- [ ] Paid-plan gate is met before production traffic.
+- [ ] A backup generation exists and one restore rehearsal has passed with its
+      elapsed time recorded. This is the whole backup story on the Free plan.
 - [ ] A fresh encrypted off-platform backup exists and restore was rehearsed.
 - [ ] Storage backup policy is implemented or the approved no-backup decision
       is reflected in user-facing policy.

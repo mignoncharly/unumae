@@ -68,23 +68,4 @@ jobs:
         run: node scripts/capture-production-baseline.mjs | tee phase-c-post-baseline.json >> "$GITHUB_STEP_SUMMARY"
       - name: Compare sanitized baselines
         if: always()
-        shell: bash
-        run: |
-          if test -f phase-c-pre-baseline.json && test -f phase-c-post-baseline.json; then
-            node - <<'NODE'
-            const fs = require('node:fs');
-            const normalize = (file) => {
-              const value = JSON.parse(fs.readFileSync(file, 'utf8'));
-              delete value.captured_at_utc;
-              return JSON.stringify(value);
-            };
-            if (normalize('phase-c-pre-baseline.json') !== normalize('phase-c-post-baseline.json')) {
-              console.error('Sanitized hosted baseline changed during verification. Review the diff.');
-              process.exit(1);
-            }
-            console.log('Sanitized hosted baseline is unchanged apart from capture time.');
-            NODE
-          else
-            echo 'Baseline comparison skipped because one capture failed.'
-            exit 1
-          fi
+        run: node scripts/compare-hosted-baselines.mjs

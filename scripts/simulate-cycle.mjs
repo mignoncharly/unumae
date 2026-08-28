@@ -508,9 +508,26 @@ async function runCycle(
   // therefore completes consent on a future scheduler date, then moves the
   // approved fixture to the day whose Today/Archive behavior it is exercising.
   if (finalDate !== date) {
+    const existing = await svc(
+      `/rest/v1/daily_draws?selection_date=eq.${finalDate}&select=draw_version,selection_status&order=draw_version.desc&limit=1`
+    );
+    const existingRows = existing.ok ? await existing.json() : [];
+    const activeExisting = existingRows.find(
+      (candidate) => candidate.selection_status !== 'cancelled'
+    );
+    if (activeExisting) {
+      step(
+        false,
+        `the approved fixture can use ${finalDate} without replacing an active cycle`
+      );
+      return null;
+    }
     const moved = await svc(`/rest/v1/daily_draws?id=eq.${row.id}`, {
       method: 'PATCH',
-      body: JSON.stringify({ selection_date: finalDate }),
+      body: JSON.stringify({
+        selection_date: finalDate,
+        draw_version: (existingRows[0]?.draw_version ?? 0) + 1,
+      }),
     });
     if (!step(moved.ok, `the approved fixture moved to ${finalDate}`)) {
       return null;

@@ -42,4 +42,22 @@ describe('Phase 10 operational readiness', () => {
     expect(migration).toContain('drop table if exists public.job_secrets');
     expect(migration).toContain('configure_job_secret');
   });
+
+  it('keeps Phase C baseline comparison and hosted fixtures shell-safe', () => {
+    const phaseC = read('.github', 'workflows', 'hosted-phase-c.yml');
+    const compare = read('scripts', 'compare-hosted-baselines.mjs');
+    const edge = read('scripts', 'verify-edge-functions.mjs');
+    const deletion = read('scripts', 'verify-delete-account.mjs');
+    const simulation = read('scripts', 'simulate-cycle.mjs');
+    expect(phaseC).toContain('node scripts/compare-hosted-baselines.mjs');
+    expect(phaseC).not.toContain("node - <<'NODE'");
+    expect(compare).toContain('captured_at_utc');
+    expect(edge).toContain(
+      'token: publicFunctions.includes(name) ? undefined : secretKey'
+    );
+    expect(deletion).toContain('body: { jobRunId }');
+    expect(simulation).toContain(
+      'draw_version: (existingRows[0]?.draw_version ?? 0) + 1'
+    );
+  });
 });

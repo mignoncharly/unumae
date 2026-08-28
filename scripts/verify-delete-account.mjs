@@ -17,6 +17,7 @@ const password = `${randomUUID()}Aa1!`;
 let userId;
 let drawId;
 let correlationId;
+let jobRunId;
 let failures = 0;
 
 function check(value, labelText) {
@@ -84,6 +85,9 @@ async function cleanup() {
       .from('deletion_requests')
       .delete()
       .eq('correlation_id', correlationId);
+  }
+  if (jobRunId) {
+    await service.from('job_runs').delete().eq('id', jobRunId);
   }
 }
 
@@ -194,12 +198,24 @@ try {
     'account is locked before any destructive work'
   );
 
+  const workerRun = await service
+    .from('job_runs')
+    .insert({
+      job: 'process-account-deletions',
+      ok: false,
+      status: 'queued',
+    })
+    .select('id')
+    .single();
+  if (workerRun.error || !workerRun.data) throw workerRun.error;
+  jobRunId = workerRun.data.id;
+
   let authDeleted = false;
   for (let attempt = 0; attempt < 20; attempt += 1) {
     const processed = await service.functions.invoke(
       'process-account-deletions',
       {
-        body: {},
+        body: { jobRunId },
       }
     );
     if (processed.error) throw processed.error;

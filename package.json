@@ -51,6 +51,7 @@
     "verify:delete-account:live": "node scripts/verify-delete-account.mjs --live",
     "verify:release-config": "node scripts/verify-release-config.mjs",
     "verify:operations": "node scripts/verify-operational-readiness.mjs",
+    "verify:hosted": "node scripts/verify-hosted-phase-c.mjs",
     "baseline:production": "node scripts/capture-production-baseline.mjs",
     "e2e:ios": "node scripts/run-ios-e2e.mjs",
     "e2e:ios:eas": "eas workflow:run .eas/workflows/e2e-ios.yml",

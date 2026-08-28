@@ -201,7 +201,6 @@ Authoritative references: [billing and quotas](https://supabase.com/docs/guides/
 
 The following pre-existing files were deliberately not folded into Phase 0:
 
-- `docs/APP_STORE_CONNECT_PROMPT.md`
 - `docs/k.jpeg`
 
 They remain user-owned, untracked work. The v2 roadmap itself is part of Phase

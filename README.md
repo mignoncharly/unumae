@@ -21,6 +21,7 @@ amended. Every feature request is measured against it.
 | [DATABASE.md](./docs/DATABASE.md) | Schema conventions, RLS posture, planned tables |
 | [SECURITY.md](./docs/SECURITY.md) | Threat model, secrets, proof of humanity |
 | [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) | 18 phases and their status |
+| [PHASE11_RELEASE_HARDENING.md](./docs/PHASE11_RELEASE_HARDENING.md) | Current code-side release hardening and manual blockers |
 | [IMPLEMENTATION_PLAN_RECONCILED.md](./docs/IMPLEMENTATION_PLAN_RECONCILED.md) | Current iOS-first, single-project release plan |
 | [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) | What is waiting on you, and what is waiting on me |
 | [MODERATION.md](./docs/MODERATION.md) | Who can moderate, and how the first one comes to exist |

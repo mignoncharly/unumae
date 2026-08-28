@@ -1,0 +1,34 @@
+{
+  "name": "Unumae",
+  "localizations": {
+    "en-US": {
+      "subtitle": "One person, one day",
+      "promotionalText": "Meet one person. Read one story. Return tomorrow.",
+      "description": "One person. One day. One story worth your attention.\n\nEvery day, Unumae selects one ordinary person from the community. If they accept and a human moderator approves their portrait, they become Today's Human for one shared 24-hour window. Read their portrait, ask a thoughtful question, Remember them privately, and return to the Human Archive when the day is over.\n\nThe draw is recorded and reproducible. Participation is free, and payment, fame, and engagement never improve a person's chance. Unumae has no followers, likes, rankings, advertising, or endless feed. It is a finite daily meeting, designed to end when the story has been read.\n\nRead everything as a guest; an account is needed only for participation, questions, Remember, reports, blocking, and entering the draw. Unumae is free, available in English, French, and German, and made for iPhone.",
+      "keywords": "portrait,question,archive,random,community,story,curiosity,privacy,moderation",
+      "whatsNew": "First release of Unumae."
+    },
+    "fr-FR": {
+      "subtitle": "Une personne, un jour",
+      "promotionalText": "Rencontrez une personne. Lisez une histoire. Revenez demain.",
+      "description": "Une personne. Un jour. Une histoire qui mérite votre attention.\n\nChaque jour, Unumae sélectionne au hasard une personne ordinaire de la communauté. Si elle accepte et qu'un modérateur humain approuve son portrait, elle devient l'Humain du jour pendant une même fenêtre de 24 heures pour tout le monde. Lisez son portrait, posez une question réfléchie, ajoutez cette personne à vos Archives privées avec Remember, puis retrouvez-la dans les Archives humaines.\n\nLe tirage est enregistré et reproductible. La participation est gratuite : le paiement, la célébrité et l'engagement n'améliorent jamais les chances. Unumae n'a ni followers, ni likes, ni classements, ni publicité, ni fil sans fin. C'est une rencontre quotidienne limitée, conçue pour se terminer lorsque l'histoire est lue.\n\nTout est lisible sans compte ; un compte est nécessaire uniquement pour participer, poser une question, utiliser Remember, signaler, bloquer ou entrer dans le tirage. Unumae est gratuit, disponible en français, anglais et allemand, et conçu pour iPhone.",
+      "keywords": "portrait,question,archives,hasard,communaute,histoire,curiosite,confidentialite,moderation",
+      "whatsNew": "Première version d'Unumae."
+    },
+    "de-DE": {
+      "subtitle": "Ein Mensch, ein Tag",
+      "promotionalText": "Begegne einem Menschen. Lies eine Geschichte. Komm morgen wieder.",
+      "description": "Ein Mensch. Ein Tag. Eine Geschichte, die deine Aufmerksamkeit verdient.\n\nJeden Tag wählt Unumae zufällig einen gewöhnlichen Menschen aus der Community aus. Wenn diese Person zustimmt und ein menschlicher Moderator das Porträt freigibt, wird sie für ein gemeinsames 24-Stunden-Fenster zum Menschen des Tages. Lies das Porträt, stelle eine überlegte Frage, merke dir die Person privat mit Remember und finde sie danach im Menschenarchiv wieder.\n\nDie Auswahl wird aufgezeichnet und ist reproduzierbar. Die Teilnahme ist kostenlos: Zahlung, Bekanntheit und Aktivität verbessern die Chance niemals. Unumae hat keine Follower, Likes, Ranglisten, Werbung und keinen endlosen Feed. Es ist eine begrenzte tägliche Begegnung, die endet, wenn die Geschichte gelesen ist.\n\nAlles ist als Gast lesbar; ein Konto ist nur für die Teilnahme, Fragen, Remember, Meldungen, das Blockieren und den Eintritt in die Auswahl nötig. Unumae ist kostenlos, auf Deutsch, Englisch und Französisch verfügbar und für das iPhone entwickelt.",
+      "keywords": "portraet,frage,archiv,zufall,gemeinschaft,geschichte,neugier,datenschutz,moderation",
+      "whatsNew": "Erste Version von Unumae."
+    }
+  },
+  "urls": {
+    "privacy": "https://unumae.app/privacy",
+    "support": "https://unumae.app/about",
+    "marketing": "https://unumae.app",
+    "terms": "https://unumae.app/terms",
+    "communityGuidelines": "https://unumae.app/community-guidelines",
+    "selection": "https://unumae.app/how-selection-works"
+  }
+}

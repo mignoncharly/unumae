@@ -62,10 +62,11 @@ used elsewhere, so no candidate or draft Human can enter a social cache. The
 guarded quote template remains reviewable at `/dev/share-card` and only accepts
 live content with an explicitly approved quote.
 
-The site does not emit an App Store banner or universal-link association yet.
-Those require the real App Store identifier, deployed HTTPS origin, Apple Team
-ID, and a verified association file. Until then every shared URL remains a
-complete web fallback.
+The site does not emit an App Store banner yet; that requires the final App
+Store listing URL. It does publish the reviewed universal-link association at
+`/.well-known/apple-app-site-association` for `com.unumae.app`. Until the
+listing URL and release artifact are final, every shared URL remains a complete
+web fallback.
 
 ## Privacy-conscious measurement
 

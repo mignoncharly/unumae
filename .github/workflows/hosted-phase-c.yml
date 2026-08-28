@@ -1,0 +1,90 @@
+name: Phase C hosted verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: Full main SHA with a successful CI run and hosted deployment
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: hosted-phase-c
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify Phases 1-6 against hosted infrastructure
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    environment: production
+    env:
+      RELEASE_SHA: ${{ inputs.commit_sha }}
+      PROMOTION_TARGET: hosted
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+      SUPABASE_DB_POOLER_URL: ${{ vars.SUPABASE_DB_POOLER_URL }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ inputs.commit_sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.20.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520 # v3.0.0
+        with:
+          version: 2.84.2
+      - run: npm ci
+      - name: Require successful CI for this exact SHA
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$RELEASE_SHA"
+          node scripts/verify-ci-provenance.mjs
+      - name: Verify hosted migration and Edge Function parity
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: node scripts/verify-hosted-parity.mjs
+      - name: Capture sanitized pre-verification baseline
+        env:
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: node scripts/capture-production-baseline.mjs | tee phase-c-pre-baseline.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Run all bounded hosted Phase C probes
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run verify:hosted
+      - name: Capture sanitized post-verification baseline
+        if: always()
+        env:
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: node scripts/capture-production-baseline.mjs | tee phase-c-post-baseline.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Compare sanitized baselines
+        if: always()
+        shell: bash
+        run: |
+          if test -f phase-c-pre-baseline.json && test -f phase-c-post-baseline.json; then
+            node - <<'NODE'
+            const fs = require('node:fs');
+            const normalize = (file) => {
+              const value = JSON.parse(fs.readFileSync(file, 'utf8'));
+              delete value.captured_at_utc;
+              return JSON.stringify(value);
+            };
+            if (normalize('phase-c-pre-baseline.json') !== normalize('phase-c-post-baseline.json')) {
+              console.error('Sanitized hosted baseline changed during verification. Review the diff.');
+              process.exit(1);
+            }
+            console.log('Sanitized hosted baseline is unchanged apart from capture time.');
+            NODE
+          else
+            echo 'Baseline comparison skipped because one capture failed.'
+            exit 1
+          fi

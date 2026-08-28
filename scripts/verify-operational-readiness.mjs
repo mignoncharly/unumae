@@ -43,6 +43,22 @@ for (const contract of [
   );
 }
 
+const phaseC = read('.github', 'workflows', 'hosted-phase-c.yml');
+for (const contract of [
+  'environment: production',
+  'Require successful CI for this exact SHA',
+  'verify-hosted-parity.mjs',
+  'Capture sanitized pre-verification baseline',
+  'npm run verify:hosted',
+  'Capture sanitized post-verification baseline',
+  'Compare sanitized baselines',
+]) {
+  requireText(
+    phaseC,
+    contract,
+    `Phase C hosted workflow is missing: ${contract}`
+  );
+}
 const backup = read('.github', 'workflows', 'production-backup.yml');
 for (const contract of [
   'pg_dump',

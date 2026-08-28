@@ -1,4 +1,4 @@
-import type { Locale, PageKey } from './site';
+import { CONTACT_EMAIL, type Locale, type PageKey } from './site';
 
 /**
  * The long-form legal text: privacy and terms.
@@ -62,7 +62,7 @@ export const legalSections: Record<
       },
       {
         title: 'Questions',
-        body: 'Write to us and a person will answer. We do not use an automated system for privacy requests.',
+        body: `Write to us at ${CONTACT_EMAIL} and a person will answer. We do not use an automated system for privacy requests, and we reply to every one within 30 days.`,
       },
     ],
     terms: [
@@ -144,7 +144,7 @@ export const legalSections: Record<
       },
       {
         title: 'Questions',
-        body: "Écrivez-nous et une personne vous répondra. Nous n'utilisons pas de système automatisé pour les demandes de confidentialité.",
+        body: `Écrivez-nous à ${CONTACT_EMAIL} et une personne vous répondra. Nous n'utilisons pas de système automatisé pour les demandes de confidentialité, et nous répondons à chacune sous 30 jours.`,
       },
     ],
     terms: [
@@ -226,7 +226,7 @@ export const legalSections: Record<
       },
       {
         title: 'Fragen',
-        body: 'Schreib uns, und ein Mensch antwortet. Für Datenschutzanfragen nutzen wir kein automatisches System.',
+        body: `Schreib uns an ${CONTACT_EMAIL}, und ein Mensch antwortet. Für Datenschutzanfragen nutzen wir kein automatisches System, und wir beantworten jede innerhalb von 30 Tagen.`,
       },
     ],
     terms: [

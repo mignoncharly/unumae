@@ -1,3 +1,14 @@
+/**
+ * The one address a person can reach a human at.
+ *
+ * The privacy policy promises that a person answers, and GDPR Article 13
+ * requires the controller's contact details to be given, not implied — so this
+ * belongs on every page rather than only in the policy that references it.
+ * Defined once here and interpolated into the legal copy so the two can never
+ * disagree.
+ */
+export const CONTACT_EMAIL = 'hello@unumae.app';
+
 export const locales = ['en', 'fr', 'de'] as const;
 export const translatedLocales = ['fr', 'de'] as const;
 export const pageKeys = [
@@ -37,6 +48,8 @@ interface SiteCopy {
   lastUpdated: string;
   facts: readonly { value: string; label: string }[];
   footerStatement: string;
+  /** Precedes CONTACT_EMAIL in the footer. */
+  contactLabel: string;
 }
 
 export const content: Record<Locale, SiteCopy> = {
@@ -132,6 +145,8 @@ export const content: Record<Locale, SiteCopy> = {
       { value: '0', label: 'Followers or rankings' },
     ],
     footerStatement: 'Meet one person. Come back tomorrow.',
+    contactLabel:
+      'Questions, privacy requests or something that needs a person:',
   },
   fr: {
     languageName: 'Français',
@@ -226,6 +241,8 @@ export const content: Record<Locale, SiteCopy> = {
       { value: '0', label: 'Followers ou classements' },
     ],
     footerStatement: 'Rencontrez une personne. Revenez demain.',
+    contactLabel:
+      'Questions, demandes de confidentialité ou besoin d’un interlocuteur :',
   },
   de: {
     languageName: 'Deutsch',
@@ -320,6 +337,8 @@ export const content: Record<Locale, SiteCopy> = {
       { value: '0', label: 'Follower oder Ranglisten' },
     ],
     footerStatement: 'Begegne einem Menschen. Komm morgen wieder.',
+    contactLabel:
+      'Fragen, Datenschutzanfragen oder etwas, das einen Menschen braucht:',
   },
 };
 

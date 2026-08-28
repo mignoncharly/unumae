@@ -1,8 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import 'react-native-url-polyfill/auto';
 
 import { env, isConfigured } from '@/lib/env';
+
+import { secureSessionStorage } from './secureStorage';
 
 import type { Database } from './types';
 
@@ -22,7 +23,9 @@ export function getSupabase(): SupabaseClient<Database> {
 
   client ??= createClient<Database>(env.supabaseUrl, env.supabaseAnonKey, {
     auth: {
-      storage: AsyncStorage,
+      // The Keychain, not a plaintext file in the app container. See
+      // ./secureStorage.ts for the size and migration handling that needs.
+      storage: secureSessionStorage,
       autoRefreshToken: true,
       persistSession: true,
       // No URL-based session detection: this is a native app, and the web

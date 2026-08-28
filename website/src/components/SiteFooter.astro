@@ -1,5 +1,6 @@
 ---
 import {
+  CONTACT_EMAIL,
   content,
   localizedPath,
   type Locale,
@@ -20,7 +21,13 @@ const footerPages = [
 ---
 
 <footer class="site-footer">
-  <p>{copy.footerStatement}</p>
+  <div class="site-footer__intro">
+    <p>{copy.footerStatement}</p>
+    <p class="site-footer__contact">
+      {copy.contactLabel}{' '}
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+    </p>
+  </div>
   <nav aria-label={copy.footerNavigationLabel}>
     <ul>
       {

@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AccountStatusGate } from '@/components/shared/AccountStatusGate';
+import { AppErrorBoundary } from '@/components/shared/AppErrorBoundary';
 import { AppLifecycle } from '@/components/shared/AppLifecycle';
 import { JourneyGate } from '@/components/shared/JourneyGate';
 import { NotificationCoordinator } from '@/components/shared/NotificationCoordinator';
@@ -17,6 +18,7 @@ import { SessionProvider } from '@/features/auth/useSession';
 import i18n, { initI18n } from '@/i18n';
 import { setAnalyticsProvider } from '@/lib/analytics';
 import { createSupabaseAnalytics } from '@/lib/analytics/provider';
+import { installGlobalErrorHandlers } from '@/lib/errors/reporter';
 import { persistOptions } from '@/lib/offline/persist';
 import { usePreferences } from '@/stores/preferences';
 import { useTheme } from '@/theme';
@@ -27,6 +29,17 @@ initI18n();
 // no-op provider stays the default so tests and unconfigured builds record
 // nothing at all.
 setAnalyticsProvider(createSupabaseAnalytics());
+
+/**
+ * Expo Router renders this instead of a route that threw, anywhere in the
+ * tree. Exported from the root layout so it covers every screen rather than
+ * being repeated per route.
+ */
+export { AppErrorBoundary as ErrorBoundary };
+
+// Installed at module scope so a throw during the first render is already
+// covered — a boundary cannot catch what happens before it mounts.
+installGlobalErrorHandlers();
 
 const queryClient = new QueryClient({
   defaultOptions: {

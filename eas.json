@@ -6,30 +6,51 @@
   "build": {
     "development": {
       "environment": "production",
-      "env": { "APP_ENV": "hosted" },
+      "env": {
+        "APP_ENV": "hosted"
+      },
       "developmentClient": true,
       "distribution": "internal",
-      "ios": { "simulator": false }
+      "ios": {
+        "simulator": false
+      },
+      "channel": "development"
     },
     "development-simulator": {
       "environment": "production",
-      "env": { "APP_ENV": "hosted" },
+      "env": {
+        "APP_ENV": "hosted"
+      },
       "developmentClient": true,
       "distribution": "internal",
-      "ios": { "simulator": true }
+      "ios": {
+        "simulator": true
+      },
+      "channel": "development"
     },
     "e2e-test": {
       "environment": "production",
-      "env": { "APP_ENV": "hosted" },
+      "env": {
+        "APP_ENV": "hosted"
+      },
       "withoutCredentials": true,
-      "ios": { "simulator": true },
-      "android": { "buildType": "apk" }
+      "ios": {
+        "simulator": true
+      },
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {
       "environment": "production",
-      "env": { "APP_ENV": "production" },
+      "env": {
+        "APP_ENV": "production"
+      },
       "autoIncrement": true,
-      "android": { "buildType": "app-bundle" }
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "channel": "production"
     }
   },
   "submit": {

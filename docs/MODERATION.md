@@ -63,6 +63,31 @@ client role has any write on it.
 A moderator **cannot**: appoint another moderator, edit the log, read the
 candidate pool, see who upvoted what, or read anybody's private library.
 
+## 3a. Two moderators is a requirement, not a preference
+
+`review_moderation_appeal` refuses when the reviewer is the moderator who made
+the original decision, and `moderation_appeal_queue` hides those rows so nobody
+is offered a decision they may not make. An appeal reviewed by its own author is
+not an appeal.
+
+The consequence is easy to miss: **with one moderator on the roster, every
+appeal against that moderator's own decision is permanently undecidable.** It
+never reaches a queue and nothing fails — it simply waits, and the person
+waiting is by construction someone who was suspended or whose work was
+rejected.
+
+Two accounts belonging to the same person satisfy the database check and defeat
+the point. This needs a second human before public beta.
+
+Until then the condition is at least visible rather than silent:
+
+- `refresh_operational_alerts()` raises a **critical** `appeal_unreviewable`
+  alert for any pending appeal with no permitted reviewer, and resolves it once
+  one exists.
+- `appeal_review_capacity()` answers the same question directly — roster size,
+  pending appeals, and how many of them cannot be heard — without waiting for
+  someone to get stuck first.
+
 ## 4. Adding a moderator later
 
 Two service-role functions, taking an **email** rather than a uuid, because

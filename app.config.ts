@@ -11,6 +11,7 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
  */
 const BUNDLE_ID = 'com.unumae.app';
 const PRODUCTION_PROJECT_REF = 'qpicjsjxdblrxdrdibge';
+const EAS_PROJECT_ID = '75cfb922-5d90-4436-965d-e67672558ed3';
 const APP_ENV = process.env.APP_ENV ?? 'development';
 const configuredProjectRef =
   /https:\/\/([a-z0-9]+)\.supabase\./.exec(
@@ -42,6 +43,37 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '0.1.0',
   orientation: 'portrait',
   scheme: 'onehuman',
+  /*
+   * Over-the-air updates.
+   *
+   * The store review cycle is the wrong length for a crash. Without this, a
+   * one-line JavaScript fix costs a resubmission and a day or more, during
+   * which every user stays broken. With it, a JS-only fix ships in minutes to
+   * the channel the build was cut from.
+   *
+   * `fallbackToCacheTimeout: 0` is the deliberate half of the trade: launch
+   * from the cached bundle immediately and fetch in the background, rather
+   * than making every cold start wait on the network. A person on a bad
+   * connection gets yesterday's bundle now instead of a spinner.
+   *
+   * What this must never be used for: shipping behaviour Apple has not seen.
+   * Guideline 3.3.1 permits bug fixes and content, not a different app.
+   */
+  updates: {
+    url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
+    fallbackToCacheTimeout: 0,
+  },
+  /*
+   * `appVersion` ties an update to the `version` above, so a bundle can only
+   * reach a build whose native side it was compiled against. The looser
+   * `sdkVersion` policy would let a bundle land on a binary with different
+   * native modules — which is a crash, delivered automatically, to everyone.
+   *
+   * The consequence to remember: bumping `version` starts a new runtime, and
+   * builds on the old one stop receiving updates. That is the correct
+   * direction to be wrong in.
+   */
+  runtimeVersion: { policy: 'appVersion' },
   userInterfaceStyle: 'automatic',
   /*
    * 1254×1254 and deliberately opaque — Apple rejects an icon with an alpha

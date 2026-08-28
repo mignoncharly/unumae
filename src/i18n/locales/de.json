@@ -266,6 +266,7 @@
     "codePlaceholder": "Dein Code"
   },
   "errors": {
+    "boundaryBody": "Dieser Bildschirm konnte nicht angezeigt werden. Nichts von dem, was du geschrieben hast, ist verloren.",
     "notFound": "Diese Seite existiert nicht.",
     "goHome": "Zurück zu Heute"
   },
@@ -779,7 +780,8 @@
       "job_failed": "Geplanter Job fehlgeschlagen",
       "job_stalled": "Geplanter Job hängt fest",
       "portrait_queue_age": "Porträtprüfung dauert zu lange",
-      "cycle_at_risk": "Human-Tag ist gefährdet"
+      "cycle_at_risk": "Human-Tag ist gefährdet",
+      "appeal_unreviewable": "Einspruch ohne zulässige prüfende Person"
     },
     "jobStatuses": {
       "queued": "Wartet",

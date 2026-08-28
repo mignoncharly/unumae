@@ -38,4 +38,31 @@ if (!passed) {
   process.exit(1);
 }
 
+// A successful CI run on a feature branch is not a releasable hosted
+// revision. The deployment and hosted-verification workflows both require an
+// exact commit that is already reachable from the protected main branch.
+const mainResponse = await fetch(
+  `https://api.github.com/repos/${repository}/compare/main...${sha}`,
+  {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  }
+);
+
+if (!mainResponse.ok) {
+  console.error(
+    `Could not verify main-branch reachability (HTTP ${mainResponse.status}).`
+  );
+  process.exit(1);
+}
+
+const comparison = await mainResponse.json();
+if (!['behind', 'identical'].includes(comparison.status)) {
+  console.error(`Commit ${sha.slice(0, 12)} is not reachable from main.`);
+  process.exit(1);
+}
+
 console.log(`CI provenance verified for ${sha}.`);

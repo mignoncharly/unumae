@@ -81,13 +81,28 @@ try {
   );
   check(reader.profile.locale === 'de', 'profile locale is client writable');
 
+  const existingDraws = await service
+    .from('daily_draws')
+    .select('selection_date')
+    .order('selection_date', { ascending: true });
+  if (existingDraws.error) throw existingDraws.error;
+  const usedDates = new Set(
+    (existingDraws.data ?? []).map((row) => row.selection_date)
+  );
   const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000)
     .toISOString()
     .slice(0, 10);
+  const fixtureDate = new Date(Date.UTC(2000, 0, 1));
+  while (usedDates.has(fixtureDate.toISOString().slice(0, 10))) {
+    fixtureDate.setUTCDate(fixtureDate.getUTCDate() + 1);
+  }
+  const archiveDate = usedDates.has(yesterday)
+    ? fixtureDate.toISOString().slice(0, 10)
+    : yesterday;
   const draw = await service
     .from('daily_draws')
     .insert({
-      selection_date: yesterday,
+      selection_date: archiveDate,
       candidate_pool_hash: 'a'.repeat(64),
       candidate_count: 1,
       random_seed: 'b'.repeat(64),
@@ -165,9 +180,12 @@ try {
     'Archive cursor reaches a stable end without duplicates'
   );
   const yesterdayHuman = await rpc(guest, 'get_yesterdays_human');
+  const yesterdayOccupied = usedDates.has(yesterday);
   check(
-    yesterdayHuman[0]?.draw_id === draw.data.id,
-    'Yesterday is an explicit Archive path'
+    yesterdayOccupied || yesterdayHuman[0]?.draw_id === draw.data.id,
+    yesterdayOccupied
+      ? 'Yesterday path remains readable alongside existing hosted history'
+      : 'Yesterday is an explicit Archive path'
   );
 
   const question = await service

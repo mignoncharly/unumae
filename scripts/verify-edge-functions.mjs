@@ -103,7 +103,13 @@ try {
       `${name} accepts CORS preflight`
     );
 
-    const wrongMethod = await call(name, { method: 'GET' });
+    // Hosted Supabase verifies JWTs at the gateway before the request reaches
+    // the function. Use a valid service token for this protocol-only check so
+    // the function's own method guard, rather than the gateway, is exercised.
+    const wrongMethod = await call(name, {
+      method: 'GET',
+      token: publicFunctions.includes(name) ? undefined : secretKey,
+    });
     check(wrongMethod.status === 405, `${name} rejects unsupported methods`);
 
     if (!publicFunctions.includes(name)) {

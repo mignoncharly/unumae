@@ -63,6 +63,12 @@ describe('Phase 3 remote CI is an executable release gate', () => {
     expect(release).toContain('node scripts/verify-ci-provenance.mjs');
     expect(release).toContain('.eas/workflows/e2e-ios.yml');
   });
+
+  it('requires the release SHA to be reachable from main', () => {
+    const provenance = read('scripts', 'verify-ci-provenance.mjs');
+    expect(provenance).toContain('/compare/main...');
+    expect(provenance).toContain("['behind', 'identical']");
+  });
 });
 
 describe('Phase 3 PostgreSQL privilege baseline', () => {

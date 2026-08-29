@@ -67,7 +67,7 @@ describe('analytics cannot become tracking', () => {
       ),
     ].map((match) => match[1]);
     const values = [...new Set([...created, ...added])];
-    expect(values).toHaveLength(25);
+    expect(values).toHaveLength(26);
     expect(values).toEqual(
       expect.arrayContaining([
         "'active_day'",
@@ -79,6 +79,7 @@ describe('analytics cannot become tracking', () => {
         "'share_sheet_opened'",
         "'selection_explainer_opened'",
         "'mission_opened'",
+        "'client_crash'",
       ])
     );
   });

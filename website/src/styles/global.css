@@ -560,7 +560,11 @@ h2 {
 }
 
 .site-footer__contact a {
+  align-items: center;
   color: var(--color-text);
+  display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
 }
 
 .styleguide {

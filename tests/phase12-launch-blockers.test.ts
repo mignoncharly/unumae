@@ -49,6 +49,12 @@ describe('an appeal can always be heard, or is escalated', () => {
     'migrations',
     '20260828120000_phase12_appeal_reviewability.sql'
   );
+  const generatedTypes = read(
+    'src',
+    'lib',
+    'supabase',
+    'database.generated.ts'
+  );
   const appeals = read(
     'supabase',
     'migrations',
@@ -81,6 +87,12 @@ describe('an appeal can always be heard, or is escalated', () => {
     expect(migration).toContain('function public.appeal_review_capacity()');
     expect(migration).toContain('moderator_count');
     expect(migration).toContain('unreviewable_appeals');
+  });
+
+  it('keeps the generated client contract aligned with Phase 12', () => {
+    expect(generatedTypes).toContain('appeal_review_capacity:');
+    expect(generatedTypes).toContain('refresh_operational_alerts_phase7:');
+    expect(generatedTypes).toContain('unreviewable_appeals: number;');
   });
 
   it('is reachable only by a moderator', () => {

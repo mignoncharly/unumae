@@ -1,7 +1,8 @@
 import type { ErrorUtils as ErrorUtilsType } from 'react-native';
 
-import { toAppError, type ErrorKind } from './index';
 import { redact } from './redact';
+
+import { toAppError, type ErrorKind } from './index';
 
 declare const ErrorUtils: ErrorUtilsType;
 
@@ -31,14 +32,32 @@ export interface CrashReporter {
   report(report: CrashReport): void;
 }
 
+const MAX_CONTEXT_ENTRIES = 8;
+const MAX_CONTEXT_KEY_LENGTH = 64;
+const MAX_CONTEXT_VALUE_LENGTH = 240;
+
+function redactContext(context: CrashContext): CrashContext {
+  const clean: CrashContext = Object.create(null) as CrashContext;
+
+  for (const [key, value] of Object.entries(context).slice(
+    0,
+    MAX_CONTEXT_ENTRIES
+  )) {
+    const safeKey = redact(key).slice(0, MAX_CONTEXT_KEY_LENGTH);
+    if (!safeKey) continue;
+    clean[safeKey] =
+      typeof value === 'string'
+        ? redact(value).slice(0, MAX_CONTEXT_VALUE_LENGTH)
+        : value;
+  }
+
+  return clean;
+}
+
 /**
- * The default, and the one that ships until a provider is chosen deliberately.
- *
- * No third party is wired up here on purpose. Unumae's analytics are
- * first-party by policy (`src/lib/analytics/provider.ts`), the iOS privacy
- * manifest declares no data shared with a broker, and adding a crash SDK is a
- * privacy-label change, not a dependency change. Swapping this in one place is
- * the whole point — see `setCrashReporter`.
+ * Safe default for tests and modules loaded outside the application root.
+ * Production explicitly swaps in the first-party provider; adding any external
+ * crash SDK would require a separate privacy review.
  */
 const noopReporter: CrashReporter = {
   report: () => {},
@@ -80,7 +99,7 @@ export function reportCrash(
       kind: appError.kind,
       scope: options.scope,
       fatal: options.fatal ?? options.scope !== 'handled',
-      ...(options.context ? { context: options.context } : {}),
+      ...(options.context ? { context: redactContext(options.context) } : {}),
     });
   } catch {
     // A reporter must never be the reason a crash becomes two crashes.

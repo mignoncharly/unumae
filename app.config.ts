@@ -208,6 +208,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             'NSPrivacyCollectedDataTypePurposeAnalytics',
           ],
         },
+        {
+          // Redacted first-party diagnostics retained in the same bounded,
+          // 90-day analytics store. No third-party crash processor is used.
+          NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypeCrashData',
+          NSPrivacyCollectedDataTypeLinked: true,
+          NSPrivacyCollectedDataTypeTracking: false,
+          NSPrivacyCollectedDataTypePurposes: [
+            'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+          ],
+        },
       ],
       NSPrivacyAccessedAPITypes: [
         {

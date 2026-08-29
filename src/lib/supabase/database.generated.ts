@@ -2084,6 +2084,14 @@ export type Database = {
         Returns: boolean;
       };
       am_i_founding: { Args: never; Returns: boolean };
+      appeal_review_capacity: {
+        Args: never;
+        Returns: {
+          moderator_count: number;
+          pending_appeals: number;
+          unreviewable_appeals: number;
+        }[];
+      };
       analytics_journey_funnels: {
         Args: { window_days?: number };
         Returns: {
@@ -2976,6 +2984,7 @@ export type Database = {
       };
       refresh_operational_alerts: { Args: never; Returns: number };
       refresh_operational_alerts_phase6: { Args: never; Returns: number };
+      refresh_operational_alerts_phase7: { Args: never; Returns: number };
       refresh_selection_eligibility: { Args: never; Returns: number };
       register_push_token:
         | {
@@ -3294,7 +3303,8 @@ export type Database = {
         | 'remembered_library_opened'
         | 'share_sheet_opened'
         | 'selection_explainer_opened'
-        | 'mission_opened';
+        | 'mission_opened'
+        | 'client_crash';
       appeal_status: 'pending' | 'upheld' | 'overturned';
       archive_removal_status: 'pending' | 'approved' | 'declined' | 'cancelled';
       assurance_level:
@@ -3542,6 +3552,7 @@ export const Constants = {
         'share_sheet_opened',
         'selection_explainer_opened',
         'mission_opened',
+        'client_crash',
       ],
       appeal_status: ['pending', 'upheld', 'overturned'],
       archive_removal_status: ['pending', 'approved', 'declined', 'cancelled'],

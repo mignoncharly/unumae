@@ -82,6 +82,20 @@ describe('crash reporter', () => {
     expect(reports[0]?.message).toBe('no profile for [email]');
   });
 
+  it('redacts context keys and values before the provider sees them', () => {
+    reportCrash(new Error('boom'), {
+      scope: 'handled',
+      context: {
+        'account someone@example.com':
+          'row 3f1a2b4c-5d6e-4f70-8a91-b2c3d4e5f607',
+      },
+    });
+
+    expect(reports[0]?.context).toEqual({
+      'account [email]': 'row [id]',
+    });
+  });
+
   it('carries the AppError kind but reports the underlying cause', () => {
     const cause = new TypeError('undefined is not an object');
     reportCrash(new AppError('network', 'common.error', { cause }), {
@@ -118,7 +132,7 @@ describe('crash reporter', () => {
 
   it('chains the previous global handler instead of replacing it', () => {
     const previous = jest.fn();
-    const handlers: Array<(error: unknown, isFatal?: boolean) => void> = [];
+    const handlers: ((error: unknown, isFatal?: boolean) => void)[] = [];
     (globalThis as Record<string, unknown>).ErrorUtils = {
       getGlobalHandler: () => previous,
       setGlobalHandler: (next: (error: unknown, isFatal?: boolean) => void) =>

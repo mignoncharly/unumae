@@ -12,7 +12,7 @@
  * diagnose a crash. Losing a legitimate uuid from a stack trace costs a little
  * debugging convenience. Keeping one costs a person their privacy.
  */
-const RULES: ReadonlyArray<{ expression: RegExp; replacement: string }> = [
+const RULES: readonly { expression: RegExp; replacement: string }[] = [
   // Bearer tokens and JWTs, before anything else can match a fragment of one.
   {
     expression: /\beyJ[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]+/g,

@@ -18,7 +18,11 @@ import { SessionProvider } from '@/features/auth/useSession';
 import i18n, { initI18n } from '@/i18n';
 import { setAnalyticsProvider } from '@/lib/analytics';
 import { createSupabaseAnalytics } from '@/lib/analytics/provider';
-import { installGlobalErrorHandlers } from '@/lib/errors/reporter';
+import { createSupabaseCrashReporter } from '@/lib/errors/provider';
+import {
+  installGlobalErrorHandlers,
+  setCrashReporter,
+} from '@/lib/errors/reporter';
 import { persistOptions } from '@/lib/offline/persist';
 import { usePreferences } from '@/stores/preferences';
 import { useTheme } from '@/theme';
@@ -29,6 +33,7 @@ initI18n();
 // no-op provider stays the default so tests and unconfigured builds record
 // nothing at all.
 setAnalyticsProvider(createSupabaseAnalytics());
+setCrashReporter(createSupabaseCrashReporter());
 
 /**
  * Expo Router renders this instead of a route that threw, anywhere in the

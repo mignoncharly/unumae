@@ -2121,14 +2121,6 @@ export type Database = {
           source: string;
         }[];
       };
-      appeal_review_capacity: {
-        Args: never;
-        Returns: {
-          moderator_count: number;
-          pending_appeals: number;
-          unreviewable_appeals: number;
-        }[];
-      };
       answer_question: {
         Args: { answer_body: string; target_question: string };
         Returns: boolean;
@@ -2136,6 +2128,14 @@ export type Database = {
       answer_question_phase0: {
         Args: { answer_body: string; target_question: string };
         Returns: boolean;
+      };
+      appeal_review_capacity: {
+        Args: never;
+        Returns: {
+          moderator_count: number;
+          pending_appeals: number;
+          unreviewable_appeals: number;
+        }[];
       };
       approve_portrait: { Args: { target_portrait: string }; Returns: boolean };
       ask_question: {

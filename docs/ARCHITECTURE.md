@@ -118,8 +118,11 @@ The constitution test reads `docs/PRODUCT_CONSTITUTION.md` and compares it to
 `src/constants/constitution.ts`. Changing either alone fails the build — which
 is the point: a parameter change must be a deliberate amendment.
 
-## Phase ownership
+## Implementation ownership
 
-Every `src/features/*` folder carries a README naming the phase that fills it,
-so an empty directory is a plan rather than an oversight. See
-[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md).
+The implementation history and release requirements remain in
+[implementation-roadmap-v2.md](./implementation-roadmap-v2.md). Current work is
+split deliberately between
+[repository-only work](./REMAINING_IMPLEMENTATION_NO_ACTION_REQUIRED.md) and
+[external/device work](./REMAINING_IMPLEMENTATION_EXTERNAL_ACCESS_REQUIRED.md)
+so a local green check cannot be mistaken for completed release evidence.

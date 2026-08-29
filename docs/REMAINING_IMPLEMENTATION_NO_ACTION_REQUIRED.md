@@ -1,6 +1,6 @@
 # Remaining implementation: no action required from the owner
 
-Status: 28 August 2026
+Status: 29 August 2026
 
 This is the repository-only queue. It contains work that can be inspected,
 documented, tested, or improved locally without owner credentials, paid
@@ -18,22 +18,28 @@ The active phase position is:
 
 | Phase | Repository-side state | What remains outside this queue |
 | --- | --- | --- |
-| A–C | Complete according to the active tracker | Reconcile older historical open-item entries if they disagree |
+| A–C | Complete according to retained phase evidence | Re-run only after backend changes deploy |
 | D | Code and automation prepared | Signed iOS build, physical iPhone, provider/device evidence |
-| E | Backup/restore automation and documentation prepared | Paid plan, protected backup destination, hosted evidence, alert delivery and drills |
+| E | Free-plan backup/restore automation and documentation prepared | Scheduled-backup evidence, future isolated restore target, alert delivery and drills |
 | F | Metadata, App Review notes, legal-route checks prepared | Approved controller/support identity, staffing, screenshots, final signed artifact and submission |
 | G | Alpha/beta/launch evidence pack prepared | Real participants, four-week beta, release and first complete production cycle |
 | 15 | Growth handoff prepared and closed | Mature `growth_gate()` result and explicit owner authorization |
 | 16/H | Deferred-feature guardrails prepared and closed | Explicit post-launch decision; no deferred feature is approved today |
 
+The final local hardening pass also corrected generated Supabase types, the
+website footer's 44-point contact target, and first-party crash reporting. The
+crash path redacts and bounds diagnostics, uses attested ingestion, retains
+rows for 90 days, and retries one redacted fatal report after restart. No
+third-party crash processor or additional owner credential is required.
+
 ## Repository-only work that can continue
 
 ### Documentation reconciliation
 
-- Keep `docs/REMAINING_IMPLEMENTATION_PHASES.md` aligned with the phase evidence
-  and owner-only queue.
-- Reconcile stale historical entries in `docs/OPEN_ITEMS.md` and older roadmap
-  summaries without deleting their audit history.
+- Keep this repository-only queue aligned with
+  `REMAINING_IMPLEMENTATION_EXTERNAL_ACCESS_REQUIRED.md` and phase evidence.
+- Keep older roadmap and phase evidence explicitly historical; Git retains
+  superseded plans that no longer need to remain in the working tree.
 - Keep the privacy inventory, App Store declarations, legal routes, moderation
   promises, and shipped behavior synchronized.
 - Maintain the exact-build, exact-SHA, rollback, backup, and launch evidence
@@ -51,6 +57,8 @@ The active phase position is:
 - Keep the EN/FR/DE website build, metadata, privacy routes, universal-link
   association, and public guest experience internally consistent.
 - Keep secret scanning and safe-path checks in all new scripts and workflows.
+- Keep generated-type drift diagnostics bounded so fresh-schema CI failures are
+  actionable without printing data or credentials.
 
 ### Release-pack maintenance
 

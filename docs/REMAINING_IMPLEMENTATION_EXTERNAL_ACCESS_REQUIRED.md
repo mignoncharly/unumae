@@ -1,6 +1,6 @@
 # Remaining implementation: external access required
 
-Status: 28 August 2026
+Status: 29 August 2026
 
 This is the owner/external-environment queue. These items cannot be completed
 from repository-only work because they require credentials, keys, paid plans,
@@ -16,7 +16,7 @@ sanitized evidence, timestamps, build IDs, and commit SHAs.
 | Order | Phase | External dependency | Completion evidence |
 | ---: | --- | --- | --- |
 | 1 | D | Physical iPhone, macOS or approved EAS build access, Apple signing/provider access | `docs/IOS_RELEASE_VERIFICATION.md` tied to an exact build and SHA |
-| 2 | E | Supabase paid plan before public production, protected backup/restore secrets, and an isolated hosted restore target | Scheduled artifact backup, timed isolated restore, alert delivery, and incident-drill evidence |
+| 2 | E | Accepted Free-plan closed-beta limitation, protected backup secrets, and a future isolated restore target | Scheduled artifact backup now; timed isolated restore before public production, plus alert delivery and incident-drill evidence |
 | 3 | F | Legal/support owner, App Store Connect access, final signed artifact and real-device screenshots | Approved legal pages, staffed contacts, completed listing, and reviewable artifact |
 | 4 | G | Alpha participants, private-beta cohort, moderator/on-call coverage and hosted production access | Alpha findings, four mature beta weeks, gate result, release record and first-cycle evidence |
 | 5 | 15 | Moderator-only mature `growth_gate()` result and explicit owner authorization | Dated gate decision and aggregate experiment record |
@@ -44,8 +44,12 @@ Required access/actions:
 
 Required access/actions:
 
-- Upgrade the single Supabase project to the required paid plan before public
-  production traffic.
+- The owner has explicitly accepted the Free-plan restore limitation for a
+  closed beta. `RESTORE_DATABASE_URL` is intentionally absent, and the restore
+  workflow must continue to fail closed without an isolated target.
+- Before public production, either upgrade to suitable managed recovery or
+  provide an isolated PostgreSQL restore target and complete a timed rehearsal.
+  The production database must never be used as that target.
 - Configure the protected backup workflow with GitHub Actions artifact storage
   for the closed beta. No S3 account or Docker installation is required for
   this interim path. The artifact retention is 35 days and does not provide
@@ -82,6 +86,9 @@ Required access/actions:
   third-party processor disclosures.
 - Assign named coverage for portrait/question moderation, reports, appeals,
   privacy requests, Archive removal, deletion failures, and operational alerts.
+- Recruit at least a second genuine moderator so appeals can satisfy the
+  different-reviewer rule, and staff `hello@unumae.app` for the published
+  response promise.
 - Use App Store Connect access to enter the reviewed EN/FR/DE metadata from
   `docs/app-store-metadata.json` and the review notes from
   `docs/APP_REVIEW_NOTES.md`.
@@ -90,6 +97,9 @@ Required access/actions:
 - Build and submit only the signed artifact that passed the physical-device and
   release checks. Record the exact EAS build ID, build number, commit SHA, and
   App Store Connect version.
+- Add the public App Store listing URL only after Apple creates it. A light
+  wordmark remains optional; the current white splash is the contrast-safe
+  release configuration.
 
 ## Phase G — real people and production launch
 

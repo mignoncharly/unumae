@@ -26,6 +26,7 @@ screen.
 | Location | Coarse Location | App Functionality |
 | Other Data | Other Data Types | App Functionality |
 | Usage Data | Product Interaction | Analytics |
+| Diagnostics | Crash Data | App Functionality |
 
 **Device ID** covers the random per-installation identifier and platform
 attestation state. **User ID** covers the Supabase account id and stable
@@ -36,7 +37,8 @@ have no user link.
 Country and optional city are typed by the person and never read from Location
 Services, but they still describe coarse location and are declared that way.
 Other Data Types covers birth year, assurance state, and account/moderation
-status.
+status. Crash Data covers bounded, redacted first-party diagnostics retained
+for 90 days; no external crash processor receives it.
 
 ### Privacy labels — "Data Not Collected"
 

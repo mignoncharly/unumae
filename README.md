@@ -20,10 +20,10 @@ amended. Every feature request is measured against it.
 | [ARCHITECTURE.md](./docs/ARCHITECTURE.md) | Stack, layout, state, environments, verification |
 | [DATABASE.md](./docs/DATABASE.md) | Schema conventions, RLS posture, planned tables |
 | [SECURITY.md](./docs/SECURITY.md) | Threat model, secrets, proof of humanity |
-| [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) | 18 phases and their status |
-| [PHASE11_RELEASE_HARDENING.md](./docs/PHASE11_RELEASE_HARDENING.md) | Current code-side release hardening and manual blockers |
-| [IMPLEMENTATION_PLAN_RECONCILED.md](./docs/IMPLEMENTATION_PLAN_RECONCILED.md) | Current iOS-first, single-project release plan |
-| [OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) | What is waiting on you, and what is waiting on me |
+| [REMAINING_IMPLEMENTATION_NO_ACTION_REQUIRED.md](./docs/REMAINING_IMPLEMENTATION_NO_ACTION_REQUIRED.md) | Current repository-only work and verification |
+| [REMAINING_IMPLEMENTATION_EXTERNAL_ACCESS_REQUIRED.md](./docs/REMAINING_IMPLEMENTATION_EXTERNAL_ACCESS_REQUIRED.md) | Current device, account, staffing, and release gates |
+| [implementation-roadmap-v2.md](./docs/implementation-roadmap-v2.md) | Detailed implementation history and release requirements |
+| [RELEASE_CHECKLIST.md](./docs/RELEASE_CHECKLIST.md) | Exact-build release evidence checklist |
 | [MODERATION.md](./docs/MODERATION.md) | Who can moderate, and how the first one comes to exist |
 | [SURFACES.md](./docs/SURFACES.md) | Which pages live in the app and which on the website |
 | [APP_STORE.md](./docs/APP_STORE.md) | Review answers, and what still needs a person |
@@ -74,8 +74,10 @@ to say yes start sounding excellent.
 
 ## Status
 
-Roadmap v2 Phases 1–10 are implemented locally; hosted, physical-iPhone, backup,
-and release evidence remains. The current release is iOS-first. Android support
-is preserved but deferred to [POST_IOS_ANDROID.md](./docs/POST_IOS_ANDROID.md).
-See [implementation-roadmap-v2.md](./docs/implementation-roadmap-v2.md) and
-[OPEN_ITEMS.md](./docs/OPEN_ITEMS.md) for current status.
+Roadmap v2 Phases 1–10 and repository-side release hardening are implemented.
+Hosted Phase C evidence is complete; the current repository backend changes
+pass protected CI and await deployment from an approved exact SHA. Signed
+physical-iPhone, restore-target, staffing, and release evidence remains. The
+current release is iOS-first; Android is preserved but deferred to
+[POST_IOS_ANDROID.md](./docs/POST_IOS_ANDROID.md). The two remaining-work files
+above are the current status source.

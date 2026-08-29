@@ -89,8 +89,9 @@ artifact.
   is ready to receive replay, malformed, and expired token cases, but Phase 3
   cannot test a protocol that has not yet been selected or implemented.
 
-These are tracked in `docs/OPEN_ITEMS.md`; none is hidden behind a green local
-test result.
+These are tracked in
+`docs/REMAINING_IMPLEMENTATION_EXTERNAL_ACCESS_REQUIRED.md`; none is hidden
+behind a green local test result.
 
 ## Local verification evidence
 

@@ -117,12 +117,14 @@ only where it matters.
 A crash report is a diagnostic that has been handed whatever the failing code
 was holding, which is why it is treated as user data rather than as a log.
 
-- **No third party is wired up.** `src/lib/errors/reporter.ts` ships a no-op
-  provider by default, the same shape as the analytics provider. Analytics are
-  first-party by policy, the iOS privacy manifest declares no data shared with
-  a broker, and the App Store privacy answers were written against that. Adding
-  a crash SDK is a privacy-label change and a manifest change, not a dependency
-  change — treat it as one.
+- **Reports stay first-party.** The application root installs
+  `src/lib/errors/provider.ts`, which sends a bounded `client_crash` event
+  through the existing attested analytics endpoint. There is no crash SDK,
+  broker, device fingerprint, IP-address column, or separate processor.
+- **Fatal reports survive one restart.** One already-redacted envelope may be
+  written synchronously to the app cache because a fatal handler cannot wait
+  for a network promise. It is retried on the next launch and removed after
+  successful delivery; malformed or oversized cache content is discarded.
 - **Nothing reaches a provider unredacted.** `redact()` removes whole classes of
   value rather than trying to detect secrets: JWTs and bearer tokens, API keys,
   email addresses, every uuid, credentials inside connection strings, and the
@@ -135,6 +137,9 @@ was holding, which is why it is treated as user data rather than as a log.
 - **A reporter must never become the crash.** Every failure inside `reportCrash`
   is swallowed, and the global handler chains the previous one rather than
   replacing it.
+- **Collection is declared and expires.** Apple Crash Data is declared as
+  linked App Functionality data. Crash rows share the analytics table's
+  90-day purge and account-export/deletion behavior.
 
 ## Reporting a vulnerability
 

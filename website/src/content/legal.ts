@@ -30,7 +30,7 @@ export const legalSections: Record<
       },
       {
         title: 'One number about your app, not about you',
-        body: 'After the app and device pass platform attestation, our server issues a short-lived random installation session so we can count how many people came back the next day and protect submission queues. It is not an advertising identifier, its secret is stored securely on your device, and analytics events are deleted after 90 days.',
+        body: 'After the app and device pass platform attestation, our server issues a short-lived random installation session so we can count how many people came back the next day, protect submission queues, and receive bounded, redacted crash diagnostics. It is not an advertising identifier, no external crash processor receives the data, its secret is stored securely on your device, and all of these events are deleted after 90 days.',
       },
       {
         title: 'Account and device assurance',
@@ -112,7 +112,7 @@ export const legalSections: Record<
       },
       {
         title: 'Un numéro sur votre application, pas sur vous',
-        body: 'Après l’attestation de l’application et de l’appareil, notre serveur émet une session d’installation aléatoire et temporaire pour compter les retours et protéger les files d’envoi. Ce n’est pas un identifiant publicitaire, son secret reste dans le stockage sécurisé de l’appareil et les événements sont supprimés après 90 jours.',
+        body: 'Après l’attestation de l’application et de l’appareil, notre serveur émet une session d’installation aléatoire et temporaire pour compter les retours, protéger les files d’envoi et recevoir des diagnostics de panne limités et expurgés. Ce n’est pas un identifiant publicitaire, aucun service externe de diagnostic ne reçoit ces données, son secret reste dans le stockage sécurisé de l’appareil et tous ces événements sont supprimés après 90 jours.',
       },
       {
         title: 'Assurance du compte et de l’appareil',
@@ -194,7 +194,7 @@ export const legalSections: Record<
       },
       {
         title: 'Eine Zahl über deine App, nicht über dich',
-        body: 'Nach der Plattformprüfung von App und Gerät stellt unser Server eine kurzlebige zufällige Installationssitzung aus, um Wiederkehr zu zählen und Eingabewarteschlangen zu schützen. Sie ist keine Werbekennung, ihr Geheimnis bleibt im sicheren Gerätespeicher und Analytik-Ereignisse werden nach 90 Tagen gelöscht.',
+        body: 'Nach der Plattformprüfung von App und Gerät stellt unser Server eine kurzlebige zufällige Installationssitzung aus, um Wiederkehr zu zählen, Eingabewarteschlangen zu schützen und begrenzte, bereinigte Absturzdiagnosen zu empfangen. Sie ist keine Werbekennung, kein externer Absturzdienst erhält diese Daten, ihr Geheimnis bleibt im sicheren Gerätespeicher und alle diese Ereignisse werden nach 90 Tagen gelöscht.',
       },
       {
         title: 'Konto- und Geräteprüfung',

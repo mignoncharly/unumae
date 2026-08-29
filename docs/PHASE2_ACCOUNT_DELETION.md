@@ -1,7 +1,8 @@
 # Phase 2 account deletion
 
-Status: implemented and verified locally on 25 August 2026. Protected hosted
-deployment and bounded verification are pending the gate in `OPEN_ITEMS.md`.
+Status: implemented locally and verified through the bounded hosted Phase C
+gate. Physical-iPhone deletion and share-sheet evidence remains in
+`REMAINING_IMPLEMENTATION_EXTERNAL_ACCESS_REQUIRED.md`.
 
 This phase follows Phase 2 of `implementation-roadmap-v2.md`. Account deletion
 is now a durable, retryable operation. The database locks the account before any

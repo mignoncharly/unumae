@@ -5,7 +5,7 @@ This checklist implements the verification layers required by Phase 0 of
 migration, build, environment, date, operator, result, and evidence location.
 
 Public beta is blocked until roadmap Phases 1–5 are complete. Production
-traffic is additionally blocked by the paid-plan gate.
+traffic is additionally blocked by the device and moderation gates.
 
 ## 1. Local static verification
 
@@ -89,7 +89,8 @@ signed-build, app-link, and device-verification gates live in
 ## 5. Production promotion
 
 - [ ] Roadmap Phases 1–5 are complete for public beta.
-- [ ] Paid-plan gate is met before production traffic.
+- [ ] A backup generation exists and one restore rehearsal has passed with its
+      elapsed time recorded. This is the whole backup story on the Free plan.
 - [ ] A fresh encrypted off-platform backup exists and restore was rehearsed.
 - [ ] Storage backup policy is implemented or the approved no-backup decision
       is reflected in user-facing policy.
@@ -101,6 +102,45 @@ signed-build, app-link, and device-verification gates live in
 - [ ] Hosted live verification passed.
 - [ ] Alerts and job history were watched through the next daily cycle.
 - [ ] Rollback owner and trigger were named before promotion.
+
+## 6. Over-the-air updates
+
+`expo-updates` gives JavaScript-only fixes a path that does not wait on App
+Review. It is a repair tool, not a release channel.
+
+**Before publishing any update**
+
+- [ ] The fix is JavaScript or asset only. Anything touching a native module,
+      an entitlement, a permission string or `app.config.ts` needs a new
+      binary — an OTA bundle cannot change the native side, and shipping one
+      that assumes otherwise crashes on launch for everyone who takes it.
+- [ ] The change is a bug fix or content, not new or altered behaviour Apple
+      has not reviewed. App Store Guideline 3.3.1 permits the former only.
+- [ ] `npm run verify` passed on the exact commit being published.
+- [ ] The target `version` in `app.config.ts` matches the `version` of the
+      builds meant to receive it. `runtimeVersion` uses the `appVersion`
+      policy, so bumping `version` starts a new runtime and every build on the
+      old one silently stops receiving updates.
+
+**Publishing**
+
+```
+eas update --branch <branch> --message "<what and why>"
+```
+
+Channels are set per build profile in `eas.json`: `production` builds listen on
+`production`, both development profiles on `development`, and `e2e-test` on
+none — a test build must not pull a bundle mid-run.
+
+**After**
+
+- [ ] Verified on a device that took the update, not only on the publishing
+      machine. `fallbackToCacheTimeout: 0` means an update is fetched in the
+      background and applied on the *next* launch, so the first relaunch after
+      publishing proves nothing.
+- [ ] Rollback path confirmed: `eas update:republish` to the last good update,
+      which travels the same way and just as fast.
+- [ ] The same fix is in `main`, so the next binary does not regress it.
 
 ## Evidence template
 

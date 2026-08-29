@@ -11,6 +11,81 @@ const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const TARGET = join(ROOT, 'src', 'lib', 'supabase', 'database.generated.ts');
 const WRITE = process.argv.includes('--write');
 
+function printBoundedLineDiff(actual, expected) {
+  const actualLines = actual.split('\n');
+  const expectedLines = expected.split('\n');
+  const window = 40;
+  const limit = 160;
+  let actualIndex = 0;
+  let expectedIndex = 0;
+  let emitted = 0;
+
+  console.error('Generated type drift (actual -, expected +):');
+
+  while (
+    actualIndex < actualLines.length &&
+    expectedIndex < expectedLines.length &&
+    emitted < limit
+  ) {
+    if (actualLines[actualIndex] === expectedLines[expectedIndex]) {
+      actualIndex += 1;
+      expectedIndex += 1;
+      continue;
+    }
+
+    let best = null;
+    for (let actualSkip = 0; actualSkip <= window; actualSkip += 1) {
+      for (let expectedSkip = 0; expectedSkip <= window; expectedSkip += 1) {
+        if (actualSkip === 0 && expectedSkip === 0) continue;
+        if (
+          actualIndex + actualSkip >= actualLines.length ||
+          expectedIndex + expectedSkip >= expectedLines.length ||
+          actualLines[actualIndex + actualSkip] !==
+            expectedLines[expectedIndex + expectedSkip]
+        ) {
+          continue;
+        }
+        const distance = actualSkip + expectedSkip;
+        if (!best || distance < best.distance) {
+          best = { actualSkip, expectedSkip, distance };
+        }
+      }
+    }
+
+    if (!best) {
+      best = { actualSkip: 1, expectedSkip: 1, distance: 2 };
+    }
+
+    for (
+      let index = 0;
+      index < best.actualSkip && emitted < limit;
+      index += 1
+    ) {
+      console.error(`- ${actualLines[actualIndex + index]}`);
+      emitted += 1;
+    }
+    for (
+      let index = 0;
+      index < best.expectedSkip && emitted < limit;
+      index += 1
+    ) {
+      console.error(`+ ${expectedLines[expectedIndex + index]}`);
+      emitted += 1;
+    }
+
+    actualIndex += best.actualSkip;
+    expectedIndex += best.expectedSkip;
+  }
+
+  if (
+    emitted >= limit ||
+    actualIndex < actualLines.length ||
+    expectedIndex < expectedLines.length
+  ) {
+    console.error(`Diff output limited to ${limit} changed lines.`);
+  }
+}
+
 let generated;
 try {
   const supabaseExecutable =
@@ -54,6 +129,7 @@ try {
 }
 
 if (actual !== expected.replaceAll('\r\n', '\n')) {
+  printBoundedLineDiff(actual, expected.replaceAll('\r\n', '\n'));
   console.error(
     'Generated database types are stale. Run npm run db:types:local and commit the result.'
   );

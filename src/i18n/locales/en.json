@@ -266,6 +266,7 @@
     "codePlaceholder": "Your code"
   },
   "errors": {
+    "boundaryBody": "This screen could not be shown. Nothing you have written has been lost.",
     "notFound": "This page does not exist.",
     "goHome": "Back to Today"
   },
@@ -779,7 +780,8 @@
       "job_failed": "Scheduled job failed",
       "job_stalled": "Scheduled job is stalled",
       "portrait_queue_age": "Portrait review is aging",
-      "cycle_at_risk": "Human day is at risk"
+      "cycle_at_risk": "Human day is at risk",
+      "appeal_unreviewable": "Appeal has no eligible reviewer"
     },
     "jobStatuses": {
       "queued": "Waiting",

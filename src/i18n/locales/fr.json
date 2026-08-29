@@ -266,6 +266,7 @@
     "codePlaceholder": "Votre code"
   },
   "errors": {
+    "boundaryBody": "Cet écran n'a pas pu s'afficher. Rien de ce que vous avez écrit n'a été perdu.",
     "notFound": "Cette page n'existe pas.",
     "goHome": "Retour à Aujourd'hui"
   },
@@ -779,7 +780,8 @@
       "job_failed": "Échec d’une tâche planifiée",
       "job_stalled": "Une tâche planifiée est bloquée",
       "portrait_queue_age": "La révision d’un portrait prend du retard",
-      "cycle_at_risk": "La journée Human est menacée"
+      "cycle_at_risk": "La journée Human est menacée",
+      "appeal_unreviewable": "Appel sans relecteur éligible"
     },
     "jobStatuses": {
       "queued": "En attente",

@@ -541,6 +541,32 @@ h2 {
   font-size: var(--step-caption);
 }
 
+.site-footer__intro {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+/* The address is a thing to read and use, not a statement — so it drops out of
+   the display face the footer statement uses. */
+.site-footer__contact,
+.site-footer__contact a {
+  font-family: var(--font-body);
+  font-size: var(--step-caption);
+}
+
+.site-footer__contact {
+  color: var(--color-text-secondary);
+  font-variation-settings: normal;
+}
+
+.site-footer__contact a {
+  align-items: center;
+  color: var(--color-text);
+  display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
 .styleguide {
   max-width: var(--content-width);
 }

@@ -12,9 +12,10 @@ Implemented controls:
   Store production builds by `APP_ENV`;
 - sanitized hosted baselines before and after deployment;
 - scheduler credentials migrated from `public.job_secrets` into Supabase Vault;
-- daily encrypted database and Storage export outside Supabase, automatic
-  retention pruning, and failure issues;
-- disposable timed restore rehearsal;
+- daily age-encrypted database and Storage export to GitHub Actions artifact
+  storage outside Supabase, 35-day retention, and failure issues;
+- disposable timed restore rehearsal with storage checksums and critical
+  database/media integrity checks;
 - six-hour hosted keep-warm, service-health, and database-disk checks;
 - incident procedures for every critical dependency.
 
@@ -34,4 +35,7 @@ history, EAS linkage, public environment variables, and sanitized baseline were
 audited and captured in `docs/PHASE_B_HOSTED_BASELINE.md`.
 
 Phase 10 is not fully complete until Phase E observes a scheduled encrypted
-backup outside Supabase and a restore workflow records real elapsed time.
+backup outside Supabase and a restore workflow records real elapsed time. The
+interim restore workflow uses an isolated hosted PostgreSQL target and does not
+use Docker; the free plan remains unsuitable for public production because it
+does not provide managed backups or PITR.

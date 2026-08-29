@@ -64,8 +64,8 @@ for (const contract of [
   'pg_dump',
   'export-storage-backup.mjs',
   'age --recipient',
-  's3 cp',
-  'BACKUP_RETENTION_DAYS',
+  'actions/upload-artifact',
+  'retention-days: 35',
   'if: failure()',
 ]) {
   requireText(backup, contract, `Backup workflow is missing: ${contract}`);
@@ -74,12 +74,23 @@ const restore = read('.github', 'workflows', 'restore-rehearsal.yml');
 for (const contract of [
   'sha256sum --check',
   'age --decrypt',
-  'supabase start',
+  'actions/download-artifact',
+  'RESTORE_DATABASE_URL',
   'pg_restore',
   'Elapsed:',
 ]) {
   requireText(restore, contract, `Restore workflow is missing: ${contract}`);
 }
+forbidText(
+  restore,
+  'supabase start',
+  'Restore workflow must not start a local Supabase stack.'
+);
+forbidText(
+  restore,
+  'supabase stop',
+  'Restore workflow must not stop a local Supabase stack.'
+);
 
 const migration = read(
   'supabase',

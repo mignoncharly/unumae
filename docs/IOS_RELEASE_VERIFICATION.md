@@ -97,5 +97,6 @@ the confirmation prompt and verify the linked project before approving it.
 | Current App Store record | App Store Connect | App record for `com.unumae.app` | Pass | Existence confirmed by the owner on 24 August 2026 |
 | _fill during release_ | | | | |
 
-Failures block beta. Record them in `docs/OPEN_ITEMS.md`; do not convert an
+Failures block beta. Record them in
+`docs/REMAINING_IMPLEMENTATION_EXTERNAL_ACCESS_REQUIRED.md`; do not convert an
 untested box into a pass based on code inspection.

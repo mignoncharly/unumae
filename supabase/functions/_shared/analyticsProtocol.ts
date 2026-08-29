@@ -25,6 +25,7 @@ const APP_EVENTS = new Set([
   'share_sheet_opened',
   'notification_opened',
   'language_changed',
+  'client_crash',
 ]);
 const MARKETING_EVENTS = new Set([
   'selection_explainer_opened',

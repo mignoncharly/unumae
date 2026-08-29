@@ -4,56 +4,63 @@ on:
   workflow_dispatch:
     inputs:
       backup_generation:
-        description: Generation under s3://bucket/unumae/ (UTC timestamp)
+        description: UTC generation timestamp from the backup workflow
+        required: true
+        type: string
+      backup_run_id:
+        description: Backup workflow run ID containing the generation artifact
         required: true
         type: string
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   restore:
-    name: Timed restore into disposable local stack
+    name: Timed restore into isolated hosted PostgreSQL target
     runs-on: ubuntu-latest
     timeout-minutes: 60
     environment: production-backup
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520 # v3.0.0
-        with:
-          version: 2.84.2
       - name: Install restore clients
-        run: sudo apt-get update && sudo apt-get install -y age awscli postgresql-client
-      - name: Download and decrypt one complete generation
+        run: sudo apt-get update && sudo apt-get install -y age postgresql-client
+      - name: Download encrypted generation artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: unumae-backup-${{ inputs.backup_generation }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.backup_run_id }}
+          path: restore
+      - name: Decrypt and verify one complete generation
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ vars.BACKUP_S3_REGION }}
-          BACKUP_S3_BUCKET: ${{ vars.BACKUP_S3_BUCKET }}
-          BACKUP_S3_ENDPOINT: ${{ vars.BACKUP_S3_ENDPOINT }}
           AGE_SECRET_KEY: ${{ secrets.BACKUP_AGE_SECRET_KEY }}
           GENERATION: ${{ inputs.backup_generation }}
         run: |
-          endpoint=()
-          test -z "$BACKUP_S3_ENDPOINT" || endpoint=(--endpoint-url "$BACKUP_S3_ENDPOINT")
-          mkdir restore
-          aws "${endpoint[@]}" s3 cp "s3://$BACKUP_S3_BUCKET/unumae/$GENERATION/" restore --recursive
+          case "$GENERATION" in
+            ????-??-??T??-??-??Z) ;;
+            *) echo "backup_generation must be a UTC timestamp such as 2026-08-28T02-17-00Z" >&2; exit 1 ;;
+          esac
           cd restore
           sha256sum --check SHA256SUMS
           printf '%s\n' "$AGE_SECRET_KEY" > age-key.txt
           age --decrypt --identity age-key.txt --output database.dump database.dump.age
           age --decrypt --identity age-key.txt --output storage.tar.gz storage.tar.gz.age
-          tar -tzf storage.tar.gz > storage-files.txt
-      - name: Restore and record elapsed time
+          mkdir extracted-storage
+          tar -xzf storage.tar.gz -C extracted-storage
+          node ../scripts/verify-storage-backup.mjs extracted-storage/storage
+      - name: Restore into isolated hosted target and record elapsed time
+        env:
+          RESTORE_DATABASE_URL: ${{ secrets.RESTORE_DATABASE_URL }}
         run: |
+          test -n "$RESTORE_DATABASE_URL"
           started="$(date +%s)"
-          supabase start
-          local_database_url="$(supabase status -o env | sed -n 's/^DB_URL="\{0,1\}\([^"[:space:]]*\)"\{0,1\}$/\1/p')"
-          test -n "$local_database_url"
-          pg_restore --dbname "$local_database_url" --clean --if-exists --no-owner --no-privileges --exit-on-error restore/database.dump
-          psql "$local_database_url" -v ON_ERROR_STOP=1 -c 'select count(*) from public.profiles'
+          pg_restore --dbname "$RESTORE_DATABASE_URL" --clean --if-exists --no-owner --no-privileges --exit-on-error restore/database.dump
+          psql "$RESTORE_DATABASE_URL" -X -v ON_ERROR_STOP=1 -f scripts/verify-restored-database.sql
           elapsed="$(( $(date +%s) - started ))"
-          printf '### Restore rehearsal\n\n- Generation: `%s`\n- Commit: `%s`\n- Elapsed: **%s seconds**\n' "${{ inputs.backup_generation }}" "$GITHUB_SHA" "$elapsed" >> "$GITHUB_STEP_SUMMARY"
-      - name: Destroy disposable restore target
+          printf '### Restore rehearsal\n\n- Generation: `%s`\n- Backup run: `%s`\n- Commit: `%s`\n- Target: **isolated hosted PostgreSQL**\n- Elapsed: **%s seconds**\n' "${{ inputs.backup_generation }}" "${{ inputs.backup_run_id }}" "$GITHUB_SHA" "$elapsed" >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove downloaded restore materials
         if: always()
-        run: supabase stop --no-backup
+        run: rm -rf restore

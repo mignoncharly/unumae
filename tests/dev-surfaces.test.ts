@@ -52,3 +52,38 @@ describe('developer surfaces do not ship', () => {
     expect(() => source(path)).not.toThrow();
   });
 });
+
+/**
+ * The website had the same shape of problem as the app, one layer out.
+ *
+ * `/dev/*` is a styleguide, a share-card harness and the social-card templates.
+ * They were kept out of the sitemap and disallowed in robots.txt, which stops
+ * them being listed and does nothing to stop them being served — an address
+ * anyone can type is a shipped page. The build genuinely needs them, because
+ * the Open Graph images are rendered from /dev/human-social/*, so the fix is to
+ * strip them afterwards rather than to stop building them.
+ */
+describe('website developer pages do not ship', () => {
+  const websitePackage = JSON.parse(source('website/package.json'));
+
+  it('strips the developer routes from every build that produces a dist', () => {
+    for (const script of ['build', 'build:quality']) {
+      expect(websitePackage.scripts[script]).toContain(
+        'node scripts/strip-dev-pages.mjs'
+      );
+    }
+  });
+
+  it('strips them after the social cards are rendered from them', () => {
+    const build = websitePackage.scripts.build;
+    expect(build.indexOf('generate-human-social-cards.mjs')).toBeLessThan(
+      build.indexOf('strip-dev-pages.mjs')
+    );
+  });
+
+  it('verifies the removal rather than trusting it', () => {
+    const strip = source('website/scripts/strip-dev-pages.mjs');
+    expect(strip).toContain('findDevRoutes');
+    expect(strip).toContain('process.exit(1)');
+  });
+});

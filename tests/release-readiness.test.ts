@@ -28,6 +28,22 @@ describe('Phase 5 iOS release automation', () => {
     expect(appConfig).toContain('usesNonExemptEncryption: false');
   });
 
+  it('binds every over-the-air update to the native build it was compiled against', () => {
+    // `sdkVersion` or `nativeVersion` would let a bundle reach a binary with a
+    // different native module graph, which is a crash delivered automatically.
+    expect(appConfig).toContain("runtimeVersion: { policy: 'appVersion' }");
+    expect(appConfig).toContain('https://u.expo.dev/${EAS_PROJECT_ID}');
+  });
+
+  it('keeps release and development update channels apart', () => {
+    expect(eas.build.production.channel).toBe('production');
+    expect(eas.build.development.channel).toBe('development');
+    expect(eas.build['development-simulator'].channel).toBe('development');
+    // A throwaway simulator artifact must not pull an update mid-run and make
+    // the E2E result depend on what was last published.
+    expect(eas.build['e2e-test'].channel).toBeUndefined();
+  });
+
   it('targets the existing App Store Connect record for unattended submission', () => {
     expect(eas.submit.production.ios.ascAppId).toBe('6804251671');
   });

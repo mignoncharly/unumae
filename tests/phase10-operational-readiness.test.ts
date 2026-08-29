@@ -24,11 +24,26 @@ describe('Phase 10 operational readiness', () => {
   it('backs up database and photos encrypted outside Supabase and rehearses restore', () => {
     const backup = read('.github', 'workflows', 'production-backup.yml');
     const restore = read('.github', 'workflows', 'restore-rehearsal.yml');
+    const storageVerifier = read('scripts', 'verify-storage-backup.mjs');
+    const databaseVerifier = read('scripts', 'verify-restored-database.sql');
     expect(backup).toContain('pg_dump');
     expect(backup).toContain('export-storage-backup.mjs');
     expect(backup).toContain('age --recipient');
-    expect(backup).toContain('BACKUP_RETENTION_DAYS');
+    expect(backup).toContain('retention-days: 35');
+    expect(backup).toContain('actions/upload-artifact');
+    expect(backup).not.toContain('aws s3');
     expect(restore).toContain('pg_restore');
+    expect(restore).toContain('actions/download-artifact');
+    expect(restore).toContain('RESTORE_DATABASE_URL');
+    expect(restore).not.toContain('supabase start');
+    expect(restore).not.toContain('supabase stop');
+    expect(restore).toContain('verify-storage-backup.mjs');
+    expect(restore).toContain('verify-restored-database.sql');
+    expect(restore).toContain('backup_generation must be a UTC timestamp');
+    expect(storageVerifier).toContain('checksum mismatch');
+    expect(databaseVerifier).toContain('orphaned draw-candidate rows');
+    expect(databaseVerifier).toContain('Approved media must retain');
+    expect(databaseVerifier).toContain('claim_account_deletion_requests');
     expect(restore).toContain('Elapsed:');
   });
 

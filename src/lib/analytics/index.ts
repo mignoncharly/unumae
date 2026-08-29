@@ -29,7 +29,8 @@ export type AnalyticsEvent =
   | 'share_started'
   | 'share_completed'
   | 'share_sheet_opened'
-  | 'language_changed';
+  | 'language_changed'
+  | 'client_crash';
 
 /**
  * Flat scalars only.

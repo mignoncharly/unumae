@@ -33,7 +33,9 @@ The recapture found one production configuration gap: `RESEND_API_KEY` and
 `NOTIFICATION_FROM_EMAIL` are absent from the Edge secret store. The
 `send-notifications` worker therefore records `email_not_configured` instead of
 sending the selected-user email fallback when push delivery does not succeed.
-This is tracked in `docs/OPEN_ITEMS.md` and must be fixed before public beta.
+This historical gap was closed when both production secret names were later
+configured. Real iPhone delivery evidence remains in
+`docs/REMAINING_IMPLEMENTATION_EXTERNAL_ACCESS_REQUIRED.md`.
 
 ## Source and mobile release
 
@@ -201,7 +203,6 @@ Authoritative references: [billing and quotas](https://supabase.com/docs/guides/
 
 The following pre-existing files were deliberately not folded into Phase 0:
 
-- `docs/APP_STORE_CONNECT_PROMPT.md`
 - `docs/k.jpeg`
 
 They remain user-owned, untracked work. The v2 roadmap itself is part of Phase

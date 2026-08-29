@@ -3,6 +3,17 @@ import { parseAnalyticsEnvelope } from './analyticsProtocol.ts';
 Deno.test('accepts bounded app and identifier-free marketing events', () => {
   if (!parseAnalyticsEnvelope({ events: [{ event: 'app_opened' }] }))
     throw new Error('app event rejected');
+  if (
+    !parseAnalyticsEnvelope({
+      events: [
+        {
+          event: 'client_crash',
+          properties: { name: 'TypeError', fatal: true },
+        },
+      ],
+    })
+  )
+    throw new Error('crash event rejected');
   const marketing = parseAnalyticsEnvelope({
     event: 'archive_opened',
     locale: 'de',
@@ -32,6 +43,17 @@ Deno.test(
       })
     )
       throw new Error('oversized batch accepted');
+    if (
+      parseAnalyticsEnvelope({
+        events: [
+          {
+            event: 'client_crash',
+            properties: { stack: 'x'.repeat(1025) },
+          },
+        ],
+      })
+    )
+      throw new Error('oversized crash accepted');
     if (
       parseAnalyticsEnvelope({
         event: 'archive_opened',

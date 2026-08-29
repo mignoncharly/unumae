@@ -102,12 +102,44 @@ only where it matters.
 - Never render server error text directly. `AppError` carries an i18n key, not a
   message from a backend.
 - Never log tokens, emails or user identifiers.
+- Keep the Supabase session in the Keychain, not AsyncStorage. The access and
+  refresh tokens are the account; `src/lib/supabase/secureStorage.ts` chunks
+  them across keystore items and migrates anyone already signed in.
 - Never expose another account's UUID for blocking; resolve the account from a
   visible portrait or question and return only an opaque management id.
 - Clear in-memory and persisted private query caches whenever account identity
   changes or cannot be reconciled safely.
 - Validate with the same Zod schemas on the client and in Edge Functions. Client
   validation is a convenience; the server check is the real one.
+
+## Crash reporting
+
+A crash report is a diagnostic that has been handed whatever the failing code
+was holding, which is why it is treated as user data rather than as a log.
+
+- **Reports stay first-party.** The application root installs
+  `src/lib/errors/provider.ts`, which sends a bounded `client_crash` event
+  through the existing attested analytics endpoint. There is no crash SDK,
+  broker, device fingerprint, IP-address column, or separate processor.
+- **Fatal reports survive one restart.** One already-redacted envelope may be
+  written synchronously to the app cache because a fatal handler cannot wait
+  for a network promise. It is retried on the next launch and removed after
+  successful delivery; malformed or oversized cache content is discarded.
+- **Nothing reaches a provider unredacted.** `redact()` removes whole classes of
+  value rather than trying to detect secrets: JWTs and bearer tokens, API keys,
+  email addresses, every uuid, credentials inside connection strings, and the
+  query string of a signed storage URL. Losing a row id from a stack trace costs
+  a little debugging convenience; keeping one costs a person their privacy.
+- **A redacted message is still not user-facing.** It goes to the reporter only.
+  The rule above — render an `AppError` i18n key, never backend text — is why
+  `AppErrorBoundary` replaces Expo Router's default boundary, which renders
+  `error.message` on screen in production.
+- **A reporter must never become the crash.** Every failure inside `reportCrash`
+  is swallowed, and the global handler chains the previous one rather than
+  replacing it.
+- **Collection is declared and expires.** Apple Crash Data is declared as
+  linked App Functionality data. Crash rows share the analytics table's
+  90-day purge and account-export/deletion behavior.
 
 ## Reporting a vulnerability
 

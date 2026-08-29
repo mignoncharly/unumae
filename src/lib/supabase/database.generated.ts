@@ -2084,14 +2084,6 @@ export type Database = {
         Returns: boolean;
       };
       am_i_founding: { Args: never; Returns: boolean };
-      appeal_review_capacity: {
-        Args: never;
-        Returns: {
-          moderator_count: number;
-          pending_appeals: number;
-          unreviewable_appeals: number;
-        }[];
-      };
       analytics_journey_funnels: {
         Args: { window_days?: number };
         Returns: {
@@ -2127,6 +2119,14 @@ export type Database = {
           destination: string;
           opens: number;
           source: string;
+        }[];
+      };
+      appeal_review_capacity: {
+        Args: never;
+        Returns: {
+          moderator_count: number;
+          pending_appeals: number;
+          unreviewable_appeals: number;
         }[];
       };
       answer_question: {

@@ -1,0 +1,17 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  placement: 'hero' | 'closing' | 'footer';
+}
+
+const { src, alt = '', placement } = Astro.props;
+---
+
+<!-- Intentionally empty until an approved mascot asset exists. -->{
+  src && (
+    <figure class:list={['brand-companion', `brand-companion--${placement}`]}>
+      <img src={src} alt={alt} loading="lazy" decoding="async" />
+    </figure>
+  )
+}

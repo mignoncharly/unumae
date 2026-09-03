@@ -34,6 +34,10 @@ Premium photorealistic architectural still life of an open plaster doorway
 with soft daylight and a restrained blue-violet sky, vertical 4:5. No people,
 silhouettes, text, landmarks, logos, or watermark.
 
+## Derived delivery assets
+
+`public/editorial/journey-preview.webp` is a 480×600 WebP derivative of the approved Today empty-chair image. It was resized with FFmpeg on 2026-09-03 for the marketing preview; its subject, crop meaning, and usage safeguards are unchanged.
+
 ## Usage safeguards
 
 - A visible localized label identifies each fallback as an editorial image and

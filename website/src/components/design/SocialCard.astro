@@ -1,6 +1,6 @@
 ---
-import { homeContent } from '../../content/home';
 import { publicContent } from '../../content/public';
+import { journeyHomeContent } from '../../content/journey-home';
 import { socialContent } from '../../content/social';
 import type { Locale } from '../../content/site';
 import {
@@ -30,7 +30,7 @@ if (mode === 'archive-human' && !archiveHuman) {
 }
 
 const copy = socialContent[locale];
-const tagline = homeContent[locale].hero;
+const tagline = journeyHomeContent[locale].hero;
 const approved =
   mode === 'human' && human ? prepareHumanShareCard(human) : null;
 const firstName =

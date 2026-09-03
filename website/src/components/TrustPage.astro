@@ -20,7 +20,11 @@ const guidelines = copy.guidelines;
 <BaseLayout locale={locale} page={page}>
   {
     page === 'about' && (
-      <main id="main-content" class="trust-main about-page" tabindex="-1">
+      <main
+        id="main-content"
+        class="trust-main about-page journey-trust-page"
+        tabindex="-1"
+      >
         <header class="trust-hero">
           <p class="eyebrow">{about.hero.eyebrow}</p>
           <h1>{about.hero.title}</h1>

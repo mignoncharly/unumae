@@ -33,7 +33,7 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
     class:list={[
       'public-main',
       `${page}-public-page`,
-      { 'journey-public-page': page === 'today' },
+      { 'journey-public-page': page === 'today' || page === 'archive' },
     ]}
     data-public-page={page}
     data-data-mode={dataMode}

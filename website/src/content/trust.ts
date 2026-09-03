@@ -114,7 +114,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         eyebrow: 'The promise',
         title: 'Ordinary. One. Remembered.',
         quote:
-          'Every day, one ordinary person from the community becomes Today’s Human. The world discovers their story for 24 hours, asks them questions, and remembers them in the Human Archive.',
+          'Every day, one ordinary person from the community becomes the Chosen One. The world discovers their story for 24 hours, asks them questions, and remembers them in the Archive.',
         commitments: [
           {
             term: 'Ordinary',
@@ -141,7 +141,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         items: [
           {
             title: 'No audience to accumulate',
-            body: 'There are no followers, public popularity counts, rankings, or leaderboards.',
+            body: 'There are no public popularity counts, rankings, or leaderboards. If Unumae adds a way to stay connected, it will be scoped to a Journey, not a person’s status.',
           },
           {
             title: 'No attention to buy',
@@ -160,7 +160,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
       access: {
         eyebrow: 'Open by default',
         title: 'A person’s story is not a signup tactic.',
-        body: 'Today’s Human, their portrait and questions, and the Human Archive remain open to guests. Reading never requires an account or app installation.',
+        body: 'The Chosen One’s Journey, portrait, and questions remain open to guests in the Archive. Reading never requires an account or app installation.',
         rights: [
           'The selected person can decline without consequence.',
           'They choose what to share and which questions to answer.',
@@ -173,7 +173,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         title: 'Not one centre looking outward.',
         body: 'The same UTC day is shared everywhere. Nationality never affects the draw, and country is context—not a score, quota, or category of worth.',
         languageNote:
-          'The interface begins in English, French, and German. A Human’s original words always remain visible when translations are added.',
+          'The interface begins in English, French, and German. The Chosen One’s original words always remain visible when translations are added.',
       },
       closing: {
         title: 'Fair attention begins with a fair draw.',
@@ -192,7 +192,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         { value: 'D−2', label: 'inputs committed before the draw' },
         { value: '1 + 3', label: 'primary and ordered backups' },
         { value: '12h', label: 'time to accept freely' },
-        { value: 'Once', label: 'one Human, one day, forever' },
+        { value: 'Once', label: 'one Chosen One, one day, forever' },
       ],
       eligibility: {
         eyebrow: '01 · Eligibility',
@@ -207,7 +207,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'The account has genuine participation activity and no unresolved review flag.',
           'The community rules have been accepted.',
           'The person has chosen to enter the draw.',
-          'The person has never previously been Today’s Human.',
+          'The person has never previously been Chosen One.',
         ],
         conclusion:
           'Everyone who meets the same complete test receives the same probability.',
@@ -247,7 +247,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'These signals are not merely ignored by policy. The selection engine is forbidden from receiving them.',
         items: [
           'Payment or subscription tier',
-          'Followers or engagement',
+          'Popularity to accumulate',
           'Session count or content scores',
           'Sponsorship or admin preference',
           'Nationality quotas or language',
@@ -266,7 +266,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         title: 'Being drawn is not enough to go live.',
         body: 'At launch, an accepted candidate completes a guided portrait. A person reviews the portrait and answers before publication.',
         quietDay:
-          'If nobody has accepted and passed review by the deadline, Unumae shows a Quiet Day. It never invents a Human, skips consent, or publishes unreviewed work.',
+          'If nobody has accepted and passed review by the deadline, Unumae shows a Quiet Day. It never invents a Chosen One, skips consent, or publishes unreviewed work.',
       },
       audit: {
         eyebrow: '06 · What can be verified',
@@ -280,16 +280,16 @@ export const trustContent: Record<Locale, TrustCopy> = {
         eyebrow: 'Community guidelines',
         title: 'Treat a stranger with respect.',
         introduction:
-          'This is a small place with a simple promise: every day, one ordinary person is introduced to the world. These rules exist to keep that possible.',
+          'This is a small place with a simple promise: every day, one ordinary person is introduced through the daily flagship Journey. Other Journeys may become finite spaces for intentional participation; these rules exist to keep people and their boundaries safe.',
       },
       canonicalNote:
-        'Approved 22 August 2026. English is the canonical version. These are the rules a person accepts before entering the draw.',
+        'Approved 3 September 2026. English is the canonical version. These are the rules a person accepts before entering the draw.',
       contentsLabel: 'On this page',
       rules: [
         {
           title: 'There is one person here at a time. Treat them that way.',
           paragraphs: [
-            'Today’s Human is not content. They are somebody who agreed to be seen, once, by strangers. They chose to do something most people would find frightening.',
+            'The Chosen One is not content. They are somebody who agreed to be seen, once, by strangers. They chose to do something most people would find frightening.',
             'Ask them what you would ask a stranger you respected. If you would not say it to them in a room, do not send it here.',
           ],
         },
@@ -310,7 +310,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'Nobody here is competing.',
           paragraphs: [
-            'There are no followers, no scores, no rankings, and no way to pay for attention. If you are here to build an audience, this is the wrong place, and nothing we add later will change that.',
+            'Journeys, not popularity. A Journey may eventually let people stay connected to it, but there are no public member counts, scores, rankings, or ways to pay for attention. If you are here to turn a person into a status signal, this is the wrong place.',
             'Do not use questions, portraits, or reports to promote anything—yourself, a business, a cause, or another platform.',
           ],
         },
@@ -329,8 +329,8 @@ export const trustContent: Record<Locale, TrustCopy> = {
             'Hate directed at people for who they are',
             'Sexual content, and any sexual content involving minors, which we report to the authorities',
             'Encouraging self-harm or suicide',
-            'Sharing anyone’s private information, including Today’s Human’s—where they live, work, or can be found',
-            'Trying to contact Today’s Human outside this app after seeing them here',
+            'Sharing anyone’s private information, including the Chosen One’s—where they live, work, or can be found',
+            'Trying to contact the Chosen One outside this app after seeing them here',
           ],
         },
         {
@@ -364,11 +364,11 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'These rules can change. The promise cannot.',
           paragraphs: [
-            'We will update this page as we learn. What cannot change is underneath it: no followers, no rankings, no way to buy a better chance, and one ordinary person a day.',
+            'We will update this page as we learn. What cannot change is underneath it: people choose their boundaries, selection cannot be bought, Journeys do not turn popularity into status, and the daily flagship remains one person at a time.',
           ],
         },
       ],
-      updated: 'Last updated 22 August 2026.',
+      updated: 'Last updated 3 September 2026.',
     },
   },
   fr: {
@@ -383,7 +383,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         eyebrow: 'La promesse',
         title: 'Ordinaire. Une. Dans les mémoires.',
         quote:
-          'Chaque jour, une personne ordinaire de la communauté devient l’Humain du jour. Le monde découvre son histoire pendant 24 heures, lui pose des questions et s’en souvient dans les Archives humaines.',
+          'Chaque jour, une personne ordinaire de la communauté devient l’Élu·e. Le monde découvre son histoire pendant 24 heures, lui pose des questions et s’en souvient dans les Archives.',
         commitments: [
           {
             term: 'Ordinaire',
@@ -410,7 +410,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         items: [
           {
             title: 'Aucune audience à accumuler',
-            body: 'Ni followers, ni compteurs publics de popularité, ni classements.',
+            body: 'Aucun compteur public de popularité ni classement. Si Unumae ajoute un moyen de rester liée à une histoire, il sera rattaché à une Journey, pas au statut d’une personne.',
           },
           {
             title: 'Aucune attention à acheter',
@@ -429,7 +429,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
       access: {
         eyebrow: 'Ouvert par défaut',
         title: 'L’histoire d’une personne n’est pas un piège à inscription.',
-        body: 'L’Humain du jour, son portrait, les questions et les Archives humaines restent ouverts aux visiteurs. Lire ne demande ni compte ni installation.',
+        body: 'L’Élu·e, son portrait, les questions et les Archives restent ouverts aux visiteurs. Lire ne demande ni compte ni installation.',
         rights: [
           'La personne sélectionnée peut refuser sans conséquence.',
           'Elle choisit ce qu’elle partage et les questions auxquelles elle répond.',
@@ -442,7 +442,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         title: 'Pas un centre qui regarde vers l’extérieur.',
         body: 'La même journée UTC est partagée partout. La nationalité n’influence jamais le tirage ; le pays donne un contexte, jamais un score, un quota ou une valeur.',
         languageNote:
-          'L’interface commence en anglais, français et allemand. Les mots originaux d’un Humain restent toujours visibles quand une traduction est ajoutée.',
+          'L’interface commence en anglais, français et allemand. Les mots originaux de l’Élu·e restent toujours visibles quand une traduction est ajoutée.',
       },
       closing: {
         title: 'Une attention juste commence par un tirage juste.',
@@ -461,7 +461,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         { value: 'J−2', label: 'entrées engagées avant le tirage' },
         { value: '1 + 3', label: 'personne principale et remplaçants' },
         { value: '12 h', label: 'pour accepter librement' },
-        { value: 'Une fois', label: 'un Humain, un jour, pour toujours' },
+        { value: 'Une fois', label: 'un Élu·e, un jour, pour toujours' },
       ],
       eligibility: {
         eyebrow: '01 · Éligibilité',
@@ -476,7 +476,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'Le compte a une participation réelle et aucun signal d’examen non résolu.',
           'Les règles de la communauté ont été acceptées.',
           'La personne a choisi de participer au tirage.',
-          'La personne n’a jamais été l’Humain du jour.',
+          'La personne n’a jamais été l’Élu·e.',
         ],
         conclusion:
           'Toutes les personnes qui satisfont au même test complet ont la même probabilité.',
@@ -516,7 +516,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'Ces signaux ne sont pas simplement ignorés par principe. Le moteur de sélection n’a pas le droit de les recevoir.',
         items: [
           'Paiement ou niveau d’abonnement',
-          'Followers ou engagement',
+          'Popularité à accumuler',
           'Nombre de sessions ou score de contenu',
           'Sponsoring ou préférence administrative',
           'Quotas de nationalité ou langue',
@@ -540,7 +540,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         title: 'Être tiré au sort ne suffit pas pour être publié.',
         body: 'Au lancement, la personne qui accepte crée un portrait guidé. Des contrôles automatiques et une personne examinent le portrait avant publication.',
         quietDay:
-          'Si personne n’a accepté et passé la modération avant l’échéance, Unumae affiche un Jour calme. Le produit n’invente jamais un Humain, ne contourne pas le consentement et ne publie rien sans relecture.',
+          'Si personne n’a accepté et passé la modération avant l’échéance, Unumae affiche un Jour calme. Le produit n’invente jamais un Élu·e, ne contourne pas le consentement et ne publie rien sans relecture.',
       },
       audit: {
         eyebrow: '06 · Ce qui peut être vérifié',
@@ -557,13 +557,13 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'C’est un petit espace avec une promesse simple : chaque jour, une personne ordinaire est présentée au monde. Ces règles rendent cela possible.',
       },
       canonicalNote:
-        'Approuvées le 22 août 2026. La version anglaise fait foi. Une personne accepte ces règles avant d’entrer dans le tirage.',
+        'Approuvées le 3 septembre 2026. La version anglaise fait foi. Une personne accepte ces règles avant d’entrer dans le tirage.',
       contentsLabel: 'Sur cette page',
       rules: [
         {
           title: 'Il y a une personne à la fois. Traitez-la comme telle.',
           paragraphs: [
-            'L’Humain du jour n’est pas un contenu. C’est une personne qui a accepté d’être vue, une fois, par des inconnus. Elle a choisi de faire quelque chose que beaucoup trouveraient intimidant.',
+            'L’Élu·e n’est pas un contenu. C’est une personne qui a accepté d’être vue, une fois, par des inconnus. Elle a choisi de faire quelque chose que beaucoup trouveraient intimidant.',
             'Posez-lui la question que vous poseriez à une personne inconnue que vous respectez. Si vous ne le diriez pas dans la même pièce, ne l’envoyez pas ici.',
           ],
         },
@@ -584,7 +584,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'Personne n’est en compétition.',
           paragraphs: [
-            'Il n’y a ni followers, ni scores, ni classements, ni moyen de payer pour obtenir de l’attention. Si vous êtes ici pour construire une audience, ce n’est pas le bon endroit, et rien de ce que nous ajouterons ne changera cela.',
+            'Les Journeys comptent plus que la popularité. Une Journey pourra permettre de rester liée à son histoire, mais sans compteur public de membres, score, classement ou moyen de payer pour obtenir de l’attention. Si vous êtes ici pour transformer une personne en statut, ce n’est pas le bon endroit.',
             'N’utilisez ni questions, ni portraits, ni signalements pour promouvoir quoi que ce soit—vous-même, une entreprise, une cause ou une autre plateforme.',
           ],
         },
@@ -603,8 +603,8 @@ export const trustContent: Record<Locale, TrustCopy> = {
             'La haine envers des personnes pour ce qu’elles sont',
             'Le contenu sexuel, et tout contenu sexuel impliquant des mineurs, que nous signalons aux autorités',
             'L’incitation à l’automutilation ou au suicide',
-            'Le partage d’informations privées, y compris celles de l’Humain du jour—son domicile, son travail ou l’endroit où le trouver',
-            'Toute tentative de contacter l’Humain du jour hors de l’application après l’avoir vu ici',
+            'Le partage d’informations privées, y compris celles de l’Élu·e—son domicile, son travail ou l’endroit où le trouver',
+            'Toute tentative de contacter l’Élu·e hors de l’application après l’avoir vu ici',
           ],
         },
         {
@@ -638,11 +638,11 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'Ces règles peuvent changer. La promesse, jamais.',
           paragraphs: [
-            'Nous mettrons cette page à jour au fil de nos apprentissages. Le fond ne peut pas changer : aucun follower, aucun classement, aucun moyen d’acheter une meilleure chance, et une personne ordinaire par jour.',
+            'Nous mettrons cette page à jour au fil de nos apprentissages. Le fond ne change pas : chacun choisit ses limites, la sélection ne s’achète pas, les Journeys ne transforment pas la popularité en statut, et la Journey phare quotidienne reste centrée sur une personne à la fois.',
           ],
         },
       ],
-      updated: 'Dernière mise à jour : 22 août 2026.',
+      updated: 'Dernière mise à jour : 3 septembre 2026.',
     },
   },
   de: {
@@ -657,7 +657,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         eyebrow: 'Das Versprechen',
         title: 'Gewöhnlich. Einer. Erinnert.',
         quote:
-          'Jeden Tag wird ein gewöhnlicher Mensch aus der Community zum Menschen des Tages. Die Welt entdeckt 24 Stunden lang seine Geschichte, stellt Fragen und erinnert sich im Menschenarchiv.',
+          'Jeden Tag wird ein gewöhnlicher Mensch aus der Community zum Chosen One. Die Welt entdeckt 24 Stunden lang seine Geschichte, stellt Fragen und erinnert sich im Archiv.',
         commitments: [
           {
             term: 'Gewöhnlich',
@@ -684,7 +684,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         items: [
           {
             title: 'Kein Publikum zum Ansammeln',
-            body: 'Keine Follower, öffentlichen Beliebtheitszahlen, Ranglisten oder Bestenlisten.',
+            body: 'Keine öffentlichen Beliebtheitszahlen, Ranglisten oder Bestenlisten. Wenn Unumae später eine Verbindung ermöglicht, gehört sie zu einer Journey, nicht zum Status einer Person.',
           },
           {
             title: 'Keine Aufmerksamkeit zum Kaufen',
@@ -703,7 +703,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
       access: {
         eyebrow: 'Standardmäßig offen',
         title: 'Die Geschichte eines Menschen ist kein Anmeldetrick.',
-        body: 'Der Mensch des Tages, das Porträt, die Fragen und das Menschenarchiv bleiben für Gäste offen. Lesen erfordert weder Konto noch App-Installation.',
+        body: 'Der Chosen One, das Porträt, die Fragen und das Archiv bleiben für Gäste offen. Lesen erfordert weder Konto noch App-Installation.',
         rights: [
           'Die ausgewählte Person kann ohne Folgen ablehnen.',
           'Sie entscheidet, was sie teilt und welche Fragen sie beantwortet.',
@@ -750,7 +750,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'Das Konto zeigt echte Beteiligung und hat kein ungeklärtes Prüfsignal.',
           'Die Community-Regeln wurden akzeptiert.',
           'Die Person hat sich für die Ziehung entschieden.',
-          'Die Person war noch nie Mensch des Tages.',
+          'Die Person war noch nie Chosen One.',
         ],
         conclusion:
           'Alle, die denselben vollständigen Test bestehen, erhalten dieselbe Wahrscheinlichkeit.',
@@ -790,7 +790,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'Diese Signale werden nicht nur aus Prinzip ignoriert. Die Auswahl-Engine darf sie nicht erhalten.',
         items: [
           'Zahlung oder Abonnementstufe',
-          'Follower oder Engagement',
+          'Popularität zum Ansammeln',
           'Sitzungszahl oder Inhaltsbewertungen',
           'Sponsoring oder Admin-Präferenz',
           'Nationalitätsquoten oder Sprache',
@@ -826,13 +826,13 @@ export const trustContent: Record<Locale, TrustCopy> = {
           'Dies ist ein kleiner Ort mit einem einfachen Versprechen: Jeden Tag wird der Welt ein gewöhnlicher Mensch vorgestellt. Diese Regeln machen das möglich.',
       },
       canonicalNote:
-        'Beschlossen am 22. August 2026. Die englische Fassung ist maßgeblich. Vor der Teilnahme an der Ziehung stimmt eine Person diesen Regeln zu.',
+        'Beschlossen am 3. September 2026. Die englische Fassung ist maßgeblich. Vor der Teilnahme an der Ziehung stimmt eine Person diesen Regeln zu.',
       contentsLabel: 'Auf dieser Seite',
       rules: [
         {
           title: 'Hier ist jeweils ein Mensch. Behandle ihn auch so.',
           paragraphs: [
-            'Der Mensch des Tages ist kein Inhalt. Es ist jemand, der zugestimmt hat, einmal von Fremden gesehen zu werden. Diese Person hat etwas gewählt, das viele Menschen beängstigend fänden.',
+            'Der Chosen One ist kein Inhalt. Es ist jemand, der zugestimmt hat, einmal von Fremden gesehen zu werden. Diese Person hat etwas gewählt, das viele Menschen beängstigend fänden.',
             'Frage, was du eine fremde Person fragen würdest, die du respektierst. Wenn du es ihr nicht im selben Raum sagen würdest, sende es hier nicht.',
           ],
         },
@@ -853,7 +853,7 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'Hier konkurriert niemand.',
           paragraphs: [
-            'Es gibt keine Follower, Punktzahlen, Ranglisten und keine Möglichkeit, für Aufmerksamkeit zu bezahlen. Wer ein Publikum aufbauen will, ist hier falsch; nichts, was wir später ergänzen, wird das ändern.',
+            'Journeys zählen mehr als Popularität. Eine Journey kann später ermöglichen, mit ihrer Geschichte verbunden zu bleiben—ohne öffentliche Mitgliederzahl, Punktzahl, Rangliste oder bezahlte Aufmerksamkeit. Wer eine Person in ein Statussignal verwandeln will, ist hier falsch.',
             'Nutze Fragen, Porträts oder Meldungen nicht, um etwas zu bewerben—dich selbst, ein Unternehmen, ein Anliegen oder eine andere Plattform.',
           ],
         },
@@ -872,8 +872,8 @@ export const trustContent: Record<Locale, TrustCopy> = {
             'Hass gegen Menschen aufgrund ihrer Identität',
             'Sexuelle Inhalte und alle sexuellen Inhalte mit Minderjährigen, die wir den Behörden melden',
             'Ermutigung zu Selbstverletzung oder Suizid',
-            'Weitergabe privater Informationen, auch über den Menschen des Tages—wo jemand lebt, arbeitet oder zu finden ist',
-            'Versuche, den Menschen des Tages nach der Begegnung hier außerhalb der App zu kontaktieren',
+            'Weitergabe privater Informationen, auch über den Chosen One—wo jemand lebt, arbeitet oder zu finden ist',
+            'Versuche, den Chosen One nach der Begegnung hier außerhalb der App zu kontaktieren',
           ],
         },
         {
@@ -907,11 +907,11 @@ export const trustContent: Record<Locale, TrustCopy> = {
         {
           title: 'Diese Regeln können sich ändern. Das Versprechen nicht.',
           paragraphs: [
-            'Wir aktualisieren diese Seite, wenn wir dazulernen. Unveränderlich bleibt: keine Follower, keine Ranglisten, keine Möglichkeit, eine bessere Chance zu kaufen, und ein gewöhnlicher Mensch pro Tag.',
+            'Wir aktualisieren diese Seite, wenn wir dazulernen. Unveränderlich bleibt: Jeder Mensch bestimmt seine Grenzen, die Auswahl ist nicht käuflich, Journeys machen Popularität nicht zum Status, und die tägliche Flagship-Journey bleibt auf eine Person fokussiert.',
           ],
         },
       ],
-      updated: 'Zuletzt aktualisiert am 22. August 2026.',
+      updated: 'Zuletzt aktualisiert am 3. September 2026.',
     },
   },
 };

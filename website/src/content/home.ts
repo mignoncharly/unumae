@@ -70,7 +70,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
       firstLine: '8 billion people.',
       secondLine: 'One today.',
       introduction:
-        'Every day, one ordinary person becomes Today’s Human. For 24 hours, the world gives one story its full attention.',
+        'Every day, one ordinary person becomes the Chosen One. For 24 hours, the world gives one story its full attention.',
       selectionLink: 'See how selection works',
       launchState: 'Coming to iPhone',
     },
@@ -87,9 +87,9 @@ export const homeContent: Record<Locale, HomeCopy> = {
     portrait: {
       eyebrow: 'The story',
       title: 'A portrait in their own words.',
-      body: 'Today’s Human responds to the same gentle prompts in text, voice, photo, or video. The structure stays familiar; every answer is singular.',
+      body: 'Chosen One responds to the same gentle prompts in text, voice, photo, or video. The structure stays familiar; every answer is singular.',
       previewLabel: 'Story format preview',
-      previewDetail: 'Abstract composition · no Human shown',
+      previewDetail: 'Abstract composition · no Chosen One shown',
       promptsLabel: 'Guided prompts',
       prompts: [
         'Today I feel…',
@@ -128,7 +128,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
         {
           number: '05',
           title: 'Live for 24 hours',
-          body: 'The same Human is present worldwide for one UTC day.',
+          body: 'The same Chosen One is present worldwide for one UTC day.',
         },
         {
           number: '06',
@@ -142,7 +142,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
       title: 'This is not another social network.',
       body: 'Attention is scarce. Unumae gives it to one person instead of turning it into a contest.',
       exclusions: [
-        'No followers',
+        'No public popularity counts',
         'No rankings',
         'No paid boost',
         'No infinite feed',
@@ -151,13 +151,13 @@ export const homeContent: Record<Locale, HomeCopy> = {
         'Nothing to win. No one to outperform. Just a person to meet.',
     },
     archive: {
-      eyebrow: 'The Human Archive',
+      eyebrow: 'The Archive',
       title: 'Everyone the world has met.',
       body: 'After each day, the sequence grows by one. Explore it by time, by country, or by chance—not by who collected the most attention.',
       modes: ['By time', 'By country', 'At random'],
       rule: 'Never by popularity',
       removal:
-        'A Human can ask for their story to be removed. Their number and date remain as a quiet place in the sequence.',
+        'The Chosen One can ask for their Journey to be removed. Their number and date remain as a quiet place in the sequence.',
       link: 'Visit the Archive preview',
     },
     fairness: {
@@ -185,7 +185,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
       firstLine: '8 milliards de personnes.',
       secondLine: 'Une aujourd’hui.',
       introduction:
-        'Chaque jour, une personne ordinaire devient l’Humain du jour. Pendant 24 heures, le monde accorde toute son attention à une seule histoire.',
+        'Chaque jour, une personne ordinaire devient l’Élu·e. Pendant 24 heures, le monde accorde toute son attention à une seule histoire.',
       selectionLink: 'Voir comment fonctionne la sélection',
       launchState: 'Bientôt sur iPhone',
     },
@@ -202,9 +202,9 @@ export const homeContent: Record<Locale, HomeCopy> = {
     portrait: {
       eyebrow: 'L’histoire',
       title: 'Un portrait avec ses propres mots.',
-      body: 'L’Humain du jour répond aux mêmes invitations bienveillantes en texte, voix, photo ou vidéo. La structure reste familière ; chaque réponse est unique.',
+      body: 'L’Élu·e répond aux mêmes invitations bienveillantes en texte, voix, photo ou vidéo. La structure reste familière ; chaque réponse est unique.',
       previewLabel: 'Aperçu du format',
-      previewDetail: 'Composition abstraite · aucun Humain représenté',
+      previewDetail: 'Composition abstraite · aucun Élu·e représenté',
       promptsLabel: 'Invitations guidées',
       prompts: [
         'Aujourd’hui, je me sens…',
@@ -243,7 +243,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
         {
           number: '05',
           title: 'En ligne pendant 24 h',
-          body: 'Le même Humain est présent dans le monde entier un jour UTC.',
+          body: 'Le même Élu·e est présent dans le monde entier un jour UTC.',
         },
         {
           number: '06',
@@ -257,7 +257,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
       title: 'Ceci n’est pas un réseau social de plus.',
       body: 'L’attention est rare. Unumae la donne à une personne au lieu d’en faire un concours.',
       exclusions: [
-        'Aucun follower',
+        'Aucun compteur public de popularité',
         'Aucun classement',
         'Aucune mise en avant payante',
         'Aucun fil infini',
@@ -266,13 +266,13 @@ export const homeContent: Record<Locale, HomeCopy> = {
         'Rien à gagner. Personne à dépasser. Juste une personne à rencontrer.',
     },
     archive: {
-      eyebrow: 'Les Archives humaines',
+      eyebrow: 'Les Archives',
       title: 'Toutes les personnes rencontrées par le monde.',
       body: 'Après chaque journée, la séquence s’agrandit d’une personne. Parcourez-la par date, par pays ou au hasard—jamais selon l’attention reçue.',
       modes: ['Par date', 'Par pays', 'Au hasard'],
       rule: 'Jamais par popularité',
       removal:
-        'Un Humain peut demander le retrait de son histoire. Son numéro et la date gardent une place discrète dans la séquence.',
+        'L’Élu·e peut demander le retrait de sa Journey. Son numéro et la date gardent une place discrète dans la séquence.',
       link: 'Voir l’aperçu des Archives',
     },
     fairness: {
@@ -300,7 +300,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
       firstLine: '8 Milliarden Menschen.',
       secondLine: 'Heute einer.',
       introduction:
-        'Jeden Tag wird ein gewöhnlicher Mensch zum Menschen des Tages. 24 Stunden lang schenkt die Welt einer Geschichte ihre volle Aufmerksamkeit.',
+        'Jeden Tag wird ein gewöhnlicher Mensch zum Chosen One. 24 Stunden lang schenkt die Welt einer Geschichte ihre volle Aufmerksamkeit.',
       selectionLink: 'So funktioniert die Auswahl',
       launchState: 'Demnächst fürs iPhone',
     },
@@ -317,7 +317,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
     portrait: {
       eyebrow: 'Die Geschichte',
       title: 'Ein Porträt in eigenen Worten.',
-      body: 'Der Mensch des Tages antwortet auf dieselben behutsamen Impulse mit Text, Stimme, Foto oder Video. Die Struktur bleibt vertraut; jede Antwort ist einzigartig.',
+      body: 'Der Chosen One antwortet auf dieselben behutsamen Impulse mit Text, Stimme, Foto oder Video. Die Struktur bleibt vertraut; jede Antwort ist einzigartig.',
       previewLabel: 'Vorschau des Formats',
       previewDetail: 'Abstrakte Komposition · kein Mensch dargestellt',
       promptsLabel: 'Geführte Impulse',
@@ -372,7 +372,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
       title: 'Das ist nicht noch ein soziales Netzwerk.',
       body: 'Aufmerksamkeit ist knapp. Unumae schenkt sie einem Menschen, statt daraus einen Wettbewerb zu machen.',
       exclusions: [
-        'Keine Follower',
+        'Keine öffentlichen Beliebtheitszahlen',
         'Keine Ranglisten',
         'Keine bezahlte Reichweite',
         'Kein endloser Feed',
@@ -381,7 +381,7 @@ export const homeContent: Record<Locale, HomeCopy> = {
         'Nichts zu gewinnen. Niemanden zu übertreffen. Nur ein Mensch, dem du begegnen kannst.',
     },
     archive: {
-      eyebrow: 'Das Menschenarchiv',
+      eyebrow: 'Das Archiv',
       title: 'Alle Menschen, denen die Welt begegnet ist.',
       body: 'Nach jedem Tag wächst die Reihenfolge um einen Menschen. Entdecke sie nach Zeit, Land oder per Zufall—nie danach, wer die meiste Aufmerksamkeit bekam.',
       modes: ['Nach Zeit', 'Nach Land', 'Per Zufall'],

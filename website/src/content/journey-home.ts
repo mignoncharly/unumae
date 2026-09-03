@@ -16,6 +16,7 @@ interface JourneyHomeCopy {
     previewNote: string;
   };
   path: readonly string[];
+  pathNote: string;
   experience: {
     eyebrow: string;
     title: string;
@@ -82,7 +83,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       firstLine: 'The journey',
       secondLine: 'is yours.',
       introduction:
-        'One person becomes the Chosen One. For one day, their world unfolds in moments—and everyone else gets to experience it with them.',
+        'Each day, one person becomes the Chosen One. Their Journey unfolds through a finite sequence of moments—open to experience, question, remember, and share.',
       primaryLink: 'Enter the journey',
       selectionLink: 'Why one person?',
       launchState: 'In development · coming to iPhone',
@@ -94,45 +95,47 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       previewNote: 'Editorial preview · no person shown',
     },
     path: ['Discover', 'Stay', 'Take part', 'Remember'],
+    pathNote:
+      'Stay with a Journey is coming: a private way to keep one close, never a public count.',
     experience: {
       eyebrow: 'The experience',
-      title: 'Not a feed. A point of view.',
-      body: 'Move through one person’s day as they lived it: a clip, a thought, a photo, a pause. No pile-up of strangers competing for the next swipe.',
+      title: 'One Journey, many moments.',
+      body: 'Move through one person’s Journey as it takes shape: a thought, a photo, a question, a pause. Some Moments are here today; others are designed for what comes next.',
       previewLabel: 'Journey preview',
       previewNote:
-        'Concept preview. The immersive stream and Live are not available in the current app yet.',
+        'Concept preview. Photo and text reflect today’s portrait; video and Live are designed for what comes next.',
       actions: ['Ask', 'Remember', 'Share'],
       moments: [
         {
           id: 'video',
           label: 'Video',
-          eyebrow: 'Moment 01 · 00:43 / 00:59',
+          eyebrow: 'Coming to Journeys · Moment 01 · 00:43 / 00:59',
           title: 'The train left before sunrise.',
-          detail: 'Short video',
+          detail: 'Future · Short video',
           caption: 'A moving moment, kept to under a minute.',
         },
         {
           id: 'photo',
           label: 'Photo',
-          eyebrow: 'Moment 03 · 08:14',
+          eyebrow: 'Current portrait · Moment 03 · 08:14',
           title: 'The quiet before everything starts.',
-          detail: 'Photo',
+          detail: 'Current · Photo',
           caption: 'One frame can hold the whole mood.',
         },
         {
           id: 'text',
           label: 'Text',
-          eyebrow: 'Moment 06 · In their words',
+          eyebrow: 'Current portrait · Moment 06 · In their words',
           title: 'I thought I needed a plan. I needed a beginning.',
-          detail: 'Text moment',
+          detail: 'Current · Text moment',
           caption: 'Room for the thoughts that do not need a camera.',
         },
         {
           id: 'live',
           label: 'Live',
-          eyebrow: 'On the horizon · Live',
+          eyebrow: 'Future direction · Live',
           title: 'Be there when it happens.',
-          detail: 'Future direction',
+          detail: 'Future · Live',
           caption:
             'A shared moment, without turning a life into a performance.',
         },
@@ -146,20 +149,20 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       roleTitle: 'The Chosen One',
       roleBody:
         'One ordinary person gets the whole frame. Everyone else gets to meet them properly.',
-      formatsLabel: 'A journey can hold',
+      formatsLabel: 'The story can move through',
       formats: [
-        'Video · up to 59s',
-        'Photo',
-        'Text',
-        'Voice',
-        'Moments',
-        'Milestones',
+        'Photo · today',
+        'Text · today',
+        'Questions · today',
+        'Short video · future',
+        'Milestones · future',
+        'Live · future',
       ],
       selectionLink: 'See how selection works',
     },
     participate: {
       eyebrow: 'Show up, don’t perform',
-      title: 'You are part of the journey. You are not the algorithm.',
+      title: 'You can be more than a viewer.',
       body: 'The people watching can lean in without taking over. The current app keeps participation small, human, and intentional.',
       items: [
         {
@@ -180,7 +183,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       ],
     },
     live: {
-      eyebrow: 'Live, when it belongs',
+      eyebrow: 'Designed for what comes next',
       title: 'Be there when it happens.',
       body: 'Live belongs in a journey when the moment matters—not as an always-on demand to perform. It is part of the product direction, with safety and control designed first.',
       futureLabel: 'Future-facing preview',
@@ -211,7 +214,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
     },
     closing: {
       eyebrow: 'The next journey has not started yet',
-      title: 'Come for the moments. Stay for the person.',
+      title: 'Come for the moments. Return for the person.',
       body: 'Unumae is still in development. See the honest pre-launch space today, then come back as the journey takes shape.',
       primaryLink: 'See Today',
       secondaryLink: 'Why Unumae exists',
@@ -224,7 +227,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       firstLine: 'Le voyage',
       secondLine: 't’appartient.',
       introduction:
-        'Une personne devient l’Élu·e. Pendant une journée, son monde se dévoile en moments—et chacun peut le vivre à ses côtés.',
+        'Chaque jour, une personne devient l’Élu·e. Son Journey se déploie en une suite finie de moments—à vivre, questionner, garder en mémoire et partager.',
       primaryLink: 'Entrer dans le voyage',
       selectionLink: 'Pourquoi une personne ?',
       launchState: 'En développement · bientôt sur iPhone',
@@ -236,45 +239,47 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       previewNote: 'Aperçu éditorial · personne non représentée',
     },
     path: ['Découvrir', 'Rester', 'Participer', 'Se souvenir'],
+    pathNote:
+      'Rester avec une Journey viendra plus tard : une façon privée d’en garder une près de soi, jamais un compteur public.',
     experience: {
       eyebrow: 'L’expérience',
-      title: 'Pas un fil. Un point de vue.',
-      body: 'Parcourez la journée d’une personne comme elle l’a vécue : une vidéo, une pensée, une photo, une pause. Sans foule d’inconnus en compétition pour le prochain geste.',
+      body: 'Parcourez le Journey d’une personne au fil de son déroulement : une pensée, une photo, une question, une pause. Certains moments existent déjà ; d’autres sont conçus pour la suite.',
+      title: 'Un Journey, plusieurs moments.',
       previewLabel: 'Aperçu du voyage',
       previewNote:
-        'Aperçu conceptuel. Le flux immersif et le Live ne sont pas encore disponibles dans l’application actuelle.',
+        'Aperçu conceptuel. La photo et le texte reflètent le portrait actuel ; la vidéo et le Live sont conçus pour la suite.',
       actions: ['Demander', 'Garder', 'Partager'],
       moments: [
         {
           id: 'video',
           label: 'Vidéo',
-          eyebrow: 'Moment 01 · 00:43 / 00:59',
+          eyebrow: 'À venir dans les Journeys · Moment 01 · 00:43 / 00:59',
           title: 'Le train est parti avant l’aube.',
-          detail: 'Vidéo courte',
+          detail: 'Futur · Vidéo courte',
           caption: 'Un moment en mouvement, en moins d’une minute.',
         },
         {
           id: 'photo',
           label: 'Photo',
-          eyebrow: 'Moment 03 · 08:14',
+          eyebrow: 'Portrait actuel · Moment 03 · 08:14',
           title: 'Le calme avant que tout commence.',
-          detail: 'Photo',
+          detail: 'Actuel · Photo',
           caption: 'Une seule image peut contenir toute une humeur.',
         },
         {
           id: 'text',
           label: 'Texte',
-          eyebrow: 'Moment 06 · Avec ses mots',
+          eyebrow: 'Portrait actuel · Moment 06 · Avec ses mots',
           title: 'Je pensais avoir besoin d’un plan. Il me fallait un début.',
-          detail: 'Moment texte',
+          detail: 'Actuel · Moment texte',
           caption: 'Une place pour les pensées sans caméra.',
         },
         {
           id: 'live',
           label: 'Live',
-          eyebrow: 'À l’horizon · Live',
+          eyebrow: 'Direction future · Live',
           title: 'Être là quand ça arrive.',
-          detail: 'Direction future',
+          detail: 'Futur · Live',
           caption: 'Un moment partagé, sans transformer une vie en spectacle.',
         },
       ],
@@ -287,20 +292,20 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       roleTitle: 'L’Élu·e',
       roleBody:
         'Une personne ordinaire occupe tout le cadre. Les autres peuvent enfin vraiment la rencontrer.',
-      formatsLabel: 'Un voyage peut contenir',
+      formatsLabel: 'L’histoire peut passer par',
       formats: [
-        'Vidéo · 59 s max.',
-        'Photo',
-        'Texte',
-        'Voix',
-        'Moments',
-        'Étapes',
+        'Photo · aujourd’hui',
+        'Texte · aujourd’hui',
+        'Questions · aujourd’hui',
+        'Vidéo courte · pour la suite',
+        'Jalons · pour la suite',
+        'Live · pour la suite',
       ],
       selectionLink: 'Voir comment fonctionne la sélection',
     },
     participate: {
       eyebrow: 'Être présent, sans jouer un rôle',
-      title: 'Vous faites partie du voyage. Vous n’êtes pas l’algorithme.',
+      title: 'Vous pouvez faire plus que regarder.',
       body: 'Le public peut se rapprocher sans prendre toute la place. L’application actuelle garde la participation simple, humaine et intentionnelle.',
       items: [
         {
@@ -321,7 +326,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       ],
     },
     live: {
-      eyebrow: 'En direct, au bon moment',
+      eyebrow: 'Pensé pour la suite',
       title: 'Être là quand ça arrive.',
       body: 'Le Live a sa place quand le moment le demande—pas comme une obligation permanente de se montrer. Il fait partie de la direction produit, après la sécurité et le contrôle.',
       futureLabel: 'Aperçu tourné vers l’avenir',
@@ -352,7 +357,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
     },
     closing: {
       eyebrow: 'Le prochain voyage n’a pas encore commencé',
-      title: 'Venez pour les moments. Restez pour la personne.',
+      title: 'Venez pour les moments. Revenez pour la personne.',
       body: 'Unumae est encore en développement. Découvrez aujourd’hui son espace de prélancement, puis revenez voir le voyage prendre forme.',
       primaryLink: 'Voir Aujourd’hui',
       secondaryLink: 'Pourquoi Unumae existe',
@@ -365,7 +370,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       firstLine: 'Die Reise',
       secondLine: 'gehört dir.',
       introduction:
-        'Ein Mensch wird zum Chosen One. Einen Tag lang entfaltet sich seine Welt in Momenten—und alle anderen können sie miterleben.',
+        'Jeden Tag wird ein Mensch zum Chosen One. Seine Journey entfaltet sich in einer endlichen Folge von Momenten—zum Erleben, Fragen, Erinnern und Teilen.',
       primaryLink: 'Die Reise beginnen',
       selectionLink: 'Warum ein Mensch?',
       launchState: 'In Entwicklung · bald fürs iPhone',
@@ -377,46 +382,48 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       previewNote: 'Redaktionelle Vorschau · keine Person gezeigt',
     },
     path: ['Entdecken', 'Dabeibleiben', 'Mitmachen', 'Erinnern'],
+    pathNote:
+      'Bei einer Journey bleiben kommt später: eine private Nähe zu einer Geschichte, niemals eine öffentliche Zahl.',
     experience: {
       eyebrow: 'Das Erlebnis',
-      title: 'Kein Feed. Eine Perspektive.',
-      body: 'Erlebe den Tag eines Menschen so, wie er ihn erlebt hat: ein Clip, ein Gedanke, ein Foto, eine Pause. Kein Stapel Fremder, die um den nächsten Swipe kämpfen.',
+      title: 'Eine Journey, viele Momente.',
+      body: 'Erlebe die Journey eines Menschen, wie sie Gestalt annimmt: ein Gedanke, ein Foto, eine Frage, eine Pause. Manche Momente gibt es heute schon; andere sind für das Kommende gedacht.',
       previewLabel: 'Reise-Vorschau',
       previewNote:
-        'Konzeptvorschau. Der immersive Stream und Live sind in der aktuellen App noch nicht verfügbar.',
+        'Konzeptvorschau. Foto und Text spiegeln das heutige Porträt; Video und Live sind für das Kommende gedacht.',
       actions: ['Fragen', 'Erinnern', 'Teilen'],
       moments: [
         {
           id: 'video',
           label: 'Video',
-          eyebrow: 'Moment 01 · 00:43 / 00:59',
+          eyebrow: 'Kommt in Journeys · Moment 01 · 00:43 / 00:59',
           title: 'Der Zug fuhr vor Sonnenaufgang ab.',
-          detail: 'Kurzvideo',
+          detail: 'Zukunft · Kurzvideo',
           caption: 'Ein bewegter Moment, kürzer als eine Minute.',
         },
         {
           id: 'photo',
           label: 'Foto',
-          eyebrow: 'Moment 03 · 08:14',
+          eyebrow: 'Aktuelles Porträt · Moment 03 · 08:14',
           title: 'Die Ruhe, bevor alles beginnt.',
-          detail: 'Foto',
+          detail: 'Aktuell · Foto',
           caption: 'Ein Bild kann die ganze Stimmung tragen.',
         },
         {
           id: 'text',
           label: 'Text',
-          eyebrow: 'Moment 06 · In eigenen Worten',
+          eyebrow: 'Aktuelles Porträt · Moment 06 · In eigenen Worten',
           title:
             'Ich dachte, ich bräuchte einen Plan. Ich brauchte einen Anfang.',
-          detail: 'Textmoment',
+          detail: 'Aktuell · Textmoment',
           caption: 'Raum für Gedanken, die keine Kamera brauchen.',
         },
         {
           id: 'live',
           label: 'Live',
-          eyebrow: 'Am Horizont · Live',
+          eyebrow: 'Zukunftsrichtung · Live',
           title: 'Sei dabei, wenn es passiert.',
-          detail: 'Zukünftige Richtung',
+          detail: 'Zukunft · Live',
           caption: 'Ein geteilter Moment, ohne ein Leben zur Show zu machen.',
         },
       ],
@@ -429,20 +436,20 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       roleTitle: 'Der Chosen One',
       roleBody:
         'Ein ganz normaler Mensch bekommt den ganzen Rahmen. Alle anderen können ihm wirklich begegnen.',
-      formatsLabel: 'Eine Reise kann enthalten',
+      formatsLabel: 'Die Geschichte kann durch',
       formats: [
-        'Video · bis 59 Sek.',
-        'Foto',
-        'Text',
-        'Stimme',
-        'Momente',
-        'Meilensteine',
+        'Foto · heute',
+        'Text · heute',
+        'Fragen · heute',
+        'Kurzvideo · für später',
+        'Meilensteine · für später',
+        'Live · für später',
       ],
       selectionLink: 'So funktioniert die Auswahl',
     },
     participate: {
       eyebrow: 'Dabei sein, nicht auftreten',
-      title: 'Du bist Teil der Reise. Du bist nicht der Algorithmus.',
+      title: 'Du kannst mehr sein als Zuschauer.',
       body: 'Zuschauende können näherkommen, ohne zu übernehmen. Die aktuelle App hält Beteiligung klein, menschlich und bewusst.',
       items: [
         {
@@ -463,7 +470,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
       ],
     },
     live: {
-      eyebrow: 'Live, wenn es passt',
+      eyebrow: 'Für das Kommende gedacht',
       title: 'Sei dabei, wenn es passiert.',
       body: 'Live gehört in eine Reise, wenn der Moment zählt—nicht als ständiger Zwang aufzutreten. Es ist Teil der Produktrichtung, bei der Sicherheit und Kontrolle zuerst kommen.',
       futureLabel: 'Zukunftsvorschau',
@@ -494,7 +501,7 @@ export const journeyHomeContent: Record<Locale, JourneyHomeCopy> = {
     },
     closing: {
       eyebrow: 'Die nächste Reise hat noch nicht begonnen',
-      title: 'Komm für die Momente. Bleib für den Menschen.',
+      title: 'Komm für die Momente. Komm für den Menschen zurück.',
       body: 'Unumae ist noch in Entwicklung. Sieh dir heute den ehrlichen Vorab-Raum an und komm wieder, während die Reise Gestalt annimmt.',
       primaryLink: 'Heute ansehen',
       secondaryLink: 'Warum es Unumae gibt',

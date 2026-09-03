@@ -124,12 +124,12 @@ const humanDescription = (
   date: string
 ) => {
   if (locale === 'fr') {
-    return `Rencontrez ${name}, Humain ${number}${place ? ` de ${place}` : ''}, publié dans les Archives humaines d’Unumae le ${date}.`;
+    return `Rencontrez ${name}, l’Élu·e de la Journey ${number}${place ? ` de ${place}` : ''}, publiée dans l’Archive d’Unumae le ${date}.`;
   }
   if (locale === 'de') {
-    return `Begegne ${name}, Mensch ${number}${place ? ` aus ${place}` : ''}, veröffentlicht im Unumae-Menschenarchiv am ${date}.`;
+    return `Begegne ${name}, dem Chosen One der Journey ${number}${place ? ` aus ${place}` : ''}, veröffentlicht im Unumae-Archiv am ${date}.`;
   }
-  return `Meet ${name}, Human ${number}${place ? ` from ${place}` : ''}, published in the Unumae Human Archive on ${date}.`;
+  return `Meet ${name}, the Chosen One of Journey ${number}${place ? ` from ${place}` : ''}, published in the Unumae Archive on ${date}.`;
 };
 
 export function createHumanMetadata(

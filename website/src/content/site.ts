@@ -45,7 +45,7 @@ export const content: Record<Locale, SiteCopy> = {
     lastUpdated: 'Last updated {date}.',
     skipToContent: 'Skip to content',
     navigationLabel: 'Primary navigation',
-    footerNavigationLabel: 'Legal navigation',
+    footerNavigationLabel: 'More navigation',
     languageLabel: 'Language',
     homeLabel: 'Unumae home',
     comingSoon: 'Coming to iPhone',
@@ -53,7 +53,7 @@ export const content: Record<Locale, SiteCopy> = {
       today: 'Today',
       about: 'About',
       'how-selection-works': 'How it works',
-      archive: 'The Archive',
+      archive: 'Archive',
       'community-guidelines': 'Safety',
       privacy: 'Privacy',
       terms: 'Terms',
@@ -62,27 +62,28 @@ export const content: Record<Locale, SiteCopy> = {
       home: {
         title: 'The journey is yours. — Unumae',
         description:
-          'Meet the Chosen One and experience one personal journey through video, photos, words, questions, and moments that matter.',
+          'Meet the Chosen One and see how one personal Journey unfolds through photos, words, questions, and moments that matter.',
         eyebrow: 'Unumae',
         introduction:
-          'Every day, one ordinary person from the community becomes Today’s Human. The world discovers their story for 24 hours, asks them questions, and remembers them in the Human Archive.',
+          'Every day, one ordinary person becomes the Chosen One. The world discovers their Journey for 24 hours, asks questions, and can return to it in the Archive.',
       },
       today: {
-        title: 'Today’s Human',
+        title: 'Today',
         description:
-          'The public home of Today’s Human, designed to make every shared story understandable without installing the app.',
+          'The public home of today’s Chosen One and Journey, designed to make the story understandable without installing the app.',
         eyebrow: 'Today',
         introduction:
           'When Unumae launches, this is where the world will meet one person for one global 24-hour window. Every story will remain open to guests.',
-        notice: 'There is no public Human yet. Unumae is preparing for launch.',
+        notice:
+          'There is no public Journey yet. Unumae is preparing for launch.',
       },
       about: {
         title: 'One person, seen properly.',
         description:
-          'Why Unumae introduces one ordinary person to the world each day—and deliberately stops there.',
+          'Why Unumae introduces one ordinary person to the world each day, then gives future Journeys room to unfold without turning attention into status.',
         eyebrow: 'About Unumae',
         introduction:
-          'Unumae is built around attention with limits: one person, one day, one finite story. There are no followers, rankings, or endless feed competing with them.',
+          'Unumae is built around attention with limits: one person, one day, one finite story. There are no public popularity counts, rankings, or an endless global feed competing with them. Journey connections, when introduced, will belong to a Journey rather than a person.',
       },
       'how-selection-works': {
         title: 'An equal chance means equal.',
@@ -95,16 +96,16 @@ export const content: Record<Locale, SiteCopy> = {
       archive: {
         title: 'Everyone the world has met.',
         description:
-          'The Human Archive is a chronological record explored by time, country, year, or at random—never by popularity.',
+          'The Archive is a chronological record of completed Journeys, explored by time, country, year, or at random—never by popularity.',
         eyebrow: 'The Archive',
         introduction:
-          'After each live day, the Human joins a permanent sequence. A person can still ask to leave; their number and date remain as a quiet tombstone.',
-        notice: 'The Archive begins when the first Human goes live.',
+          'After a Journey ends, it remains in a permanent sequence. The Chosen One can still ask to leave; only its number and date remain as a quiet marker.',
+        notice: 'The Archive begins when the first Journey ends.',
       },
       'community-guidelines': {
         title: 'Treat a stranger with respect.',
         description:
-          'The public rules that protect Today’s Human and keep Unumae free from competition, promotion, and harassment.',
+          'The public rules that protect the Chosen One and keep Unumae free from competition, promotion, and harassment.',
         eyebrow: 'Community guidelines',
         introduction:
           'Ask what you would ask a stranger you respected. Questions are welcome; verdicts, promotion, harassment, and attempts at private contact are not.',
@@ -127,9 +128,9 @@ export const content: Record<Locale, SiteCopy> = {
       },
     },
     facts: [
-      { value: '1', label: 'Human per day' },
+      { value: '1', label: 'Chosen One per day' },
       { value: '24h', label: 'One global window' },
-      { value: '0', label: 'Followers or rankings' },
+      { value: '0', label: 'Public popularity counts' },
     ],
     footerStatement: 'Meet one person. Come back tomorrow.',
   },
@@ -138,7 +139,7 @@ export const content: Record<Locale, SiteCopy> = {
     lastUpdated: 'Dernière mise à jour : {date}.',
     skipToContent: 'Aller au contenu',
     navigationLabel: 'Navigation principale',
-    footerNavigationLabel: 'Navigation juridique',
+    footerNavigationLabel: 'Autres liens',
     languageLabel: 'Langue',
     homeLabel: 'Accueil Unumae',
     comingSoon: 'Bientôt sur iPhone',
@@ -155,20 +156,20 @@ export const content: Record<Locale, SiteCopy> = {
       home: {
         title: 'Le voyage t’appartient. — Unumae',
         description:
-          'Rencontrez l’Élu·e et vivez un voyage personnel en vidéo, photos, mots, questions et moments qui comptent.',
+          'Rencontrez l’Élu·e et découvrez comment une Journey personnelle se déploie à travers photos, mots, questions et moments qui comptent.',
         eyebrow: 'Unumae',
         introduction:
-          'Chaque jour, une personne ordinaire de la communauté devient l’Humain du jour. Le monde découvre son histoire pendant 24 heures, lui pose des questions et s’en souvient dans les Archives humaines.',
+          'Chaque jour, une personne ordinaire devient l’Élu·e. Le monde découvre sa Journey pendant 24 heures, lui pose des questions et peut la retrouver dans les Archives.',
       },
       today: {
-        title: 'L’Humain du jour',
+        title: 'Aujourd’hui',
         description:
-          'La page publique de l’Humain du jour, compréhensible depuis un lien partagé sans installer l’application.',
+          'La page publique de l’Élu·e et de sa Journey du jour, compréhensible depuis un lien partagé sans installer l’application.',
         eyebrow: 'Aujourd’hui',
         introduction:
           'Au lancement d’Unumae, le monde rencontrera ici une personne pendant une même fenêtre mondiale de 24 heures. Chaque histoire restera ouverte aux visiteurs.',
         notice:
-          'Aucun Humain public pour le moment. Unumae prépare son lancement.',
+          'Aucune Journey publique pour le moment. Unumae prépare son lancement.',
       },
       about: {
         title: 'Voir vraiment une personne.',
@@ -176,7 +177,7 @@ export const content: Record<Locale, SiteCopy> = {
           'Pourquoi Unumae présente chaque jour une personne ordinaire au monde—et choisit de s’arrêter là.',
         eyebrow: 'À propos d’Unumae',
         introduction:
-          'Unumae repose sur une attention limitée : une personne, un jour, une histoire finie. Aucun follower, classement ou fil infini ne lui fait concurrence.',
+          'Unumae repose sur une attention limitée : une personne, un jour, une histoire finie. Aucun compteur public de popularité, classement ou fil infini ne lui fait concurrence. Les liens futurs appartiendront à une Journey, pas au statut d’une personne.',
       },
       'how-selection-works': {
         title: 'Une chance égale est vraiment égale.',
@@ -189,16 +190,16 @@ export const content: Record<Locale, SiteCopy> = {
       archive: {
         title: 'Toutes les personnes rencontrées par le monde.',
         description:
-          'Les Archives humaines se parcourent par date, pays, année ou au hasard—jamais par popularité.',
+          'Les Archives rassemblent les Journeys terminées, par date, pays, année ou au hasard—jamais par popularité.',
         eyebrow: 'Les Archives',
         introduction:
-          'Après sa journée, chaque Humain rejoint une séquence permanente. Une personne peut demander à partir ; seuls son numéro et la date restent comme trace neutre.',
-        notice: 'Les Archives commenceront avec le premier Humain publié.',
+          'Après sa journée, chaque Journey rejoint une séquence permanente. L’Élu·e peut demander son retrait ; seuls son numéro et la date restent comme trace neutre.',
+        notice: 'Les Archives commenceront avec la première Journey terminée.',
       },
       'community-guidelines': {
         title: 'Respecter la personne en face.',
         description:
-          'Les règles publiques qui protègent l’Humain du jour de la compétition, de la promotion et du harcèlement.',
+          'Les règles publiques qui protègent l’Élu·e de la compétition, de la promotion et du harcèlement.',
         eyebrow: 'Règles de la communauté',
         introduction:
           'Posez la question que vous poseriez à une personne inconnue que vous respectez. Les questions sont bienvenues ; les verdicts, la promotion, le harcèlement et le contact privé ne le sont pas.',
@@ -221,9 +222,9 @@ export const content: Record<Locale, SiteCopy> = {
       },
     },
     facts: [
-      { value: '1', label: 'Humain par jour' },
+      { value: '1', label: 'Élu·e par jour' },
       { value: '24 h', label: 'Une fenêtre mondiale' },
-      { value: '0', label: 'Followers ou classements' },
+      { value: '0', label: 'Compteurs publics de popularité' },
     ],
     footerStatement: 'Rencontrez une personne. Revenez demain.',
   },
@@ -232,7 +233,7 @@ export const content: Record<Locale, SiteCopy> = {
     lastUpdated: 'Zuletzt aktualisiert am {date}.',
     skipToContent: 'Zum Inhalt springen',
     navigationLabel: 'Hauptnavigation',
-    footerNavigationLabel: 'Rechtliche Navigation',
+    footerNavigationLabel: 'Weitere Links',
     languageLabel: 'Sprache',
     homeLabel: 'Unumae-Startseite',
     comingSoon: 'Demnächst fürs iPhone',
@@ -249,20 +250,20 @@ export const content: Record<Locale, SiteCopy> = {
       home: {
         title: 'Die Reise gehört dir. — Unumae',
         description:
-          'Begegne dem Chosen One und erlebe eine persönliche Reise in Videos, Fotos, Worten, Fragen und bedeutenden Momenten.',
+          'Lerne den Chosen One kennen und entdecke, wie sich eine persönliche Journey durch Fotos, Worte, Fragen und bedeutungsvolle Momente entfaltet.',
         eyebrow: 'Unumae',
         introduction:
-          'Jeden Tag wird ein gewöhnlicher Mensch aus der Community zum Menschen des Tages. Die Welt entdeckt 24 Stunden lang seine Geschichte, stellt Fragen und erinnert sich im Menschenarchiv.',
+          'Jeden Tag wird ein gewöhnlicher Mensch zum Chosen One. Die Welt entdeckt 24 Stunden lang seine Journey, stellt Fragen und kann zu ihr ins Archiv zurückkehren.',
       },
       today: {
-        title: 'Der Mensch des Tages',
+        title: 'Heute',
         description:
-          'Die öffentliche Seite des Menschen des Tages—verständlich über einen geteilten Link, ohne die App zu installieren.',
+          'Die öffentliche Seite des heutigen Chosen One und seiner Journey—verständlich über einen geteilten Link, ohne die App zu installieren.',
         eyebrow: 'Heute',
         introduction:
           'Nach dem Start von Unumae begegnet die Welt hier einem Menschen in einem gemeinsamen globalen 24-Stunden-Fenster. Jede Geschichte bleibt für Gäste offen.',
         notice:
-          'Noch ist kein öffentlicher Mensch live. Unumae bereitet den Start vor.',
+          'Noch ist keine öffentliche Journey live. Unumae bereitet den Start vor.',
       },
       about: {
         title: 'Einen Menschen wirklich sehen.',
@@ -270,7 +271,7 @@ export const content: Record<Locale, SiteCopy> = {
           'Warum Unumae jeden Tag einen gewöhnlichen Menschen vorstellt—und bewusst dort aufhört.',
         eyebrow: 'Über Unumae',
         introduction:
-          'Unumae gibt Aufmerksamkeit klare Grenzen: ein Mensch, ein Tag, eine endliche Geschichte. Keine Follower, Ranglisten oder endlosen Feeds konkurrieren mit dieser Person.',
+          'Unumae gibt Aufmerksamkeit klare Grenzen: ein Mensch, ein Tag, eine endliche Geschichte. Keine öffentlichen Beliebtheitszahlen, Ranglisten oder endlosen Feeds konkurrieren mit dieser Person. Künftige Verbindungen gehören zu einer Journey, nicht zum Status einer Person.',
       },
       'how-selection-works': {
         title: 'Gleiche Chance heißt wirklich gleich.',
@@ -283,16 +284,16 @@ export const content: Record<Locale, SiteCopy> = {
       archive: {
         title: 'Alle Menschen, denen die Welt begegnet ist.',
         description:
-          'Das Menschenarchiv lässt sich nach Zeit, Land, Jahr oder zufällig erkunden—niemals nach Beliebtheit.',
+          'Das Archiv versammelt abgeschlossene Journeys, erkundbar nach Zeit, Land, Jahr oder Zufall—niemals nach Beliebtheit.',
         eyebrow: 'Das Archiv',
         introduction:
-          'Nach dem Live-Tag wird jeder Mensch Teil einer dauerhaften Reihenfolge. Die Person kann weiterhin um Entfernung bitten; nur Nummer und Datum bleiben als neutraler Platzhalter.',
-        notice: 'Das Archiv beginnt mit dem ersten veröffentlichten Menschen.',
+          'Nach dem Ende einer Journey bleibt sie Teil einer dauerhaften Reihenfolge. Der Chosen One kann weiterhin um Entfernung bitten; nur Nummer und Datum bleiben als neutraler Platzhalter.',
+        notice: 'Das Archiv beginnt mit der ersten abgeschlossenen Journey.',
       },
       'community-guidelines': {
         title: 'Behandle Fremde mit Respekt.',
         description:
-          'Die öffentlichen Regeln, die den Menschen des Tages vor Wettbewerb, Werbung und Belästigung schützen.',
+          'Die öffentlichen Regeln, die den Chosen One vor Wettbewerb, Werbung und Belästigung schützen.',
         eyebrow: 'Community-Regeln',
         introduction:
           'Frage, was du eine fremde Person fragen würdest, die du respektierst. Fragen sind willkommen; Urteile, Werbung, Belästigung und private Kontaktversuche nicht.',
@@ -315,9 +316,9 @@ export const content: Record<Locale, SiteCopy> = {
       },
     },
     facts: [
-      { value: '1', label: 'Mensch pro Tag' },
+      { value: '1', label: 'Chosen One pro Tag' },
       { value: '24 Std.', label: 'Ein globales Zeitfenster' },
-      { value: '0', label: 'Follower oder Ranglisten' },
+      { value: '0', label: 'Öffentliche Beliebtheitszahlen' },
     ],
     footerStatement: 'Begegne einem Menschen. Komm morgen wieder.',
   },

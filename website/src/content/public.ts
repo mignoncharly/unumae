@@ -79,14 +79,14 @@ export const publicContent: Record<Locale, PublicCopy> = {
     today: {
       hero: {
         eyebrow: 'Today · One global window',
-        title: 'Today’s Human',
+        title: 'Today',
         introduction:
-          'One person, open to everyone for the same 24 hours. A shared link works here without an account or app installation.',
+          'Today opens the current daily Journey to everyone for the same 24 hours. A shared link works here without an account or app installation.',
       },
       launch: {
         eyebrow: 'Preparing for launch',
-        title: 'There is no public Human yet.',
-        body: 'Unumae will only show a real person here after they have accepted, completed their portrait, and passed review. Until then, this page stays honest and still.',
+        title: 'There is no public Journey yet.',
+        body: 'Unumae will only show a real Journey here after the Chosen One has accepted, completed their portrait, and passed review. Until then, this page stays honest and still.',
       },
       loading: {
         eyebrow: 'Today',
@@ -95,7 +95,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       },
       quiet: {
         eyebrow: 'Quiet Day',
-        title: 'No Human is being published today.',
+        title: 'No Journey is being published today.',
         body: 'Sometimes the careful answer is nobody: no person accepted and passed review in time. Unumae never fills the space with an invented or unreviewed story.',
         archiveLink: 'Meet someone from the Archive',
       },
@@ -107,7 +107,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       },
       live: {
         liveLabel: 'Live worldwide',
-        humanLabel: 'Human',
+        humanLabel: 'Chosen One',
         foundingLabel: 'Joined during Year Zero',
         remainingLabel: 'Remaining in this UTC day',
         portraitLabel: 'Their portrait',
@@ -132,10 +132,10 @@ export const publicContent: Record<Locale, PublicCopy> = {
     },
     archive: {
       hero: {
-        eyebrow: 'The Human Archive',
+        eyebrow: 'The Archive',
         title: 'Everyone the world has met.',
         introduction:
-          'A chronological record of each published day. Explore by time, country, year, or chance—never by popularity.',
+          'A chronological record of each completed Journey. Explore by time, country, year, or chance—never by popularity.',
       },
       principles: [
         {
@@ -148,13 +148,13 @@ export const publicContent: Record<Locale, PublicCopy> = {
         },
         {
           title: 'Removal is real',
-          body: 'A Human may remove their story; only their number and date remain.',
+          body: 'A Chosen One may ask to remove their Journey; only its number and date remain.',
         },
       ],
       launch: {
         eyebrow: 'Preparing for launch',
-        title: 'The Archive begins with Human #0001.',
-        body: 'No demo people have been added. The first entry will appear only after a real, consented Human completes their live day.',
+        title: 'The Archive begins with Journey #0001.',
+        body: 'No demo people have been added. The first entry will appear only after a real, consenting Chosen One completes their Journey.',
       },
       loading: {
         eyebrow: 'The Archive',
@@ -164,12 +164,12 @@ export const publicContent: Record<Locale, PublicCopy> = {
       empty: {
         eyebrow: 'The beginning',
         title: 'The Archive is still empty.',
-        body: 'It begins with Human #0001 after the first approved live day.',
+        body: 'It begins with Journey #0001 after the first approved live day.',
       },
       noMatch: {
         eyebrow: 'No match',
         title: 'Nobody here yet.',
-        body: 'No Human matches those filters. Try another country or year.',
+        body: 'No Journey matches those filters. Try another country or year.',
       },
       error: {
         eyebrow: 'Connection interrupted',
@@ -183,17 +183,17 @@ export const publicContent: Record<Locale, PublicCopy> = {
         year: 'Year',
         everywhere: 'Everywhere',
         allYears: 'All years',
-        random: 'Random Human',
+        random: 'Random Journey',
         chronological: 'Newest first',
         randomResult: 'Found at random',
         loadMore: 'Show the next 12',
         end: 'You have reached the end.',
       },
       entry: {
-        humanLabel: 'Human',
-        removed: 'This Human asked to be removed.',
+        humanLabel: 'Chosen One',
+        removed: 'This Journey was removed at the Chosen One’s request.',
         removedBody:
-          'Their number and date stay so the Archive remains a complete sequence. Their identity and story do not.',
+          'Its number and date remain so the Archive keeps a complete sequence. The Chosen One’s identity and story do not.',
         photoAlt: 'Portrait of',
         editorialFallback: 'Editorial image · Portrait unavailable',
       },
@@ -203,14 +203,14 @@ export const publicContent: Record<Locale, PublicCopy> = {
     today: {
       hero: {
         eyebrow: 'Aujourd’hui · Une fenêtre mondiale',
-        title: 'L’Humain du jour',
+        title: 'Aujourd’hui',
         introduction:
-          'Une personne, ouverte à tout le monde pendant les mêmes 24 heures. Un lien partagé fonctionne ici sans compte ni installation.',
+          'Aujourd’hui ouvre la Journey du jour à tout le monde pendant les mêmes 24 heures. Un lien partagé fonctionne ici sans compte ni installation.',
       },
       launch: {
         eyebrow: 'Préparation du lancement',
-        title: 'Aucun Humain public pour le moment.',
-        body: 'Unumae ne montrera ici qu’une personne réelle, après son acceptation, son portrait et sa validation. Jusque-là, cette page reste honnête et calme.',
+        title: 'Aucune Journey publique pour le moment.',
+        body: 'Unumae ne montrera ici qu’une Journey réelle, après l’accord de l’Élu·e, son portrait et sa validation. Jusque-là, cette page reste honnête et calme.',
       },
       loading: {
         eyebrow: 'Aujourd’hui',
@@ -219,7 +219,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       },
       quiet: {
         eyebrow: 'Jour calme',
-        title: 'Aucun Humain n’est publié aujourd’hui.',
+        title: 'Aucune Journey n’est publiée aujourd’hui.',
         body: 'Parfois, la réponse la plus soigneuse est personne : personne n’a accepté et passé la modération à temps. Unumae ne comble jamais cet espace avec une histoire inventée ou non relue.',
         archiveLink: 'Rencontrer quelqu’un dans les Archives',
       },
@@ -231,7 +231,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       },
       live: {
         liveLabel: 'En direct dans le monde',
-        humanLabel: 'Humain',
+        humanLabel: 'Élu·e',
         foundingLabel: 'Arrivé pendant l’Année Zéro',
         remainingLabel: 'Temps restant dans cette journée UTC',
         portraitLabel: 'Son portrait',
@@ -257,10 +257,10 @@ export const publicContent: Record<Locale, PublicCopy> = {
     },
     archive: {
       hero: {
-        eyebrow: 'Les Archives humaines',
+        eyebrow: 'Les Archives',
         title: 'Toutes les personnes rencontrées par le monde.',
         introduction:
-          'La trace chronologique de chaque journée publiée. À parcourir par date, pays, année ou au hasard—jamais par popularité.',
+          'La trace chronologique de chaque Journey terminée. À parcourir par date, pays, année ou au hasard—jamais par popularité.',
       },
       principles: [
         {
@@ -273,13 +273,13 @@ export const publicContent: Record<Locale, PublicCopy> = {
         },
         {
           title: 'Le retrait est réel',
-          body: 'Un Humain peut retirer son histoire ; seuls son numéro et la date restent.',
+          body: 'L’Élu·e peut demander le retrait de sa Journey ; seuls son numéro et la date restent.',
         },
       ],
       launch: {
         eyebrow: 'Préparation du lancement',
-        title: 'Les Archives commencent avec l’Humain #0001.',
-        body: 'Aucune personne de démonstration n’a été ajoutée. La première entrée apparaîtra après la journée d’un Humain réel et consentant.',
+        title: 'Les Archives commencent avec la Journey #0001.',
+        body: 'Aucune personne de démonstration n’a été ajoutée. La première entrée apparaîtra après la Journey d’un·e Élu·e réel·le et consentant·e.',
       },
       loading: {
         eyebrow: 'Les Archives',
@@ -289,12 +289,12 @@ export const publicContent: Record<Locale, PublicCopy> = {
       empty: {
         eyebrow: 'Le commencement',
         title: 'Les Archives sont encore vides.',
-        body: 'Elles commencent avec l’Humain #0001 après la première journée approuvée.',
+        body: 'Elles commencent avec la Journey #0001 après la première journée approuvée.',
       },
       noMatch: {
         eyebrow: 'Aucun résultat',
         title: 'Personne ici pour le moment.',
-        body: 'Aucun Humain ne correspond à ces filtres. Essayez un autre pays ou une autre année.',
+        body: 'Aucune Journey ne correspond à ces filtres. Essayez un autre pays ou une autre année.',
       },
       error: {
         eyebrow: 'Connexion interrompue',
@@ -308,17 +308,17 @@ export const publicContent: Record<Locale, PublicCopy> = {
         year: 'Année',
         everywhere: 'Partout',
         allYears: 'Toutes les années',
-        random: 'Humain au hasard',
+        random: 'Journey au hasard',
         chronological: 'Du plus récent au plus ancien',
         randomResult: 'Trouvé au hasard',
         loadMore: 'Afficher les 12 suivants',
         end: 'Vous avez atteint la fin.',
       },
       entry: {
-        humanLabel: 'Humain',
-        removed: 'Cet Humain a demandé à être retiré.',
+        humanLabel: 'Élu·e',
+        removed: 'Cette Journey a été retirée à la demande de l’Élu·e.',
         removedBody:
-          'Son numéro et la date restent pour préserver la séquence. Son identité et son histoire disparaissent.',
+          'Son numéro et la date restent pour préserver la séquence. L’identité de l’Élu·e et son histoire disparaissent.',
         photoAlt: 'Portrait de',
         editorialFallback: 'Image éditoriale · Portrait indisponible',
       },
@@ -328,14 +328,14 @@ export const publicContent: Record<Locale, PublicCopy> = {
     today: {
       hero: {
         eyebrow: 'Heute · Ein globales Zeitfenster',
-        title: 'Der Mensch des Tages',
+        title: 'Heute',
         introduction:
-          'Ein Mensch, für alle in denselben 24 Stunden offen. Ein geteilter Link funktioniert hier ohne Konto oder App-Installation.',
+          'Heute öffnet die aktuelle Journey für alle in denselben 24 Stunden. Ein geteilter Link funktioniert hier ohne Konto oder App-Installation.',
       },
       launch: {
         eyebrow: 'Vorbereitung auf den Start',
-        title: 'Noch ist kein öffentlicher Mensch zu sehen.',
-        body: 'Unumae zeigt hier erst eine reale Person, nachdem sie zugesagt, ihr Porträt erstellt und die Prüfung bestanden hat. Bis dahin bleibt diese Seite ehrlich und still.',
+        title: 'Noch ist keine öffentliche Journey zu sehen.',
+        body: 'Unumae zeigt hier erst eine reale Journey, nachdem der Chosen One zugesagt, das Porträt erstellt und die Prüfung bestanden hat. Bis dahin bleibt diese Seite ehrlich und still.',
       },
       loading: {
         eyebrow: 'Heute',
@@ -344,7 +344,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       },
       quiet: {
         eyebrow: 'Stiller Tag',
-        title: 'Heute wird kein Mensch veröffentlicht.',
+        title: 'Heute wird keine Journey veröffentlicht.',
         body: 'Manchmal ist niemand die sorgfältigste Antwort: Niemand hat rechtzeitig zugesagt und die Prüfung bestanden. Unumae füllt den Platz nie mit einer erfundenen oder ungeprüften Geschichte.',
         archiveLink: 'Jemandem aus dem Archiv begegnen',
       },
@@ -356,7 +356,7 @@ export const publicContent: Record<Locale, PublicCopy> = {
       },
       live: {
         liveLabel: 'Weltweit live',
-        humanLabel: 'Mensch',
+        humanLabel: 'Chosen One',
         foundingLabel: 'Im Jahr Null dazugekommen',
         remainingLabel: 'Verbleibend in diesem UTC-Tag',
         portraitLabel: 'Das Porträt',
@@ -381,10 +381,10 @@ export const publicContent: Record<Locale, PublicCopy> = {
     },
     archive: {
       hero: {
-        eyebrow: 'Das Menschenarchiv',
+        eyebrow: 'Das Archiv',
         title: 'Alle Menschen, denen die Welt begegnet ist.',
         introduction:
-          'Die chronologische Aufzeichnung jedes veröffentlichten Tages. Nach Zeit, Land, Jahr oder Zufall—niemals nach Beliebtheit.',
+          'Die chronologische Aufzeichnung jeder abgeschlossenen Journey. Nach Zeit, Land, Jahr oder Zufall—niemals nach Beliebtheit.',
       },
       principles: [
         {
@@ -397,12 +397,12 @@ export const publicContent: Record<Locale, PublicCopy> = {
         },
         {
           title: 'Entfernung ist real',
-          body: 'Ein Mensch kann seine Geschichte entfernen; nur Nummer und Datum bleiben.',
+          body: 'Der Chosen One kann seine Journey entfernen; nur Nummer und Datum bleiben.',
         },
       ],
       launch: {
         eyebrow: 'Vorbereitung auf den Start',
-        title: 'Das Archiv beginnt mit Mensch #0001.',
+        title: 'Das Archiv beginnt mit Journey #0001.',
         body: 'Es wurden keine Demopersonen hinzugefügt. Der erste Eintrag erscheint erst nach dem Live-Tag eines realen, einwilligenden Menschen.',
       },
       loading: {
@@ -413,12 +413,12 @@ export const publicContent: Record<Locale, PublicCopy> = {
       empty: {
         eyebrow: 'Der Anfang',
         title: 'Das Archiv ist noch leer.',
-        body: 'Es beginnt nach dem ersten freigegebenen Live-Tag mit Mensch #0001.',
+        body: 'Es beginnt nach dem ersten freigegebenen Live-Tag mit Journey #0001.',
       },
       noMatch: {
         eyebrow: 'Kein Treffer',
         title: 'Hier ist noch niemand.',
-        body: 'Kein Mensch entspricht diesen Filtern. Probiere ein anderes Land oder Jahr.',
+        body: 'Keine Journey entspricht diesen Filtern. Probiere ein anderes Land oder Jahr.',
       },
       error: {
         eyebrow: 'Verbindung unterbrochen',
@@ -432,17 +432,17 @@ export const publicContent: Record<Locale, PublicCopy> = {
         year: 'Jahr',
         everywhere: 'Überall',
         allYears: 'Alle Jahre',
-        random: 'Zufälliger Mensch',
+        random: 'Zufällige Journey',
         chronological: 'Das Neueste zuerst',
         randomResult: 'Zufällig gefunden',
         loadMore: 'Die nächsten 12 zeigen',
         end: 'Du hast das Ende erreicht.',
       },
       entry: {
-        humanLabel: 'Mensch',
-        removed: 'Dieser Mensch bat um Entfernung.',
+        humanLabel: 'Chosen One',
+        removed: 'Diese Journey wurde auf Wunsch des Chosen One entfernt.',
         removedBody:
-          'Nummer und Datum bleiben für die vollständige Reihenfolge. Identität und Geschichte nicht.',
+          'Nummer und Datum bleiben für die vollständige Reihenfolge. Identität des Chosen One und Geschichte nicht.',
         photoAlt: 'Porträt von',
         editorialFallback: 'Redaktionelles Bild · Porträt nicht verfügbar',
       },

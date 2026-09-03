@@ -4,6 +4,7 @@ import PublicState from './ui/PublicState.astro';
 import { publicContent, type PublicPageKey } from '../content/public';
 import { localizedPath, type Locale } from '../content/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/journey-pages.css';
 
 interface Props {
   locale: Locale;
@@ -29,13 +30,19 @@ if (dataMode === 'live' && (!supabaseUrl || !supabaseAnonKey)) {
   <main
     id="main-content"
     tabindex="-1"
-    class:list={['public-main', `${page}-public-page`]}
+    class:list={[
+      'public-main',
+      `${page}-public-page`,
+      { 'journey-public-page': page === 'today' },
+    ]}
     data-public-page={page}
     data-data-mode={dataMode}
     data-supabase-url={supabaseUrl}
     data-supabase-anon-key={supabaseAnonKey}
   >
-    <header class="public-hero">
+    <header
+      class:list={['public-hero', { 'journey-public-hero': page === 'today' }]}
+    >
       <p class="eyebrow">{copy[page].hero.eyebrow}</p>
       <h1>{copy[page].hero.title}</h1>
       <p class="introduction">{copy[page].hero.introduction}</p>

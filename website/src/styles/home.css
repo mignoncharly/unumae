@@ -267,7 +267,7 @@
 }
 
 .journey-phone__topline small,
-.journey-phone__day {
+.journey-phone__sequence {
   color: rgb(255 254 249 / 68%);
   font-family: var(--font-mono);
   font-size: 0.5625rem;
@@ -396,6 +396,17 @@
   font-family: var(--font-display);
   font-size: clamp(1.1rem, 2vw, 1.55rem);
   font-weight: 520;
+}
+
+.journey-path__note {
+  max-width: 44rem;
+  margin: 0;
+  padding: 0.8rem 1.25rem 1.25rem;
+  color: rgb(17 17 15 / 68%);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.025em;
+  line-height: 1.5;
 }
 
 .journey-showcase,
@@ -1198,6 +1209,10 @@
     scrollbar-width: thin;
   }
 
+  .journey-path__note {
+    padding-inline: var(--gutter);
+  }
+
   .journey-path ol {
     width: max-content;
     min-width: 100%;
@@ -1312,7 +1327,7 @@
   .journey-hero__introduction,
   .journey-hero__status,
   .journey-phone__topline small,
-  .journey-phone__day,
+  .journey-phone__sequence,
   .journey-section-copy > p:not(.journey-kicker),
   .chosen-section__headline > p:not(.journey-kicker),
   .participate-list p,

@@ -3,6 +3,7 @@ import ActionLink from './ui/ActionLink.astro';
 import { trustContent, type TrustPageKey } from '../content/trust';
 import { localizedPath, type Locale } from '../content/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/journey-pages.css';
 
 interface Props {
   locale: Locale;
@@ -114,7 +115,11 @@ const guidelines = copy.guidelines;
 
   {
     page === 'how-selection-works' && (
-      <main id="main-content" class="trust-main selection-page" tabindex="-1">
+      <main
+        id="main-content"
+        class="trust-main selection-page journey-trust-page"
+        tabindex="-1"
+      >
         <header class="trust-hero">
           <p class="eyebrow">{selection.hero.eyebrow}</p>
           <h1>{selection.hero.title}</h1>
@@ -258,7 +263,11 @@ const guidelines = copy.guidelines;
 
   {
     page === 'community-guidelines' && (
-      <main id="main-content" class="trust-main guidelines-page" tabindex="-1">
+      <main
+        id="main-content"
+        class="trust-main guidelines-page journey-trust-page"
+        tabindex="-1"
+      >
         <header class="trust-hero">
           <p class="eyebrow">{guidelines.hero.eyebrow}</p>
           <h1>{guidelines.hero.title}</h1>

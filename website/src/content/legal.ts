@@ -26,7 +26,7 @@ export const legalSections: Record<
     privacy: [
       {
         title: 'What we collect',
-        body: 'Your email address, and the profile you fill in: a username, a name, a year of birth, a country, and optionally a city and one line about you. If you are selected, the portrait you write and the photograph you choose. Questions you ask and the Humans you remember.',
+        body: 'Your email address, and the profile you fill in: a username, a name, a year of birth, a country, and optionally a city and one line about you. If you are selected, the portrait you write and the photograph you choose. Questions you ask and the Journeys you remember.',
       },
       {
         title: 'One number about your app, not about you',
@@ -38,7 +38,7 @@ export const legalSections: Record<
       },
       {
         title: 'Website measurement without a profile',
-        body: 'On this website, we count only when someone chooses the selection explainer, Archive, or mission page. An event contains only its name, source page, and language, and follows the same 90-day retention. We set no analytics cookie or identifier, send nothing to an advertising service, honor Global Privacy Control and Do Not Track, and never measure a Human, story, question, Archive entry, or popularity.',
+        body: 'On this website, we count only when someone chooses the selection explainer, Archive, or mission page. An event contains only its name, source page, and language, and follows the same 90-day retention. We set no analytics cookie or identifier, send nothing to an advertising service, honor Global Privacy Control and Do Not Track, and never measure a person, story, question, Archive entry, or popularity.',
       },
       {
         title: 'What we never collect',
@@ -92,7 +92,7 @@ export const legalSections: Record<
       },
       {
         title: 'No promises about availability',
-        body: 'The service may be interrupted or changed. Some days no Human is published, and that is by design rather than a failure.',
+        body: 'The service may be interrupted or changed. Some days no Journey is published, and that is by design rather than a failure.',
       },
       {
         title: 'Ending it',
@@ -100,7 +100,7 @@ export const legalSections: Record<
       },
       {
         title: 'Changes',
-        body: 'We will update these terms as the product grows. What cannot change is the promise underneath: no followers, no rankings, no way to buy a better chance, and one ordinary person a day.',
+        body: 'We will update these terms as the product grows. The durable promise underneath is that people choose their boundaries, selection cannot be bought, Journeys do not turn popularity into status, and the daily flagship remains one person at a time.',
       },
     ],
   },
@@ -108,7 +108,7 @@ export const legalSections: Record<
     privacy: [
       {
         title: 'Ce que nous collectons',
-        body: "Votre adresse e-mail et le profil que vous remplissez : un nom d'utilisateur, un nom, une année de naissance, un pays, et éventuellement une ville et une ligne sur vous. Si vous êtes sélectionné, le portrait que vous écrivez et la photo que vous choisissez. Les questions que vous posez et les Humans dont vous vous souvenez.",
+        body: "Votre adresse e-mail et le profil que vous remplissez : un nom d'utilisateur, un nom, une année de naissance, un pays, et éventuellement une ville et une ligne sur vous. Si vous êtes sélectionné, le portrait que vous écrivez et la photo que vous choisissez. Les questions que vous posez et les Journeys dont vous vous souvenez.",
       },
       {
         title: 'Un numéro sur votre application, pas sur vous',
@@ -120,7 +120,7 @@ export const legalSections: Record<
       },
       {
         title: 'Mesure du site sans créer de profil',
-        body: 'Sur ce site, nous comptons uniquement le choix d’ouvrir l’explication de la sélection, les Archives ou la page de mission. Un événement contient seulement son nom, la page d’origine et la langue, avec la même conservation de 90 jours. Aucun cookie ni identifiant analytique, aucun service publicitaire ; nous respectons Global Privacy Control et Do Not Track et ne mesurons jamais un Humain, une histoire, une question, une entrée des Archives ou sa popularité.',
+        body: 'Sur ce site, nous comptons uniquement le choix d’ouvrir l’explication de la sélection, les Archives ou la page de mission. Un événement contient seulement son nom, la page d’origine et la langue, avec la même conservation de 90 jours. Aucun cookie ni identifiant analytique, aucun service publicitaire ; nous respectons Global Privacy Control et Do Not Track et ne mesurons jamais une Journey, une histoire, une question, une entrée des Archives ou sa popularité.',
       },
       {
         title: 'Ce que nous ne collectons jamais',
@@ -174,7 +174,7 @@ export const legalSections: Record<
       },
       {
         title: 'Aucune promesse de disponibilité',
-        body: "Le service peut être interrompu ou modifié. Certains jours, aucun Human n'est publié : c'est voulu, pas une panne.",
+        body: "Le service peut être interrompu ou modifié. Certains jours, aucune Journey n'est publiée : c'est voulu, pas une panne.",
       },
       {
         title: 'Y mettre fin',
@@ -190,7 +190,7 @@ export const legalSections: Record<
     privacy: [
       {
         title: 'Was wir erheben',
-        body: 'Deine E-Mail-Adresse und das Profil, das du ausfüllst: Benutzername, Name, Geburtsjahr, Land und optional Stadt und eine Zeile über dich. Wirst du ausgewählt, das Porträt, das du schreibst, und das Foto, das du wählst. Deine Fragen und die Humans, an die du dich erinnerst.',
+        body: 'Deine E-Mail-Adresse und das Profil, das du ausfüllst: Benutzername, Name, Geburtsjahr, Land und optional Stadt und eine Zeile über dich. Wirst du ausgewählt, das Porträt, das du schreibst, und das Foto, das du wählst. Deine Fragen und die Journeys, an die du dich erinnerst.',
       },
       {
         title: 'Eine Zahl über deine App, nicht über dich',
@@ -256,7 +256,7 @@ export const legalSections: Record<
       },
       {
         title: 'Keine Zusagen zur Verfügbarkeit',
-        body: 'Der Dienst kann unterbrochen oder geändert werden. An manchen Tagen wird kein Human veröffentlicht — so gewollt, kein Fehler.',
+        body: 'Der Dienst kann unterbrochen oder geändert werden. An manchen Tagen wird keine Journey veröffentlicht — so gewollt, kein Fehler.',
       },
       {
         title: 'Beenden',
@@ -264,7 +264,7 @@ export const legalSections: Record<
       },
       {
         title: 'Änderungen',
-        body: 'Wir aktualisieren diese Bedingungen, während das Produkt wächst. Was nicht änderbar ist, ist das Versprechen darunter: keine Follower, keine Ranglisten, kein Kaufen einer besseren Chance, und ein gewöhnlicher Mensch pro Tag.',
+        body: 'Wir aktualisieren diese Bedingungen, während das Produkt wächst. Das dauerhafte Versprechen darunter ist: Menschen bestimmen ihre Grenzen, die Auswahl ist nicht käuflich, Journeys machen Popularität nicht zum Status, und die tägliche Flagship-Journey bleibt auf eine Person fokussiert.',
       },
     ],
   },

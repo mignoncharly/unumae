@@ -9,6 +9,9 @@ for (const switcher of document.querySelectorAll<HTMLElement>(
   );
   const caption = switcher.querySelector<HTMLElement>('[data-moment-caption]');
   const detail = switcher.querySelector<HTMLElement>('[data-moment-detail]');
+  const position = switcher.querySelector<HTMLElement>(
+    '[data-moment-position]'
+  );
 
   const selectMoment = (tab: HTMLButtonElement, focus = false) => {
     const moment = tab.dataset.momentTab;
@@ -28,6 +31,13 @@ for (const switcher of document.querySelectorAll<HTMLElement>(
     if (caption && panelCopy) caption.textContent = panelCopy;
     if (detail && panel?.dataset.momentDetail) {
       detail.textContent = panel.dataset.momentDetail;
+    }
+    if (position) {
+      const panelIndex = panels.findIndex((candidate) => candidate === panel);
+      position.textContent =
+        panelIndex >= 0
+          ? `${String(panelIndex + 1).padStart(2, '0')} / ${String(panels.length).padStart(2, '0')}`
+          : '';
     }
     if (focus) tab.focus();
   };

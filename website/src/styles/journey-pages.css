@@ -1,0 +1,545 @@
+/* Shared journey treatment for the core public experience. */
+.journey-public-page,
+.journey-trust-page {
+  --journey-ink: #11110f;
+  --journey-paper: #f4f0e7;
+  --journey-white: #fffef9;
+  --journey-acid: #ddff63;
+  --journey-coral: #ff6047;
+  --journey-blue: #87a7ff;
+  --journey-muted: #5f5b54;
+  --journey-rule: rgb(17 17 15 / 18%);
+  background: var(--journey-paper);
+  color: var(--journey-ink);
+}
+
+.journey-public-page h1,
+.journey-public-page h2,
+.journey-public-page h3,
+.journey-trust-page h1,
+.journey-trust-page h2,
+.journey-trust-page h3 {
+  color: inherit;
+  hyphens: none;
+  overflow-wrap: normal;
+}
+
+.journey-public-page .eyebrow,
+.journey-trust-page .eyebrow {
+  font-weight: 760;
+  letter-spacing: 0.14em;
+}
+
+/* Today: the public window gets the same strong opening as the home page. */
+.journey-public-page .journey-public-hero {
+  position: relative;
+  width: 100%;
+  min-height: min(48rem, 76svh);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-content: end;
+  gap: var(--space-lg);
+  box-sizing: border-box;
+  padding: clamp(4rem, 10vw, 8rem)
+    max(var(--gutter), calc((100vw - var(--content-width)) / 2 + var(--gutter)))
+    clamp(3rem, 6vw, 5rem);
+  overflow: hidden;
+  border: 0;
+  background: var(--journey-ink);
+  color: var(--journey-white);
+  isolation: isolate;
+}
+
+.journey-public-hero::before {
+  position: absolute;
+  right: -12rem;
+  bottom: -24rem;
+  z-index: -1;
+  width: min(65rem, 78vw);
+  aspect-ratio: 1;
+  border: 1px solid rgb(221 255 99 / 32%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 5rem rgb(221 255 99 / 5%),
+    0 0 0 11rem rgb(221 255 99 / 3%);
+  content: '';
+}
+
+.journey-public-hero > .eyebrow {
+  grid-column: 1 / -1;
+  color: var(--journey-acid);
+}
+
+.journey-public-hero h1 {
+  grid-column: 1 / span 8;
+  max-width: 9ch;
+  margin: 1.5rem 0 0;
+  color: var(--journey-white);
+  font-size: clamp(4.25rem, 10vw, 9rem);
+  font-weight: 430;
+  letter-spacing: -0.075em;
+  line-height: 0.8;
+}
+
+.journey-public-hero .introduction {
+  grid-column: 8 / -1;
+  max-width: 34rem;
+  margin: 2rem 0 0;
+  align-self: end;
+  color: rgb(255 254 249 / 76%);
+  font-size: clamp(1.05rem, 1rem + 0.35vw, 1.35rem);
+  line-height: 1.55;
+}
+
+.journey-public-page .public-stage {
+  width: min(100% - (var(--gutter) * 2), var(--content-width));
+  padding-block: clamp(3rem, 7vw, 7rem);
+}
+
+.journey-public-page .public-state {
+  position: relative;
+  max-width: none;
+  min-height: 25rem;
+  box-sizing: border-box;
+  padding: clamp(2rem, 6vw, 5rem);
+  overflow: hidden;
+  border: 0;
+  background: var(--journey-acid);
+}
+
+.journey-public-page .public-state::before {
+  position: absolute;
+  top: -2rem;
+  right: 2rem;
+  color: rgb(17 17 15 / 12%);
+  content: '00';
+  font-family: var(--font-mono);
+  font-size: clamp(5rem, 14vw, 12rem);
+  letter-spacing: -0.1em;
+  line-height: 1;
+}
+
+.journey-public-page .public-state > * {
+  position: relative;
+  z-index: 1;
+}
+
+.journey-public-page .public-state h2 {
+  max-width: 12ch;
+  margin: 1.5rem 0;
+  font-size: clamp(2.8rem, 6vw, 5.75rem);
+  font-weight: 430;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+}
+
+.journey-public-page .public-state > p:not(.eyebrow) {
+  max-width: 36rem;
+  color: rgb(17 17 15 / 72%);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.journey-public-page .public-state[data-state='loading'] {
+  background: var(--journey-blue);
+}
+
+.journey-public-page .public-state[data-state='error'] {
+  background: var(--journey-coral);
+}
+
+.journey-public-page .today-human {
+  max-width: none;
+  margin: 0;
+  padding: clamp(1.25rem, 3vw, 3rem);
+  border: 0;
+  background: var(--journey-white);
+  box-shadow: 0 1.5rem 4rem rgb(42 37 29 / 12%);
+}
+
+.journey-public-page .today-human__header {
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--journey-ink);
+}
+
+.journey-public-page .today-human__clock time {
+  color: var(--journey-ink);
+}
+
+.journey-public-page .today-human__identity {
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding-block: clamp(2rem, 5vw, 5rem);
+}
+
+.journey-public-page .today-human__media {
+  border: 0;
+  background: var(--journey-coral);
+}
+
+.journey-public-page .today-human__nameplate h2 {
+  font-size: clamp(3rem, 7vw, 7rem);
+  line-height: 0.83;
+}
+
+.journey-public-page .today-portrait,
+.journey-public-page .today-questions {
+  padding-block: clamp(3rem, 7vw, 7rem);
+  border-top: 1px solid var(--journey-rule);
+}
+
+.journey-public-page .today-portrait > h2,
+.journey-public-page .today-questions > h2 {
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: 430;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+}
+
+.journey-public-page .today-human__guest-note {
+  border: 0;
+  background: var(--journey-ink);
+  color: rgb(255 254 249 / 72%);
+}
+
+/* Selection and community guidelines share an editorial hero and measured body. */
+.journey-trust-page .trust-hero {
+  position: relative;
+  width: 100%;
+  min-height: min(38rem, 64svh);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding: clamp(4rem, 10vw, 8rem)
+    max(var(--gutter), calc((100vw - var(--content-width)) / 2 + var(--gutter)))
+    clamp(3rem, 6vw, 5rem);
+  overflow: hidden;
+  border: 0;
+  background: var(--journey-ink);
+  color: var(--journey-white);
+  isolation: isolate;
+}
+
+.journey-trust-page .trust-hero::after {
+  position: absolute;
+  right: 9%;
+  bottom: -10rem;
+  width: min(28rem, 46vw);
+  aspect-ratio: 1;
+  border: 1px solid rgb(255 254 249 / 24%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3rem rgb(255 254 249 / 4%);
+  content: '';
+}
+
+.journey-trust-page .trust-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.journey-trust-page .trust-hero > .eyebrow {
+  margin-bottom: 1.5rem;
+  color: var(--journey-acid);
+}
+
+.journey-trust-page .trust-hero h1 {
+  max-width: 10ch;
+  color: var(--journey-white);
+  font-size: clamp(3.8rem, 9vw, 8rem);
+  font-weight: 430;
+  letter-spacing: -0.075em;
+  line-height: 0.82;
+}
+
+.journey-trust-page .trust-hero .introduction {
+  max-width: 42rem;
+  margin-top: 2rem;
+  color: rgb(255 254 249 / 76%);
+  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.3rem);
+  line-height: 1.6;
+}
+
+.journey-trust-page .trust-section {
+  width: min(100% - (var(--gutter) * 2), var(--content-width));
+  padding-block: clamp(4rem, 9vw, 8rem);
+  border-bottom: 0;
+}
+
+.journey-trust-page .trust-section__heading .eyebrow {
+  color: var(--journey-muted);
+}
+
+.journey-trust-page .trust-section__heading h2,
+.journey-trust-page .audit-section h2 {
+  max-width: 10ch;
+  margin-top: 1.5rem;
+  font-size: clamp(2.7rem, 5.5vw, 5.5rem);
+  font-weight: 430;
+  letter-spacing: -0.065em;
+  line-height: 0.87;
+}
+
+.journey-trust-page .trust-section__heading > p:not(.eyebrow) {
+  max-width: 27rem;
+  line-height: 1.65;
+}
+
+.journey-trust-page .trust-section__body {
+  padding-top: 0.5rem;
+}
+
+.journey-trust-page .trust-section:nth-of-type(odd) {
+  background: var(--journey-white);
+}
+
+.journey-trust-page .trust-section:nth-of-type(even) {
+  background: var(--journey-paper);
+}
+
+.journey-trust-page .trust-inverse {
+  position: relative;
+  background: var(--journey-coral);
+  color: var(--journey-ink);
+}
+
+.journey-trust-page .trust-inverse h2,
+.journey-trust-page .trust-inverse h3,
+.journey-trust-page .trust-inverse .eyebrow,
+.journey-trust-page .trust-inverse .trust-section__heading > p:not(.eyebrow) {
+  color: var(--journey-ink);
+}
+
+.journey-trust-page .trust-inverse__inner {
+  width: min(100% - (var(--gutter) * 2), var(--content-width));
+  padding-block: clamp(4rem, 9vw, 8rem);
+}
+
+.journey-trust-page .trust-facts {
+  width: 100%;
+  box-sizing: border-box;
+  padding-inline: var(--gutter);
+  background: var(--journey-acid);
+  border-bottom: 0;
+}
+
+.journey-trust-page .trust-facts div {
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+}
+
+.journey-trust-page .trust-facts dd {
+  color: var(--journey-ink);
+  font-size: clamp(2rem, 4vw, 4rem);
+}
+
+.journey-trust-page .criteria-list,
+.journey-trust-page .draw-steps,
+.journey-trust-page .backup-sequence,
+.journey-trust-page .publication-cards {
+  border-color: var(--journey-rule);
+}
+
+.journey-trust-page .criteria-list li,
+.journey-trust-page .draw-steps li {
+  padding-block: 1.5rem;
+  border-color: var(--journey-rule);
+}
+
+.journey-trust-page .criteria-list span {
+  color: var(--journey-coral);
+}
+
+.journey-trust-page .trust-conclusion {
+  border-left-color: var(--journey-coral);
+  background: var(--journey-paper);
+}
+
+.journey-trust-page .forbidden-list li {
+  border-color: rgb(17 17 15 / 24%);
+}
+
+.journey-trust-page .forbidden-list span {
+  color: rgb(17 17 15 / 58%);
+}
+
+.journey-trust-page .publication-section {
+  background: var(--journey-acid);
+}
+
+.journey-trust-page .publication-cards p {
+  border-color: rgb(17 17 15 / 24%);
+  background: var(--journey-white);
+}
+
+.journey-trust-page .publication-cards p + p {
+  background: transparent;
+}
+
+.journey-trust-page .audit-section {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  padding: clamp(4rem, 9vw, 8rem)
+    max(var(--gutter), calc((100vw - var(--content-width)) / 2 + var(--gutter)));
+  background: var(--journey-ink);
+  color: var(--journey-white);
+}
+
+.journey-trust-page .audit-section h2 {
+  color: var(--journey-acid);
+}
+
+.journey-trust-page .audit-section > .eyebrow,
+.journey-trust-page .audit-section__grid > div:first-child p,
+.journey-trust-page .audit-section__note {
+  color: rgb(255 254 249 / 70%);
+}
+
+.journey-trust-page .audit-record {
+  border-color: rgb(255 254 249 / 24%);
+}
+
+.journey-trust-page .audit-record span,
+.journey-trust-page .audit-record strong {
+  border-color: rgb(255 254 249 / 24%);
+}
+
+.journey-trust-page .audit-record strong {
+  color: var(--journey-white);
+}
+
+/* Guidelines become a field guide: sticky contents, numbered rules, clear exits. */
+.journey-trust-page .canonical-note {
+  max-width: 34rem;
+  margin-top: 2rem;
+  border: 0;
+  background: var(--journey-acid);
+  color: var(--journey-ink);
+}
+
+.journey-trust-page .guidelines-layout {
+  width: min(100% - (var(--gutter) * 2), var(--content-width));
+  gap: clamp(2rem, 7vw, 7rem);
+  padding-block: clamp(4rem, 9vw, 8rem);
+}
+
+.journey-trust-page .guidelines-toc {
+  padding: 1.25rem;
+  background: var(--journey-acid);
+}
+
+.journey-trust-page .guidelines-toc .specimen-label {
+  margin-bottom: 1.25rem;
+}
+
+.journey-trust-page .guidelines-toc li,
+.journey-trust-page .guidelines-toc li:last-child {
+  border-color: rgb(17 17 15 / 24%);
+}
+
+.journey-trust-page .guidelines-toc a {
+  color: var(--journey-ink);
+}
+
+.journey-trust-page .guidelines-toc a:hover {
+  color: var(--journey-coral);
+}
+
+.journey-trust-page .guidelines-rules {
+  max-width: none;
+}
+
+.journey-trust-page .guidelines-rules section {
+  padding: clamp(2.5rem, 6vw, 5rem);
+  border: 0;
+  background: var(--journey-white);
+  scroll-margin-top: 7rem;
+}
+
+.journey-trust-page .guidelines-rules section + section {
+  margin-top: 1rem;
+}
+
+.journey-trust-page .guideline-number {
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  margin-bottom: 1.5rem;
+  border-radius: 50%;
+  background: var(--journey-coral);
+  color: var(--journey-ink);
+}
+
+.journey-trust-page .guidelines-rules h2 {
+  max-width: 14ch;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  font-weight: 430;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+}
+
+.journey-trust-page .guidelines-rules section > p:not(.guideline-number) {
+  max-width: 39rem;
+  line-height: 1.75;
+}
+
+.journey-trust-page .rule-examples {
+  border-left-color: var(--journey-coral);
+  background: var(--journey-paper);
+}
+
+.journey-trust-page .guidelines-updated {
+  margin-top: 2rem;
+}
+
+.journey-trust-page .audit-record span {
+  color: rgb(255 254 249 / 70%);
+}
+
+@media (max-width: 48rem) {
+  .journey-public-page .journey-public-hero,
+  .journey-trust-page .trust-hero {
+    min-height: 34rem;
+    padding-inline: var(--gutter);
+  }
+
+  .journey-public-hero h1,
+  .journey-public-hero .introduction {
+    grid-column: 1 / -1;
+  }
+
+  .journey-public-hero .introduction {
+    margin-top: 1.5rem;
+  }
+
+  .journey-trust-page .trust-hero h1 {
+    max-width: 8ch;
+  }
+
+  .journey-trust-page .trust-facts {
+    padding-inline: 0;
+  }
+
+  .journey-trust-page .guidelines-layout {
+    gap: 2rem;
+  }
+
+  .journey-trust-page .guidelines-toc {
+    position: static;
+  }
+}
+
+@media (max-width: 36rem) {
+  .journey-public-page .journey-public-hero,
+  .journey-trust-page .trust-hero {
+    min-height: 30rem;
+  }
+
+  .journey-public-page .public-state h2 {
+    max-width: 10ch;
+  }
+
+  .journey-trust-page .guidelines-rules section {
+    padding: 2rem 1.25rem;
+  }
+}

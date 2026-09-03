@@ -52,17 +52,17 @@ export const content: Record<Locale, SiteCopy> = {
     navigation: {
       today: 'Today',
       about: 'About',
-      'how-selection-works': 'How selection works',
+      'how-selection-works': 'How it works',
       archive: 'The Archive',
-      'community-guidelines': 'Community guidelines',
+      'community-guidelines': 'Safety',
       privacy: 'Privacy',
       terms: 'Terms',
     },
     pages: {
       home: {
-        title: '8 billion people. One today.',
+        title: 'The journey is yours. — Unumae',
         description:
-          'Every day, one ordinary person becomes Today’s Human. Discover their story for 24 hours and remember them in the Human Archive.',
+          'Meet the Chosen One and experience one personal journey through video, photos, words, questions, and moments that matter.',
         eyebrow: 'Unumae',
         introduction:
           'Every day, one ordinary person from the community becomes Today’s Human. The world discovers their story for 24 hours, asks them questions, and remembers them in the Human Archive.',
@@ -145,17 +145,17 @@ export const content: Record<Locale, SiteCopy> = {
     navigation: {
       today: 'Aujourd’hui',
       about: 'À propos',
-      'how-selection-works': 'Comment fonctionne la sélection',
+      'how-selection-works': 'Comment ça marche',
       archive: 'Les Archives',
-      'community-guidelines': 'Règles de la communauté',
+      'community-guidelines': 'Sécurité',
       privacy: 'Confidentialité',
       terms: 'Conditions',
     },
     pages: {
       home: {
-        title: '8 milliards de personnes. Une aujourd’hui.',
+        title: 'Le voyage t’appartient. — Unumae',
         description:
-          'Chaque jour, une personne ordinaire devient l’Humain du jour. Découvrez son histoire pendant 24 heures et retrouvez-la dans les Archives humaines.',
+          'Rencontrez l’Élu·e et vivez un voyage personnel en vidéo, photos, mots, questions et moments qui comptent.',
         eyebrow: 'Unumae',
         introduction:
           'Chaque jour, une personne ordinaire de la communauté devient l’Humain du jour. Le monde découvre son histoire pendant 24 heures, lui pose des questions et s’en souvient dans les Archives humaines.',
@@ -239,17 +239,17 @@ export const content: Record<Locale, SiteCopy> = {
     navigation: {
       today: 'Heute',
       about: 'Über uns',
-      'how-selection-works': 'So funktioniert die Auswahl',
+      'how-selection-works': 'So funktioniert’s',
       archive: 'Das Archiv',
-      'community-guidelines': 'Community-Regeln',
+      'community-guidelines': 'Sicherheit',
       privacy: 'Datenschutz',
       terms: 'Bedingungen',
     },
     pages: {
       home: {
-        title: '8 Milliarden Menschen. Heute einer.',
+        title: 'Die Reise gehört dir. — Unumae',
         description:
-          'Jeden Tag wird ein gewöhnlicher Mensch zum Menschen des Tages. Entdecke seine Geschichte 24 Stunden lang und erinnere dich im Menschenarchiv.',
+          'Begegne dem Chosen One und erlebe eine persönliche Reise in Videos, Fotos, Worten, Fragen und bedeutenden Momenten.',
         eyebrow: 'Unumae',
         introduction:
           'Jeden Tag wird ein gewöhnlicher Mensch aus der Community zum Menschen des Tages. Die Welt entdeckt 24 Stunden lang seine Geschichte, stellt Fragen und erinnert sich im Menschenarchiv.',

@@ -1,194 +1,345 @@
 ---
-import CampaignStudy from './design/CampaignStudy.astro';
+import BrandCompanion from './BrandCompanion.astro';
 import ActionLink from './ui/ActionLink.astro';
-import { homeContent } from '../content/home';
+import { journeyHomeContent } from '../content/journey-home';
 import { localizedPath, type Locale } from '../content/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/home.css';
 
 interface Props {
   locale: Locale;
 }
-
 const { locale } = Astro.props;
-const copy = homeContent[locale];
+const copy = journeyHomeContent[locale];
+const firstMoment = copy.experience.moments[0]!;
 ---
 
 <BaseLayout locale={locale} page="home">
-  <main id="main-content" class="home-main" tabindex="-1">
-    <section class="home-hero" aria-labelledby="home-title">
-      <p class="eyebrow">{copy.hero.eyebrow}</p>
-      <h1 id="home-title">
-        <span>{copy.hero.firstLine}</span>
-        <em>{copy.hero.secondLine}</em>
-      </h1>
-      <div class="home-hero__footer">
-        <p>{copy.hero.introduction}</p>
-        <div class="actions">
+  <main id="main-content" class="home-main journey-home" tabindex="-1">
+    <section class="journey-hero" aria-labelledby="home-title">
+      <div class="journey-hero__copy">
+        <p class="journey-kicker">{copy.hero.eyebrow}</p>
+        <h1 id="home-title">
+          <span>{copy.hero.firstLine}</span><em>{copy.hero.secondLine}</em>
+        </h1>
+        <p class="journey-hero__introduction">{copy.hero.introduction}</p>
+        <div class="journey-hero__actions">
+          <a class="journey-button journey-button--light" href="#journey"
+            >{copy.hero.primaryLink}<span aria-hidden="true">↓</span></a
+          >
           <ActionLink
             href={localizedPath(locale, 'how-selection-works')}
+            variant="text"
             analyticsEvent="selection_explainer_opened"
+            >{copy.hero.selectionLink}</ActionLink
           >
-            {copy.hero.selectionLink}
-          </ActionLink>
-          <span class="launch-state">{copy.hero.launchState}</span>
         </div>
+        <p class="journey-hero__status">{copy.hero.launchState}</p>
       </div>
-      <span class="home-hero__marker" aria-hidden="true">01 / 01</span>
-    </section>
 
-    <section class="home-section premise" aria-labelledby="premise-title">
-      <div class="section-heading">
-        <p class="eyebrow">01 · {copy.premise.eyebrow}</p>
-        <h2 id="premise-title">{copy.premise.title}</h2>
-      </div>
-      <div class="section-body">
-        <p class="section-lede">{copy.premise.body}</p>
-        <dl class="premise__facts">
-          {
-            copy.premise.facts.map((fact) => (
-              <div>
-                <dt>{fact.label}</dt>
-                <dd>{fact.value}</dd>
-              </div>
-            ))
-          }
-        </dl>
-      </div>
-    </section>
-
-    <section class="home-section portrait" aria-labelledby="portrait-title">
-      <div class="section-heading">
-        <p class="eyebrow">02 · {copy.portrait.eyebrow}</p>
-        <h2 id="portrait-title">{copy.portrait.title}</h2>
-        <p>{copy.portrait.body}</p>
-      </div>
-      <div class="portrait__preview">
-        <CampaignStudy
-          label={copy.portrait.previewLabel}
-          detail={copy.portrait.previewDetail}
-        />
-        <div class="portrait__prompts">
-          <p class="specimen-label">{copy.portrait.promptsLabel}</p>
-          <ol>
-            {
-              copy.portrait.prompts.map((prompt, index) => (
-                <li>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <p>{prompt}</p>
-                </li>
-              ))
-            }
-          </ol>
-          <p class="portrait__disclaimer">{copy.portrait.disclaimer}</p>
+      <figure class="hero-preview" aria-label={copy.hero.previewAlt}>
+        <div class="hero-preview__halo" aria-hidden="true"></div>
+        <div class="journey-phone journey-phone--hero">
+          <div class="journey-phone__progress" aria-hidden="true">
+            <span></span><span></span><span class="is-current"></span><span
+            ></span><span></span>
+          </div>
+          <div class="journey-phone__topline">
+            <span class="chosen-mark" aria-hidden="true">1</span>
+            <div>
+              <strong>{copy.chosen.roleTitle}</strong><small
+                >{copy.hero.previewLabel}</small
+              >
+            </div>
+            <span class="journey-phone__day">01 / 01</span>
+          </div>
+          <div class="hero-preview__media">
+            <img
+              src="/editorial/journey-preview.webp"
+              width="480"
+              height="600"
+              alt=""
+              aria-hidden="true"
+              decoding="async"
+            />
+            <span class="hero-preview__note">{copy.hero.previewNote}</span>
+            <div class="hero-preview__caption">
+              <span>{copy.hero.previewMoment}</span><strong
+                >{copy.hero.previewCaption}</strong
+              >
+            </div>
+          </div>
+          <ul
+            class="journey-phone__actions"
+            aria-label={copy.experience.previewLabel}
+          >
+            {copy.experience.actions.map((action) => <li>{action}</li>)}
+          </ul>
         </div>
-      </div>
+        <figcaption>{copy.hero.previewLabel}</figcaption>
+      </figure>
+      <BrandCompanion placement="hero" />
     </section>
 
-    <section class="home-section day" aria-labelledby="day-title">
-      <div class="section-heading">
-        <p class="eyebrow">03 · {copy.day.eyebrow}</p>
-        <h2 id="day-title">{copy.day.title}</h2>
-        <p>{copy.day.introduction}</p>
-      </div>
-      <ol class="day__timeline">
+    <section
+      class="journey-path"
+      tabindex="0"
+      aria-label={copy.experience.eyebrow}
+    >
+      <ol>
         {
-          copy.day.stages.map((stage) => (
+          copy.path.map((step, index) => (
             <li>
-              <span>{stage.number}</span>
-              <div>
-                <h3>{stage.title}</h3>
-                <p>{stage.body}</p>
-              </div>
+              <>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <strong>{step}</strong>
+              </>
             </li>
           ))
         }
       </ol>
     </section>
 
-    <section class="manifesto" aria-labelledby="manifesto-title">
-      <div class="manifesto__inner">
-        <p class="eyebrow">04 · {copy.manifesto.eyebrow}</p>
-        <h2 id="manifesto-title">{copy.manifesto.title}</h2>
-        <p class="manifesto__lede">{copy.manifesto.body}</p>
-        <ul>
-          {copy.manifesto.exclusions.map((item) => <li>{item}</li>)}
-        </ul>
-        <p class="manifesto__conclusion">{copy.manifesto.conclusion}</p>
+    <section
+      id="journey"
+      class="journey-showcase"
+      aria-labelledby="journey-title"
+    >
+      <div class="journey-section-copy">
+        <p class="journey-kicker">01 · {copy.experience.eyebrow}</p>
+        <h2 id="journey-title">{copy.experience.title}</h2>
+        <p>{copy.experience.body}</p>
+        <p class="concept-note">{copy.experience.previewNote}</p>
       </div>
-    </section>
-
-    <section class="home-section archive-story" aria-labelledby="archive-title">
-      <div class="section-heading">
-        <p class="eyebrow">05 · {copy.archive.eyebrow}</p>
-        <h2 id="archive-title">{copy.archive.title}</h2>
-        <p>{copy.archive.body}</p>
-      </div>
-      <div class="archive-story__body">
-        <ol class="archive-story__modes">
+      <div class="moment-switcher" data-moment-switcher>
+        <div
+          class="moment-switcher__tabs"
+          role="tablist"
+          aria-label={copy.experience.previewLabel}
+        >
           {
-            copy.archive.modes.map((mode, index) => (
-              <li>
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                {mode}
-              </li>
+            copy.experience.moments.map((moment, index) => (
+              <button
+                id={`moment-tab-${locale}-${moment.id}`}
+                type="button"
+                role="tab"
+                aria-selected={index === 0 ? 'true' : 'false'}
+                aria-controls={`moment-panel-${locale}-${moment.id}`}
+                tabindex={index === 0 ? '0' : '-1'}
+                data-moment-tab={moment.id}
+              >
+                {moment.label}
+              </button>
             ))
           }
-          <li class="archive-story__rule">
-            <span aria-hidden="true">×</span>{copy.archive.rule}
-          </li>
-        </ol>
-        <p>{copy.archive.removal}</p>
-        <ActionLink
-          href={localizedPath(locale, 'archive')}
-          variant="text"
-          analyticsEvent="archive_opened"
+        </div>
+        <div class="journey-phone journey-phone--showcase">
+          <div class="journey-phone__progress" aria-hidden="true">
+            <span class="is-current"></span><span></span><span></span><span
+            ></span>
+          </div>
+          <div class="journey-phone__topline">
+            <span class="chosen-mark" aria-hidden="true">1</span>
+            <div>
+              <strong>{copy.chosen.roleTitle}</strong><small
+                >{copy.experience.previewLabel}</small
+              >
+            </div>
+            <span class="journey-phone__day">01 / 01</span>
+          </div>
+          <div class="moment-panels">
+            {
+              copy.experience.moments.map((moment, index) => (
+                <section
+                  id={`moment-panel-${locale}-${moment.id}`}
+                  class:list={['moment-panel', `moment-panel--${moment.id}`]}
+                  role="tabpanel"
+                  aria-labelledby={`moment-tab-${locale}-${moment.id}`}
+                  hidden={index !== 0}
+                  data-moment-panel={moment.id}
+                  data-moment-detail={moment.detail}
+                >
+                  {moment.id === 'video' && (
+                    <div class="video-scene" aria-hidden="true">
+                      <span class="video-scene__sun" />
+                      <span class="video-scene__window" />
+                      <span class="video-scene__rail" />
+                      <span class="video-scene__play">▶</span>
+                    </div>
+                  )}
+                  {moment.id === 'photo' && (
+                    <img
+                      src="/editorial/journey-preview.webp"
+                      width="480"
+                      height="600"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                  {moment.id === 'text' && (
+                    <div class="text-moment__mark" aria-hidden="true">
+                      “
+                    </div>
+                  )}
+                  {moment.id === 'live' && (
+                    <div class="live-orbit" aria-hidden="true">
+                      <span />
+                    </div>
+                  )}
+                  <div class="moment-panel__overlay">
+                    <>
+                      <span>{moment.eyebrow}</span>
+                      <h3>{moment.title}</h3>
+                      <p>{moment.caption}</p>
+                    </>
+                  </div>
+                </section>
+              ))
+            }
+          </div>
+          <div class="journey-phone__bottomline">
+            <span data-moment-detail>{firstMoment.detail}</span>
+            <ul aria-label={copy.experience.previewLabel}>
+              {copy.experience.actions.map((action) => <li>{action}</li>)}
+            </ul>
+          </div>
+        </div>
+        <p
+          class="moment-switcher__caption"
+          aria-live="polite"
+          data-moment-caption
         >
-          {copy.archive.link}
-        </ActionLink>
+          {firstMoment.caption}
+        </p>
       </div>
     </section>
 
-    <section class="home-section fairness" aria-labelledby="fairness-title">
-      <div class="section-heading">
-        <p class="eyebrow">06 · {copy.fairness.eyebrow}</p>
-        <h2 id="fairness-title">{copy.fairness.title}</h2>
-        <p>{copy.fairness.body}</p>
+    <section class="chosen-section" aria-labelledby="chosen-title">
+      <div class="chosen-section__headline">
+        <p class="journey-kicker">02 · {copy.chosen.eyebrow}</p><h2
+          id="chosen-title"
+        >
+          {copy.chosen.title}
+        </h2><p>{copy.chosen.body}</p>
         <ActionLink
           href={localizedPath(locale, 'how-selection-works')}
-          variant="text"
+          variant="secondary"
           analyticsEvent="selection_explainer_opened"
+          >{copy.chosen.selectionLink}</ActionLink
         >
-          {copy.fairness.link}
-        </ActionLink>
       </div>
-      <div class="fairness__proof">
-        <p class="specimen-label">{copy.fairness.proofLabel}</p>
-        <ol>
-          {
-            copy.fairness.proof.map((step, index) => (
-              <li>
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <dl>
-                  <dt>{step.label}</dt>
-                  <dd>{step.value}</dd>
-                </dl>
-              </li>
-            ))
-          }
-        </ol>
+      <div class="chosen-role">
+        <div class="chosen-role__identity">
+          <span class="chosen-role__number" aria-hidden="true">01</span><p>
+            {copy.chosen.roleLabel}
+          </p><h3>{copy.chosen.roleTitle}</h3><p>{copy.chosen.roleBody}</p>
+        </div>
+        <div class="chosen-role__formats">
+          <p>{copy.chosen.formatsLabel}</p><ul>
+            {copy.chosen.formats.map((format) => <li>{format}</li>)}
+          </ul>
+        </div>
       </div>
     </section>
 
-    <section class="closing-invitation" aria-labelledby="closing-title">
-      <p class="eyebrow">{copy.closing.eyebrow}</p>
-      <h2 id="closing-title">{copy.closing.title}</h2>
-      <p>{copy.closing.body}</p>
+    <section class="participate-section" aria-labelledby="participate-title">
+      <div class="journey-section-copy">
+        <p class="journey-kicker">03 · {copy.participate.eyebrow}</p><h2
+          id="participate-title"
+        >
+          {copy.participate.title}
+        </h2><p>{copy.participate.body}</p>
+      </div>
+      <ol class="participate-list">
+        {
+          copy.participate.items.map((item) => (
+            <li>
+              <>
+                <span>{item.number}</span>
+                <div>
+                  <>
+                    <h3>{item.title}</h3>
+                    <p>{item.body}</p>
+                  </>
+                </div>
+              </>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="live-section" aria-labelledby="live-title">
+      <div class="live-section__copy">
+        <p class="journey-kicker">04 · {copy.live.eyebrow}</p><h2
+          id="live-title"
+        >
+          {copy.live.title}
+        </h2><p>{copy.live.body}</p>
+      </div>
+      <div class="live-concept">
+        <span class="live-concept__badge"><i></i>{copy.live.futureLabel}</span>
+        <div class="live-concept__pulse" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="live-concept__copy">
+          <h3>{copy.live.visualTitle}</h3><p>{copy.live.visualBody}</p>
+        </div>
+        <p class="live-concept__meta">{copy.live.visualMeta}</p>
+      </div>
+    </section>
+
+    <section class="safety-section" aria-labelledby="safety-title">
+      <div class="safety-section__heading">
+        <p class="journey-kicker">05 · {copy.safety.eyebrow}</p><h2
+          id="safety-title"
+        >
+          {copy.safety.title}
+        </h2><p>{copy.safety.body}</p>
+      </div>
+      <ol class="safety-list">
+        {
+          copy.safety.principles.map((principle, index) => (
+            <li>
+              <>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <h3>{principle.title}</h3>
+                <p>{principle.body}</p>
+              </>
+            </li>
+          ))
+        }
+      </ol>
       <ActionLink
-        href={localizedPath(locale, 'about')}
-        analyticsEvent="mission_opened"
+        href={localizedPath(locale, 'community-guidelines')}
+        variant="text">{copy.safety.link}</ActionLink
       >
-        {copy.closing.link}
-      </ActionLink>
+    </section>
+
+    <section class="journey-closing" aria-labelledby="closing-title">
+      <p class="journey-kicker">{copy.closing.eyebrow}</p><h2
+        id="closing-title"
+      >
+        {copy.closing.title}
+      </h2><p>{copy.closing.body}</p>
+      <div class="journey-closing__actions">
+        <ActionLink href={localizedPath(locale, 'today')}
+          >{copy.closing.primaryLink}</ActionLink
+        >
+        <ActionLink
+          href={localizedPath(locale, 'about')}
+          variant="text"
+          analyticsEvent="mission_opened"
+          >{copy.closing.secondaryLink}</ActionLink
+        >
+      </div>
+      <p class="journey-closing__status">
+        {copy.closing.launchState}
+      </p><BrandCompanion placement="closing" />
     </section>
   </main>
+  <script>
+    import '../scripts/home.ts';
+  </script>
 </BaseLayout>

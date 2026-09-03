@@ -13,9 +13,9 @@ interface SocialCopy {
 export const socialContent: Record<Locale, SocialCopy> = {
   en: {
     imageAlt:
-      'Unumae editorial card: 8 billion people. One today. One person, one global day.',
-    cardEyebrow: 'One person · One global day',
-    cardSupporting: 'Meet one person. Come back tomorrow.',
+      'Unumae editorial card: The journey is yours. One person, one unfolding story.',
+    cardEyebrow: 'One person · One unfolding story',
+    cardSupporting: 'Come for the moments. Stay for the person.',
     templateLabel: 'Today’s Human',
     templateFirstName: '[First name]',
     templateCountry: '[Country]',
@@ -23,9 +23,9 @@ export const socialContent: Record<Locale, SocialCopy> = {
   },
   fr: {
     imageAlt:
-      'Carte éditoriale Unumae : 8 milliards de personnes. Une aujourd’hui. Une personne, une journée mondiale.',
-    cardEyebrow: 'Une personne · Une journée mondiale',
-    cardSupporting: 'Rencontrez une personne. Revenez demain.',
+      'Carte éditoriale Unumae : Le voyage t’appartient. Une personne, une histoire qui se déroule.',
+    cardEyebrow: 'Une personne · Une histoire qui se déroule',
+    cardSupporting: 'Venez pour les moments. Restez pour la personne.',
     templateLabel: 'L’Humain du jour',
     templateFirstName: '[Prénom]',
     templateCountry: '[Pays]',
@@ -33,9 +33,9 @@ export const socialContent: Record<Locale, SocialCopy> = {
   },
   de: {
     imageAlt:
-      'Unumae-Redaktionskarte: 8 Milliarden Menschen. Heute einer. Ein Mensch, ein globaler Tag.',
-    cardEyebrow: 'Ein Mensch · Ein globaler Tag',
-    cardSupporting: 'Begegne einem Menschen. Komm morgen wieder.',
+      'Unumae-Redaktionskarte: Die Reise gehört dir. Ein Mensch, eine Geschichte in Bewegung.',
+    cardEyebrow: 'Ein Mensch · Eine Geschichte in Bewegung',
+    cardSupporting: 'Komm für die Momente. Bleib für den Menschen.',
     templateLabel: 'Der Mensch des Tages',
     templateFirstName: '[Vorname]',
     templateCountry: '[Land]',
